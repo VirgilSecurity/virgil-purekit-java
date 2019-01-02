@@ -31,7 +31,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package utils
+package com.virgilsecurity.passw0rd.utils
 
 import com.google.gson.*
 import com.sun.xml.internal.messaging.saaj.util.Base64.base64Decode

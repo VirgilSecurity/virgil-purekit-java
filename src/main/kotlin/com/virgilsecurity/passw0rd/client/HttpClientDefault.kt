@@ -31,15 +31,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package client
+package com.virgilsecurity.passw0rd.client
 
 import com.google.gson.JsonObject
 import com.virgilsecurity.sdk.common.ErrorResponse
 import com.virgilsecurity.sdk.utils.ConvertionUtils
 import com.virgilsecurity.sdk.utils.StringUtils
-import data.ServiceException
-import utils.Loggable
-import utils.Serializer
+import com.virgilsecurity.passw0rd.data.ServiceException
+import com.virgilsecurity.passw0rd.utils.Loggable
+import com.virgilsecurity.passw0rd.utils.Serializer
 import java.io.BufferedInputStream
 import java.io.IOException
 import java.net.HttpURLConnection

@@ -38,7 +38,8 @@ buildscript {
             junit: '5.2.0',
             dokka: '0.9.17',
             gson: '2.8.5',
-            coroutines : '1.0.1'
+            coroutines : '1.0.1',
+            protobuf : '3.6.1',
     ]
 
     repositories {
@@ -74,16 +75,24 @@ repositories {
 }
 
 dependencies {
+    implementation files('src/main/libs/phe-5.0.1-SNAPSHOT.jar')
+    
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$versions.kotlin"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.coroutines"
 
     // Virgil
-    implementation "com.virgilsecurity.sdk:crypto:$versions.virgilSdk"
-    implementation "com.virgilsecurity.sdk:sdk:$versions.virgilSdk"
+//    implementation "com.virgilsecurity.sdk:com.virgilsecurity.passw0rd.crypto:$versions.virgilSdk"
+//    implementation "com.virgilsecurity.sdk:sdk:$versions.virgilSdk"
 
     // Gson
     implementation "com.google.code.gson:gson:$versions.gson"
+
+    // kHttp com.virgilsecurity.passw0rd.client
+    implementation "khttp:khttp:0.1.0"
+    
+    // Protobuf
+    implementation "com.google.protobuf:protobuf-java:$versions.protobuf"
 
     // Tests
     testImplementation "org.junit.jupiter:junit-jupiter-api:$versions.junit"

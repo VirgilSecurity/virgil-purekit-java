@@ -31,30 +31,47 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package client
+package com.virgilsecurity.passw0rd.utils
 
-import kotlinx.coroutines.Deferred
-import stubs.EnrollmentRequestModel
-import stubs.EnrollmentResponseModel
-import stubs.VerificationRequestModel
-import stubs.VerificationResponseModel
+import com.virgilsecurity.sdk.utils.Base64
+import com.virgilsecurity.sdk.utils.ConvertionUtils
+import java.util.*
+import java.util.logging.Logger
+
+//import kotlin.reflect.full.companionObject
+
+inline fun base64Encode(array: ByteArray) = Base64.encode(array)
+
+inline fun base64Encode(string: String) = ConvertionUtils.toBase64Bytes(string)
+
+inline fun base64Decode(array: ByteArray) = ConvertionUtils.base64ToString(array)
+
+inline fun base64Decode(string: String) = Base64.decode(string)
+
+fun ClosedRange<Int>.random() =
+        Random().nextInt((endInclusive + 1) - start) + start
 
 /**
- * . _  _
- * .| || | _
- * -| || || |   Created by:
- * .| || || |-  Danylo Oliinyk
- * ..\_  || |   on
- * ....|  _/    12/13/18
- * ...-| | \    at Virgil Security
- * ....|_|-
+ * Return logger for Java class, if companion object fix the name.
  */
+fun <R : Any> R.logger(): Lazy<Logger> {
+    return lazy { Logger.getLogger(unwrapCompanionClass(this.javaClass).name) }
+}
 
 /**
- * PheClient class.
+ * Unwrap companion class to enclosing class given a Java Class.
  */
-interface PheClient {
+fun <T : Any> unwrapCompanionClass(ofClass: Class<T>): Class<*> {
+    return ofClass.enclosingClass?.takeIf {
+        ofClass.enclosingClass.kotlin.java == ofClass
+    } ?: ofClass
+}
 
-    fun enroll(request: EnrollmentRequestModel): Deferred<EnrollmentResponseModel>
-    fun verify(request: VerificationRequestModel): Deferred<VerificationResponseModel>
+/**
+ * Marker interface and related extension (remove extension for Any.logger() in favour of this).
+ */
+interface Loggable {
+    public fun logger(): Logger {
+        return Logger.getLogger(unwrapCompanionClass(this.javaClass).name)
+    }
 }

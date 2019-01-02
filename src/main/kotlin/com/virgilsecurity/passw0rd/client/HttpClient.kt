@@ -31,44 +31,19 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package client
+package com.virgilsecurity.passw0rd.client
 
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
-import stubs.EnrollmentRequestModel
-import stubs.EnrollmentResponseModel
-import stubs.VerificationRequestModel
-import stubs.VerificationResponseModel
 import java.net.URL
 
-/**
- * . _  _
- * .| || | _
- * -| || || |   Created by:
- * .| || || |-  Danylo Oliinyk
- * ..\_  || |   on
- * ....|  _/    12/13/18
- * ...-| | \    at Virgil Security
- * ....|_|-
- */
+interface HttpClientProtocol {
 
-/**
- * PheClientDefault class.
- */
-class PheClientDefault(val serviceUrl: URL = URL("http://url.some")) : PheClient { // TODO update URL
+    fun send(url: URL, method: Method, accessToken: String, body: Any? = null, headers: Map<String, String>? = null): Response
+}
 
-    private val httpClientDefault: HttpClientDefault = HttpClientDefault()
+enum class Method {
+    GET, POST, PUT, DELETE
+}
 
-    override fun enroll(request: EnrollmentRequestModel): Deferred<EnrollmentResponseModel> = GlobalScope.async {
-        URL(serviceUrl, "phe/v1/${request.appId}/enroll").run {
-            httpClientDefault.send(this, Method.POST, accessToken, request)
-        }
-    }
+class Response(val body: String, val headers: Map<String, String>) {
 
-    override fun verify(request: VerificationRequestModel): Deferred<VerificationResponseModel> = GlobalScope.async {
-        URL(serviceUrl, "phe/v1/${request.appId}/verify-password").run {
-            httpClientDefault.send(this, Method.POST, accessToken, request)
-        }
-    }
 }

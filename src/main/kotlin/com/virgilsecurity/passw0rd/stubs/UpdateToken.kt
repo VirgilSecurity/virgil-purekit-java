@@ -31,19 +31,43 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package client
+package com.virgilsecurity.passw0rd.stubs
 
-import java.net.URL
+import java.lang.IllegalArgumentException
 
-interface HttpClientProtocol {
+/**
+ * . _  _
+ * .| || | _
+ * -| || || |   Created by:
+ * .| || || |-  Danylo Oliinyk
+ * ..\_  || |   on
+ * ....|  _/    12/13/18
+ * ...-| | \    at Virgil Security
+ * ....|_|-
+ */
 
-    fun send(url: URL, method: Method, accessToken: String, body: Any? = null, headers: Map<String, String>? = null): Response
-}
+/**
+ * UpdateToken class.
+ */
+class UpdateToken(
+    val a: ByteArray,
+    val b: ByteArray,
+    val version: Int
+) {
 
-enum class Method {
-    GET, POST, PUT, DELETE
-}
+    fun decode(updateToken: String): UpdateToken {
+        val tokenParts = updateToken.split(".")
+        if (tokenParts.size != 3 || !tokenParts[0].toUpperCase() == "UT") {
+            throw IllegalArgumentException("\'updateToken\' has incorrect format.")
+        }
+        val version: Int
+        try {
+            version = tokenParts[1].toInt()
+        } catch (exception: NumberFormatException) {
+            throw IllegalArgumentException("\'updateToken\' has incorrect format.")
+        }
 
-class Response(val body: String, val headers: Map<String, String>) {
-
+        // TODO implement update
+        return UpdateToken(ByteArray(0), ByteArray(0), version)
+    }
 }

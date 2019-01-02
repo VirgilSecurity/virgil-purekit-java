@@ -31,9 +31,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package stubs
+package com.virgilsecurity.passw0rd.stubs
 
-import java.lang.IllegalArgumentException
+import java.math.BigInteger
 
 /**
  * . _  _
@@ -47,27 +47,68 @@ import java.lang.IllegalArgumentException
  */
 
 /**
- * UpdateToken class.
+ * Models class.
  */
-class UpdateToken(
-    val a: ByteArray,
-    val b: ByteArray,
-    val version: Int
-) {
 
-    fun decode(updateToken: String): UpdateToken {
-        val tokenParts = updateToken.split(".")
-        if (tokenParts.size != 3 || !tokenParts[0].toUpperCase() == "UT") {
-            throw IllegalArgumentException("\'updateToken\' has incorrect format.")
-        }
-        val version: Int
-        try {
-            version = tokenParts[1].toInt()
-        } catch (exception: NumberFormatException) {
-            throw IllegalArgumentException("\'updateToken\' has incorrect format.")
-        }
+data class SecretKey(val bigInteger: BigInteger)
 
-        // TODO implement update
-        return UpdateToken(ByteArray(0), ByteArray(0), version)
-    }
-}
+fun SecretKey.encode(): ByteArray = bigInteger.toByteArray()
+
+data class ProofOfFail(
+    val term1: ByteArray,
+    val term2: ByteArray,
+    val term3: ByteArray,
+    val term4: ByteArray,
+    val blindA: ByteArray,
+    val blindB: ByteArray
+)
+
+data class ProofOfSuccess(
+    val term1: ByteArray,
+    val term2: ByteArray,
+    val term3: ByteArray,
+    val blindX: ByteArray
+)
+
+data class FpPoint(val x: BigInteger, val y: BigInteger)
+
+fun FpPoint.getEncoded(): ByteArray = x.toByteArray() + y.toByteArray()
+
+data class PublicKey(val fpPoint: FpPoint)
+
+fun PublicKey.encode(): ByteArray = fpPoint.getEncoded()
+
+data class ProofOfSuccessModel(
+    val term1: ByteArray,
+    val term2: ByteArray,
+    val term3: ByteArray,
+    val blindX: ByteArray
+)
+
+data class ProofOfFailModel(
+    val term1: ByteArray,
+    val term2: ByteArray,
+    val term3: ByteArray,
+    val term4: ByteArray,
+    val blindA: ByteArray,
+    val blindB: ByteArray
+)
+
+data class EnrollmentModel(
+    val nonce: ByteArray,
+    val c0: ByteArray,
+    val c1: ByteArray,
+    val proofOfSuccessModel: ProofOfSuccessModel
+)
+
+data class EnrollmentRequestModel(val appId: String, val version: Int)
+data class EnrollmentResponseModel(val enrollment: EnrollmentModel, val version: Int)
+
+data class VerificationModel(val ns: ByteArray, val c0: ByteArray)
+data class VerificationRequestModel(val appId: String, val version: Int, val verification: VerificationModel)
+data class VerificationResponseModel(
+    val isSuccess: Boolean,
+    val c1: ByteArray,
+    val proofOfSuccessModel: ProofOfSuccessModel,
+    val proofOfFailModel: ProofOfFailModel
+)

@@ -31,7 +31,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package crypto
+package com.virgilsecurity.passw0rd.client
+
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import com.virgilsecurity.passw0rd.stubs.EnrollmentRequestModel
+import com.virgilsecurity.passw0rd.stubs.EnrollmentResponseModel
+import com.virgilsecurity.passw0rd.stubs.VerificationRequestModel
+import com.virgilsecurity.passw0rd.stubs.VerificationResponseModel
+import java.net.URL
 
 /**
  * . _  _
@@ -45,9 +54,21 @@ package crypto
  */
 
 /**
- * PheCrypto class.
+ * PheClientDefault class.
  */
-interface PheCrypto {
+class PheClientDefault(val serviceUrl: URL = URL("http://url.some")) : PheClient { // TODO update URL
 
+    private val httpClientDefault: HttpClientDefault = HttpClientDefault()
 
+    override fun enroll(request: EnrollmentRequestModel): Deferred<EnrollmentResponseModel> = GlobalScope.async {
+        URL(serviceUrl, "phe/v1/${request.appId}/enroll").run {
+            httpClientDefault.send(this, Method.POST, accessToken, request)
+        }
+    }
+
+    override fun verify(request: VerificationRequestModel): Deferred<VerificationResponseModel> = GlobalScope.async {
+        URL(serviceUrl, "phe/v1/${request.appId}/verify-password").run {
+            httpClientDefault.send(this, Method.POST, accessToken, request)
+        }
+    }
 }

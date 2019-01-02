@@ -31,7 +31,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package data
+package com.virgilsecurity.passw0rd.utils
+
+import java.lang.IllegalArgumentException
 
 /**
  * . _  _
@@ -39,17 +41,19 @@ package data
  * -| || || |   Created by:
  * .| || || |-  Danylo Oliinyk
  * ..\_  || |   on
- * ....|  _/    12/13/18
+ * ....|  _/    2019-01-02
  * ...-| | \    at Virgil Security
  * ....|_|-
  */
 
 /**
- * Exceptions class.
+ * Utils class.
  */
+object Utils {
 
-class ServiceException(
-    val responseCode: Int,
-    val errorCode: Int = -1,
-    message: String? = "Unknown error"
-) : Throwable(message) // TODO refactor exception view (take service + http errors)
+    /**
+     * @throws IllegalArgumentException
+     */
+    fun shouldNotBeEmpty(argumentName: String): Nothing =
+        throw IllegalArgumentException("Parameter $argumentName should not be empty")
+}

@@ -31,10 +31,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package stubs
-
-import com.sun.org.apache.xpath.internal.operations.Bool
-import java.math.BigInteger
+package com.virgilsecurity.passw0rd.stubs
 
 /**
  * . _  _
@@ -42,74 +39,35 @@ import java.math.BigInteger
  * -| || || |   Created by:
  * .| || || |-  Danylo Oliinyk
  * ..\_  || |   on
- * ....|  _/    12/13/18
+ * ....|  _/    12/14/18
  * ...-| | \    at Virgil Security
  * ....|_|-
  */
 
 /**
- * Models class.
+ * PasswordRecord class.
  */
+class PasswordRecord(
+    val serverNonce: ByteArray,
+    val clientNonce: ByteArray,
+    val recordT0: ByteArray,
+    val recordT1: ByteArray,
+    val version: Int
+) {
 
-data class SecretKey(val bigInteger: BigInteger)
+    fun encode(): ByteArray {
 
-fun SecretKey.encode(): ByteArray = bigInteger.toByteArray()
+    }
 
-data class ProofOfFail(
-    val term1: ByteArray,
-    val term2: ByteArray,
-    val term3: ByteArray,
-    val term4: ByteArray,
-    val blindA: ByteArray,
-    val blindB: ByteArray
-)
+    fun encodeToBase64(): String {
 
-data class ProofOfSuccess(
-    val term1: ByteArray,
-    val term2: ByteArray,
-    val term3: ByteArray,
-    val blindX: ByteArray
-)
+    }
 
-data class FpPoint(val x: BigInteger, val y: BigInteger)
+    fun decode(encodedRecord: ByteArray): PasswordRecord {
 
-fun FpPoint.getEncoded(): ByteArray = x.toByteArray() + y.toByteArray()
+    }
 
-data class PublicKey(val fpPoint: FpPoint)
+    fun decodeFromBase64(encodedRecord: String): PasswordRecord {
 
-fun PublicKey.encode(): ByteArray = fpPoint.getEncoded()
-
-data class ProofOfSuccessModel(
-    val term1: ByteArray,
-    val term2: ByteArray,
-    val term3: ByteArray,
-    val blindX: ByteArray
-)
-
-data class ProofOfFailModel(
-    val term1: ByteArray,
-    val term2: ByteArray,
-    val term3: ByteArray,
-    val term4: ByteArray,
-    val blindA: ByteArray,
-    val blindB: ByteArray
-)
-
-data class EnrollmentModel(
-    val nonce: ByteArray,
-    val c0: ByteArray,
-    val c1: ByteArray,
-    val proofOfSuccessModel: ProofOfSuccessModel
-)
-
-data class EnrollmentRequestModel(val appId: String, val version: Int)
-data class EnrollmentResponseModel(val enrollment: EnrollmentModel, val version: Int)
-
-data class VerificationModel(val ns: ByteArray, val c0: ByteArray)
-data class VerificationRequestModel(val appId: String, val version: Int, val verification: VerificationModel)
-data class VerificationResponseModel(
-    val isSuccess: Boolean,
-    val c1: ByteArray,
-    val proofOfSuccessModel: ProofOfSuccessModel,
-    val proofOfFailModel: ProofOfFailModel
-)
+    }
+}

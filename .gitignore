@@ -27,7 +27,7 @@ local.properties
 .idea/**/libraries
 
 # CMake
-cmake-build-*/
+cmake-com.virgilsecurity.passw0rd.protobuf.build-*/
 
 # Mongo Explorer plugin
 .idea/**/mongoSettings.xml
@@ -47,7 +47,7 @@ atlassian-ide-plugin.xml
 # Crashlytics plugin (for Android Studio and IntelliJ)
 com_crashlytics_export_strings.xml
 crashlytics.properties
-crashlytics-build.properties
+crashlytics-com.virgilsecurity.passw0rd.protobuf.build.properties
 fabric.properties
 
 # Editor-based Rest Client
@@ -84,7 +84,7 @@ hs_err_pid*
 ### Gradle ###
 .gradle
 gradle.properties
-/build/
+/com.virgilsecurity.passw0rd.protobuf.build/
 
 # Gradle wrapper
 gradle-wrapper.jar

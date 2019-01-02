@@ -31,7 +31,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package crypto
+package com.virgilsecurity.passw0rd.client
+
+import kotlinx.coroutines.Deferred
+import com.virgilsecurity.passw0rd.stubs.EnrollmentRequestModel
+import com.virgilsecurity.passw0rd.stubs.EnrollmentResponseModel
+import com.virgilsecurity.passw0rd.stubs.VerificationRequestModel
+import com.virgilsecurity.passw0rd.stubs.VerificationResponseModel
 
 /**
  * . _  _
@@ -45,7 +51,10 @@ package crypto
  */
 
 /**
- * PheCryptoDefault class.
+ * PheClient class.
  */
-class PheCryptoDefault : PheCrypto {
+interface PheClient {
+
+    fun enroll(request: EnrollmentRequestModel): Deferred<EnrollmentResponseModel>
+    fun verify(request: VerificationRequestModel): Deferred<VerificationResponseModel>
 }
