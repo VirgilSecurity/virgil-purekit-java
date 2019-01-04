@@ -31,44 +31,43 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.passw0rd.client
+package com.virgilsecurity.passw0rd.utils
 
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
-import com.virgilsecurity.passw0rd.stubs.EnrollmentRequestModel
-import com.virgilsecurity.passw0rd.stubs.EnrollmentResponseModel
-import com.virgilsecurity.passw0rd.stubs.VerificationRequestModel
-import com.virgilsecurity.passw0rd.stubs.VerificationResponseModel
-import java.net.URL
-
-/**
- * . _  _
- * .| || | _
- * -| || || |   Created by:
- * .| || || |-  Danylo Oliinyk
- * ..\_  || |   on
- * ....|  _/    12/13/18
- * ...-| | \    at Virgil Security
- * ....|_|-
- */
-
-/**
- * PheClientDefault class.
- */
-class PheClientDefault(val serviceUrl: URL = URL("http://url.some")) : PheClient { // TODO update URL
-
-    private val httpClientDefault: HttpClientDefault = HttpClientDefault()
-
-    override fun enroll(request: EnrollmentRequestModel): Deferred<EnrollmentResponseModel> = GlobalScope.async {
-        URL(serviceUrl, "phe/v1/${request.appId}/enroll").run {
-            httpClientDefault.send(this, Method.POST, accessToken, request)
+object PropertyManager {
+        val appToken: String by lazy {
+            if (System.getProperty(APP_TOKEN) != null)
+                System.getProperty(APP_TOKEN)
+            else
+                System.getenv(APP_TOKEN)
         }
-    }
-
-    override fun verify(request: VerificationRequestModel): Deferred<VerificationResponseModel> = GlobalScope.async {
-        URL(serviceUrl, "phe/v1/${request.appId}/verify-password").run {
-            httpClientDefault.send(this, Method.POST, accessToken, request)
+        val secretKey: String by lazy {
+            if (System.getProperty(SECRET_KEY) != null)
+                System.getProperty(SECRET_KEY)
+            else
+                System.getenv(SECRET_KEY)
         }
+        val publicKey: String by lazy {
+            if (System.getProperty(PUBLIC_KEY) != null)
+                System.getProperty(PUBLIC_KEY)
+            else
+                System.getenv(PUBLIC_KEY)
+        }
+        val updateToken: String by lazy {
+            if (System.getProperty(UPDATE_TOKEN) != null)
+                System.getProperty(UPDATE_TOKEN)
+            else
+                System.getenv(UPDATE_TOKEN)
+        }
+        val serverAddress: String by lazy {
+            if (System.getProperty(SERVER_ADDRESS) != null)
+                System.getProperty(SERVER_ADDRESS)
+            else
+                System.getenv(SERVER_ADDRESS)
+        }
+
+        private const val APP_TOKEN = "APP_TOKEN"
+        private const val SECRET_KEY = "SECRET_KEY"
+        private const val PUBLIC_KEY = "PUBLIC_KEY"
+        private const val UPDATE_TOKEN = "UPDATE_TOKEN"
+        private const val SERVER_ADDRESS = "SERVER_ADDRESS"
     }
-}

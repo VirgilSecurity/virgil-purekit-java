@@ -48,8 +48,7 @@ package com.virgilsecurity.passw0rd.data
  * Exceptions class.
  */
 
-class ServiceException(
-    val responseCode: Int,
+class ProtocolException(
     val errorCode: Int = -1,
     message: String? = "Unknown error"
 ) : Throwable(message) // TODO refactor exception view (take service + http errors)

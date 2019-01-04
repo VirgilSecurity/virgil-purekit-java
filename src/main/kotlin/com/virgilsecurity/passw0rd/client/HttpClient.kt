@@ -31,7 +31,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.passw0rd.client
+package com.virgilsecurity.keyknox.client
 
 import java.net.URL
 

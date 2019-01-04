@@ -54,6 +54,7 @@ object Utils {
     /**
      * @throws IllegalArgumentException
      */
+    @Throws(IllegalArgumentException::class)
     fun shouldNotBeEmpty(argumentName: String): Nothing =
         throw IllegalArgumentException("Parameter $argumentName should not be empty")
 }

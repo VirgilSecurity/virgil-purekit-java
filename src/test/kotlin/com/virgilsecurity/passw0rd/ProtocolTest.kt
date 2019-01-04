@@ -31,47 +31,41 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.passw0rd.utils
+package com.virgilsecurity.passw0rd
 
-import com.virgilsecurity.sdk.utils.Base64
-import com.virgilsecurity.sdk.utils.ConvertionUtils
-import java.util.*
-import java.util.logging.Logger
-
-//import kotlin.reflect.full.companionObject
-
-inline fun base64Encode(array: ByteArray) = Base64.encode(array)
-
-inline fun base64Encode(string: String) = ConvertionUtils.toBase64Bytes(string)
-
-inline fun base64Decode(array: ByteArray) = ConvertionUtils.base64ToString(array)
-
-inline fun base64Decode(string: String) = Base64.decode(string)
-
-fun ClosedRange<Int>.random() =
-        Random().nextInt((endInclusive + 1) - start) + start
+import com.virgilsecurity.passw0rd.utils.PropertyManager
+import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Test
 
 /**
- * Return logger for Java class, if companion object fix the name.
+ * . _  _
+ * .| || | _
+ * -| || || |   Created by:
+ * .| || || |-  Danylo Oliinyk
+ * ..\_  || |   on
+ * ....|  _/    2019-01-04
+ * ...-| | \    at Virgil Security
+ * ....|_|-
  */
-fun <R : Any> R.logger(): Lazy<Logger> {
-    return lazy { Logger.getLogger(unwrapCompanionClass(this.javaClass).name) }
-}
 
 /**
- * Unwrap companion class to enclosing class given a Java Class.
+ * ProtocolTest class.
  */
-fun <T : Any> unwrapCompanionClass(ofClass: Class<T>): Class<*> {
-    return ofClass.enclosingClass?.takeIf {
-        ofClass.enclosingClass.kotlin.java == ofClass
-    } ?: ofClass
-}
+class ProtocolTest {
 
-/**
- * Marker interface and related extension (remove extension for Any.logger() in favour of this).
- */
-interface Loggable {
-    public fun logger(): Logger {
-        return Logger.getLogger(unwrapCompanionClass(this.javaClass).name)
+    private val propertyManager = PropertyManager
+
+    @Test
+    fun enrollAccount() {
+        val context = ProtocolContext.create(
+            propertyManager.appToken,
+            propertyManager.publicKey,
+            propertyManager.secretKey,
+            propertyManager.updateToken
+        )
+        assertNotNull(context)
+
+        val protocol = Protocol(context)
     }
 }

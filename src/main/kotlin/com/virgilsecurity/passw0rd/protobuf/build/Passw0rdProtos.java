@@ -37,3376 +37,4159 @@
 package com.virgilsecurity.passw0rd.protobuf.build;
 
 public final class Passw0rdProtos {
-  private Passw0rdProtos() {}
-  public static void registerAllExtensions(
-      com.google.protobuf.ExtensionRegistryLite registry) {
-  }
+    private Passw0rdProtos() {
+    }
 
-  public static void registerAllExtensions(
-      com.google.protobuf.ExtensionRegistry registry) {
-    registerAllExtensions(
-        (com.google.protobuf.ExtensionRegistryLite) registry);
-  }
-  public interface EnrollmentRequestOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:build.EnrollmentRequest)
-      com.google.protobuf.MessageOrBuilder {
+    public static void registerAllExtensions(
+            com.google.protobuf.ExtensionRegistryLite registry) {
+    }
+
+    public static void registerAllExtensions(
+            com.google.protobuf.ExtensionRegistry registry) {
+        registerAllExtensions(
+                (com.google.protobuf.ExtensionRegistryLite) registry);
+    }
+
+    public interface DatabaseRecordOrBuilder extends
+            // @@protoc_insertion_point(interface_extends:build.DatabaseRecord)
+            com.google.protobuf.MessageOrBuilder {
+
+        /**
+         * <code>uint32 version = 1;</code>
+         */
+        int getVersion();
+
+        /**
+         * <code>bytes record = 2;</code>
+         */
+        com.google.protobuf.ByteString getRecord();
+    }
 
     /**
-     * <code>uint32 version = 1;</code>
+     * Protobuf type {@code build.DatabaseRecord}
      */
-    int getVersion();
-  }
-  /**
-   * Protobuf type {@code build.EnrollmentRequest}
-   */
-  public  static final class EnrollmentRequest extends
-      com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:build.EnrollmentRequest)
-      EnrollmentRequestOrBuilder {
-  private static final long serialVersionUID = 0L;
-    // Use EnrollmentRequest.newBuilder() to construct.
-    private EnrollmentRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
-      super(builder);
-    }
-    private EnrollmentRequest() {
-      version_ = 0;
-    }
+    public static final class DatabaseRecord extends
+            com.google.protobuf.GeneratedMessageV3 implements
+            // @@protoc_insertion_point(message_implements:build.DatabaseRecord)
+            DatabaseRecordOrBuilder {
+        private static final long serialVersionUID = 0L;
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return this.unknownFields;
-    }
-    private EnrollmentRequest(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
-      int mutable_bitField0_ = 0;
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            case 8: {
-
-              version_ = input.readUInt32();
-              break;
-            }
-            default: {
-              if (!parseUnknownFieldProto3(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-          }
+        // Use DatabaseRecord.newBuilder() to construct.
+        private DatabaseRecord(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+            super(builder);
         }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
+
+        private DatabaseRecord() {
+            version_ = 0;
+            record_ = com.google.protobuf.ByteString.EMPTY;
+        }
+
+        @java.lang.Override
+        public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+            return this.unknownFields;
+        }
+
+        private DatabaseRecord(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            this();
+            if (extensionRegistry == null) {
+                throw new java.lang.NullPointerException();
+            }
+            int mutable_bitField0_ = 0;
+            com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+                    com.google.protobuf.UnknownFieldSet.newBuilder();
+            try {
+                boolean done = false;
+                while (!done) {
+                    int tag = input.readTag();
+                    switch (tag) {
+                        case 0:
+                            done = true;
+                            break;
+                        case 8: {
+
+                            version_ = input.readUInt32();
+                            break;
+                        }
+                        case 18: {
+
+                            record_ = input.readBytes();
+                            break;
+                        }
+                        default: {
+                            if (!parseUnknownFieldProto3(
+                                    input, unknownFields, extensionRegistry, tag)) {
+                                done = true;
+                            }
+                            break;
+                        }
+                    }
+                }
+            } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                throw e.setUnfinishedMessage(this);
+            } catch (java.io.IOException e) {
+                throw new com.google.protobuf.InvalidProtocolBufferException(
+                        e).setUnfinishedMessage(this);
+            } finally {
+                this.unknownFields = unknownFields.build();
+                makeExtensionsImmutable();
+            }
+        }
+
+        public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.internal_static_build_EnrollmentRequest_descriptor;
-    }
+            return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.internal_static_build_DatabaseRecord_descriptor;
+        }
 
-    @java.lang.Override
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        @java.lang.Override
+        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.internal_static_build_EnrollmentRequest_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest.class, com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest.Builder.class);
+            return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.internal_static_build_DatabaseRecord_fieldAccessorTable
+                    .ensureFieldAccessorsInitialized(
+                            com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.DatabaseRecord.class, com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.DatabaseRecord.Builder.class);
+        }
+
+        public static final int VERSION_FIELD_NUMBER = 1;
+        private int version_;
+
+        /**
+         * <code>uint32 version = 1;</code>
+         */
+        public int getVersion() {
+            return version_;
+        }
+
+        public static final int RECORD_FIELD_NUMBER = 2;
+        private com.google.protobuf.ByteString record_;
+
+        /**
+         * <code>bytes record = 2;</code>
+         */
+        public com.google.protobuf.ByteString getRecord() {
+            return record_;
+        }
+
+        private byte memoizedIsInitialized = -1;
+
+        @java.lang.Override
+        public final boolean isInitialized() {
+            byte isInitialized = memoizedIsInitialized;
+            if (isInitialized == 1) return true;
+            if (isInitialized == 0) return false;
+
+            memoizedIsInitialized = 1;
+            return true;
+        }
+
+        @java.lang.Override
+        public void writeTo(com.google.protobuf.CodedOutputStream output)
+                throws java.io.IOException {
+            if (version_ != 0) {
+                output.writeUInt32(1, version_);
+            }
+            if (!record_.isEmpty()) {
+                output.writeBytes(2, record_);
+            }
+            unknownFields.writeTo(output);
+        }
+
+        @java.lang.Override
+        public int getSerializedSize() {
+            int size = memoizedSize;
+            if (size != -1) return size;
+
+            size = 0;
+            if (version_ != 0) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeUInt32Size(1, version_);
+            }
+            if (!record_.isEmpty()) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeBytesSize(2, record_);
+            }
+            size += unknownFields.getSerializedSize();
+            memoizedSize = size;
+            return size;
+        }
+
+        @java.lang.Override
+        public boolean equals(final java.lang.Object obj) {
+            if (obj == this) {
+                return true;
+            }
+            if (!(obj instanceof com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.DatabaseRecord)) {
+                return super.equals(obj);
+            }
+            com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.DatabaseRecord other = (com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.DatabaseRecord) obj;
+
+            boolean result = true;
+            result = result && (getVersion()
+                    == other.getVersion());
+            result = result && getRecord()
+                    .equals(other.getRecord());
+            result = result && unknownFields.equals(other.unknownFields);
+            return result;
+        }
+
+        @java.lang.Override
+        public int hashCode() {
+            if (memoizedHashCode != 0) {
+                return memoizedHashCode;
+            }
+            int hash = 41;
+            hash = (19 * hash) + getDescriptor().hashCode();
+            hash = (37 * hash) + VERSION_FIELD_NUMBER;
+            hash = (53 * hash) + getVersion();
+            hash = (37 * hash) + RECORD_FIELD_NUMBER;
+            hash = (53 * hash) + getRecord().hashCode();
+            hash = (29 * hash) + unknownFields.hashCode();
+            memoizedHashCode = hash;
+            return hash;
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.DatabaseRecord parseFrom(
+                java.nio.ByteBuffer data)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.DatabaseRecord parseFrom(
+                java.nio.ByteBuffer data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data, extensionRegistry);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.DatabaseRecord parseFrom(
+                com.google.protobuf.ByteString data)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.DatabaseRecord parseFrom(
+                com.google.protobuf.ByteString data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data, extensionRegistry);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.DatabaseRecord parseFrom(byte[] data)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.DatabaseRecord parseFrom(
+                byte[] data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data, extensionRegistry);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.DatabaseRecord parseFrom(java.io.InputStream input)
+                throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3
+                    .parseWithIOException(PARSER, input);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.DatabaseRecord parseFrom(
+                java.io.InputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3
+                    .parseWithIOException(PARSER, input, extensionRegistry);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.DatabaseRecord parseDelimitedFrom(java.io.InputStream input)
+                throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3
+                    .parseDelimitedWithIOException(PARSER, input);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.DatabaseRecord parseDelimitedFrom(
+                java.io.InputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3
+                    .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.DatabaseRecord parseFrom(
+                com.google.protobuf.CodedInputStream input)
+                throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3
+                    .parseWithIOException(PARSER, input);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.DatabaseRecord parseFrom(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3
+                    .parseWithIOException(PARSER, input, extensionRegistry);
+        }
+
+        @java.lang.Override
+        public Builder newBuilderForType() {
+            return newBuilder();
+        }
+
+        public static Builder newBuilder() {
+            return DEFAULT_INSTANCE.toBuilder();
+        }
+
+        public static Builder newBuilder(com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.DatabaseRecord prototype) {
+            return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+        }
+
+        @java.lang.Override
+        public Builder toBuilder() {
+            return this == DEFAULT_INSTANCE
+                    ? new Builder() : new Builder().mergeFrom(this);
+        }
+
+        @java.lang.Override
+        protected Builder newBuilderForType(
+                com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+            Builder builder = new Builder(parent);
+            return builder;
+        }
+
+        /**
+         * Protobuf type {@code build.DatabaseRecord}
+         */
+        public static final class Builder extends
+                com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+                // @@protoc_insertion_point(builder_implements:build.DatabaseRecord)
+                com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.DatabaseRecordOrBuilder {
+            public static final com.google.protobuf.Descriptors.Descriptor
+            getDescriptor() {
+                return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.internal_static_build_DatabaseRecord_descriptor;
+            }
+
+            @java.lang.Override
+            protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+            internalGetFieldAccessorTable() {
+                return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.internal_static_build_DatabaseRecord_fieldAccessorTable
+                        .ensureFieldAccessorsInitialized(
+                                com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.DatabaseRecord.class, com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.DatabaseRecord.Builder.class);
+            }
+
+            // Construct using com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.DatabaseRecord.newBuilder()
+            private Builder() {
+                maybeForceBuilderInitialization();
+            }
+
+            private Builder(
+                    com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+                super(parent);
+                maybeForceBuilderInitialization();
+            }
+
+            private void maybeForceBuilderInitialization() {
+                if (com.google.protobuf.GeneratedMessageV3
+                        .alwaysUseFieldBuilders) {
+                }
+            }
+
+            @java.lang.Override
+            public Builder clear() {
+                super.clear();
+                version_ = 0;
+
+                record_ = com.google.protobuf.ByteString.EMPTY;
+
+                return this;
+            }
+
+            @java.lang.Override
+            public com.google.protobuf.Descriptors.Descriptor
+            getDescriptorForType() {
+                return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.internal_static_build_DatabaseRecord_descriptor;
+            }
+
+            @java.lang.Override
+            public com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.DatabaseRecord getDefaultInstanceForType() {
+                return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.DatabaseRecord.getDefaultInstance();
+            }
+
+            @java.lang.Override
+            public com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.DatabaseRecord build() {
+                com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.DatabaseRecord result = buildPartial();
+                if (!result.isInitialized()) {
+                    throw newUninitializedMessageException(result);
+                }
+                return result;
+            }
+
+            @java.lang.Override
+            public com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.DatabaseRecord buildPartial() {
+                com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.DatabaseRecord result = new com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.DatabaseRecord(this);
+                result.version_ = version_;
+                result.record_ = record_;
+                onBuilt();
+                return result;
+            }
+
+            @java.lang.Override
+            public Builder clone() {
+                return (Builder) super.clone();
+            }
+
+            @java.lang.Override
+            public Builder setField(
+                    com.google.protobuf.Descriptors.FieldDescriptor field,
+                    java.lang.Object value) {
+                return (Builder) super.setField(field, value);
+            }
+
+            @java.lang.Override
+            public Builder clearField(
+                    com.google.protobuf.Descriptors.FieldDescriptor field) {
+                return (Builder) super.clearField(field);
+            }
+
+            @java.lang.Override
+            public Builder clearOneof(
+                    com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+                return (Builder) super.clearOneof(oneof);
+            }
+
+            @java.lang.Override
+            public Builder setRepeatedField(
+                    com.google.protobuf.Descriptors.FieldDescriptor field,
+                    int index, java.lang.Object value) {
+                return (Builder) super.setRepeatedField(field, index, value);
+            }
+
+            @java.lang.Override
+            public Builder addRepeatedField(
+                    com.google.protobuf.Descriptors.FieldDescriptor field,
+                    java.lang.Object value) {
+                return (Builder) super.addRepeatedField(field, value);
+            }
+
+            @java.lang.Override
+            public Builder mergeFrom(com.google.protobuf.Message other) {
+                if (other instanceof com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.DatabaseRecord) {
+                    return mergeFrom((com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.DatabaseRecord) other);
+                } else {
+                    super.mergeFrom(other);
+                    return this;
+                }
+            }
+
+            public Builder mergeFrom(com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.DatabaseRecord other) {
+                if (other == com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.DatabaseRecord.getDefaultInstance())
+                    return this;
+                if (other.getVersion() != 0) {
+                    setVersion(other.getVersion());
+                }
+                if (other.getRecord() != com.google.protobuf.ByteString.EMPTY) {
+                    setRecord(other.getRecord());
+                }
+                this.mergeUnknownFields(other.unknownFields);
+                onChanged();
+                return this;
+            }
+
+            @java.lang.Override
+            public final boolean isInitialized() {
+                return true;
+            }
+
+            @java.lang.Override
+            public Builder mergeFrom(
+                    com.google.protobuf.CodedInputStream input,
+                    com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                    throws java.io.IOException {
+                com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.DatabaseRecord parsedMessage = null;
+                try {
+                    parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+                } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                    parsedMessage = (com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.DatabaseRecord) e.getUnfinishedMessage();
+                    throw e.unwrapIOException();
+                } finally {
+                    if (parsedMessage != null) {
+                        mergeFrom(parsedMessage);
+                    }
+                }
+                return this;
+            }
+
+            private int version_;
+
+            /**
+             * <code>uint32 version = 1;</code>
+             */
+            public int getVersion() {
+                return version_;
+            }
+
+            /**
+             * <code>uint32 version = 1;</code>
+             */
+            public Builder setVersion(int value) {
+
+                version_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>uint32 version = 1;</code>
+             */
+            public Builder clearVersion() {
+
+                version_ = 0;
+                onChanged();
+                return this;
+            }
+
+            private com.google.protobuf.ByteString record_ = com.google.protobuf.ByteString.EMPTY;
+
+            /**
+             * <code>bytes record = 2;</code>
+             */
+            public com.google.protobuf.ByteString getRecord() {
+                return record_;
+            }
+
+            /**
+             * <code>bytes record = 2;</code>
+             */
+            public Builder setRecord(com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+
+                record_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>bytes record = 2;</code>
+             */
+            public Builder clearRecord() {
+
+                record_ = getDefaultInstance().getRecord();
+                onChanged();
+                return this;
+            }
+
+            @java.lang.Override
+            public final Builder setUnknownFields(
+                    final com.google.protobuf.UnknownFieldSet unknownFields) {
+                return super.setUnknownFieldsProto3(unknownFields);
+            }
+
+            @java.lang.Override
+            public final Builder mergeUnknownFields(
+                    final com.google.protobuf.UnknownFieldSet unknownFields) {
+                return super.mergeUnknownFields(unknownFields);
+            }
+
+
+            // @@protoc_insertion_point(builder_scope:build.DatabaseRecord)
+        }
+
+        // @@protoc_insertion_point(class_scope:build.DatabaseRecord)
+        private static final com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.DatabaseRecord DEFAULT_INSTANCE;
+
+        static {
+            DEFAULT_INSTANCE = new com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.DatabaseRecord();
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.DatabaseRecord getDefaultInstance() {
+            return DEFAULT_INSTANCE;
+        }
+
+        private static final com.google.protobuf.Parser<DatabaseRecord>
+                PARSER = new com.google.protobuf.AbstractParser<DatabaseRecord>() {
+            @java.lang.Override
+            public DatabaseRecord parsePartialFrom(
+                    com.google.protobuf.CodedInputStream input,
+                    com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                    throws com.google.protobuf.InvalidProtocolBufferException {
+                return new DatabaseRecord(input, extensionRegistry);
+            }
+        };
+
+        public static com.google.protobuf.Parser<DatabaseRecord> parser() {
+            return PARSER;
+        }
+
+        @java.lang.Override
+        public com.google.protobuf.Parser<DatabaseRecord> getParserForType() {
+            return PARSER;
+        }
+
+        @java.lang.Override
+        public com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.DatabaseRecord getDefaultInstanceForType() {
+            return DEFAULT_INSTANCE;
+        }
+
     }
 
-    public static final int VERSION_FIELD_NUMBER = 1;
-    private int version_;
-    /**
-     * <code>uint32 version = 1;</code>
-     */
-    public int getVersion() {
-      return version_;
+    public interface EnrollmentRequestOrBuilder extends
+            // @@protoc_insertion_point(interface_extends:build.EnrollmentRequest)
+            com.google.protobuf.MessageOrBuilder {
+
+        /**
+         * <code>uint32 version = 1;</code>
+         */
+        int getVersion();
     }
 
-    private byte memoizedIsInitialized = -1;
-    @java.lang.Override
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized == 1) return true;
-      if (isInitialized == 0) return false;
-
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    @java.lang.Override
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      if (version_ != 0) {
-        output.writeUInt32(1, version_);
-      }
-      unknownFields.writeTo(output);
-    }
-
-    @java.lang.Override
-    public int getSerializedSize() {
-      int size = memoizedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      if (version_ != 0) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeUInt32Size(1, version_);
-      }
-      size += unknownFields.getSerializedSize();
-      memoizedSize = size;
-      return size;
-    }
-
-    @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest)) {
-        return super.equals(obj);
-      }
-      com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest other = (com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest) obj;
-
-      boolean result = true;
-      result = result && (getVersion()
-          == other.getVersion());
-      result = result && unknownFields.equals(other.unknownFields);
-      return result;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + VERSION_FIELD_NUMBER;
-      hash = (53 * hash) + getVersion();
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
-    }
-
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest parseFrom(
-        java.nio.ByteBuffer data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest parseFrom(
-        java.nio.ByteBuffer data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
-    }
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-
-    @java.lang.Override
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
-    public static Builder newBuilder(com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-    }
-    @java.lang.Override
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
     /**
      * Protobuf type {@code build.EnrollmentRequest}
      */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:build.EnrollmentRequest)
-        com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequestOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.internal_static_build_EnrollmentRequest_descriptor;
-      }
+    public static final class EnrollmentRequest extends
+            com.google.protobuf.GeneratedMessageV3 implements
+            // @@protoc_insertion_point(message_implements:build.EnrollmentRequest)
+            EnrollmentRequestOrBuilder {
+        private static final long serialVersionUID = 0L;
 
-      @java.lang.Override
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.internal_static_build_EnrollmentRequest_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest.class, com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest.Builder.class);
-      }
-
-      // Construct using com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
+        // Use EnrollmentRequest.newBuilder() to construct.
+        private EnrollmentRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+            super(builder);
         }
-      }
-      @java.lang.Override
-      public Builder clear() {
-        super.clear();
-        version_ = 0;
 
-        return this;
-      }
-
-      @java.lang.Override
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.internal_static_build_EnrollmentRequest_descriptor;
-      }
-
-      @java.lang.Override
-      public com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest getDefaultInstanceForType() {
-        return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest.getDefaultInstance();
-      }
-
-      @java.lang.Override
-      public com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest build() {
-        com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
+        private EnrollmentRequest() {
+            version_ = 0;
         }
-        return result;
-      }
 
-      @java.lang.Override
-      public com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest buildPartial() {
-        com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest result = new com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest(this);
-        result.version_ = version_;
-        onBuilt();
-        return result;
-      }
-
-      @java.lang.Override
-      public Builder clone() {
-        return (Builder) super.clone();
-      }
-      @java.lang.Override
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return (Builder) super.setField(field, value);
-      }
-      @java.lang.Override
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return (Builder) super.clearField(field);
-      }
-      @java.lang.Override
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return (Builder) super.clearOneof(oneof);
-      }
-      @java.lang.Override
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
-        return (Builder) super.setRepeatedField(field, index, value);
-      }
-      @java.lang.Override
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return (Builder) super.addRepeatedField(field, value);
-      }
-      @java.lang.Override
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest) {
-          return mergeFrom((com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
+        @java.lang.Override
+        public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+            return this.unknownFields;
         }
-      }
 
-      public Builder mergeFrom(com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest other) {
-        if (other == com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest.getDefaultInstance()) return this;
-        if (other.getVersion() != 0) {
-          setVersion(other.getVersion());
-        }
-        this.mergeUnknownFields(other.unknownFields);
-        onChanged();
-        return this;
-      }
-
-      @java.lang.Override
-      public final boolean isInitialized() {
-        return true;
-      }
-
-      @java.lang.Override
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
-        return this;
-      }
-
-      private int version_ ;
-      /**
-       * <code>uint32 version = 1;</code>
-       */
-      public int getVersion() {
-        return version_;
-      }
-      /**
-       * <code>uint32 version = 1;</code>
-       */
-      public Builder setVersion(int value) {
-        
-        version_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>uint32 version = 1;</code>
-       */
-      public Builder clearVersion() {
-        
-        version_ = 0;
-        onChanged();
-        return this;
-      }
-      @java.lang.Override
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFieldsProto3(unknownFields);
-      }
-
-      @java.lang.Override
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.mergeUnknownFields(unknownFields);
-      }
-
-
-      // @@protoc_insertion_point(builder_scope:build.EnrollmentRequest)
-    }
-
-    // @@protoc_insertion_point(class_scope:build.EnrollmentRequest)
-    private static final com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest DEFAULT_INSTANCE;
-    static {
-      DEFAULT_INSTANCE = new com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest();
-    }
-
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    private static final com.google.protobuf.Parser<EnrollmentRequest>
-        PARSER = new com.google.protobuf.AbstractParser<EnrollmentRequest>() {
-      @java.lang.Override
-      public EnrollmentRequest parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return new EnrollmentRequest(input, extensionRegistry);
-      }
-    };
-
-    public static com.google.protobuf.Parser<EnrollmentRequest> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<EnrollmentRequest> getParserForType() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
-  }
-
-  public interface EnrollmentResponseOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:build.EnrollmentResponse)
-      com.google.protobuf.MessageOrBuilder {
-
-    /**
-     * <code>uint32 version = 1;</code>
-     */
-    int getVersion();
-
-    /**
-     * <code>bytes response = 2;</code>
-     */
-    com.google.protobuf.ByteString getResponse();
-  }
-  /**
-   * Protobuf type {@code build.EnrollmentResponse}
-   */
-  public  static final class EnrollmentResponse extends
-      com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:build.EnrollmentResponse)
-      EnrollmentResponseOrBuilder {
-  private static final long serialVersionUID = 0L;
-    // Use EnrollmentResponse.newBuilder() to construct.
-    private EnrollmentResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
-      super(builder);
-    }
-    private EnrollmentResponse() {
-      version_ = 0;
-      response_ = com.google.protobuf.ByteString.EMPTY;
-    }
-
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return this.unknownFields;
-    }
-    private EnrollmentResponse(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
-      int mutable_bitField0_ = 0;
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            case 8: {
-
-              version_ = input.readUInt32();
-              break;
+        private EnrollmentRequest(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            this();
+            if (extensionRegistry == null) {
+                throw new java.lang.NullPointerException();
             }
-            case 18: {
+            int mutable_bitField0_ = 0;
+            com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+                    com.google.protobuf.UnknownFieldSet.newBuilder();
+            try {
+                boolean done = false;
+                while (!done) {
+                    int tag = input.readTag();
+                    switch (tag) {
+                        case 0:
+                            done = true;
+                            break;
+                        case 8: {
 
-              response_ = input.readBytes();
-              break;
+                            version_ = input.readUInt32();
+                            break;
+                        }
+                        default: {
+                            if (!parseUnknownFieldProto3(
+                                    input, unknownFields, extensionRegistry, tag)) {
+                                done = true;
+                            }
+                            break;
+                        }
+                    }
+                }
+            } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                throw e.setUnfinishedMessage(this);
+            } catch (java.io.IOException e) {
+                throw new com.google.protobuf.InvalidProtocolBufferException(
+                        e).setUnfinishedMessage(this);
+            } finally {
+                this.unknownFields = unknownFields.build();
+                makeExtensionsImmutable();
             }
-            default: {
-              if (!parseUnknownFieldProto3(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-          }
         }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
+
+        public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.internal_static_build_EnrollmentResponse_descriptor;
-    }
+            return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.internal_static_build_EnrollmentRequest_descriptor;
+        }
 
-    @java.lang.Override
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        @java.lang.Override
+        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.internal_static_build_EnrollmentResponse_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse.class, com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse.Builder.class);
+            return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.internal_static_build_EnrollmentRequest_fieldAccessorTable
+                    .ensureFieldAccessorsInitialized(
+                            com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest.class, com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest.Builder.class);
+        }
+
+        public static final int VERSION_FIELD_NUMBER = 1;
+        private int version_;
+
+        /**
+         * <code>uint32 version = 1;</code>
+         */
+        public int getVersion() {
+            return version_;
+        }
+
+        private byte memoizedIsInitialized = -1;
+
+        @java.lang.Override
+        public final boolean isInitialized() {
+            byte isInitialized = memoizedIsInitialized;
+            if (isInitialized == 1) return true;
+            if (isInitialized == 0) return false;
+
+            memoizedIsInitialized = 1;
+            return true;
+        }
+
+        @java.lang.Override
+        public void writeTo(com.google.protobuf.CodedOutputStream output)
+                throws java.io.IOException {
+            if (version_ != 0) {
+                output.writeUInt32(1, version_);
+            }
+            unknownFields.writeTo(output);
+        }
+
+        @java.lang.Override
+        public int getSerializedSize() {
+            int size = memoizedSize;
+            if (size != -1) return size;
+
+            size = 0;
+            if (version_ != 0) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeUInt32Size(1, version_);
+            }
+            size += unknownFields.getSerializedSize();
+            memoizedSize = size;
+            return size;
+        }
+
+        @java.lang.Override
+        public boolean equals(final java.lang.Object obj) {
+            if (obj == this) {
+                return true;
+            }
+            if (!(obj instanceof com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest)) {
+                return super.equals(obj);
+            }
+            com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest other = (com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest) obj;
+
+            boolean result = true;
+            result = result && (getVersion()
+                    == other.getVersion());
+            result = result && unknownFields.equals(other.unknownFields);
+            return result;
+        }
+
+        @java.lang.Override
+        public int hashCode() {
+            if (memoizedHashCode != 0) {
+                return memoizedHashCode;
+            }
+            int hash = 41;
+            hash = (19 * hash) + getDescriptor().hashCode();
+            hash = (37 * hash) + VERSION_FIELD_NUMBER;
+            hash = (53 * hash) + getVersion();
+            hash = (29 * hash) + unknownFields.hashCode();
+            memoizedHashCode = hash;
+            return hash;
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest parseFrom(
+                java.nio.ByteBuffer data)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest parseFrom(
+                java.nio.ByteBuffer data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data, extensionRegistry);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest parseFrom(
+                com.google.protobuf.ByteString data)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest parseFrom(
+                com.google.protobuf.ByteString data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data, extensionRegistry);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest parseFrom(byte[] data)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest parseFrom(
+                byte[] data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data, extensionRegistry);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest parseFrom(java.io.InputStream input)
+                throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3
+                    .parseWithIOException(PARSER, input);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest parseFrom(
+                java.io.InputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3
+                    .parseWithIOException(PARSER, input, extensionRegistry);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest parseDelimitedFrom(java.io.InputStream input)
+                throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3
+                    .parseDelimitedWithIOException(PARSER, input);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest parseDelimitedFrom(
+                java.io.InputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3
+                    .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest parseFrom(
+                com.google.protobuf.CodedInputStream input)
+                throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3
+                    .parseWithIOException(PARSER, input);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest parseFrom(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3
+                    .parseWithIOException(PARSER, input, extensionRegistry);
+        }
+
+        @java.lang.Override
+        public Builder newBuilderForType() {
+            return newBuilder();
+        }
+
+        public static Builder newBuilder() {
+            return DEFAULT_INSTANCE.toBuilder();
+        }
+
+        public static Builder newBuilder(com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest prototype) {
+            return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+        }
+
+        @java.lang.Override
+        public Builder toBuilder() {
+            return this == DEFAULT_INSTANCE
+                    ? new Builder() : new Builder().mergeFrom(this);
+        }
+
+        @java.lang.Override
+        protected Builder newBuilderForType(
+                com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+            Builder builder = new Builder(parent);
+            return builder;
+        }
+
+        /**
+         * Protobuf type {@code build.EnrollmentRequest}
+         */
+        public static final class Builder extends
+                com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+                // @@protoc_insertion_point(builder_implements:build.EnrollmentRequest)
+                com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequestOrBuilder {
+            public static final com.google.protobuf.Descriptors.Descriptor
+            getDescriptor() {
+                return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.internal_static_build_EnrollmentRequest_descriptor;
+            }
+
+            @java.lang.Override
+            protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+            internalGetFieldAccessorTable() {
+                return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.internal_static_build_EnrollmentRequest_fieldAccessorTable
+                        .ensureFieldAccessorsInitialized(
+                                com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest.class, com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest.Builder.class);
+            }
+
+            // Construct using com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest.newBuilder()
+            private Builder() {
+                maybeForceBuilderInitialization();
+            }
+
+            private Builder(
+                    com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+                super(parent);
+                maybeForceBuilderInitialization();
+            }
+
+            private void maybeForceBuilderInitialization() {
+                if (com.google.protobuf.GeneratedMessageV3
+                        .alwaysUseFieldBuilders) {
+                }
+            }
+
+            @java.lang.Override
+            public Builder clear() {
+                super.clear();
+                version_ = 0;
+
+                return this;
+            }
+
+            @java.lang.Override
+            public com.google.protobuf.Descriptors.Descriptor
+            getDescriptorForType() {
+                return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.internal_static_build_EnrollmentRequest_descriptor;
+            }
+
+            @java.lang.Override
+            public com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest getDefaultInstanceForType() {
+                return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest.getDefaultInstance();
+            }
+
+            @java.lang.Override
+            public com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest build() {
+                com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest result = buildPartial();
+                if (!result.isInitialized()) {
+                    throw newUninitializedMessageException(result);
+                }
+                return result;
+            }
+
+            @java.lang.Override
+            public com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest buildPartial() {
+                com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest result = new com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest(this);
+                result.version_ = version_;
+                onBuilt();
+                return result;
+            }
+
+            @java.lang.Override
+            public Builder clone() {
+                return (Builder) super.clone();
+            }
+
+            @java.lang.Override
+            public Builder setField(
+                    com.google.protobuf.Descriptors.FieldDescriptor field,
+                    java.lang.Object value) {
+                return (Builder) super.setField(field, value);
+            }
+
+            @java.lang.Override
+            public Builder clearField(
+                    com.google.protobuf.Descriptors.FieldDescriptor field) {
+                return (Builder) super.clearField(field);
+            }
+
+            @java.lang.Override
+            public Builder clearOneof(
+                    com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+                return (Builder) super.clearOneof(oneof);
+            }
+
+            @java.lang.Override
+            public Builder setRepeatedField(
+                    com.google.protobuf.Descriptors.FieldDescriptor field,
+                    int index, java.lang.Object value) {
+                return (Builder) super.setRepeatedField(field, index, value);
+            }
+
+            @java.lang.Override
+            public Builder addRepeatedField(
+                    com.google.protobuf.Descriptors.FieldDescriptor field,
+                    java.lang.Object value) {
+                return (Builder) super.addRepeatedField(field, value);
+            }
+
+            @java.lang.Override
+            public Builder mergeFrom(com.google.protobuf.Message other) {
+                if (other instanceof com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest) {
+                    return mergeFrom((com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest) other);
+                } else {
+                    super.mergeFrom(other);
+                    return this;
+                }
+            }
+
+            public Builder mergeFrom(com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest other) {
+                if (other == com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest.getDefaultInstance())
+                    return this;
+                if (other.getVersion() != 0) {
+                    setVersion(other.getVersion());
+                }
+                this.mergeUnknownFields(other.unknownFields);
+                onChanged();
+                return this;
+            }
+
+            @java.lang.Override
+            public final boolean isInitialized() {
+                return true;
+            }
+
+            @java.lang.Override
+            public Builder mergeFrom(
+                    com.google.protobuf.CodedInputStream input,
+                    com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                    throws java.io.IOException {
+                com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest parsedMessage = null;
+                try {
+                    parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+                } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                    parsedMessage = (com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest) e.getUnfinishedMessage();
+                    throw e.unwrapIOException();
+                } finally {
+                    if (parsedMessage != null) {
+                        mergeFrom(parsedMessage);
+                    }
+                }
+                return this;
+            }
+
+            private int version_;
+
+            /**
+             * <code>uint32 version = 1;</code>
+             */
+            public int getVersion() {
+                return version_;
+            }
+
+            /**
+             * <code>uint32 version = 1;</code>
+             */
+            public Builder setVersion(int value) {
+
+                version_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>uint32 version = 1;</code>
+             */
+            public Builder clearVersion() {
+
+                version_ = 0;
+                onChanged();
+                return this;
+            }
+
+            @java.lang.Override
+            public final Builder setUnknownFields(
+                    final com.google.protobuf.UnknownFieldSet unknownFields) {
+                return super.setUnknownFieldsProto3(unknownFields);
+            }
+
+            @java.lang.Override
+            public final Builder mergeUnknownFields(
+                    final com.google.protobuf.UnknownFieldSet unknownFields) {
+                return super.mergeUnknownFields(unknownFields);
+            }
+
+
+            // @@protoc_insertion_point(builder_scope:build.EnrollmentRequest)
+        }
+
+        // @@protoc_insertion_point(class_scope:build.EnrollmentRequest)
+        private static final com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest DEFAULT_INSTANCE;
+
+        static {
+            DEFAULT_INSTANCE = new com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest();
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest getDefaultInstance() {
+            return DEFAULT_INSTANCE;
+        }
+
+        private static final com.google.protobuf.Parser<EnrollmentRequest>
+                PARSER = new com.google.protobuf.AbstractParser<EnrollmentRequest>() {
+            @java.lang.Override
+            public EnrollmentRequest parsePartialFrom(
+                    com.google.protobuf.CodedInputStream input,
+                    com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                    throws com.google.protobuf.InvalidProtocolBufferException {
+                return new EnrollmentRequest(input, extensionRegistry);
+            }
+        };
+
+        public static com.google.protobuf.Parser<EnrollmentRequest> parser() {
+            return PARSER;
+        }
+
+        @java.lang.Override
+        public com.google.protobuf.Parser<EnrollmentRequest> getParserForType() {
+            return PARSER;
+        }
+
+        @java.lang.Override
+        public com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentRequest getDefaultInstanceForType() {
+            return DEFAULT_INSTANCE;
+        }
+
     }
 
-    public static final int VERSION_FIELD_NUMBER = 1;
-    private int version_;
-    /**
-     * <code>uint32 version = 1;</code>
-     */
-    public int getVersion() {
-      return version_;
+    public interface EnrollmentResponseOrBuilder extends
+            // @@protoc_insertion_point(interface_extends:build.EnrollmentResponse)
+            com.google.protobuf.MessageOrBuilder {
+
+        /**
+         * <code>uint32 version = 1;</code>
+         */
+        int getVersion();
+
+        /**
+         * <code>bytes response = 2;</code>
+         */
+        com.google.protobuf.ByteString getResponse();
     }
 
-    public static final int RESPONSE_FIELD_NUMBER = 2;
-    private com.google.protobuf.ByteString response_;
-    /**
-     * <code>bytes response = 2;</code>
-     */
-    public com.google.protobuf.ByteString getResponse() {
-      return response_;
-    }
-
-    private byte memoizedIsInitialized = -1;
-    @java.lang.Override
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized == 1) return true;
-      if (isInitialized == 0) return false;
-
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    @java.lang.Override
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      if (version_ != 0) {
-        output.writeUInt32(1, version_);
-      }
-      if (!response_.isEmpty()) {
-        output.writeBytes(2, response_);
-      }
-      unknownFields.writeTo(output);
-    }
-
-    @java.lang.Override
-    public int getSerializedSize() {
-      int size = memoizedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      if (version_ != 0) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeUInt32Size(1, version_);
-      }
-      if (!response_.isEmpty()) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(2, response_);
-      }
-      size += unknownFields.getSerializedSize();
-      memoizedSize = size;
-      return size;
-    }
-
-    @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse)) {
-        return super.equals(obj);
-      }
-      com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse other = (com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse) obj;
-
-      boolean result = true;
-      result = result && (getVersion()
-          == other.getVersion());
-      result = result && getResponse()
-          .equals(other.getResponse());
-      result = result && unknownFields.equals(other.unknownFields);
-      return result;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + VERSION_FIELD_NUMBER;
-      hash = (53 * hash) + getVersion();
-      hash = (37 * hash) + RESPONSE_FIELD_NUMBER;
-      hash = (53 * hash) + getResponse().hashCode();
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
-    }
-
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse parseFrom(
-        java.nio.ByteBuffer data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse parseFrom(
-        java.nio.ByteBuffer data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
-    }
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-
-    @java.lang.Override
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
-    public static Builder newBuilder(com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-    }
-    @java.lang.Override
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
     /**
      * Protobuf type {@code build.EnrollmentResponse}
      */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:build.EnrollmentResponse)
-        com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponseOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.internal_static_build_EnrollmentResponse_descriptor;
-      }
+    public static final class EnrollmentResponse extends
+            com.google.protobuf.GeneratedMessageV3 implements
+            // @@protoc_insertion_point(message_implements:build.EnrollmentResponse)
+            EnrollmentResponseOrBuilder {
+        private static final long serialVersionUID = 0L;
 
-      @java.lang.Override
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.internal_static_build_EnrollmentResponse_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse.class, com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse.Builder.class);
-      }
-
-      // Construct using com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
+        // Use EnrollmentResponse.newBuilder() to construct.
+        private EnrollmentResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+            super(builder);
         }
-      }
-      @java.lang.Override
-      public Builder clear() {
-        super.clear();
-        version_ = 0;
 
-        response_ = com.google.protobuf.ByteString.EMPTY;
-
-        return this;
-      }
-
-      @java.lang.Override
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.internal_static_build_EnrollmentResponse_descriptor;
-      }
-
-      @java.lang.Override
-      public com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse getDefaultInstanceForType() {
-        return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse.getDefaultInstance();
-      }
-
-      @java.lang.Override
-      public com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse build() {
-        com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
+        private EnrollmentResponse() {
+            version_ = 0;
+            response_ = com.google.protobuf.ByteString.EMPTY;
         }
-        return result;
-      }
 
-      @java.lang.Override
-      public com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse buildPartial() {
-        com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse result = new com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse(this);
-        result.version_ = version_;
-        result.response_ = response_;
-        onBuilt();
-        return result;
-      }
-
-      @java.lang.Override
-      public Builder clone() {
-        return (Builder) super.clone();
-      }
-      @java.lang.Override
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return (Builder) super.setField(field, value);
-      }
-      @java.lang.Override
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return (Builder) super.clearField(field);
-      }
-      @java.lang.Override
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return (Builder) super.clearOneof(oneof);
-      }
-      @java.lang.Override
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
-        return (Builder) super.setRepeatedField(field, index, value);
-      }
-      @java.lang.Override
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return (Builder) super.addRepeatedField(field, value);
-      }
-      @java.lang.Override
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse) {
-          return mergeFrom((com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
+        @java.lang.Override
+        public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+            return this.unknownFields;
         }
-      }
 
-      public Builder mergeFrom(com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse other) {
-        if (other == com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse.getDefaultInstance()) return this;
-        if (other.getVersion() != 0) {
-          setVersion(other.getVersion());
-        }
-        if (other.getResponse() != com.google.protobuf.ByteString.EMPTY) {
-          setResponse(other.getResponse());
-        }
-        this.mergeUnknownFields(other.unknownFields);
-        onChanged();
-        return this;
-      }
-
-      @java.lang.Override
-      public final boolean isInitialized() {
-        return true;
-      }
-
-      @java.lang.Override
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
-        return this;
-      }
-
-      private int version_ ;
-      /**
-       * <code>uint32 version = 1;</code>
-       */
-      public int getVersion() {
-        return version_;
-      }
-      /**
-       * <code>uint32 version = 1;</code>
-       */
-      public Builder setVersion(int value) {
-        
-        version_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>uint32 version = 1;</code>
-       */
-      public Builder clearVersion() {
-        
-        version_ = 0;
-        onChanged();
-        return this;
-      }
-
-      private com.google.protobuf.ByteString response_ = com.google.protobuf.ByteString.EMPTY;
-      /**
-       * <code>bytes response = 2;</code>
-       */
-      public com.google.protobuf.ByteString getResponse() {
-        return response_;
-      }
-      /**
-       * <code>bytes response = 2;</code>
-       */
-      public Builder setResponse(com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        response_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>bytes response = 2;</code>
-       */
-      public Builder clearResponse() {
-        
-        response_ = getDefaultInstance().getResponse();
-        onChanged();
-        return this;
-      }
-      @java.lang.Override
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFieldsProto3(unknownFields);
-      }
-
-      @java.lang.Override
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.mergeUnknownFields(unknownFields);
-      }
-
-
-      // @@protoc_insertion_point(builder_scope:build.EnrollmentResponse)
-    }
-
-    // @@protoc_insertion_point(class_scope:build.EnrollmentResponse)
-    private static final com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse DEFAULT_INSTANCE;
-    static {
-      DEFAULT_INSTANCE = new com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse();
-    }
-
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    private static final com.google.protobuf.Parser<EnrollmentResponse>
-        PARSER = new com.google.protobuf.AbstractParser<EnrollmentResponse>() {
-      @java.lang.Override
-      public EnrollmentResponse parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return new EnrollmentResponse(input, extensionRegistry);
-      }
-    };
-
-    public static com.google.protobuf.Parser<EnrollmentResponse> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<EnrollmentResponse> getParserForType() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
-  }
-
-  public interface VerifyPasswordRequestOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:build.VerifyPasswordRequest)
-      com.google.protobuf.MessageOrBuilder {
-
-    /**
-     * <code>uint32 version = 1;</code>
-     */
-    int getVersion();
-
-    /**
-     * <code>bytes request = 2;</code>
-     */
-    com.google.protobuf.ByteString getRequest();
-  }
-  /**
-   * Protobuf type {@code build.VerifyPasswordRequest}
-   */
-  public  static final class VerifyPasswordRequest extends
-      com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:build.VerifyPasswordRequest)
-      VerifyPasswordRequestOrBuilder {
-  private static final long serialVersionUID = 0L;
-    // Use VerifyPasswordRequest.newBuilder() to construct.
-    private VerifyPasswordRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
-      super(builder);
-    }
-    private VerifyPasswordRequest() {
-      version_ = 0;
-      request_ = com.google.protobuf.ByteString.EMPTY;
-    }
-
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return this.unknownFields;
-    }
-    private VerifyPasswordRequest(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
-      int mutable_bitField0_ = 0;
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            case 8: {
-
-              version_ = input.readUInt32();
-              break;
+        private EnrollmentResponse(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            this();
+            if (extensionRegistry == null) {
+                throw new java.lang.NullPointerException();
             }
-            case 18: {
+            int mutable_bitField0_ = 0;
+            com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+                    com.google.protobuf.UnknownFieldSet.newBuilder();
+            try {
+                boolean done = false;
+                while (!done) {
+                    int tag = input.readTag();
+                    switch (tag) {
+                        case 0:
+                            done = true;
+                            break;
+                        case 8: {
 
-              request_ = input.readBytes();
-              break;
+                            version_ = input.readUInt32();
+                            break;
+                        }
+                        case 18: {
+
+                            response_ = input.readBytes();
+                            break;
+                        }
+                        default: {
+                            if (!parseUnknownFieldProto3(
+                                    input, unknownFields, extensionRegistry, tag)) {
+                                done = true;
+                            }
+                            break;
+                        }
+                    }
+                }
+            } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                throw e.setUnfinishedMessage(this);
+            } catch (java.io.IOException e) {
+                throw new com.google.protobuf.InvalidProtocolBufferException(
+                        e).setUnfinishedMessage(this);
+            } finally {
+                this.unknownFields = unknownFields.build();
+                makeExtensionsImmutable();
             }
-            default: {
-              if (!parseUnknownFieldProto3(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-          }
         }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
+
+        public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.internal_static_build_VerifyPasswordRequest_descriptor;
-    }
+            return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.internal_static_build_EnrollmentResponse_descriptor;
+        }
 
-    @java.lang.Override
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        @java.lang.Override
+        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.internal_static_build_VerifyPasswordRequest_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest.class, com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest.Builder.class);
+            return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.internal_static_build_EnrollmentResponse_fieldAccessorTable
+                    .ensureFieldAccessorsInitialized(
+                            com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse.class, com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse.Builder.class);
+        }
+
+        public static final int VERSION_FIELD_NUMBER = 1;
+        private int version_;
+
+        /**
+         * <code>uint32 version = 1;</code>
+         */
+        public int getVersion() {
+            return version_;
+        }
+
+        public static final int RESPONSE_FIELD_NUMBER = 2;
+        private com.google.protobuf.ByteString response_;
+
+        /**
+         * <code>bytes response = 2;</code>
+         */
+        public com.google.protobuf.ByteString getResponse() {
+            return response_;
+        }
+
+        private byte memoizedIsInitialized = -1;
+
+        @java.lang.Override
+        public final boolean isInitialized() {
+            byte isInitialized = memoizedIsInitialized;
+            if (isInitialized == 1) return true;
+            if (isInitialized == 0) return false;
+
+            memoizedIsInitialized = 1;
+            return true;
+        }
+
+        @java.lang.Override
+        public void writeTo(com.google.protobuf.CodedOutputStream output)
+                throws java.io.IOException {
+            if (version_ != 0) {
+                output.writeUInt32(1, version_);
+            }
+            if (!response_.isEmpty()) {
+                output.writeBytes(2, response_);
+            }
+            unknownFields.writeTo(output);
+        }
+
+        @java.lang.Override
+        public int getSerializedSize() {
+            int size = memoizedSize;
+            if (size != -1) return size;
+
+            size = 0;
+            if (version_ != 0) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeUInt32Size(1, version_);
+            }
+            if (!response_.isEmpty()) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeBytesSize(2, response_);
+            }
+            size += unknownFields.getSerializedSize();
+            memoizedSize = size;
+            return size;
+        }
+
+        @java.lang.Override
+        public boolean equals(final java.lang.Object obj) {
+            if (obj == this) {
+                return true;
+            }
+            if (!(obj instanceof com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse)) {
+                return super.equals(obj);
+            }
+            com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse other = (com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse) obj;
+
+            boolean result = true;
+            result = result && (getVersion()
+                    == other.getVersion());
+            result = result && getResponse()
+                    .equals(other.getResponse());
+            result = result && unknownFields.equals(other.unknownFields);
+            return result;
+        }
+
+        @java.lang.Override
+        public int hashCode() {
+            if (memoizedHashCode != 0) {
+                return memoizedHashCode;
+            }
+            int hash = 41;
+            hash = (19 * hash) + getDescriptor().hashCode();
+            hash = (37 * hash) + VERSION_FIELD_NUMBER;
+            hash = (53 * hash) + getVersion();
+            hash = (37 * hash) + RESPONSE_FIELD_NUMBER;
+            hash = (53 * hash) + getResponse().hashCode();
+            hash = (29 * hash) + unknownFields.hashCode();
+            memoizedHashCode = hash;
+            return hash;
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse parseFrom(
+                java.nio.ByteBuffer data)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse parseFrom(
+                java.nio.ByteBuffer data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data, extensionRegistry);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse parseFrom(
+                com.google.protobuf.ByteString data)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse parseFrom(
+                com.google.protobuf.ByteString data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data, extensionRegistry);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse parseFrom(byte[] data)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse parseFrom(
+                byte[] data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data, extensionRegistry);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse parseFrom(java.io.InputStream input)
+                throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3
+                    .parseWithIOException(PARSER, input);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse parseFrom(
+                java.io.InputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3
+                    .parseWithIOException(PARSER, input, extensionRegistry);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse parseDelimitedFrom(java.io.InputStream input)
+                throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3
+                    .parseDelimitedWithIOException(PARSER, input);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse parseDelimitedFrom(
+                java.io.InputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3
+                    .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse parseFrom(
+                com.google.protobuf.CodedInputStream input)
+                throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3
+                    .parseWithIOException(PARSER, input);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse parseFrom(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3
+                    .parseWithIOException(PARSER, input, extensionRegistry);
+        }
+
+        @java.lang.Override
+        public Builder newBuilderForType() {
+            return newBuilder();
+        }
+
+        public static Builder newBuilder() {
+            return DEFAULT_INSTANCE.toBuilder();
+        }
+
+        public static Builder newBuilder(com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse prototype) {
+            return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+        }
+
+        @java.lang.Override
+        public Builder toBuilder() {
+            return this == DEFAULT_INSTANCE
+                    ? new Builder() : new Builder().mergeFrom(this);
+        }
+
+        @java.lang.Override
+        protected Builder newBuilderForType(
+                com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+            Builder builder = new Builder(parent);
+            return builder;
+        }
+
+        /**
+         * Protobuf type {@code build.EnrollmentResponse}
+         */
+        public static final class Builder extends
+                com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+                // @@protoc_insertion_point(builder_implements:build.EnrollmentResponse)
+                com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponseOrBuilder {
+            public static final com.google.protobuf.Descriptors.Descriptor
+            getDescriptor() {
+                return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.internal_static_build_EnrollmentResponse_descriptor;
+            }
+
+            @java.lang.Override
+            protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+            internalGetFieldAccessorTable() {
+                return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.internal_static_build_EnrollmentResponse_fieldAccessorTable
+                        .ensureFieldAccessorsInitialized(
+                                com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse.class, com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse.Builder.class);
+            }
+
+            // Construct using com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse.newBuilder()
+            private Builder() {
+                maybeForceBuilderInitialization();
+            }
+
+            private Builder(
+                    com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+                super(parent);
+                maybeForceBuilderInitialization();
+            }
+
+            private void maybeForceBuilderInitialization() {
+                if (com.google.protobuf.GeneratedMessageV3
+                        .alwaysUseFieldBuilders) {
+                }
+            }
+
+            @java.lang.Override
+            public Builder clear() {
+                super.clear();
+                version_ = 0;
+
+                response_ = com.google.protobuf.ByteString.EMPTY;
+
+                return this;
+            }
+
+            @java.lang.Override
+            public com.google.protobuf.Descriptors.Descriptor
+            getDescriptorForType() {
+                return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.internal_static_build_EnrollmentResponse_descriptor;
+            }
+
+            @java.lang.Override
+            public com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse getDefaultInstanceForType() {
+                return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse.getDefaultInstance();
+            }
+
+            @java.lang.Override
+            public com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse build() {
+                com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse result = buildPartial();
+                if (!result.isInitialized()) {
+                    throw newUninitializedMessageException(result);
+                }
+                return result;
+            }
+
+            @java.lang.Override
+            public com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse buildPartial() {
+                com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse result = new com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse(this);
+                result.version_ = version_;
+                result.response_ = response_;
+                onBuilt();
+                return result;
+            }
+
+            @java.lang.Override
+            public Builder clone() {
+                return (Builder) super.clone();
+            }
+
+            @java.lang.Override
+            public Builder setField(
+                    com.google.protobuf.Descriptors.FieldDescriptor field,
+                    java.lang.Object value) {
+                return (Builder) super.setField(field, value);
+            }
+
+            @java.lang.Override
+            public Builder clearField(
+                    com.google.protobuf.Descriptors.FieldDescriptor field) {
+                return (Builder) super.clearField(field);
+            }
+
+            @java.lang.Override
+            public Builder clearOneof(
+                    com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+                return (Builder) super.clearOneof(oneof);
+            }
+
+            @java.lang.Override
+            public Builder setRepeatedField(
+                    com.google.protobuf.Descriptors.FieldDescriptor field,
+                    int index, java.lang.Object value) {
+                return (Builder) super.setRepeatedField(field, index, value);
+            }
+
+            @java.lang.Override
+            public Builder addRepeatedField(
+                    com.google.protobuf.Descriptors.FieldDescriptor field,
+                    java.lang.Object value) {
+                return (Builder) super.addRepeatedField(field, value);
+            }
+
+            @java.lang.Override
+            public Builder mergeFrom(com.google.protobuf.Message other) {
+                if (other instanceof com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse) {
+                    return mergeFrom((com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse) other);
+                } else {
+                    super.mergeFrom(other);
+                    return this;
+                }
+            }
+
+            public Builder mergeFrom(com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse other) {
+                if (other == com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse.getDefaultInstance())
+                    return this;
+                if (other.getVersion() != 0) {
+                    setVersion(other.getVersion());
+                }
+                if (other.getResponse() != com.google.protobuf.ByteString.EMPTY) {
+                    setResponse(other.getResponse());
+                }
+                this.mergeUnknownFields(other.unknownFields);
+                onChanged();
+                return this;
+            }
+
+            @java.lang.Override
+            public final boolean isInitialized() {
+                return true;
+            }
+
+            @java.lang.Override
+            public Builder mergeFrom(
+                    com.google.protobuf.CodedInputStream input,
+                    com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                    throws java.io.IOException {
+                com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse parsedMessage = null;
+                try {
+                    parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+                } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                    parsedMessage = (com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse) e.getUnfinishedMessage();
+                    throw e.unwrapIOException();
+                } finally {
+                    if (parsedMessage != null) {
+                        mergeFrom(parsedMessage);
+                    }
+                }
+                return this;
+            }
+
+            private int version_;
+
+            /**
+             * <code>uint32 version = 1;</code>
+             */
+            public int getVersion() {
+                return version_;
+            }
+
+            /**
+             * <code>uint32 version = 1;</code>
+             */
+            public Builder setVersion(int value) {
+
+                version_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>uint32 version = 1;</code>
+             */
+            public Builder clearVersion() {
+
+                version_ = 0;
+                onChanged();
+                return this;
+            }
+
+            private com.google.protobuf.ByteString response_ = com.google.protobuf.ByteString.EMPTY;
+
+            /**
+             * <code>bytes response = 2;</code>
+             */
+            public com.google.protobuf.ByteString getResponse() {
+                return response_;
+            }
+
+            /**
+             * <code>bytes response = 2;</code>
+             */
+            public Builder setResponse(com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+
+                response_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>bytes response = 2;</code>
+             */
+            public Builder clearResponse() {
+
+                response_ = getDefaultInstance().getResponse();
+                onChanged();
+                return this;
+            }
+
+            @java.lang.Override
+            public final Builder setUnknownFields(
+                    final com.google.protobuf.UnknownFieldSet unknownFields) {
+                return super.setUnknownFieldsProto3(unknownFields);
+            }
+
+            @java.lang.Override
+            public final Builder mergeUnknownFields(
+                    final com.google.protobuf.UnknownFieldSet unknownFields) {
+                return super.mergeUnknownFields(unknownFields);
+            }
+
+
+            // @@protoc_insertion_point(builder_scope:build.EnrollmentResponse)
+        }
+
+        // @@protoc_insertion_point(class_scope:build.EnrollmentResponse)
+        private static final com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse DEFAULT_INSTANCE;
+
+        static {
+            DEFAULT_INSTANCE = new com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse();
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse getDefaultInstance() {
+            return DEFAULT_INSTANCE;
+        }
+
+        private static final com.google.protobuf.Parser<EnrollmentResponse>
+                PARSER = new com.google.protobuf.AbstractParser<EnrollmentResponse>() {
+            @java.lang.Override
+            public EnrollmentResponse parsePartialFrom(
+                    com.google.protobuf.CodedInputStream input,
+                    com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                    throws com.google.protobuf.InvalidProtocolBufferException {
+                return new EnrollmentResponse(input, extensionRegistry);
+            }
+        };
+
+        public static com.google.protobuf.Parser<EnrollmentResponse> parser() {
+            return PARSER;
+        }
+
+        @java.lang.Override
+        public com.google.protobuf.Parser<EnrollmentResponse> getParserForType() {
+            return PARSER;
+        }
+
+        @java.lang.Override
+        public com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.EnrollmentResponse getDefaultInstanceForType() {
+            return DEFAULT_INSTANCE;
+        }
+
     }
 
-    public static final int VERSION_FIELD_NUMBER = 1;
-    private int version_;
-    /**
-     * <code>uint32 version = 1;</code>
-     */
-    public int getVersion() {
-      return version_;
+    public interface VerifyPasswordRequestOrBuilder extends
+            // @@protoc_insertion_point(interface_extends:build.VerifyPasswordRequest)
+            com.google.protobuf.MessageOrBuilder {
+
+        /**
+         * <code>uint32 version = 1;</code>
+         */
+        int getVersion();
+
+        /**
+         * <code>bytes request = 2;</code>
+         */
+        com.google.protobuf.ByteString getRequest();
     }
 
-    public static final int REQUEST_FIELD_NUMBER = 2;
-    private com.google.protobuf.ByteString request_;
-    /**
-     * <code>bytes request = 2;</code>
-     */
-    public com.google.protobuf.ByteString getRequest() {
-      return request_;
-    }
-
-    private byte memoizedIsInitialized = -1;
-    @java.lang.Override
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized == 1) return true;
-      if (isInitialized == 0) return false;
-
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    @java.lang.Override
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      if (version_ != 0) {
-        output.writeUInt32(1, version_);
-      }
-      if (!request_.isEmpty()) {
-        output.writeBytes(2, request_);
-      }
-      unknownFields.writeTo(output);
-    }
-
-    @java.lang.Override
-    public int getSerializedSize() {
-      int size = memoizedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      if (version_ != 0) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeUInt32Size(1, version_);
-      }
-      if (!request_.isEmpty()) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(2, request_);
-      }
-      size += unknownFields.getSerializedSize();
-      memoizedSize = size;
-      return size;
-    }
-
-    @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest)) {
-        return super.equals(obj);
-      }
-      com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest other = (com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest) obj;
-
-      boolean result = true;
-      result = result && (getVersion()
-          == other.getVersion());
-      result = result && getRequest()
-          .equals(other.getRequest());
-      result = result && unknownFields.equals(other.unknownFields);
-      return result;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + VERSION_FIELD_NUMBER;
-      hash = (53 * hash) + getVersion();
-      hash = (37 * hash) + REQUEST_FIELD_NUMBER;
-      hash = (53 * hash) + getRequest().hashCode();
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
-    }
-
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest parseFrom(
-        java.nio.ByteBuffer data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest parseFrom(
-        java.nio.ByteBuffer data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
-    }
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-
-    @java.lang.Override
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
-    public static Builder newBuilder(com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-    }
-    @java.lang.Override
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
     /**
      * Protobuf type {@code build.VerifyPasswordRequest}
      */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:build.VerifyPasswordRequest)
-        com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequestOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.internal_static_build_VerifyPasswordRequest_descriptor;
-      }
+    public static final class VerifyPasswordRequest extends
+            com.google.protobuf.GeneratedMessageV3 implements
+            // @@protoc_insertion_point(message_implements:build.VerifyPasswordRequest)
+            VerifyPasswordRequestOrBuilder {
+        private static final long serialVersionUID = 0L;
 
-      @java.lang.Override
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.internal_static_build_VerifyPasswordRequest_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest.class, com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest.Builder.class);
-      }
-
-      // Construct using com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
+        // Use VerifyPasswordRequest.newBuilder() to construct.
+        private VerifyPasswordRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+            super(builder);
         }
-      }
-      @java.lang.Override
-      public Builder clear() {
-        super.clear();
-        version_ = 0;
 
-        request_ = com.google.protobuf.ByteString.EMPTY;
-
-        return this;
-      }
-
-      @java.lang.Override
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.internal_static_build_VerifyPasswordRequest_descriptor;
-      }
-
-      @java.lang.Override
-      public com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest getDefaultInstanceForType() {
-        return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest.getDefaultInstance();
-      }
-
-      @java.lang.Override
-      public com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest build() {
-        com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
+        private VerifyPasswordRequest() {
+            version_ = 0;
+            request_ = com.google.protobuf.ByteString.EMPTY;
         }
-        return result;
-      }
 
-      @java.lang.Override
-      public com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest buildPartial() {
-        com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest result = new com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest(this);
-        result.version_ = version_;
-        result.request_ = request_;
-        onBuilt();
-        return result;
-      }
-
-      @java.lang.Override
-      public Builder clone() {
-        return (Builder) super.clone();
-      }
-      @java.lang.Override
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return (Builder) super.setField(field, value);
-      }
-      @java.lang.Override
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return (Builder) super.clearField(field);
-      }
-      @java.lang.Override
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return (Builder) super.clearOneof(oneof);
-      }
-      @java.lang.Override
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
-        return (Builder) super.setRepeatedField(field, index, value);
-      }
-      @java.lang.Override
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return (Builder) super.addRepeatedField(field, value);
-      }
-      @java.lang.Override
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest) {
-          return mergeFrom((com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
+        @java.lang.Override
+        public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+            return this.unknownFields;
         }
-      }
 
-      public Builder mergeFrom(com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest other) {
-        if (other == com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest.getDefaultInstance()) return this;
-        if (other.getVersion() != 0) {
-          setVersion(other.getVersion());
-        }
-        if (other.getRequest() != com.google.protobuf.ByteString.EMPTY) {
-          setRequest(other.getRequest());
-        }
-        this.mergeUnknownFields(other.unknownFields);
-        onChanged();
-        return this;
-      }
-
-      @java.lang.Override
-      public final boolean isInitialized() {
-        return true;
-      }
-
-      @java.lang.Override
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
-        return this;
-      }
-
-      private int version_ ;
-      /**
-       * <code>uint32 version = 1;</code>
-       */
-      public int getVersion() {
-        return version_;
-      }
-      /**
-       * <code>uint32 version = 1;</code>
-       */
-      public Builder setVersion(int value) {
-        
-        version_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>uint32 version = 1;</code>
-       */
-      public Builder clearVersion() {
-        
-        version_ = 0;
-        onChanged();
-        return this;
-      }
-
-      private com.google.protobuf.ByteString request_ = com.google.protobuf.ByteString.EMPTY;
-      /**
-       * <code>bytes request = 2;</code>
-       */
-      public com.google.protobuf.ByteString getRequest() {
-        return request_;
-      }
-      /**
-       * <code>bytes request = 2;</code>
-       */
-      public Builder setRequest(com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        request_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>bytes request = 2;</code>
-       */
-      public Builder clearRequest() {
-        
-        request_ = getDefaultInstance().getRequest();
-        onChanged();
-        return this;
-      }
-      @java.lang.Override
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFieldsProto3(unknownFields);
-      }
-
-      @java.lang.Override
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.mergeUnknownFields(unknownFields);
-      }
-
-
-      // @@protoc_insertion_point(builder_scope:build.VerifyPasswordRequest)
-    }
-
-    // @@protoc_insertion_point(class_scope:build.VerifyPasswordRequest)
-    private static final com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest DEFAULT_INSTANCE;
-    static {
-      DEFAULT_INSTANCE = new com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest();
-    }
-
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    private static final com.google.protobuf.Parser<VerifyPasswordRequest>
-        PARSER = new com.google.protobuf.AbstractParser<VerifyPasswordRequest>() {
-      @java.lang.Override
-      public VerifyPasswordRequest parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return new VerifyPasswordRequest(input, extensionRegistry);
-      }
-    };
-
-    public static com.google.protobuf.Parser<VerifyPasswordRequest> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<VerifyPasswordRequest> getParserForType() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
-  }
-
-  public interface VerifyPasswordResponseOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:build.VerifyPasswordResponse)
-      com.google.protobuf.MessageOrBuilder {
-
-    /**
-     * <code>bytes response = 1;</code>
-     */
-    com.google.protobuf.ByteString getResponse();
-  }
-  /**
-   * Protobuf type {@code build.VerifyPasswordResponse}
-   */
-  public  static final class VerifyPasswordResponse extends
-      com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:build.VerifyPasswordResponse)
-      VerifyPasswordResponseOrBuilder {
-  private static final long serialVersionUID = 0L;
-    // Use VerifyPasswordResponse.newBuilder() to construct.
-    private VerifyPasswordResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
-      super(builder);
-    }
-    private VerifyPasswordResponse() {
-      response_ = com.google.protobuf.ByteString.EMPTY;
-    }
-
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return this.unknownFields;
-    }
-    private VerifyPasswordResponse(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
-      int mutable_bitField0_ = 0;
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            case 10: {
-
-              response_ = input.readBytes();
-              break;
+        private VerifyPasswordRequest(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            this();
+            if (extensionRegistry == null) {
+                throw new java.lang.NullPointerException();
             }
-            default: {
-              if (!parseUnknownFieldProto3(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
+            int mutable_bitField0_ = 0;
+            com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+                    com.google.protobuf.UnknownFieldSet.newBuilder();
+            try {
+                boolean done = false;
+                while (!done) {
+                    int tag = input.readTag();
+                    switch (tag) {
+                        case 0:
+                            done = true;
+                            break;
+                        case 8: {
+
+                            version_ = input.readUInt32();
+                            break;
+                        }
+                        case 18: {
+
+                            request_ = input.readBytes();
+                            break;
+                        }
+                        default: {
+                            if (!parseUnknownFieldProto3(
+                                    input, unknownFields, extensionRegistry, tag)) {
+                                done = true;
+                            }
+                            break;
+                        }
+                    }
+                }
+            } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                throw e.setUnfinishedMessage(this);
+            } catch (java.io.IOException e) {
+                throw new com.google.protobuf.InvalidProtocolBufferException(
+                        e).setUnfinishedMessage(this);
+            } finally {
+                this.unknownFields = unknownFields.build();
+                makeExtensionsImmutable();
             }
-          }
         }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
+
+        public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.internal_static_build_VerifyPasswordResponse_descriptor;
-    }
+            return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.internal_static_build_VerifyPasswordRequest_descriptor;
+        }
 
-    @java.lang.Override
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        @java.lang.Override
+        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.internal_static_build_VerifyPasswordResponse_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse.class, com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse.Builder.class);
+            return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.internal_static_build_VerifyPasswordRequest_fieldAccessorTable
+                    .ensureFieldAccessorsInitialized(
+                            com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest.class, com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest.Builder.class);
+        }
+
+        public static final int VERSION_FIELD_NUMBER = 1;
+        private int version_;
+
+        /**
+         * <code>uint32 version = 1;</code>
+         */
+        public int getVersion() {
+            return version_;
+        }
+
+        public static final int REQUEST_FIELD_NUMBER = 2;
+        private com.google.protobuf.ByteString request_;
+
+        /**
+         * <code>bytes request = 2;</code>
+         */
+        public com.google.protobuf.ByteString getRequest() {
+            return request_;
+        }
+
+        private byte memoizedIsInitialized = -1;
+
+        @java.lang.Override
+        public final boolean isInitialized() {
+            byte isInitialized = memoizedIsInitialized;
+            if (isInitialized == 1) return true;
+            if (isInitialized == 0) return false;
+
+            memoizedIsInitialized = 1;
+            return true;
+        }
+
+        @java.lang.Override
+        public void writeTo(com.google.protobuf.CodedOutputStream output)
+                throws java.io.IOException {
+            if (version_ != 0) {
+                output.writeUInt32(1, version_);
+            }
+            if (!request_.isEmpty()) {
+                output.writeBytes(2, request_);
+            }
+            unknownFields.writeTo(output);
+        }
+
+        @java.lang.Override
+        public int getSerializedSize() {
+            int size = memoizedSize;
+            if (size != -1) return size;
+
+            size = 0;
+            if (version_ != 0) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeUInt32Size(1, version_);
+            }
+            if (!request_.isEmpty()) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeBytesSize(2, request_);
+            }
+            size += unknownFields.getSerializedSize();
+            memoizedSize = size;
+            return size;
+        }
+
+        @java.lang.Override
+        public boolean equals(final java.lang.Object obj) {
+            if (obj == this) {
+                return true;
+            }
+            if (!(obj instanceof com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest)) {
+                return super.equals(obj);
+            }
+            com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest other = (com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest) obj;
+
+            boolean result = true;
+            result = result && (getVersion()
+                    == other.getVersion());
+            result = result && getRequest()
+                    .equals(other.getRequest());
+            result = result && unknownFields.equals(other.unknownFields);
+            return result;
+        }
+
+        @java.lang.Override
+        public int hashCode() {
+            if (memoizedHashCode != 0) {
+                return memoizedHashCode;
+            }
+            int hash = 41;
+            hash = (19 * hash) + getDescriptor().hashCode();
+            hash = (37 * hash) + VERSION_FIELD_NUMBER;
+            hash = (53 * hash) + getVersion();
+            hash = (37 * hash) + REQUEST_FIELD_NUMBER;
+            hash = (53 * hash) + getRequest().hashCode();
+            hash = (29 * hash) + unknownFields.hashCode();
+            memoizedHashCode = hash;
+            return hash;
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest parseFrom(
+                java.nio.ByteBuffer data)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest parseFrom(
+                java.nio.ByteBuffer data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data, extensionRegistry);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest parseFrom(
+                com.google.protobuf.ByteString data)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest parseFrom(
+                com.google.protobuf.ByteString data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data, extensionRegistry);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest parseFrom(byte[] data)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest parseFrom(
+                byte[] data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data, extensionRegistry);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest parseFrom(java.io.InputStream input)
+                throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3
+                    .parseWithIOException(PARSER, input);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest parseFrom(
+                java.io.InputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3
+                    .parseWithIOException(PARSER, input, extensionRegistry);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest parseDelimitedFrom(java.io.InputStream input)
+                throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3
+                    .parseDelimitedWithIOException(PARSER, input);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest parseDelimitedFrom(
+                java.io.InputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3
+                    .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest parseFrom(
+                com.google.protobuf.CodedInputStream input)
+                throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3
+                    .parseWithIOException(PARSER, input);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest parseFrom(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3
+                    .parseWithIOException(PARSER, input, extensionRegistry);
+        }
+
+        @java.lang.Override
+        public Builder newBuilderForType() {
+            return newBuilder();
+        }
+
+        public static Builder newBuilder() {
+            return DEFAULT_INSTANCE.toBuilder();
+        }
+
+        public static Builder newBuilder(com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest prototype) {
+            return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+        }
+
+        @java.lang.Override
+        public Builder toBuilder() {
+            return this == DEFAULT_INSTANCE
+                    ? new Builder() : new Builder().mergeFrom(this);
+        }
+
+        @java.lang.Override
+        protected Builder newBuilderForType(
+                com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+            Builder builder = new Builder(parent);
+            return builder;
+        }
+
+        /**
+         * Protobuf type {@code build.VerifyPasswordRequest}
+         */
+        public static final class Builder extends
+                com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+                // @@protoc_insertion_point(builder_implements:build.VerifyPasswordRequest)
+                com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequestOrBuilder {
+            public static final com.google.protobuf.Descriptors.Descriptor
+            getDescriptor() {
+                return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.internal_static_build_VerifyPasswordRequest_descriptor;
+            }
+
+            @java.lang.Override
+            protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+            internalGetFieldAccessorTable() {
+                return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.internal_static_build_VerifyPasswordRequest_fieldAccessorTable
+                        .ensureFieldAccessorsInitialized(
+                                com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest.class, com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest.Builder.class);
+            }
+
+            // Construct using com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest.newBuilder()
+            private Builder() {
+                maybeForceBuilderInitialization();
+            }
+
+            private Builder(
+                    com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+                super(parent);
+                maybeForceBuilderInitialization();
+            }
+
+            private void maybeForceBuilderInitialization() {
+                if (com.google.protobuf.GeneratedMessageV3
+                        .alwaysUseFieldBuilders) {
+                }
+            }
+
+            @java.lang.Override
+            public Builder clear() {
+                super.clear();
+                version_ = 0;
+
+                request_ = com.google.protobuf.ByteString.EMPTY;
+
+                return this;
+            }
+
+            @java.lang.Override
+            public com.google.protobuf.Descriptors.Descriptor
+            getDescriptorForType() {
+                return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.internal_static_build_VerifyPasswordRequest_descriptor;
+            }
+
+            @java.lang.Override
+            public com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest getDefaultInstanceForType() {
+                return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest.getDefaultInstance();
+            }
+
+            @java.lang.Override
+            public com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest build() {
+                com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest result = buildPartial();
+                if (!result.isInitialized()) {
+                    throw newUninitializedMessageException(result);
+                }
+                return result;
+            }
+
+            @java.lang.Override
+            public com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest buildPartial() {
+                com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest result = new com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest(this);
+                result.version_ = version_;
+                result.request_ = request_;
+                onBuilt();
+                return result;
+            }
+
+            @java.lang.Override
+            public Builder clone() {
+                return (Builder) super.clone();
+            }
+
+            @java.lang.Override
+            public Builder setField(
+                    com.google.protobuf.Descriptors.FieldDescriptor field,
+                    java.lang.Object value) {
+                return (Builder) super.setField(field, value);
+            }
+
+            @java.lang.Override
+            public Builder clearField(
+                    com.google.protobuf.Descriptors.FieldDescriptor field) {
+                return (Builder) super.clearField(field);
+            }
+
+            @java.lang.Override
+            public Builder clearOneof(
+                    com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+                return (Builder) super.clearOneof(oneof);
+            }
+
+            @java.lang.Override
+            public Builder setRepeatedField(
+                    com.google.protobuf.Descriptors.FieldDescriptor field,
+                    int index, java.lang.Object value) {
+                return (Builder) super.setRepeatedField(field, index, value);
+            }
+
+            @java.lang.Override
+            public Builder addRepeatedField(
+                    com.google.protobuf.Descriptors.FieldDescriptor field,
+                    java.lang.Object value) {
+                return (Builder) super.addRepeatedField(field, value);
+            }
+
+            @java.lang.Override
+            public Builder mergeFrom(com.google.protobuf.Message other) {
+                if (other instanceof com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest) {
+                    return mergeFrom((com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest) other);
+                } else {
+                    super.mergeFrom(other);
+                    return this;
+                }
+            }
+
+            public Builder mergeFrom(com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest other) {
+                if (other == com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest.getDefaultInstance())
+                    return this;
+                if (other.getVersion() != 0) {
+                    setVersion(other.getVersion());
+                }
+                if (other.getRequest() != com.google.protobuf.ByteString.EMPTY) {
+                    setRequest(other.getRequest());
+                }
+                this.mergeUnknownFields(other.unknownFields);
+                onChanged();
+                return this;
+            }
+
+            @java.lang.Override
+            public final boolean isInitialized() {
+                return true;
+            }
+
+            @java.lang.Override
+            public Builder mergeFrom(
+                    com.google.protobuf.CodedInputStream input,
+                    com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                    throws java.io.IOException {
+                com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest parsedMessage = null;
+                try {
+                    parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+                } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                    parsedMessage = (com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest) e.getUnfinishedMessage();
+                    throw e.unwrapIOException();
+                } finally {
+                    if (parsedMessage != null) {
+                        mergeFrom(parsedMessage);
+                    }
+                }
+                return this;
+            }
+
+            private int version_;
+
+            /**
+             * <code>uint32 version = 1;</code>
+             */
+            public int getVersion() {
+                return version_;
+            }
+
+            /**
+             * <code>uint32 version = 1;</code>
+             */
+            public Builder setVersion(int value) {
+
+                version_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>uint32 version = 1;</code>
+             */
+            public Builder clearVersion() {
+
+                version_ = 0;
+                onChanged();
+                return this;
+            }
+
+            private com.google.protobuf.ByteString request_ = com.google.protobuf.ByteString.EMPTY;
+
+            /**
+             * <code>bytes request = 2;</code>
+             */
+            public com.google.protobuf.ByteString getRequest() {
+                return request_;
+            }
+
+            /**
+             * <code>bytes request = 2;</code>
+             */
+            public Builder setRequest(com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+
+                request_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>bytes request = 2;</code>
+             */
+            public Builder clearRequest() {
+
+                request_ = getDefaultInstance().getRequest();
+                onChanged();
+                return this;
+            }
+
+            @java.lang.Override
+            public final Builder setUnknownFields(
+                    final com.google.protobuf.UnknownFieldSet unknownFields) {
+                return super.setUnknownFieldsProto3(unknownFields);
+            }
+
+            @java.lang.Override
+            public final Builder mergeUnknownFields(
+                    final com.google.protobuf.UnknownFieldSet unknownFields) {
+                return super.mergeUnknownFields(unknownFields);
+            }
+
+
+            // @@protoc_insertion_point(builder_scope:build.VerifyPasswordRequest)
+        }
+
+        // @@protoc_insertion_point(class_scope:build.VerifyPasswordRequest)
+        private static final com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest DEFAULT_INSTANCE;
+
+        static {
+            DEFAULT_INSTANCE = new com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest();
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest getDefaultInstance() {
+            return DEFAULT_INSTANCE;
+        }
+
+        private static final com.google.protobuf.Parser<VerifyPasswordRequest>
+                PARSER = new com.google.protobuf.AbstractParser<VerifyPasswordRequest>() {
+            @java.lang.Override
+            public VerifyPasswordRequest parsePartialFrom(
+                    com.google.protobuf.CodedInputStream input,
+                    com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                    throws com.google.protobuf.InvalidProtocolBufferException {
+                return new VerifyPasswordRequest(input, extensionRegistry);
+            }
+        };
+
+        public static com.google.protobuf.Parser<VerifyPasswordRequest> parser() {
+            return PARSER;
+        }
+
+        @java.lang.Override
+        public com.google.protobuf.Parser<VerifyPasswordRequest> getParserForType() {
+            return PARSER;
+        }
+
+        @java.lang.Override
+        public com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordRequest getDefaultInstanceForType() {
+            return DEFAULT_INSTANCE;
+        }
+
     }
 
-    public static final int RESPONSE_FIELD_NUMBER = 1;
-    private com.google.protobuf.ByteString response_;
-    /**
-     * <code>bytes response = 1;</code>
-     */
-    public com.google.protobuf.ByteString getResponse() {
-      return response_;
+    public interface VerifyPasswordResponseOrBuilder extends
+            // @@protoc_insertion_point(interface_extends:build.VerifyPasswordResponse)
+            com.google.protobuf.MessageOrBuilder {
+
+        /**
+         * <code>bytes response = 1;</code>
+         */
+        com.google.protobuf.ByteString getResponse();
     }
 
-    private byte memoizedIsInitialized = -1;
-    @java.lang.Override
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized == 1) return true;
-      if (isInitialized == 0) return false;
-
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    @java.lang.Override
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      if (!response_.isEmpty()) {
-        output.writeBytes(1, response_);
-      }
-      unknownFields.writeTo(output);
-    }
-
-    @java.lang.Override
-    public int getSerializedSize() {
-      int size = memoizedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      if (!response_.isEmpty()) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(1, response_);
-      }
-      size += unknownFields.getSerializedSize();
-      memoizedSize = size;
-      return size;
-    }
-
-    @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse)) {
-        return super.equals(obj);
-      }
-      com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse other = (com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse) obj;
-
-      boolean result = true;
-      result = result && getResponse()
-          .equals(other.getResponse());
-      result = result && unknownFields.equals(other.unknownFields);
-      return result;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + RESPONSE_FIELD_NUMBER;
-      hash = (53 * hash) + getResponse().hashCode();
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
-    }
-
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse parseFrom(
-        java.nio.ByteBuffer data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse parseFrom(
-        java.nio.ByteBuffer data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
-    }
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-
-    @java.lang.Override
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
-    public static Builder newBuilder(com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-    }
-    @java.lang.Override
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
     /**
      * Protobuf type {@code build.VerifyPasswordResponse}
      */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:build.VerifyPasswordResponse)
-        com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponseOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.internal_static_build_VerifyPasswordResponse_descriptor;
-      }
+    public static final class VerifyPasswordResponse extends
+            com.google.protobuf.GeneratedMessageV3 implements
+            // @@protoc_insertion_point(message_implements:build.VerifyPasswordResponse)
+            VerifyPasswordResponseOrBuilder {
+        private static final long serialVersionUID = 0L;
 
-      @java.lang.Override
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.internal_static_build_VerifyPasswordResponse_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse.class, com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse.Builder.class);
-      }
-
-      // Construct using com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
+        // Use VerifyPasswordResponse.newBuilder() to construct.
+        private VerifyPasswordResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+            super(builder);
         }
-      }
-      @java.lang.Override
-      public Builder clear() {
-        super.clear();
-        response_ = com.google.protobuf.ByteString.EMPTY;
 
-        return this;
-      }
-
-      @java.lang.Override
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.internal_static_build_VerifyPasswordResponse_descriptor;
-      }
-
-      @java.lang.Override
-      public com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse getDefaultInstanceForType() {
-        return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse.getDefaultInstance();
-      }
-
-      @java.lang.Override
-      public com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse build() {
-        com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
+        private VerifyPasswordResponse() {
+            response_ = com.google.protobuf.ByteString.EMPTY;
         }
-        return result;
-      }
 
-      @java.lang.Override
-      public com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse buildPartial() {
-        com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse result = new com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse(this);
-        result.response_ = response_;
-        onBuilt();
-        return result;
-      }
-
-      @java.lang.Override
-      public Builder clone() {
-        return (Builder) super.clone();
-      }
-      @java.lang.Override
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return (Builder) super.setField(field, value);
-      }
-      @java.lang.Override
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return (Builder) super.clearField(field);
-      }
-      @java.lang.Override
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return (Builder) super.clearOneof(oneof);
-      }
-      @java.lang.Override
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
-        return (Builder) super.setRepeatedField(field, index, value);
-      }
-      @java.lang.Override
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return (Builder) super.addRepeatedField(field, value);
-      }
-      @java.lang.Override
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse) {
-          return mergeFrom((com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
+        @java.lang.Override
+        public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+            return this.unknownFields;
         }
-      }
 
-      public Builder mergeFrom(com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse other) {
-        if (other == com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse.getDefaultInstance()) return this;
-        if (other.getResponse() != com.google.protobuf.ByteString.EMPTY) {
-          setResponse(other.getResponse());
-        }
-        this.mergeUnknownFields(other.unknownFields);
-        onChanged();
-        return this;
-      }
-
-      @java.lang.Override
-      public final boolean isInitialized() {
-        return true;
-      }
-
-      @java.lang.Override
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
-        return this;
-      }
-
-      private com.google.protobuf.ByteString response_ = com.google.protobuf.ByteString.EMPTY;
-      /**
-       * <code>bytes response = 1;</code>
-       */
-      public com.google.protobuf.ByteString getResponse() {
-        return response_;
-      }
-      /**
-       * <code>bytes response = 1;</code>
-       */
-      public Builder setResponse(com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        response_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>bytes response = 1;</code>
-       */
-      public Builder clearResponse() {
-        
-        response_ = getDefaultInstance().getResponse();
-        onChanged();
-        return this;
-      }
-      @java.lang.Override
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFieldsProto3(unknownFields);
-      }
-
-      @java.lang.Override
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.mergeUnknownFields(unknownFields);
-      }
-
-
-      // @@protoc_insertion_point(builder_scope:build.VerifyPasswordResponse)
-    }
-
-    // @@protoc_insertion_point(class_scope:build.VerifyPasswordResponse)
-    private static final com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse DEFAULT_INSTANCE;
-    static {
-      DEFAULT_INSTANCE = new com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse();
-    }
-
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    private static final com.google.protobuf.Parser<VerifyPasswordResponse>
-        PARSER = new com.google.protobuf.AbstractParser<VerifyPasswordResponse>() {
-      @java.lang.Override
-      public VerifyPasswordResponse parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return new VerifyPasswordResponse(input, extensionRegistry);
-      }
-    };
-
-    public static com.google.protobuf.Parser<VerifyPasswordResponse> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<VerifyPasswordResponse> getParserForType() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
-  }
-
-  public interface UpdateTokenResponseOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:build.UpdateTokenResponse)
-      com.google.protobuf.MessageOrBuilder {
-
-    /**
-     * <code>uint32 version = 1;</code>
-     */
-    int getVersion();
-
-    /**
-     * <code>bytes update_token = 2;</code>
-     */
-    com.google.protobuf.ByteString getUpdateToken();
-  }
-  /**
-   * Protobuf type {@code build.UpdateTokenResponse}
-   */
-  public  static final class UpdateTokenResponse extends
-      com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:build.UpdateTokenResponse)
-      UpdateTokenResponseOrBuilder {
-  private static final long serialVersionUID = 0L;
-    // Use UpdateTokenResponse.newBuilder() to construct.
-    private UpdateTokenResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
-      super(builder);
-    }
-    private UpdateTokenResponse() {
-      version_ = 0;
-      updateToken_ = com.google.protobuf.ByteString.EMPTY;
-    }
-
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return this.unknownFields;
-    }
-    private UpdateTokenResponse(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
-      int mutable_bitField0_ = 0;
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            case 8: {
-
-              version_ = input.readUInt32();
-              break;
+        private VerifyPasswordResponse(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            this();
+            if (extensionRegistry == null) {
+                throw new java.lang.NullPointerException();
             }
-            case 18: {
+            int mutable_bitField0_ = 0;
+            com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+                    com.google.protobuf.UnknownFieldSet.newBuilder();
+            try {
+                boolean done = false;
+                while (!done) {
+                    int tag = input.readTag();
+                    switch (tag) {
+                        case 0:
+                            done = true;
+                            break;
+                        case 10: {
 
-              updateToken_ = input.readBytes();
-              break;
+                            response_ = input.readBytes();
+                            break;
+                        }
+                        default: {
+                            if (!parseUnknownFieldProto3(
+                                    input, unknownFields, extensionRegistry, tag)) {
+                                done = true;
+                            }
+                            break;
+                        }
+                    }
+                }
+            } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                throw e.setUnfinishedMessage(this);
+            } catch (java.io.IOException e) {
+                throw new com.google.protobuf.InvalidProtocolBufferException(
+                        e).setUnfinishedMessage(this);
+            } finally {
+                this.unknownFields = unknownFields.build();
+                makeExtensionsImmutable();
             }
-            default: {
-              if (!parseUnknownFieldProto3(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-          }
         }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
+
+        public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.internal_static_build_UpdateTokenResponse_descriptor;
-    }
+            return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.internal_static_build_VerifyPasswordResponse_descriptor;
+        }
 
-    @java.lang.Override
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        @java.lang.Override
+        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.internal_static_build_UpdateTokenResponse_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.UpdateTokenResponse.class, com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.UpdateTokenResponse.Builder.class);
-    }
-
-    public static final int VERSION_FIELD_NUMBER = 1;
-    private int version_;
-    /**
-     * <code>uint32 version = 1;</code>
-     */
-    public int getVersion() {
-      return version_;
-    }
-
-    public static final int UPDATE_TOKEN_FIELD_NUMBER = 2;
-    private com.google.protobuf.ByteString updateToken_;
-    /**
-     * <code>bytes update_token = 2;</code>
-     */
-    public com.google.protobuf.ByteString getUpdateToken() {
-      return updateToken_;
-    }
-
-    private byte memoizedIsInitialized = -1;
-    @java.lang.Override
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized == 1) return true;
-      if (isInitialized == 0) return false;
-
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    @java.lang.Override
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      if (version_ != 0) {
-        output.writeUInt32(1, version_);
-      }
-      if (!updateToken_.isEmpty()) {
-        output.writeBytes(2, updateToken_);
-      }
-      unknownFields.writeTo(output);
-    }
-
-    @java.lang.Override
-    public int getSerializedSize() {
-      int size = memoizedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      if (version_ != 0) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeUInt32Size(1, version_);
-      }
-      if (!updateToken_.isEmpty()) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(2, updateToken_);
-      }
-      size += unknownFields.getSerializedSize();
-      memoizedSize = size;
-      return size;
-    }
-
-    @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.UpdateTokenResponse)) {
-        return super.equals(obj);
-      }
-      com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.UpdateTokenResponse other = (com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.UpdateTokenResponse) obj;
-
-      boolean result = true;
-      result = result && (getVersion()
-          == other.getVersion());
-      result = result && getUpdateToken()
-          .equals(other.getUpdateToken());
-      result = result && unknownFields.equals(other.unknownFields);
-      return result;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + VERSION_FIELD_NUMBER;
-      hash = (53 * hash) + getVersion();
-      hash = (37 * hash) + UPDATE_TOKEN_FIELD_NUMBER;
-      hash = (53 * hash) + getUpdateToken().hashCode();
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
-    }
-
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.UpdateTokenResponse parseFrom(
-        java.nio.ByteBuffer data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.UpdateTokenResponse parseFrom(
-        java.nio.ByteBuffer data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.UpdateTokenResponse parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.UpdateTokenResponse parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.UpdateTokenResponse parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.UpdateTokenResponse parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.UpdateTokenResponse parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.UpdateTokenResponse parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.UpdateTokenResponse parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
-    }
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.UpdateTokenResponse parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.UpdateTokenResponse parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.UpdateTokenResponse parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-
-    @java.lang.Override
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
-    public static Builder newBuilder(com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.UpdateTokenResponse prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-    }
-    @java.lang.Override
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    /**
-     * Protobuf type {@code build.UpdateTokenResponse}
-     */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:build.UpdateTokenResponse)
-        com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.UpdateTokenResponseOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.internal_static_build_UpdateTokenResponse_descriptor;
-      }
-
-      @java.lang.Override
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.internal_static_build_UpdateTokenResponse_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.UpdateTokenResponse.class, com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.UpdateTokenResponse.Builder.class);
-      }
-
-      // Construct using com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.UpdateTokenResponse.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
+            return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.internal_static_build_VerifyPasswordResponse_fieldAccessorTable
+                    .ensureFieldAccessorsInitialized(
+                            com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse.class, com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse.Builder.class);
         }
-      }
-      @java.lang.Override
-      public Builder clear() {
-        super.clear();
-        version_ = 0;
 
-        updateToken_ = com.google.protobuf.ByteString.EMPTY;
+        public static final int RESPONSE_FIELD_NUMBER = 1;
+        private com.google.protobuf.ByteString response_;
 
-        return this;
-      }
-
-      @java.lang.Override
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.internal_static_build_UpdateTokenResponse_descriptor;
-      }
-
-      @java.lang.Override
-      public com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.UpdateTokenResponse getDefaultInstanceForType() {
-        return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.UpdateTokenResponse.getDefaultInstance();
-      }
-
-      @java.lang.Override
-      public com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.UpdateTokenResponse build() {
-        com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.UpdateTokenResponse result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
+        /**
+         * <code>bytes response = 1;</code>
+         */
+        public com.google.protobuf.ByteString getResponse() {
+            return response_;
         }
-        return result;
-      }
 
-      @java.lang.Override
-      public com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.UpdateTokenResponse buildPartial() {
-        com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.UpdateTokenResponse result = new com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.UpdateTokenResponse(this);
-        result.version_ = version_;
-        result.updateToken_ = updateToken_;
-        onBuilt();
-        return result;
-      }
+        private byte memoizedIsInitialized = -1;
 
-      @java.lang.Override
-      public Builder clone() {
-        return (Builder) super.clone();
-      }
-      @java.lang.Override
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return (Builder) super.setField(field, value);
-      }
-      @java.lang.Override
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return (Builder) super.clearField(field);
-      }
-      @java.lang.Override
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return (Builder) super.clearOneof(oneof);
-      }
-      @java.lang.Override
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
-        return (Builder) super.setRepeatedField(field, index, value);
-      }
-      @java.lang.Override
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return (Builder) super.addRepeatedField(field, value);
-      }
-      @java.lang.Override
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.UpdateTokenResponse) {
-          return mergeFrom((com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.UpdateTokenResponse)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
+        @java.lang.Override
+        public final boolean isInitialized() {
+            byte isInitialized = memoizedIsInitialized;
+            if (isInitialized == 1) return true;
+            if (isInitialized == 0) return false;
+
+            memoizedIsInitialized = 1;
+            return true;
         }
-      }
 
-      public Builder mergeFrom(com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.UpdateTokenResponse other) {
-        if (other == com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.UpdateTokenResponse.getDefaultInstance()) return this;
-        if (other.getVersion() != 0) {
-          setVersion(other.getVersion());
-        }
-        if (other.getUpdateToken() != com.google.protobuf.ByteString.EMPTY) {
-          setUpdateToken(other.getUpdateToken());
-        }
-        this.mergeUnknownFields(other.unknownFields);
-        onChanged();
-        return this;
-      }
-
-      @java.lang.Override
-      public final boolean isInitialized() {
-        return true;
-      }
-
-      @java.lang.Override
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.UpdateTokenResponse parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.UpdateTokenResponse) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
-        return this;
-      }
-
-      private int version_ ;
-      /**
-       * <code>uint32 version = 1;</code>
-       */
-      public int getVersion() {
-        return version_;
-      }
-      /**
-       * <code>uint32 version = 1;</code>
-       */
-      public Builder setVersion(int value) {
-        
-        version_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>uint32 version = 1;</code>
-       */
-      public Builder clearVersion() {
-        
-        version_ = 0;
-        onChanged();
-        return this;
-      }
-
-      private com.google.protobuf.ByteString updateToken_ = com.google.protobuf.ByteString.EMPTY;
-      /**
-       * <code>bytes update_token = 2;</code>
-       */
-      public com.google.protobuf.ByteString getUpdateToken() {
-        return updateToken_;
-      }
-      /**
-       * <code>bytes update_token = 2;</code>
-       */
-      public Builder setUpdateToken(com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        updateToken_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>bytes update_token = 2;</code>
-       */
-      public Builder clearUpdateToken() {
-        
-        updateToken_ = getDefaultInstance().getUpdateToken();
-        onChanged();
-        return this;
-      }
-      @java.lang.Override
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFieldsProto3(unknownFields);
-      }
-
-      @java.lang.Override
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.mergeUnknownFields(unknownFields);
-      }
-
-
-      // @@protoc_insertion_point(builder_scope:build.UpdateTokenResponse)
-    }
-
-    // @@protoc_insertion_point(class_scope:build.UpdateTokenResponse)
-    private static final com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.UpdateTokenResponse DEFAULT_INSTANCE;
-    static {
-      DEFAULT_INSTANCE = new com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.UpdateTokenResponse();
-    }
-
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.UpdateTokenResponse getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    private static final com.google.protobuf.Parser<UpdateTokenResponse>
-        PARSER = new com.google.protobuf.AbstractParser<UpdateTokenResponse>() {
-      @java.lang.Override
-      public UpdateTokenResponse parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return new UpdateTokenResponse(input, extensionRegistry);
-      }
-    };
-
-    public static com.google.protobuf.Parser<UpdateTokenResponse> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<UpdateTokenResponse> getParserForType() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.UpdateTokenResponse getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
-  }
-
-  public interface KeypairResponseOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:build.KeypairResponse)
-      com.google.protobuf.MessageOrBuilder {
-
-    /**
-     * <code>uint32 version = 1;</code>
-     */
-    int getVersion();
-
-    /**
-     * <code>string id = 2;</code>
-     */
-    java.lang.String getId();
-    /**
-     * <code>string id = 2;</code>
-     */
-    com.google.protobuf.ByteString
-        getIdBytes();
-
-    /**
-     * <code>bytes public_key = 3;</code>
-     */
-    com.google.protobuf.ByteString getPublicKey();
-  }
-  /**
-   * Protobuf type {@code build.KeypairResponse}
-   */
-  public  static final class KeypairResponse extends
-      com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:build.KeypairResponse)
-      KeypairResponseOrBuilder {
-  private static final long serialVersionUID = 0L;
-    // Use KeypairResponse.newBuilder() to construct.
-    private KeypairResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
-      super(builder);
-    }
-    private KeypairResponse() {
-      version_ = 0;
-      id_ = "";
-      publicKey_ = com.google.protobuf.ByteString.EMPTY;
-    }
-
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return this.unknownFields;
-    }
-    private KeypairResponse(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
-      int mutable_bitField0_ = 0;
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            case 8: {
-
-              version_ = input.readUInt32();
-              break;
+        @java.lang.Override
+        public void writeTo(com.google.protobuf.CodedOutputStream output)
+                throws java.io.IOException {
+            if (!response_.isEmpty()) {
+                output.writeBytes(1, response_);
             }
-            case 18: {
-              java.lang.String s = input.readStringRequireUtf8();
+            unknownFields.writeTo(output);
+        }
 
-              id_ = s;
-              break;
+        @java.lang.Override
+        public int getSerializedSize() {
+            int size = memoizedSize;
+            if (size != -1) return size;
+
+            size = 0;
+            if (!response_.isEmpty()) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeBytesSize(1, response_);
             }
-            case 26: {
+            size += unknownFields.getSerializedSize();
+            memoizedSize = size;
+            return size;
+        }
 
-              publicKey_ = input.readBytes();
-              break;
+        @java.lang.Override
+        public boolean equals(final java.lang.Object obj) {
+            if (obj == this) {
+                return true;
             }
-            default: {
-              if (!parseUnknownFieldProto3(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
+            if (!(obj instanceof com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse)) {
+                return super.equals(obj);
             }
-          }
+            com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse other = (com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse) obj;
+
+            boolean result = true;
+            result = result && getResponse()
+                    .equals(other.getResponse());
+            result = result && unknownFields.equals(other.unknownFields);
+            return result;
         }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.internal_static_build_KeypairResponse_descriptor;
-    }
 
-    @java.lang.Override
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.internal_static_build_KeypairResponse_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.KeypairResponse.class, com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.KeypairResponse.Builder.class);
-    }
-
-    public static final int VERSION_FIELD_NUMBER = 1;
-    private int version_;
-    /**
-     * <code>uint32 version = 1;</code>
-     */
-    public int getVersion() {
-      return version_;
-    }
-
-    public static final int ID_FIELD_NUMBER = 2;
-    private volatile java.lang.Object id_;
-    /**
-     * <code>string id = 2;</code>
-     */
-    public java.lang.String getId() {
-      java.lang.Object ref = id_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        id_ = s;
-        return s;
-      }
-    }
-    /**
-     * <code>string id = 2;</code>
-     */
-    public com.google.protobuf.ByteString
-        getIdBytes() {
-      java.lang.Object ref = id_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        id_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int PUBLIC_KEY_FIELD_NUMBER = 3;
-    private com.google.protobuf.ByteString publicKey_;
-    /**
-     * <code>bytes public_key = 3;</code>
-     */
-    public com.google.protobuf.ByteString getPublicKey() {
-      return publicKey_;
-    }
-
-    private byte memoizedIsInitialized = -1;
-    @java.lang.Override
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized == 1) return true;
-      if (isInitialized == 0) return false;
-
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    @java.lang.Override
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      if (version_ != 0) {
-        output.writeUInt32(1, version_);
-      }
-      if (!getIdBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, id_);
-      }
-      if (!publicKey_.isEmpty()) {
-        output.writeBytes(3, publicKey_);
-      }
-      unknownFields.writeTo(output);
-    }
-
-    @java.lang.Override
-    public int getSerializedSize() {
-      int size = memoizedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      if (version_ != 0) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeUInt32Size(1, version_);
-      }
-      if (!getIdBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, id_);
-      }
-      if (!publicKey_.isEmpty()) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(3, publicKey_);
-      }
-      size += unknownFields.getSerializedSize();
-      memoizedSize = size;
-      return size;
-    }
-
-    @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.KeypairResponse)) {
-        return super.equals(obj);
-      }
-      com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.KeypairResponse other = (com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.KeypairResponse) obj;
-
-      boolean result = true;
-      result = result && (getVersion()
-          == other.getVersion());
-      result = result && getId()
-          .equals(other.getId());
-      result = result && getPublicKey()
-          .equals(other.getPublicKey());
-      result = result && unknownFields.equals(other.unknownFields);
-      return result;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + VERSION_FIELD_NUMBER;
-      hash = (53 * hash) + getVersion();
-      hash = (37 * hash) + ID_FIELD_NUMBER;
-      hash = (53 * hash) + getId().hashCode();
-      hash = (37 * hash) + PUBLIC_KEY_FIELD_NUMBER;
-      hash = (53 * hash) + getPublicKey().hashCode();
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
-    }
-
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.KeypairResponse parseFrom(
-        java.nio.ByteBuffer data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.KeypairResponse parseFrom(
-        java.nio.ByteBuffer data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.KeypairResponse parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.KeypairResponse parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.KeypairResponse parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.KeypairResponse parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.KeypairResponse parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.KeypairResponse parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.KeypairResponse parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
-    }
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.KeypairResponse parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.KeypairResponse parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.KeypairResponse parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-
-    @java.lang.Override
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
-    public static Builder newBuilder(com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.KeypairResponse prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-    }
-    @java.lang.Override
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    /**
-     * Protobuf type {@code build.KeypairResponse}
-     */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:build.KeypairResponse)
-        com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.KeypairResponseOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.internal_static_build_KeypairResponse_descriptor;
-      }
-
-      @java.lang.Override
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.internal_static_build_KeypairResponse_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.KeypairResponse.class, com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.KeypairResponse.Builder.class);
-      }
-
-      // Construct using com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.KeypairResponse.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
+        @java.lang.Override
+        public int hashCode() {
+            if (memoizedHashCode != 0) {
+                return memoizedHashCode;
+            }
+            int hash = 41;
+            hash = (19 * hash) + getDescriptor().hashCode();
+            hash = (37 * hash) + RESPONSE_FIELD_NUMBER;
+            hash = (53 * hash) + getResponse().hashCode();
+            hash = (29 * hash) + unknownFields.hashCode();
+            memoizedHashCode = hash;
+            return hash;
         }
-      }
-      @java.lang.Override
-      public Builder clear() {
-        super.clear();
-        version_ = 0;
 
-        id_ = "";
-
-        publicKey_ = com.google.protobuf.ByteString.EMPTY;
-
-        return this;
-      }
-
-      @java.lang.Override
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.internal_static_build_KeypairResponse_descriptor;
-      }
-
-      @java.lang.Override
-      public com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.KeypairResponse getDefaultInstanceForType() {
-        return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.KeypairResponse.getDefaultInstance();
-      }
-
-      @java.lang.Override
-      public com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.KeypairResponse build() {
-        com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.KeypairResponse result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse parseFrom(
+                java.nio.ByteBuffer data)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data);
         }
-        return result;
-      }
 
-      @java.lang.Override
-      public com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.KeypairResponse buildPartial() {
-        com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.KeypairResponse result = new com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.KeypairResponse(this);
-        result.version_ = version_;
-        result.id_ = id_;
-        result.publicKey_ = publicKey_;
-        onBuilt();
-        return result;
-      }
-
-      @java.lang.Override
-      public Builder clone() {
-        return (Builder) super.clone();
-      }
-      @java.lang.Override
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return (Builder) super.setField(field, value);
-      }
-      @java.lang.Override
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return (Builder) super.clearField(field);
-      }
-      @java.lang.Override
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return (Builder) super.clearOneof(oneof);
-      }
-      @java.lang.Override
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
-        return (Builder) super.setRepeatedField(field, index, value);
-      }
-      @java.lang.Override
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return (Builder) super.addRepeatedField(field, value);
-      }
-      @java.lang.Override
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.KeypairResponse) {
-          return mergeFrom((com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.KeypairResponse)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse parseFrom(
+                java.nio.ByteBuffer data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data, extensionRegistry);
         }
-      }
 
-      public Builder mergeFrom(com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.KeypairResponse other) {
-        if (other == com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.KeypairResponse.getDefaultInstance()) return this;
-        if (other.getVersion() != 0) {
-          setVersion(other.getVersion());
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse parseFrom(
+                com.google.protobuf.ByteString data)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data);
         }
-        if (!other.getId().isEmpty()) {
-          id_ = other.id_;
-          onChanged();
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse parseFrom(
+                com.google.protobuf.ByteString data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data, extensionRegistry);
         }
-        if (other.getPublicKey() != com.google.protobuf.ByteString.EMPTY) {
-          setPublicKey(other.getPublicKey());
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse parseFrom(byte[] data)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data);
         }
-        this.mergeUnknownFields(other.unknownFields);
-        onChanged();
-        return this;
-      }
 
-      @java.lang.Override
-      public final boolean isInitialized() {
-        return true;
-      }
-
-      @java.lang.Override
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.KeypairResponse parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.KeypairResponse) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse parseFrom(
+                byte[] data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data, extensionRegistry);
         }
-        return this;
-      }
 
-      private int version_ ;
-      /**
-       * <code>uint32 version = 1;</code>
-       */
-      public int getVersion() {
-        return version_;
-      }
-      /**
-       * <code>uint32 version = 1;</code>
-       */
-      public Builder setVersion(int value) {
-        
-        version_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>uint32 version = 1;</code>
-       */
-      public Builder clearVersion() {
-        
-        version_ = 0;
-        onChanged();
-        return this;
-      }
-
-      private java.lang.Object id_ = "";
-      /**
-       * <code>string id = 2;</code>
-       */
-      public java.lang.String getId() {
-        java.lang.Object ref = id_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          id_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse parseFrom(java.io.InputStream input)
+                throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3
+                    .parseWithIOException(PARSER, input);
         }
-      }
-      /**
-       * <code>string id = 2;</code>
-       */
-      public com.google.protobuf.ByteString
-          getIdBytes() {
-        java.lang.Object ref = id_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          id_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse parseFrom(
+                java.io.InputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3
+                    .parseWithIOException(PARSER, input, extensionRegistry);
         }
-      }
-      /**
-       * <code>string id = 2;</code>
-       */
-      public Builder setId(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        id_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string id = 2;</code>
-       */
-      public Builder clearId() {
-        
-        id_ = getDefaultInstance().getId();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string id = 2;</code>
-       */
-      public Builder setIdBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        id_ = value;
-        onChanged();
-        return this;
-      }
 
-      private com.google.protobuf.ByteString publicKey_ = com.google.protobuf.ByteString.EMPTY;
-      /**
-       * <code>bytes public_key = 3;</code>
-       */
-      public com.google.protobuf.ByteString getPublicKey() {
-        return publicKey_;
-      }
-      /**
-       * <code>bytes public_key = 3;</code>
-       */
-      public Builder setPublicKey(com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        publicKey_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>bytes public_key = 3;</code>
-       */
-      public Builder clearPublicKey() {
-        
-        publicKey_ = getDefaultInstance().getPublicKey();
-        onChanged();
-        return this;
-      }
-      @java.lang.Override
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFieldsProto3(unknownFields);
-      }
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse parseDelimitedFrom(java.io.InputStream input)
+                throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3
+                    .parseDelimitedWithIOException(PARSER, input);
+        }
 
-      @java.lang.Override
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.mergeUnknownFields(unknownFields);
-      }
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse parseDelimitedFrom(
+                java.io.InputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3
+                    .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse parseFrom(
+                com.google.protobuf.CodedInputStream input)
+                throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3
+                    .parseWithIOException(PARSER, input);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse parseFrom(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3
+                    .parseWithIOException(PARSER, input, extensionRegistry);
+        }
+
+        @java.lang.Override
+        public Builder newBuilderForType() {
+            return newBuilder();
+        }
+
+        public static Builder newBuilder() {
+            return DEFAULT_INSTANCE.toBuilder();
+        }
+
+        public static Builder newBuilder(com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse prototype) {
+            return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+        }
+
+        @java.lang.Override
+        public Builder toBuilder() {
+            return this == DEFAULT_INSTANCE
+                    ? new Builder() : new Builder().mergeFrom(this);
+        }
+
+        @java.lang.Override
+        protected Builder newBuilderForType(
+                com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+            Builder builder = new Builder(parent);
+            return builder;
+        }
+
+        /**
+         * Protobuf type {@code build.VerifyPasswordResponse}
+         */
+        public static final class Builder extends
+                com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+                // @@protoc_insertion_point(builder_implements:build.VerifyPasswordResponse)
+                com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponseOrBuilder {
+            public static final com.google.protobuf.Descriptors.Descriptor
+            getDescriptor() {
+                return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.internal_static_build_VerifyPasswordResponse_descriptor;
+            }
+
+            @java.lang.Override
+            protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+            internalGetFieldAccessorTable() {
+                return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.internal_static_build_VerifyPasswordResponse_fieldAccessorTable
+                        .ensureFieldAccessorsInitialized(
+                                com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse.class, com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse.Builder.class);
+            }
+
+            // Construct using com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse.newBuilder()
+            private Builder() {
+                maybeForceBuilderInitialization();
+            }
+
+            private Builder(
+                    com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+                super(parent);
+                maybeForceBuilderInitialization();
+            }
+
+            private void maybeForceBuilderInitialization() {
+                if (com.google.protobuf.GeneratedMessageV3
+                        .alwaysUseFieldBuilders) {
+                }
+            }
+
+            @java.lang.Override
+            public Builder clear() {
+                super.clear();
+                response_ = com.google.protobuf.ByteString.EMPTY;
+
+                return this;
+            }
+
+            @java.lang.Override
+            public com.google.protobuf.Descriptors.Descriptor
+            getDescriptorForType() {
+                return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.internal_static_build_VerifyPasswordResponse_descriptor;
+            }
+
+            @java.lang.Override
+            public com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse getDefaultInstanceForType() {
+                return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse.getDefaultInstance();
+            }
+
+            @java.lang.Override
+            public com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse build() {
+                com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse result = buildPartial();
+                if (!result.isInitialized()) {
+                    throw newUninitializedMessageException(result);
+                }
+                return result;
+            }
+
+            @java.lang.Override
+            public com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse buildPartial() {
+                com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse result = new com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse(this);
+                result.response_ = response_;
+                onBuilt();
+                return result;
+            }
+
+            @java.lang.Override
+            public Builder clone() {
+                return (Builder) super.clone();
+            }
+
+            @java.lang.Override
+            public Builder setField(
+                    com.google.protobuf.Descriptors.FieldDescriptor field,
+                    java.lang.Object value) {
+                return (Builder) super.setField(field, value);
+            }
+
+            @java.lang.Override
+            public Builder clearField(
+                    com.google.protobuf.Descriptors.FieldDescriptor field) {
+                return (Builder) super.clearField(field);
+            }
+
+            @java.lang.Override
+            public Builder clearOneof(
+                    com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+                return (Builder) super.clearOneof(oneof);
+            }
+
+            @java.lang.Override
+            public Builder setRepeatedField(
+                    com.google.protobuf.Descriptors.FieldDescriptor field,
+                    int index, java.lang.Object value) {
+                return (Builder) super.setRepeatedField(field, index, value);
+            }
+
+            @java.lang.Override
+            public Builder addRepeatedField(
+                    com.google.protobuf.Descriptors.FieldDescriptor field,
+                    java.lang.Object value) {
+                return (Builder) super.addRepeatedField(field, value);
+            }
+
+            @java.lang.Override
+            public Builder mergeFrom(com.google.protobuf.Message other) {
+                if (other instanceof com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse) {
+                    return mergeFrom((com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse) other);
+                } else {
+                    super.mergeFrom(other);
+                    return this;
+                }
+            }
+
+            public Builder mergeFrom(com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse other) {
+                if (other == com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse.getDefaultInstance())
+                    return this;
+                if (other.getResponse() != com.google.protobuf.ByteString.EMPTY) {
+                    setResponse(other.getResponse());
+                }
+                this.mergeUnknownFields(other.unknownFields);
+                onChanged();
+                return this;
+            }
+
+            @java.lang.Override
+            public final boolean isInitialized() {
+                return true;
+            }
+
+            @java.lang.Override
+            public Builder mergeFrom(
+                    com.google.protobuf.CodedInputStream input,
+                    com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                    throws java.io.IOException {
+                com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse parsedMessage = null;
+                try {
+                    parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+                } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                    parsedMessage = (com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse) e.getUnfinishedMessage();
+                    throw e.unwrapIOException();
+                } finally {
+                    if (parsedMessage != null) {
+                        mergeFrom(parsedMessage);
+                    }
+                }
+                return this;
+            }
+
+            private com.google.protobuf.ByteString response_ = com.google.protobuf.ByteString.EMPTY;
+
+            /**
+             * <code>bytes response = 1;</code>
+             */
+            public com.google.protobuf.ByteString getResponse() {
+                return response_;
+            }
+
+            /**
+             * <code>bytes response = 1;</code>
+             */
+            public Builder setResponse(com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+
+                response_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>bytes response = 1;</code>
+             */
+            public Builder clearResponse() {
+
+                response_ = getDefaultInstance().getResponse();
+                onChanged();
+                return this;
+            }
+
+            @java.lang.Override
+            public final Builder setUnknownFields(
+                    final com.google.protobuf.UnknownFieldSet unknownFields) {
+                return super.setUnknownFieldsProto3(unknownFields);
+            }
+
+            @java.lang.Override
+            public final Builder mergeUnknownFields(
+                    final com.google.protobuf.UnknownFieldSet unknownFields) {
+                return super.mergeUnknownFields(unknownFields);
+            }
 
 
-      // @@protoc_insertion_point(builder_scope:build.KeypairResponse)
-    }
+            // @@protoc_insertion_point(builder_scope:build.VerifyPasswordResponse)
+        }
 
-    // @@protoc_insertion_point(class_scope:build.KeypairResponse)
-    private static final com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.KeypairResponse DEFAULT_INSTANCE;
-    static {
-      DEFAULT_INSTANCE = new com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.KeypairResponse();
-    }
+        // @@protoc_insertion_point(class_scope:build.VerifyPasswordResponse)
+        private static final com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse DEFAULT_INSTANCE;
 
-    public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.KeypairResponse getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
+        static {
+            DEFAULT_INSTANCE = new com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse();
+        }
 
-    private static final com.google.protobuf.Parser<KeypairResponse>
-        PARSER = new com.google.protobuf.AbstractParser<KeypairResponse>() {
-      @java.lang.Override
-      public KeypairResponse parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return new KeypairResponse(input, extensionRegistry);
-      }
-    };
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse getDefaultInstance() {
+            return DEFAULT_INSTANCE;
+        }
 
-    public static com.google.protobuf.Parser<KeypairResponse> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<KeypairResponse> getParserForType() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.KeypairResponse getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
-  }
-
-  private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_build_EnrollmentRequest_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_build_EnrollmentRequest_fieldAccessorTable;
-  private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_build_EnrollmentResponse_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_build_EnrollmentResponse_fieldAccessorTable;
-  private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_build_VerifyPasswordRequest_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_build_VerifyPasswordRequest_fieldAccessorTable;
-  private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_build_VerifyPasswordResponse_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_build_VerifyPasswordResponse_fieldAccessorTable;
-  private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_build_UpdateTokenResponse_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_build_UpdateTokenResponse_fieldAccessorTable;
-  private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_build_KeypairResponse_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_build_KeypairResponse_fieldAccessorTable;
-
-  public static com.google.protobuf.Descriptors.FileDescriptor
-      getDescriptor() {
-    return descriptor;
-  }
-  private static  com.google.protobuf.Descriptors.FileDescriptor
-      descriptor;
-  static {
-    java.lang.String[] descriptorData = {
-      "\n\016passw0rd.proto\022\005build\"$\n\021EnrollmentReq" +
-      "uest\022\017\n\007version\030\001 \001(\r\"7\n\022EnrollmentRespo" +
-      "nse\022\017\n\007version\030\001 \001(\r\022\020\n\010response\030\002 \001(\014\"9" +
-      "\n\025VerifyPasswordRequest\022\017\n\007version\030\001 \001(\r" +
-      "\022\017\n\007request\030\002 \001(\014\"*\n\026VerifyPasswordRespo" +
-      "nse\022\020\n\010response\030\001 \001(\014\"<\n\023UpdateTokenResp" +
-      "onse\022\017\n\007version\030\001 \001(\r\022\024\n\014update_token\030\002 " +
-      "\001(\014\"B\n\017KeypairResponse\022\017\n\007version\030\001 \001(\r\022" +
-      "\n\n\002id\030\002 \001(\t\022\022\n\npublic_key\030\003 \001(\014B<\n*com.v" +
-      "irgilsecurity.passw0rd.protobuf.buildB\016P" +
-      "assw0rdProtosb\006proto3"
-    };
-    com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
-        new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
-          public com.google.protobuf.ExtensionRegistry assignDescriptors(
-              com.google.protobuf.Descriptors.FileDescriptor root) {
-            descriptor = root;
-            return null;
-          }
+        private static final com.google.protobuf.Parser<VerifyPasswordResponse>
+                PARSER = new com.google.protobuf.AbstractParser<VerifyPasswordResponse>() {
+            @java.lang.Override
+            public VerifyPasswordResponse parsePartialFrom(
+                    com.google.protobuf.CodedInputStream input,
+                    com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                    throws com.google.protobuf.InvalidProtocolBufferException {
+                return new VerifyPasswordResponse(input, extensionRegistry);
+            }
         };
-    com.google.protobuf.Descriptors.FileDescriptor
-      .internalBuildGeneratedFileFrom(descriptorData,
-        new com.google.protobuf.Descriptors.FileDescriptor[] {
-        }, assigner);
-    internal_static_build_EnrollmentRequest_descriptor =
-      getDescriptor().getMessageTypes().get(0);
-    internal_static_build_EnrollmentRequest_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_build_EnrollmentRequest_descriptor,
-        new java.lang.String[] { "Version", });
-    internal_static_build_EnrollmentResponse_descriptor =
-      getDescriptor().getMessageTypes().get(1);
-    internal_static_build_EnrollmentResponse_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_build_EnrollmentResponse_descriptor,
-        new java.lang.String[] { "Version", "Response", });
-    internal_static_build_VerifyPasswordRequest_descriptor =
-      getDescriptor().getMessageTypes().get(2);
-    internal_static_build_VerifyPasswordRequest_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_build_VerifyPasswordRequest_descriptor,
-        new java.lang.String[] { "Version", "Request", });
-    internal_static_build_VerifyPasswordResponse_descriptor =
-      getDescriptor().getMessageTypes().get(3);
-    internal_static_build_VerifyPasswordResponse_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_build_VerifyPasswordResponse_descriptor,
-        new java.lang.String[] { "Response", });
-    internal_static_build_UpdateTokenResponse_descriptor =
-      getDescriptor().getMessageTypes().get(4);
-    internal_static_build_UpdateTokenResponse_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_build_UpdateTokenResponse_descriptor,
-        new java.lang.String[] { "Version", "UpdateToken", });
-    internal_static_build_KeypairResponse_descriptor =
-      getDescriptor().getMessageTypes().get(5);
-    internal_static_build_KeypairResponse_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_build_KeypairResponse_descriptor,
-        new java.lang.String[] { "Version", "Id", "PublicKey", });
-  }
 
-  // @@protoc_insertion_point(outer_class_scope)
+        public static com.google.protobuf.Parser<VerifyPasswordResponse> parser() {
+            return PARSER;
+        }
+
+        @java.lang.Override
+        public com.google.protobuf.Parser<VerifyPasswordResponse> getParserForType() {
+            return PARSER;
+        }
+
+        @java.lang.Override
+        public com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VerifyPasswordResponse getDefaultInstanceForType() {
+            return DEFAULT_INSTANCE;
+        }
+
+    }
+
+    public interface VersionedUpdateTokenOrBuilder extends
+            // @@protoc_insertion_point(interface_extends:build.VersionedUpdateToken)
+            com.google.protobuf.MessageOrBuilder {
+
+        /**
+         * <code>uint32 version = 1;</code>
+         */
+        int getVersion();
+
+        /**
+         * <code>bytes update_token = 2;</code>
+         */
+        com.google.protobuf.ByteString getUpdateToken();
+    }
+
+    /**
+     * Protobuf type {@code build.VersionedUpdateToken}
+     */
+    public static final class VersionedUpdateToken extends
+            com.google.protobuf.GeneratedMessageV3 implements
+            // @@protoc_insertion_point(message_implements:build.VersionedUpdateToken)
+            VersionedUpdateTokenOrBuilder {
+        private static final long serialVersionUID = 0L;
+
+        // Use VersionedUpdateToken.newBuilder() to construct.
+        private VersionedUpdateToken(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+            super(builder);
+        }
+
+        private VersionedUpdateToken() {
+            version_ = 0;
+            updateToken_ = com.google.protobuf.ByteString.EMPTY;
+        }
+
+        @java.lang.Override
+        public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+            return this.unknownFields;
+        }
+
+        private VersionedUpdateToken(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            this();
+            if (extensionRegistry == null) {
+                throw new java.lang.NullPointerException();
+            }
+            int mutable_bitField0_ = 0;
+            com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+                    com.google.protobuf.UnknownFieldSet.newBuilder();
+            try {
+                boolean done = false;
+                while (!done) {
+                    int tag = input.readTag();
+                    switch (tag) {
+                        case 0:
+                            done = true;
+                            break;
+                        case 8: {
+
+                            version_ = input.readUInt32();
+                            break;
+                        }
+                        case 18: {
+
+                            updateToken_ = input.readBytes();
+                            break;
+                        }
+                        default: {
+                            if (!parseUnknownFieldProto3(
+                                    input, unknownFields, extensionRegistry, tag)) {
+                                done = true;
+                            }
+                            break;
+                        }
+                    }
+                }
+            } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                throw e.setUnfinishedMessage(this);
+            } catch (java.io.IOException e) {
+                throw new com.google.protobuf.InvalidProtocolBufferException(
+                        e).setUnfinishedMessage(this);
+            } finally {
+                this.unknownFields = unknownFields.build();
+                makeExtensionsImmutable();
+            }
+        }
+
+        public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+            return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.internal_static_build_VersionedUpdateToken_descriptor;
+        }
+
+        @java.lang.Override
+        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+            return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.internal_static_build_VersionedUpdateToken_fieldAccessorTable
+                    .ensureFieldAccessorsInitialized(
+                            com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VersionedUpdateToken.class, com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VersionedUpdateToken.Builder.class);
+        }
+
+        public static final int VERSION_FIELD_NUMBER = 1;
+        private int version_;
+
+        /**
+         * <code>uint32 version = 1;</code>
+         */
+        public int getVersion() {
+            return version_;
+        }
+
+        public static final int UPDATE_TOKEN_FIELD_NUMBER = 2;
+        private com.google.protobuf.ByteString updateToken_;
+
+        /**
+         * <code>bytes update_token = 2;</code>
+         */
+        public com.google.protobuf.ByteString getUpdateToken() {
+            return updateToken_;
+        }
+
+        private byte memoizedIsInitialized = -1;
+
+        @java.lang.Override
+        public final boolean isInitialized() {
+            byte isInitialized = memoizedIsInitialized;
+            if (isInitialized == 1) return true;
+            if (isInitialized == 0) return false;
+
+            memoizedIsInitialized = 1;
+            return true;
+        }
+
+        @java.lang.Override
+        public void writeTo(com.google.protobuf.CodedOutputStream output)
+                throws java.io.IOException {
+            if (version_ != 0) {
+                output.writeUInt32(1, version_);
+            }
+            if (!updateToken_.isEmpty()) {
+                output.writeBytes(2, updateToken_);
+            }
+            unknownFields.writeTo(output);
+        }
+
+        @java.lang.Override
+        public int getSerializedSize() {
+            int size = memoizedSize;
+            if (size != -1) return size;
+
+            size = 0;
+            if (version_ != 0) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeUInt32Size(1, version_);
+            }
+            if (!updateToken_.isEmpty()) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeBytesSize(2, updateToken_);
+            }
+            size += unknownFields.getSerializedSize();
+            memoizedSize = size;
+            return size;
+        }
+
+        @java.lang.Override
+        public boolean equals(final java.lang.Object obj) {
+            if (obj == this) {
+                return true;
+            }
+            if (!(obj instanceof com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VersionedUpdateToken)) {
+                return super.equals(obj);
+            }
+            com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VersionedUpdateToken other = (com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VersionedUpdateToken) obj;
+
+            boolean result = true;
+            result = result && (getVersion()
+                    == other.getVersion());
+            result = result && getUpdateToken()
+                    .equals(other.getUpdateToken());
+            result = result && unknownFields.equals(other.unknownFields);
+            return result;
+        }
+
+        @java.lang.Override
+        public int hashCode() {
+            if (memoizedHashCode != 0) {
+                return memoizedHashCode;
+            }
+            int hash = 41;
+            hash = (19 * hash) + getDescriptor().hashCode();
+            hash = (37 * hash) + VERSION_FIELD_NUMBER;
+            hash = (53 * hash) + getVersion();
+            hash = (37 * hash) + UPDATE_TOKEN_FIELD_NUMBER;
+            hash = (53 * hash) + getUpdateToken().hashCode();
+            hash = (29 * hash) + unknownFields.hashCode();
+            memoizedHashCode = hash;
+            return hash;
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VersionedUpdateToken parseFrom(
+                java.nio.ByteBuffer data)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VersionedUpdateToken parseFrom(
+                java.nio.ByteBuffer data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data, extensionRegistry);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VersionedUpdateToken parseFrom(
+                com.google.protobuf.ByteString data)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VersionedUpdateToken parseFrom(
+                com.google.protobuf.ByteString data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data, extensionRegistry);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VersionedUpdateToken parseFrom(byte[] data)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VersionedUpdateToken parseFrom(
+                byte[] data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data, extensionRegistry);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VersionedUpdateToken parseFrom(java.io.InputStream input)
+                throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3
+                    .parseWithIOException(PARSER, input);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VersionedUpdateToken parseFrom(
+                java.io.InputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3
+                    .parseWithIOException(PARSER, input, extensionRegistry);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VersionedUpdateToken parseDelimitedFrom(java.io.InputStream input)
+                throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3
+                    .parseDelimitedWithIOException(PARSER, input);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VersionedUpdateToken parseDelimitedFrom(
+                java.io.InputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3
+                    .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VersionedUpdateToken parseFrom(
+                com.google.protobuf.CodedInputStream input)
+                throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3
+                    .parseWithIOException(PARSER, input);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VersionedUpdateToken parseFrom(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3
+                    .parseWithIOException(PARSER, input, extensionRegistry);
+        }
+
+        @java.lang.Override
+        public Builder newBuilderForType() {
+            return newBuilder();
+        }
+
+        public static Builder newBuilder() {
+            return DEFAULT_INSTANCE.toBuilder();
+        }
+
+        public static Builder newBuilder(com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VersionedUpdateToken prototype) {
+            return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+        }
+
+        @java.lang.Override
+        public Builder toBuilder() {
+            return this == DEFAULT_INSTANCE
+                    ? new Builder() : new Builder().mergeFrom(this);
+        }
+
+        @java.lang.Override
+        protected Builder newBuilderForType(
+                com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+            Builder builder = new Builder(parent);
+            return builder;
+        }
+
+        /**
+         * Protobuf type {@code build.VersionedUpdateToken}
+         */
+        public static final class Builder extends
+                com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+                // @@protoc_insertion_point(builder_implements:build.VersionedUpdateToken)
+                com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VersionedUpdateTokenOrBuilder {
+            public static final com.google.protobuf.Descriptors.Descriptor
+            getDescriptor() {
+                return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.internal_static_build_VersionedUpdateToken_descriptor;
+            }
+
+            @java.lang.Override
+            protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+            internalGetFieldAccessorTable() {
+                return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.internal_static_build_VersionedUpdateToken_fieldAccessorTable
+                        .ensureFieldAccessorsInitialized(
+                                com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VersionedUpdateToken.class, com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VersionedUpdateToken.Builder.class);
+            }
+
+            // Construct using com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VersionedUpdateToken.newBuilder()
+            private Builder() {
+                maybeForceBuilderInitialization();
+            }
+
+            private Builder(
+                    com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+                super(parent);
+                maybeForceBuilderInitialization();
+            }
+
+            private void maybeForceBuilderInitialization() {
+                if (com.google.protobuf.GeneratedMessageV3
+                        .alwaysUseFieldBuilders) {
+                }
+            }
+
+            @java.lang.Override
+            public Builder clear() {
+                super.clear();
+                version_ = 0;
+
+                updateToken_ = com.google.protobuf.ByteString.EMPTY;
+
+                return this;
+            }
+
+            @java.lang.Override
+            public com.google.protobuf.Descriptors.Descriptor
+            getDescriptorForType() {
+                return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.internal_static_build_VersionedUpdateToken_descriptor;
+            }
+
+            @java.lang.Override
+            public com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VersionedUpdateToken getDefaultInstanceForType() {
+                return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VersionedUpdateToken.getDefaultInstance();
+            }
+
+            @java.lang.Override
+            public com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VersionedUpdateToken build() {
+                com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VersionedUpdateToken result = buildPartial();
+                if (!result.isInitialized()) {
+                    throw newUninitializedMessageException(result);
+                }
+                return result;
+            }
+
+            @java.lang.Override
+            public com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VersionedUpdateToken buildPartial() {
+                com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VersionedUpdateToken result = new com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VersionedUpdateToken(this);
+                result.version_ = version_;
+                result.updateToken_ = updateToken_;
+                onBuilt();
+                return result;
+            }
+
+            @java.lang.Override
+            public Builder clone() {
+                return (Builder) super.clone();
+            }
+
+            @java.lang.Override
+            public Builder setField(
+                    com.google.protobuf.Descriptors.FieldDescriptor field,
+                    java.lang.Object value) {
+                return (Builder) super.setField(field, value);
+            }
+
+            @java.lang.Override
+            public Builder clearField(
+                    com.google.protobuf.Descriptors.FieldDescriptor field) {
+                return (Builder) super.clearField(field);
+            }
+
+            @java.lang.Override
+            public Builder clearOneof(
+                    com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+                return (Builder) super.clearOneof(oneof);
+            }
+
+            @java.lang.Override
+            public Builder setRepeatedField(
+                    com.google.protobuf.Descriptors.FieldDescriptor field,
+                    int index, java.lang.Object value) {
+                return (Builder) super.setRepeatedField(field, index, value);
+            }
+
+            @java.lang.Override
+            public Builder addRepeatedField(
+                    com.google.protobuf.Descriptors.FieldDescriptor field,
+                    java.lang.Object value) {
+                return (Builder) super.addRepeatedField(field, value);
+            }
+
+            @java.lang.Override
+            public Builder mergeFrom(com.google.protobuf.Message other) {
+                if (other instanceof com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VersionedUpdateToken) {
+                    return mergeFrom((com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VersionedUpdateToken) other);
+                } else {
+                    super.mergeFrom(other);
+                    return this;
+                }
+            }
+
+            public Builder mergeFrom(com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VersionedUpdateToken other) {
+                if (other == com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VersionedUpdateToken.getDefaultInstance())
+                    return this;
+                if (other.getVersion() != 0) {
+                    setVersion(other.getVersion());
+                }
+                if (other.getUpdateToken() != com.google.protobuf.ByteString.EMPTY) {
+                    setUpdateToken(other.getUpdateToken());
+                }
+                this.mergeUnknownFields(other.unknownFields);
+                onChanged();
+                return this;
+            }
+
+            @java.lang.Override
+            public final boolean isInitialized() {
+                return true;
+            }
+
+            @java.lang.Override
+            public Builder mergeFrom(
+                    com.google.protobuf.CodedInputStream input,
+                    com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                    throws java.io.IOException {
+                com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VersionedUpdateToken parsedMessage = null;
+                try {
+                    parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+                } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                    parsedMessage = (com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VersionedUpdateToken) e.getUnfinishedMessage();
+                    throw e.unwrapIOException();
+                } finally {
+                    if (parsedMessage != null) {
+                        mergeFrom(parsedMessage);
+                    }
+                }
+                return this;
+            }
+
+            private int version_;
+
+            /**
+             * <code>uint32 version = 1;</code>
+             */
+            public int getVersion() {
+                return version_;
+            }
+
+            /**
+             * <code>uint32 version = 1;</code>
+             */
+            public Builder setVersion(int value) {
+
+                version_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>uint32 version = 1;</code>
+             */
+            public Builder clearVersion() {
+
+                version_ = 0;
+                onChanged();
+                return this;
+            }
+
+            private com.google.protobuf.ByteString updateToken_ = com.google.protobuf.ByteString.EMPTY;
+
+            /**
+             * <code>bytes update_token = 2;</code>
+             */
+            public com.google.protobuf.ByteString getUpdateToken() {
+                return updateToken_;
+            }
+
+            /**
+             * <code>bytes update_token = 2;</code>
+             */
+            public Builder setUpdateToken(com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+
+                updateToken_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>bytes update_token = 2;</code>
+             */
+            public Builder clearUpdateToken() {
+
+                updateToken_ = getDefaultInstance().getUpdateToken();
+                onChanged();
+                return this;
+            }
+
+            @java.lang.Override
+            public final Builder setUnknownFields(
+                    final com.google.protobuf.UnknownFieldSet unknownFields) {
+                return super.setUnknownFieldsProto3(unknownFields);
+            }
+
+            @java.lang.Override
+            public final Builder mergeUnknownFields(
+                    final com.google.protobuf.UnknownFieldSet unknownFields) {
+                return super.mergeUnknownFields(unknownFields);
+            }
+
+
+            // @@protoc_insertion_point(builder_scope:build.VersionedUpdateToken)
+        }
+
+        // @@protoc_insertion_point(class_scope:build.VersionedUpdateToken)
+        private static final com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VersionedUpdateToken DEFAULT_INSTANCE;
+
+        static {
+            DEFAULT_INSTANCE = new com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VersionedUpdateToken();
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VersionedUpdateToken getDefaultInstance() {
+            return DEFAULT_INSTANCE;
+        }
+
+        private static final com.google.protobuf.Parser<VersionedUpdateToken>
+                PARSER = new com.google.protobuf.AbstractParser<VersionedUpdateToken>() {
+            @java.lang.Override
+            public VersionedUpdateToken parsePartialFrom(
+                    com.google.protobuf.CodedInputStream input,
+                    com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                    throws com.google.protobuf.InvalidProtocolBufferException {
+                return new VersionedUpdateToken(input, extensionRegistry);
+            }
+        };
+
+        public static com.google.protobuf.Parser<VersionedUpdateToken> parser() {
+            return PARSER;
+        }
+
+        @java.lang.Override
+        public com.google.protobuf.Parser<VersionedUpdateToken> getParserForType() {
+            return PARSER;
+        }
+
+        @java.lang.Override
+        public com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.VersionedUpdateToken getDefaultInstanceForType() {
+            return DEFAULT_INSTANCE;
+        }
+
+    }
+
+    public interface HttpErrorOrBuilder extends
+            // @@protoc_insertion_point(interface_extends:build.HttpError)
+            com.google.protobuf.MessageOrBuilder {
+
+        /**
+         * <code>uint32 code = 1;</code>
+         */
+        int getCode();
+
+        /**
+         * <code>string message = 2;</code>
+         */
+        java.lang.String getMessage();
+
+        /**
+         * <code>string message = 2;</code>
+         */
+        com.google.protobuf.ByteString
+        getMessageBytes();
+    }
+
+    /**
+     * Protobuf type {@code build.HttpError}
+     */
+    public static final class HttpError extends
+            com.google.protobuf.GeneratedMessageV3 implements
+            // @@protoc_insertion_point(message_implements:build.HttpError)
+            HttpErrorOrBuilder {
+        private static final long serialVersionUID = 0L;
+
+        // Use HttpError.newBuilder() to construct.
+        private HttpError(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+            super(builder);
+        }
+
+        private HttpError() {
+            code_ = 0;
+            message_ = "";
+        }
+
+        @java.lang.Override
+        public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+            return this.unknownFields;
+        }
+
+        private HttpError(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            this();
+            if (extensionRegistry == null) {
+                throw new java.lang.NullPointerException();
+            }
+            int mutable_bitField0_ = 0;
+            com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+                    com.google.protobuf.UnknownFieldSet.newBuilder();
+            try {
+                boolean done = false;
+                while (!done) {
+                    int tag = input.readTag();
+                    switch (tag) {
+                        case 0:
+                            done = true;
+                            break;
+                        case 8: {
+
+                            code_ = input.readUInt32();
+                            break;
+                        }
+                        case 18: {
+                            java.lang.String s = input.readStringRequireUtf8();
+
+                            message_ = s;
+                            break;
+                        }
+                        default: {
+                            if (!parseUnknownFieldProto3(
+                                    input, unknownFields, extensionRegistry, tag)) {
+                                done = true;
+                            }
+                            break;
+                        }
+                    }
+                }
+            } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                throw e.setUnfinishedMessage(this);
+            } catch (java.io.IOException e) {
+                throw new com.google.protobuf.InvalidProtocolBufferException(
+                        e).setUnfinishedMessage(this);
+            } finally {
+                this.unknownFields = unknownFields.build();
+                makeExtensionsImmutable();
+            }
+        }
+
+        public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+            return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.internal_static_build_HttpError_descriptor;
+        }
+
+        @java.lang.Override
+        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+            return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.internal_static_build_HttpError_fieldAccessorTable
+                    .ensureFieldAccessorsInitialized(
+                            com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.HttpError.class, com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.HttpError.Builder.class);
+        }
+
+        public static final int CODE_FIELD_NUMBER = 1;
+        private int code_;
+
+        /**
+         * <code>uint32 code = 1;</code>
+         */
+        public int getCode() {
+            return code_;
+        }
+
+        public static final int MESSAGE_FIELD_NUMBER = 2;
+        private volatile java.lang.Object message_;
+
+        /**
+         * <code>string message = 2;</code>
+         */
+        public java.lang.String getMessage() {
+            java.lang.Object ref = message_;
+            if (ref instanceof java.lang.String) {
+                return (java.lang.String) ref;
+            } else {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                java.lang.String s = bs.toStringUtf8();
+                message_ = s;
+                return s;
+            }
+        }
+
+        /**
+         * <code>string message = 2;</code>
+         */
+        public com.google.protobuf.ByteString
+        getMessageBytes() {
+            java.lang.Object ref = message_;
+            if (ref instanceof java.lang.String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (java.lang.String) ref);
+                message_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        private byte memoizedIsInitialized = -1;
+
+        @java.lang.Override
+        public final boolean isInitialized() {
+            byte isInitialized = memoizedIsInitialized;
+            if (isInitialized == 1) return true;
+            if (isInitialized == 0) return false;
+
+            memoizedIsInitialized = 1;
+            return true;
+        }
+
+        @java.lang.Override
+        public void writeTo(com.google.protobuf.CodedOutputStream output)
+                throws java.io.IOException {
+            if (code_ != 0) {
+                output.writeUInt32(1, code_);
+            }
+            if (!getMessageBytes().isEmpty()) {
+                com.google.protobuf.GeneratedMessageV3.writeString(output, 2, message_);
+            }
+            unknownFields.writeTo(output);
+        }
+
+        @java.lang.Override
+        public int getSerializedSize() {
+            int size = memoizedSize;
+            if (size != -1) return size;
+
+            size = 0;
+            if (code_ != 0) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeUInt32Size(1, code_);
+            }
+            if (!getMessageBytes().isEmpty()) {
+                size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, message_);
+            }
+            size += unknownFields.getSerializedSize();
+            memoizedSize = size;
+            return size;
+        }
+
+        @java.lang.Override
+        public boolean equals(final java.lang.Object obj) {
+            if (obj == this) {
+                return true;
+            }
+            if (!(obj instanceof com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.HttpError)) {
+                return super.equals(obj);
+            }
+            com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.HttpError other = (com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.HttpError) obj;
+
+            boolean result = true;
+            result = result && (getCode()
+                    == other.getCode());
+            result = result && getMessage()
+                    .equals(other.getMessage());
+            result = result && unknownFields.equals(other.unknownFields);
+            return result;
+        }
+
+        @java.lang.Override
+        public int hashCode() {
+            if (memoizedHashCode != 0) {
+                return memoizedHashCode;
+            }
+            int hash = 41;
+            hash = (19 * hash) + getDescriptor().hashCode();
+            hash = (37 * hash) + CODE_FIELD_NUMBER;
+            hash = (53 * hash) + getCode();
+            hash = (37 * hash) + MESSAGE_FIELD_NUMBER;
+            hash = (53 * hash) + getMessage().hashCode();
+            hash = (29 * hash) + unknownFields.hashCode();
+            memoizedHashCode = hash;
+            return hash;
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.HttpError parseFrom(
+                java.nio.ByteBuffer data)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.HttpError parseFrom(
+                java.nio.ByteBuffer data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data, extensionRegistry);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.HttpError parseFrom(
+                com.google.protobuf.ByteString data)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.HttpError parseFrom(
+                com.google.protobuf.ByteString data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data, extensionRegistry);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.HttpError parseFrom(byte[] data)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.HttpError parseFrom(
+                byte[] data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data, extensionRegistry);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.HttpError parseFrom(java.io.InputStream input)
+                throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3
+                    .parseWithIOException(PARSER, input);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.HttpError parseFrom(
+                java.io.InputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3
+                    .parseWithIOException(PARSER, input, extensionRegistry);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.HttpError parseDelimitedFrom(java.io.InputStream input)
+                throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3
+                    .parseDelimitedWithIOException(PARSER, input);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.HttpError parseDelimitedFrom(
+                java.io.InputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3
+                    .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.HttpError parseFrom(
+                com.google.protobuf.CodedInputStream input)
+                throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3
+                    .parseWithIOException(PARSER, input);
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.HttpError parseFrom(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3
+                    .parseWithIOException(PARSER, input, extensionRegistry);
+        }
+
+        @java.lang.Override
+        public Builder newBuilderForType() {
+            return newBuilder();
+        }
+
+        public static Builder newBuilder() {
+            return DEFAULT_INSTANCE.toBuilder();
+        }
+
+        public static Builder newBuilder(com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.HttpError prototype) {
+            return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+        }
+
+        @java.lang.Override
+        public Builder toBuilder() {
+            return this == DEFAULT_INSTANCE
+                    ? new Builder() : new Builder().mergeFrom(this);
+        }
+
+        @java.lang.Override
+        protected Builder newBuilderForType(
+                com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+            Builder builder = new Builder(parent);
+            return builder;
+        }
+
+        /**
+         * Protobuf type {@code build.HttpError}
+         */
+        public static final class Builder extends
+                com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+                // @@protoc_insertion_point(builder_implements:build.HttpError)
+                com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.HttpErrorOrBuilder {
+            public static final com.google.protobuf.Descriptors.Descriptor
+            getDescriptor() {
+                return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.internal_static_build_HttpError_descriptor;
+            }
+
+            @java.lang.Override
+            protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+            internalGetFieldAccessorTable() {
+                return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.internal_static_build_HttpError_fieldAccessorTable
+                        .ensureFieldAccessorsInitialized(
+                                com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.HttpError.class, com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.HttpError.Builder.class);
+            }
+
+            // Construct using com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.HttpError.newBuilder()
+            private Builder() {
+                maybeForceBuilderInitialization();
+            }
+
+            private Builder(
+                    com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+                super(parent);
+                maybeForceBuilderInitialization();
+            }
+
+            private void maybeForceBuilderInitialization() {
+                if (com.google.protobuf.GeneratedMessageV3
+                        .alwaysUseFieldBuilders) {
+                }
+            }
+
+            @java.lang.Override
+            public Builder clear() {
+                super.clear();
+                code_ = 0;
+
+                message_ = "";
+
+                return this;
+            }
+
+            @java.lang.Override
+            public com.google.protobuf.Descriptors.Descriptor
+            getDescriptorForType() {
+                return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.internal_static_build_HttpError_descriptor;
+            }
+
+            @java.lang.Override
+            public com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.HttpError getDefaultInstanceForType() {
+                return com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.HttpError.getDefaultInstance();
+            }
+
+            @java.lang.Override
+            public com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.HttpError build() {
+                com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.HttpError result = buildPartial();
+                if (!result.isInitialized()) {
+                    throw newUninitializedMessageException(result);
+                }
+                return result;
+            }
+
+            @java.lang.Override
+            public com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.HttpError buildPartial() {
+                com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.HttpError result = new com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.HttpError(this);
+                result.code_ = code_;
+                result.message_ = message_;
+                onBuilt();
+                return result;
+            }
+
+            @java.lang.Override
+            public Builder clone() {
+                return (Builder) super.clone();
+            }
+
+            @java.lang.Override
+            public Builder setField(
+                    com.google.protobuf.Descriptors.FieldDescriptor field,
+                    java.lang.Object value) {
+                return (Builder) super.setField(field, value);
+            }
+
+            @java.lang.Override
+            public Builder clearField(
+                    com.google.protobuf.Descriptors.FieldDescriptor field) {
+                return (Builder) super.clearField(field);
+            }
+
+            @java.lang.Override
+            public Builder clearOneof(
+                    com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+                return (Builder) super.clearOneof(oneof);
+            }
+
+            @java.lang.Override
+            public Builder setRepeatedField(
+                    com.google.protobuf.Descriptors.FieldDescriptor field,
+                    int index, java.lang.Object value) {
+                return (Builder) super.setRepeatedField(field, index, value);
+            }
+
+            @java.lang.Override
+            public Builder addRepeatedField(
+                    com.google.protobuf.Descriptors.FieldDescriptor field,
+                    java.lang.Object value) {
+                return (Builder) super.addRepeatedField(field, value);
+            }
+
+            @java.lang.Override
+            public Builder mergeFrom(com.google.protobuf.Message other) {
+                if (other instanceof com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.HttpError) {
+                    return mergeFrom((com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.HttpError) other);
+                } else {
+                    super.mergeFrom(other);
+                    return this;
+                }
+            }
+
+            public Builder mergeFrom(com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.HttpError other) {
+                if (other == com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.HttpError.getDefaultInstance())
+                    return this;
+                if (other.getCode() != 0) {
+                    setCode(other.getCode());
+                }
+                if (!other.getMessage().isEmpty()) {
+                    message_ = other.message_;
+                    onChanged();
+                }
+                this.mergeUnknownFields(other.unknownFields);
+                onChanged();
+                return this;
+            }
+
+            @java.lang.Override
+            public final boolean isInitialized() {
+                return true;
+            }
+
+            @java.lang.Override
+            public Builder mergeFrom(
+                    com.google.protobuf.CodedInputStream input,
+                    com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                    throws java.io.IOException {
+                com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.HttpError parsedMessage = null;
+                try {
+                    parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+                } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                    parsedMessage = (com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.HttpError) e.getUnfinishedMessage();
+                    throw e.unwrapIOException();
+                } finally {
+                    if (parsedMessage != null) {
+                        mergeFrom(parsedMessage);
+                    }
+                }
+                return this;
+            }
+
+            private int code_;
+
+            /**
+             * <code>uint32 code = 1;</code>
+             */
+            public int getCode() {
+                return code_;
+            }
+
+            /**
+             * <code>uint32 code = 1;</code>
+             */
+            public Builder setCode(int value) {
+
+                code_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>uint32 code = 1;</code>
+             */
+            public Builder clearCode() {
+
+                code_ = 0;
+                onChanged();
+                return this;
+            }
+
+            private java.lang.Object message_ = "";
+
+            /**
+             * <code>string message = 2;</code>
+             */
+            public java.lang.String getMessage() {
+                java.lang.Object ref = message_;
+                if (!(ref instanceof java.lang.String)) {
+                    com.google.protobuf.ByteString bs =
+                            (com.google.protobuf.ByteString) ref;
+                    java.lang.String s = bs.toStringUtf8();
+                    message_ = s;
+                    return s;
+                } else {
+                    return (java.lang.String) ref;
+                }
+            }
+
+            /**
+             * <code>string message = 2;</code>
+             */
+            public com.google.protobuf.ByteString
+            getMessageBytes() {
+                java.lang.Object ref = message_;
+                if (ref instanceof String) {
+                    com.google.protobuf.ByteString b =
+                            com.google.protobuf.ByteString.copyFromUtf8(
+                                    (java.lang.String) ref);
+                    message_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            /**
+             * <code>string message = 2;</code>
+             */
+            public Builder setMessage(
+                    java.lang.String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+
+                message_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>string message = 2;</code>
+             */
+            public Builder clearMessage() {
+
+                message_ = getDefaultInstance().getMessage();
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>string message = 2;</code>
+             */
+            public Builder setMessageBytes(
+                    com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                checkByteStringIsUtf8(value);
+
+                message_ = value;
+                onChanged();
+                return this;
+            }
+
+            @java.lang.Override
+            public final Builder setUnknownFields(
+                    final com.google.protobuf.UnknownFieldSet unknownFields) {
+                return super.setUnknownFieldsProto3(unknownFields);
+            }
+
+            @java.lang.Override
+            public final Builder mergeUnknownFields(
+                    final com.google.protobuf.UnknownFieldSet unknownFields) {
+                return super.mergeUnknownFields(unknownFields);
+            }
+
+
+            // @@protoc_insertion_point(builder_scope:build.HttpError)
+        }
+
+        // @@protoc_insertion_point(class_scope:build.HttpError)
+        private static final com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.HttpError DEFAULT_INSTANCE;
+
+        static {
+            DEFAULT_INSTANCE = new com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.HttpError();
+        }
+
+        public static com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.HttpError getDefaultInstance() {
+            return DEFAULT_INSTANCE;
+        }
+
+        private static final com.google.protobuf.Parser<HttpError>
+                PARSER = new com.google.protobuf.AbstractParser<HttpError>() {
+            @java.lang.Override
+            public HttpError parsePartialFrom(
+                    com.google.protobuf.CodedInputStream input,
+                    com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                    throws com.google.protobuf.InvalidProtocolBufferException {
+                return new HttpError(input, extensionRegistry);
+            }
+        };
+
+        public static com.google.protobuf.Parser<HttpError> parser() {
+            return PARSER;
+        }
+
+        @java.lang.Override
+        public com.google.protobuf.Parser<HttpError> getParserForType() {
+            return PARSER;
+        }
+
+        @java.lang.Override
+        public com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos.HttpError getDefaultInstanceForType() {
+            return DEFAULT_INSTANCE;
+        }
+
+    }
+
+    private static final com.google.protobuf.Descriptors.Descriptor
+            internal_static_build_DatabaseRecord_descriptor;
+    private static final
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+            internal_static_build_DatabaseRecord_fieldAccessorTable;
+    private static final com.google.protobuf.Descriptors.Descriptor
+            internal_static_build_EnrollmentRequest_descriptor;
+    private static final
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+            internal_static_build_EnrollmentRequest_fieldAccessorTable;
+    private static final com.google.protobuf.Descriptors.Descriptor
+            internal_static_build_EnrollmentResponse_descriptor;
+    private static final
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+            internal_static_build_EnrollmentResponse_fieldAccessorTable;
+    private static final com.google.protobuf.Descriptors.Descriptor
+            internal_static_build_VerifyPasswordRequest_descriptor;
+    private static final
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+            internal_static_build_VerifyPasswordRequest_fieldAccessorTable;
+    private static final com.google.protobuf.Descriptors.Descriptor
+            internal_static_build_VerifyPasswordResponse_descriptor;
+    private static final
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+            internal_static_build_VerifyPasswordResponse_fieldAccessorTable;
+    private static final com.google.protobuf.Descriptors.Descriptor
+            internal_static_build_VersionedUpdateToken_descriptor;
+    private static final
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+            internal_static_build_VersionedUpdateToken_fieldAccessorTable;
+    private static final com.google.protobuf.Descriptors.Descriptor
+            internal_static_build_HttpError_descriptor;
+    private static final
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+            internal_static_build_HttpError_fieldAccessorTable;
+
+    public static com.google.protobuf.Descriptors.FileDescriptor
+    getDescriptor() {
+        return descriptor;
+    }
+
+    private static com.google.protobuf.Descriptors.FileDescriptor
+            descriptor;
+
+    static {
+        java.lang.String[] descriptorData = {
+                "\n\016passw0rd.proto\022\005build\"1\n\016DatabaseRecor" +
+                        "d\022\017\n\007version\030\001 \001(\r\022\016\n\006record\030\002 \001(\014\"$\n\021En" +
+                        "rollmentRequest\022\017\n\007version\030\001 \001(\r\"7\n\022Enro" +
+                        "llmentResponse\022\017\n\007version\030\001 \001(\r\022\020\n\010respo" +
+                        "nse\030\002 \001(\014\"9\n\025VerifyPasswordRequest\022\017\n\007ve" +
+                        "rsion\030\001 \001(\r\022\017\n\007request\030\002 \001(\014\"*\n\026VerifyPa" +
+                        "sswordResponse\022\020\n\010response\030\001 \001(\014\"=\n\024Vers" +
+                        "ionedUpdateToken\022\017\n\007version\030\001 \001(\r\022\024\n\014upd" +
+                        "ate_token\030\002 \001(\014\"*\n\tHttpError\022\014\n\004code\030\001 \001" +
+                        "(\r\022\017\n\007message\030\002 \001(\tB<\n*com.virgilsecurit" +
+                        "y.passw0rd.protobuf.buildB\016Passw0rdProto" +
+                        "sb\006proto3"
+        };
+        com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
+                new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
+                    public com.google.protobuf.ExtensionRegistry assignDescriptors(
+                            com.google.protobuf.Descriptors.FileDescriptor root) {
+                        descriptor = root;
+                        return null;
+                    }
+                };
+        com.google.protobuf.Descriptors.FileDescriptor
+                .internalBuildGeneratedFileFrom(descriptorData,
+                        new com.google.protobuf.Descriptors.FileDescriptor[]{
+                        }, assigner);
+        internal_static_build_DatabaseRecord_descriptor =
+                getDescriptor().getMessageTypes().get(0);
+        internal_static_build_DatabaseRecord_fieldAccessorTable = new
+                com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+                internal_static_build_DatabaseRecord_descriptor,
+                new java.lang.String[]{"Version", "Record",});
+        internal_static_build_EnrollmentRequest_descriptor =
+                getDescriptor().getMessageTypes().get(1);
+        internal_static_build_EnrollmentRequest_fieldAccessorTable = new
+                com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+                internal_static_build_EnrollmentRequest_descriptor,
+                new java.lang.String[]{"Version",});
+        internal_static_build_EnrollmentResponse_descriptor =
+                getDescriptor().getMessageTypes().get(2);
+        internal_static_build_EnrollmentResponse_fieldAccessorTable = new
+                com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+                internal_static_build_EnrollmentResponse_descriptor,
+                new java.lang.String[]{"Version", "Response",});
+        internal_static_build_VerifyPasswordRequest_descriptor =
+                getDescriptor().getMessageTypes().get(3);
+        internal_static_build_VerifyPasswordRequest_fieldAccessorTable = new
+                com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+                internal_static_build_VerifyPasswordRequest_descriptor,
+                new java.lang.String[]{"Version", "Request",});
+        internal_static_build_VerifyPasswordResponse_descriptor =
+                getDescriptor().getMessageTypes().get(4);
+        internal_static_build_VerifyPasswordResponse_fieldAccessorTable = new
+                com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+                internal_static_build_VerifyPasswordResponse_descriptor,
+                new java.lang.String[]{"Response",});
+        internal_static_build_VersionedUpdateToken_descriptor =
+                getDescriptor().getMessageTypes().get(5);
+        internal_static_build_VersionedUpdateToken_fieldAccessorTable = new
+                com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+                internal_static_build_VersionedUpdateToken_descriptor,
+                new java.lang.String[]{"Version", "UpdateToken",});
+        internal_static_build_HttpError_descriptor =
+                getDescriptor().getMessageTypes().get(6);
+        internal_static_build_HttpError_fieldAccessorTable = new
+                com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+                internal_static_build_HttpError_descriptor,
+                new java.lang.String[]{"Code", "Message",});
+    }
+
+    // @@protoc_insertion_point(outer_class_scope)
 }

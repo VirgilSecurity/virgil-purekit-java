@@ -33,12 +33,16 @@
 
 package com.virgilsecurity.passw0rd
 
+import com.google.protobuf.ByteString
+import com.google.protobuf.Message
+import com.virgilsecurity.passw0rd.client.HttpClientProtobuf
 import com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos
+import com.virgilsecurity.passw0rd.stubs.PasswordRecord
+import com.virgilsecurity.passw0rd.stubs.VerificationResult
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
-import com.virgilsecurity.passw0rd.stubs.PasswordRecord
-import com.virgilsecurity.passw0rd.stubs.VerificationResult
+import virgil.crypto.phe.PheClient
 
 /*
  * Copyright (c) 2015-2018, Virgil Security, Inc.
@@ -87,15 +91,44 @@ import com.virgilsecurity.passw0rd.stubs.VerificationResult
 /**
  * Protocol class.
  */
-class Protocol(private val protocolContext: ProtocolContext) {
+class Protocol(protocolContext: ProtocolContext) {
 
-    fun enroll(password: String): Deferred<PasswordRecord> = GlobalScope.async {
+    val appToken: String = protocolContext.appToken
+    val pheClient: PheClient = protocolContext.pheClient
+    val version: Int = protocolContext.version
+    val updateToken: Passw0rdProtos.VersionedUpdateToken = protocolContext.updateToken
+    val httpClient = HttpClientProtobuf()
+
+    fun enrollAccount(password: String): Deferred<Pair<ByteArray, ByteArray>> = GlobalScope.async {
+        Passw0rdProtos.EnrollmentRequest.newBuilder().setVersion(version).build().run {
+            httpClient.firePost(
+                this,
+                HttpClientProtobuf.AvailableRequests.ENROLL,
+                authToken = appToken,
+                responseParser = Passw0rdProtos.EnrollmentResponse.parser()
+            ).let { response ->
+                val record = pheClient.enrollAccount(response.toByteArray(), password.toByteArray())
+
+                val enrollmentRecord = Passw0rdProtos.DatabaseRecord
+                    .newBuilder()
+                    .setVersion(version)
+                    .setRecord(ByteString.copyFrom(record.enrollmentRecord))
+                    .build()
+                    .toByteArray()
+
+                Pair(enrollmentRecord, record.accountKey)
+            }
+        }
+    }
+
+    fun verifyPassword(password: String, enrollmentRecord: ByteArray): Deferred<Unit> = GlobalScope.async {
+        val
+
+        Unit
+    }
+
+    fun updateEnrollmentRecord(passwordRecord: PasswordRecord): Deferred<Unit> = GlobalScope.async {
 
     }
 
-    fun verify(passwordRecord: PasswordRecord, password: String): Deferred<VerificationResult> = GlobalScope.async {
-
-    }
-
-    fun update(passwordRecord: PasswordRecord)
 }
