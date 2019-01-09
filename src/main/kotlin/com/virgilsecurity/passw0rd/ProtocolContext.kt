@@ -58,7 +58,7 @@ class ProtocolContext(
     val appToken: String,
     val pheClient: PheClient,
     val version: Int,
-    val updateToken: Passw0rdProtos.VersionedUpdateToken
+    val updateToken: Passw0rdProtos.VersionedUpdateToken?
 ) {
 
     companion object {
@@ -69,55 +69,81 @@ class ProtocolContext(
             updateToken: String
         ): ProtocolContext {
             if (appToken.isBlank()) Utils.shouldNotBeEmpty("appToken")
-            if (servicePublicKey.isBlank()) Utils.shouldNotBeEmpty("clientSecretKey")
-            if (clientSecretKey.isBlank()) Utils.shouldNotBeEmpty("servicePublicKey")
+            if (servicePublicKey.isBlank()) Utils.shouldNotBeEmpty("servicePublicKey")
+            if (clientSecretKey.isBlank()) Utils.shouldNotBeEmpty("clientSecretKey")
 
-            val (version, content) = parseToken(updateToken)
+            val (publicVersion, publicBytes) =
+                    parseVersionAndContent(servicePublicKey, PREFIX_PUBLIC_KEY, "Public Key")
 
-            val versionedUpdateToken = Passw0rdProtos.VersionedUpdateToken
-                .newBuilder()
-                .setVersion(version)
-                .setUpdateToken(ByteString.copyFrom(content))
-                .build()
+            val (secretVersion, secretBytes) =
+                    parseVersionAndContent(clientSecretKey, PREFIX_SECRET_KEY, "Secret Key")
 
-            return ProtocolContext(appToken, PheClient(), version, versionedUpdateToken)
+            if (publicVersion != secretVersion)
+                throw IllegalArgumentException("Public and Secret keys must have the same version.")
+
+            val pheClient = PheClient()
+            pheClient.setKeys(secretBytes, publicBytes)
+
+            var currentVersion = publicVersion
+            var versionedUpdateToken: Passw0rdProtos.VersionedUpdateToken? = null
+
+            if (updateToken.isNotBlank()) {
+                val (tokenVersion, content) = parseVersionAndContent(updateToken, PREFIX_UPDATE_TOKEN, "Token")
+
+                if (tokenVersion != currentVersion + 1)
+                    throw IllegalArgumentException("Incorrect token version $tokenVersion. " +
+                                                           "Should be {$tokenVersion + 1}.")
+
+                currentVersion = tokenVersion
+                val rotateKeysResult = pheClient.rotateKeys(updateToken.toByteArray())
+
+                pheClient.setKeys(rotateKeysResult.newClientPrivateKey, rotateKeysResult.newServerPublicKey)
+
+                versionedUpdateToken = Passw0rdProtos.VersionedUpdateToken
+                    .newBuilder()
+                    .setVersion(tokenVersion)
+                    .setUpdateToken(ByteString.copyFrom(content))
+                    .build()
+            }
+
+            return ProtocolContext(appToken, pheClient, currentVersion, versionedUpdateToken)
         }
 
-        private fun parseToken(token: String): Pair<Int, ByteArray> {
-            if (token.isBlank()) Utils.shouldNotBeEmpty("token")
-
-            val tokenParts = token.split('.')
-            if (tokenParts.size != 3)
+        private fun parseVersionAndContent(forParse: String, prefix: String, name: String): Pair<Int, ByteArray> {
+            val parsedParts = forParse.split('.')
+            if (parsedParts.size != 3)
                 throw IllegalArgumentException(
-                    "Provided \'token\' has wrong parts count. " +
-                            "Should be \'3\'. Actual is \'{${tokenParts.size}}\'. "
+                    "Provided \'$name\' has wrong parts count. " +
+                            "Should be \'3\'. Actual is \'{${parsedParts.size}}\'. "
                 )
 
-            if (tokenParts[0] != UPDATE_TOKEN_PREFIX)
+            if (parsedParts[0] != prefix)
                 throw IllegalArgumentException(
-                    "Wrong token prefix. Should be \'$UPDATE_TOKEN_PREFIX\'. " +
-                            "Actual is \'{$tokenParts[0]}\'."
+                    "Wrong token prefix. Should be \'$prefix\'. " +
+                            "Actual is \'{$parsedParts[0]}\'."
                 )
 
             val version: Int
             try {
-                version = tokenParts[1].toInt()
+                version = parsedParts[1].toInt()
                 if (version < 1)
-                    throw IllegalArgumentException("Token version can not be zero or negative number.")
+                    throw IllegalArgumentException("$name version can not be zero or negative number.")
             } catch (e: NumberFormatException) {
-                throw IllegalArgumentException("Token version can not be parsed.")
+                throw IllegalArgumentException("$name version can not be parsed.")
             }
 
             val content: ByteArray
             try {
-                content = Base64.getDecoder().decode(tokenParts[2])
+                content = Base64.getDecoder().decode(parsedParts[2])
             } catch (e: IllegalArgumentException) {
-                throw IllegalArgumentException("Token content can not be parsed.")
+                throw IllegalArgumentException("$name content can not be parsed.")
             }
 
             return Pair(version, content)
         }
 
-        const val UPDATE_TOKEN_PREFIX = "UT"
+        const val PREFIX_UPDATE_TOKEN = "UT"
+        const val PREFIX_SECRET_KEY = "SK"
+        const val PREFIX_PUBLIC_KEY = "PK"
     }
 }

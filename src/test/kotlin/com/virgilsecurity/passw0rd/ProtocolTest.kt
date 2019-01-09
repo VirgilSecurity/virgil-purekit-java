@@ -33,7 +33,9 @@
 
 package com.virgilsecurity.passw0rd
 
+import com.virgilsecurity.passw0rd.client.HttpClientProtobuf
 import com.virgilsecurity.passw0rd.utils.PropertyManager
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
@@ -66,6 +68,16 @@ class ProtocolTest {
         )
         assertNotNull(context)
 
-        val protocol = Protocol(context)
+        val protocol = Protocol(context, HttpClientProtobuf(propertyManager.serverAddress))
+
+        val password = "p@ssw0Rd"
+
+        var record: Pair<ByteArray, ByteArray>? = null
+        runBlocking {
+            record = protocol.enrollAccount(password).await()
+        }
+        assertNotNull(record)
+        assertTrue(record!!.first.isNotEmpty())
+        assertTrue(record!!.second.size == 32)
     }
 }

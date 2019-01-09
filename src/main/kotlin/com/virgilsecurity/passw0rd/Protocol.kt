@@ -34,11 +34,8 @@
 package com.virgilsecurity.passw0rd
 
 import com.google.protobuf.ByteString
-import com.google.protobuf.Message
 import com.virgilsecurity.passw0rd.client.HttpClientProtobuf
 import com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos
-import com.virgilsecurity.passw0rd.stubs.PasswordRecord
-import com.virgilsecurity.passw0rd.stubs.VerificationResult
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
@@ -91,13 +88,12 @@ import virgil.crypto.phe.PheClient
 /**
  * Protocol class.
  */
-class Protocol(protocolContext: ProtocolContext) {
+class Protocol(protocolContext: ProtocolContext, val httpClient: HttpClientProtobuf = HttpClientProtobuf()) {
 
     val appToken: String = protocolContext.appToken
     val pheClient: PheClient = protocolContext.pheClient
     val version: Int = protocolContext.version
-    val updateToken: Passw0rdProtos.VersionedUpdateToken = protocolContext.updateToken
-    val httpClient = HttpClientProtobuf()
+    val updateToken: Passw0rdProtos.VersionedUpdateToken? = protocolContext.updateToken
 
     fun enrollAccount(password: String): Deferred<Pair<ByteArray, ByteArray>> = GlobalScope.async {
         Passw0rdProtos.EnrollmentRequest.newBuilder().setVersion(version).build().run {
@@ -107,7 +103,7 @@ class Protocol(protocolContext: ProtocolContext) {
                 authToken = appToken,
                 responseParser = Passw0rdProtos.EnrollmentResponse.parser()
             ).let { response ->
-                val record = pheClient.enrollAccount(response.toByteArray(), password.toByteArray())
+                val record = pheClient.enrollAccount(response.response.toByteArray(), password.toByteArray())
 
                 val enrollmentRecord = Passw0rdProtos.DatabaseRecord
                     .newBuilder()
@@ -122,13 +118,13 @@ class Protocol(protocolContext: ProtocolContext) {
     }
 
     fun verifyPassword(password: String, enrollmentRecord: ByteArray): Deferred<Unit> = GlobalScope.async {
-        val
+
 
         Unit
     }
-
-    fun updateEnrollmentRecord(passwordRecord: PasswordRecord): Deferred<Unit> = GlobalScope.async {
-
-    }
+//
+//    fun updateEnrollmentRecord(passwordRecord: PasswordRecord): Deferred<Unit> = GlobalScope.async {
+//
+//    }
 
 }

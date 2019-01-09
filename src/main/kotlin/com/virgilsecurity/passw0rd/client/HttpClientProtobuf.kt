@@ -33,15 +33,10 @@
 
 package com.virgilsecurity.passw0rd.client
 
+import com.github.kittinunf.fuel.Fuel
 import com.google.protobuf.*
 import com.virgilsecurity.passw0rd.data.ProtocolException
 import com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos
-import khttp.delete
-import khttp.get
-import khttp.post
-import khttp.put
-import kotlin.collections.set
-import kotlin.reflect.KClass
 
 /**
  * . _  _
@@ -65,15 +60,19 @@ class HttpClientProtobuf(val serviceBaseUrl: String = SERVICE_BASE_URL) { // TOD
         authToken: String,
         responseType: Message
     ): Message {
-        headers.putAll(mapOf(REQUEST_AUTH_KEY to authToken))
+        headers.putAll(mapOf(APP_TOKEN_KEY to authToken))
         headers.putAll(mapOf(PROTO_REQUEST_TYPE_KEY to PROTO_REQUEST_TYPE))
+        headers.putAll(mapOf(USER_AGENT_KEY to USER_AGENT))
 
-        val response = get(url = serviceBaseUrl + extractRequestType(endpoint), headers = headers)
+        val response = Fuel.get(serviceBaseUrl + extractRequestType(endpoint))
+            .header(headers)
+            .response()
+            .second
 
         if (response.statusCode > 299)
-            return Passw0rdProtos.HttpError.parseFrom(response.content)
+            return Passw0rdProtos.HttpError.parseFrom(response.data)
 
-        return responseType.parserForType.parseFrom(response.content)
+        return responseType.parserForType.parseFrom(response.data)
     }
 
     fun <I, O> firePost(
@@ -83,37 +82,48 @@ class HttpClientProtobuf(val serviceBaseUrl: String = SERVICE_BASE_URL) { // TOD
         authToken: String,
         responseParser: Parser<O>
     ): O where I : Message, O : Message {
-        headers.putAll(mapOf(REQUEST_AUTH_KEY to authToken))
+        headers.putAll(mapOf(APP_TOKEN_KEY to authToken))
         headers.putAll(mapOf(PROTO_REQUEST_TYPE_KEY to PROTO_REQUEST_TYPE))
+        headers.putAll(mapOf(USER_AGENT_KEY to USER_AGENT))
 
-        val response =
-            post(data = data.toByteArray(), url = serviceBaseUrl + extractRequestType(endpoint), headers = headers)
+        val result = Fuel.post(serviceBaseUrl + extractRequestType(endpoint))
+            .body(data.toByteArray())
+            .header(headers)
+            .response()
+
+        val response = result.second
 
         if (response.statusCode > 299)
-            Passw0rdProtos.HttpError.parseFrom(response.content).run {
+            Passw0rdProtos.HttpError.parseFrom(response.data).run {
                 throw ProtocolException(this.code, this.message)
             }
 
-        return responseParser.parseFrom(response.content)
+        return responseParser.parseFrom(response.data)
     }
 
-    fun firePut(
-        data: Message,
+    fun <I, O> firePut(
+        data: I,
         endpoint: AvailableRequests,
         headers: MutableMap<String, String> = mutableMapOf(),
         authToken: String,
-        responseType: Message
-    ): Message {
-        headers.putAll(mapOf(REQUEST_AUTH_KEY to authToken))
+        responseParser: Parser<O>
+    ): O where I : Message, O : Message {
+        headers.putAll(mapOf(APP_TOKEN_KEY to authToken))
         headers.putAll(mapOf(PROTO_REQUEST_TYPE_KEY to PROTO_REQUEST_TYPE))
+        headers.putAll(mapOf(USER_AGENT_KEY to USER_AGENT))
 
-        val response =
-            put(data = data.toByteArray(), url = serviceBaseUrl + extractRequestType(endpoint), headers = headers)
+        val response = Fuel.put(serviceBaseUrl + extractRequestType(endpoint))
+            .body(data.toByteArray())
+            .header(headers)
+            .response()
+            .second
 
         if (response.statusCode > 299)
-            return Passw0rdProtos.HttpError.parseFrom(response.content)
+            Passw0rdProtos.HttpError.parseFrom(response.data).run {
+                throw ProtocolException(this.code, this.message)
+            }
 
-        return responseType.parserForType.parseFrom(response.content)
+        return responseParser.parseFrom(response.data)
     }
 
     fun fireDelete(
@@ -122,21 +132,25 @@ class HttpClientProtobuf(val serviceBaseUrl: String = SERVICE_BASE_URL) { // TOD
         authToken: String,
         responseType: Message
     ): Message {
-        headers.putAll(mapOf(REQUEST_AUTH_KEY to authToken))
+        headers.putAll(mapOf(APP_TOKEN_KEY to authToken))
         headers.putAll(mapOf(PROTO_REQUEST_TYPE_KEY to PROTO_REQUEST_TYPE))
+        headers.putAll(mapOf(USER_AGENT_KEY to USER_AGENT))
 
-        val response = delete(url = serviceBaseUrl + extractRequestType(endpoint), headers = headers)
+        val response = Fuel.delete(serviceBaseUrl + extractRequestType(endpoint))
+            .header(headers)
+            .response()
+            .second
 
         if (response.statusCode > 299)
-            return Passw0rdProtos.HttpError.parseFrom(response.content)
+            return Passw0rdProtos.HttpError.parseFrom(response.data)
 
-        return responseType.parserForType.parseFrom(response.content)
+        return responseType.parserForType.parseFrom(response.data)
     }
 
     private fun extractRequestType(availableRequests: AvailableRequests) =
         when (availableRequests) {
-            AvailableRequests.ENROLL -> "enroll"
-            AvailableRequests.VERIFY_PASSWORD -> "verify-password"
+            AvailableRequests.ENROLL -> "/enroll"
+            AvailableRequests.VERIFY_PASSWORD -> "/verify-password"
         }
 
     enum class AvailableRequests {
@@ -147,8 +161,13 @@ class HttpClientProtobuf(val serviceBaseUrl: String = SERVICE_BASE_URL) { // TOD
     companion object {
         private const val SERVICE_VERSION = "v1"
         private const val SERVICE_BASE_URL = "https://api.passw0rd.io/phe/$SERVICE_VERSION"
-        private const val PROTO_REQUEST_TYPE_KEY = "Content-type"
+
+        private const val PROTO_REQUEST_TYPE_KEY = "Content-Type"
         private const val PROTO_REQUEST_TYPE = "application/protobuf"
-        private const val REQUEST_AUTH_KEY = "Authorization"
+
+        private const val APP_TOKEN_KEY = "AppToken"
+
+        private const val USER_AGENT_KEY = "User-Agent"
+        private const val USER_AGENT = "passw0rd/java"
     }
 }

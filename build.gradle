@@ -75,8 +75,10 @@ repositories {
 }
 
 dependencies {
+    implementation files('src/main/libs/common-5.0.1-SNAPSHOT.jar')
+    implementation files('src/main/libs/foundation-5.0.1-SNAPSHOT.jar')
     implementation files('src/main/libs/phe-5.0.1-SNAPSHOT.jar')
-    
+
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$versions.kotlin"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.coroutines"
@@ -89,6 +91,7 @@ dependencies {
     implementation "com.google.code.gson:gson:$versions.gson"
 
     // kHttp com.virgilsecurity.passw0rd.client
+    implementation "com.github.kittinunf.fuel:fuel:1.15.1"
     implementation "khttp:khttp:0.1.0"
     
     // Protobuf
@@ -106,17 +109,21 @@ compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
 }
 
+test {
+    systemProperties(System.getProperties())
+}
+
 def APP_ID = hasProperty('APP_ID') ? APP_ID : System.getenv('APP_ID')
 def API_PRIVATE_KEY = hasProperty('API_PRIVATE_KEY') ? API_PRIVATE_KEY : System.getenv('API_PRIVATE_KEY')
 def API_PUBLIC_KEY = hasProperty('API_PUBLIC_KEY') ? API_PUBLIC_KEY : System.getenv('API_PUBLIC_KEY')
 def API_PUBLIC_KEY_ID = hasProperty('API_PUBLIC_KEY_ID') ? API_PUBLIC_KEY_ID : System.getenv('API_PUBLIC_KEY_ID')
 
-junitPlatformTest {
-    systemProperty 'APP_ID', APP_ID
-    systemProperty 'API_PRIVATE_KEY', API_PRIVATE_KEY
-    systemProperty 'API_PUBLIC_KEY', API_PUBLIC_KEY
-    systemProperty 'API_PUBLIC_KEY_ID', API_PUBLIC_KEY_ID
-}
+//junitPlatformTest {
+//    systemProperty 'APP_ID', APP_ID
+//    systemProperty 'API_PRIVATE_KEY', API_PRIVATE_KEY
+//    systemProperty 'API_PUBLIC_KEY', API_PUBLIC_KEY
+//    systemProperty 'API_PUBLIC_KEY_ID', API_PUBLIC_KEY_ID
+//}
 
 task sourcesJar(type: Jar) {
     from(sourceSets["main"].allSource)

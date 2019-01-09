@@ -96,3 +96,7 @@ gradle-app.setting
 # Cache of project
 .gradletasknamecache
 
+# Project-specific
+testsDev.sh
+testsStg.sh
+testsProd.sh
