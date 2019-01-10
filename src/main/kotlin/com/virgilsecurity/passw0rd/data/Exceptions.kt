@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2018, Virgil Security, Inc.
+ * Copyright (c) 2015-2019, Virgil Security, Inc.
  *
  * Lead Maintainer: Virgil Security Inc. <support@virgilsecurity.com>
  *
@@ -48,7 +48,9 @@ package com.virgilsecurity.passw0rd.data
  * Exceptions class.
  */
 
-class ProtocolException(
+class ProtocolException @JvmOverloads constructor(
     val errorCode: Int = -1,
     message: String? = "Unknown error"
 ) : Throwable(message) // TODO refactor exception view (take service + http errors)
+
+class InvalidPasswordException(message: String?) : Throwable(message)

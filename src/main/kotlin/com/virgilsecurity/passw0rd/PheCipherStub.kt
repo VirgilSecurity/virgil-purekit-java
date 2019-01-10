@@ -33,51 +33,23 @@
 
 package com.virgilsecurity.passw0rd
 
-import com.virgilsecurity.passw0rd.client.HttpClientProtobuf
-import com.virgilsecurity.passw0rd.utils.PropertyManager
-import kotlinx.coroutines.runBlocking
-import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.Assertions.assertNotNull
-import org.junit.jupiter.api.Test
-
 /**
  * . _  _
  * .| || | _
  * -| || || |   Created by:
  * .| || || |-  Danylo Oliinyk
  * ..\_  || |   on
- * ....|  _/    2019-01-04
+ * ....|  _/    2019-01-10
  * ...-| | \    at Virgil Security
  * ....|_|-
  */
 
 /**
- * ProtocolTest class.
+ * PheCipherStub class.
  */
-class ProtocolTest {
+interface PheCipherStub {
 
-    private val propertyManager = PropertyManager
+    fun encrypt(text: String, accountKey: String): String
 
-    @Test
-    fun enrollAccount() {
-        val context = ProtocolContext.create(
-            propertyManager.appToken,
-            propertyManager.publicKey,
-            propertyManager.secretKey,
-            propertyManager.updateToken
-        )
-        assertNotNull(context)
-
-        val protocol = Protocol(context, HttpClientProtobuf(propertyManager.serverAddress))
-
-        val password = "p@ssw0Rd"
-
-        var record: Pair<ByteArray, ByteArray>? = null
-        runBlocking {
-            record = protocol.enrollAccount(password).await()
-        }
-        assertNotNull(record)
-        assertTrue(record!!.first.isNotEmpty())
-        assertTrue(record!!.second.size == 32)
-    }
+    fun decrypt(text: String, accountKey: String): String
 }
