@@ -34,6 +34,7 @@
 package com.virgilsecurity.passw0rd
 
 import com.virgilsecurity.passw0rd.client.HttpClientProtobuf
+import com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos
 import com.virgilsecurity.passw0rd.utils.PropertyManager
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.*
@@ -57,6 +58,11 @@ import org.junit.jupiter.api.Test
 class ProtocolTest {
 
     private val propertyManager = PropertyManager
+
+    @Test fun a_test_for_proto() {
+        val request = Passw0rdProtos.EnrollmentRequest.newBuilder().setVersion(0).build()
+        assertEquals(0, request.version)
+    }
 
     @Test
     fun enrollAccount() {

@@ -117,7 +117,7 @@ class Protocol(protocolContext: ProtocolContext, val httpClient: HttpClientProto
         if (updateToken?.updateToken!!.isEmpty) // TODO test nullable token
             throw IllegalArgumentException("The update token can not be empty")
 
-        val (version, record) = Passw0rdProtos.DatabaseRecord.parseFrom(passwordRecord).let {
+        val (version, record) = Passw0rdProtos.DatabaseRecord.parseFrom(passwordRecord).let {// TODO check record variable usage
             it.version to it.record.toByteArray()
         }
 
@@ -131,7 +131,7 @@ class Protocol(protocolContext: ProtocolContext, val httpClient: HttpClientProto
     }
 
     fun encrypt(text: String, accountKey: String): String =
-        pheCipher.encrypt(text, accountKey)
+        pheCipher.encrypt(text, accountKey) // TODO add real encrypt and decrypt
 
     fun decrypt(text: String, accountKey: String): String =
         pheCipher.decrypt(text, accountKey)
