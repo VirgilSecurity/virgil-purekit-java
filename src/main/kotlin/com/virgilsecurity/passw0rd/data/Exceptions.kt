@@ -54,3 +54,5 @@ class ProtocolException @JvmOverloads constructor(
 ) : Throwable(message) // TODO refactor exception view (take service + http errors)
 
 class InvalidPasswordException(message: String?) : Throwable(message)
+
+class InvalidProtobufType(message: String? = "Can not parse model you have given.") : Throwable(message)

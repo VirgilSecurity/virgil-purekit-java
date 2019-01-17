@@ -31,14 +31,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.passw0rd
-
-import com.virgilsecurity.passw0rd.client.HttpClientProtobuf
-import com.virgilsecurity.passw0rd.utils.PropertyManager
-import kotlinx.coroutines.runBlocking
-import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.Assertions.assertNotNull
-import org.junit.jupiter.api.Test
+package com.virgilsecurity.passw0rd.utils
 
 /**
  * . _  _
@@ -46,38 +39,12 @@ import org.junit.jupiter.api.Test
  * -| || || |   Created by:
  * .| || || |-  Danylo Oliinyk
  * ..\_  || |   on
- * ....|  _/    2019-01-04
+ * ....|  _/    2019-01-17
  * ...-| | \    at Virgil Security
  * ....|_|-
  */
 
 /**
- * ProtocolTest class.
+ * EnrollResult class.
  */
-class ProtocolTest {
-
-    private val propertyManager = PropertyManager
-
-    @Test
-    fun enrollAccount() {
-        val context = ProtocolContext.create(
-            propertyManager.appToken,
-            propertyManager.publicKey,
-            propertyManager.secretKey,
-            propertyManager.updateToken
-        )
-        assertNotNull(context)
-
-        val protocol = Protocol(context, HttpClientProtobuf(propertyManager.serverAddress))
-
-        val password = "p@ssw0Rd"
-
-        var record: Pair<ByteArray, ByteArray>? = null
-        runBlocking {
-            record = protocol.enrollAccount(password).await()
-        }
-        assertNotNull(record)
-        assertTrue(record!!.first.isNotEmpty())
-        assertTrue(record!!.second.size == 32)
-    }
-}
+data class EnrollResult(val enrollmentRecord: ByteArray, val accountKey: ByteArray)

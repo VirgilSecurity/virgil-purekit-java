@@ -34,14 +34,18 @@
 package com.virgilsecurity.passw0rd
 
 import com.google.protobuf.ByteString
+import com.google.protobuf.InvalidProtocolBufferException
 import com.virgilsecurity.passw0rd.client.HttpClientProtobuf
 import com.virgilsecurity.passw0rd.data.InvalidPasswordException
+import com.virgilsecurity.passw0rd.data.InvalidProtobufType
 import com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos
+import com.virgilsecurity.passw0rd.utils.EnrollResult
+import com.virgilsecurity.passw0rd.utils.Utils
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
+import virgil.crypto.phe.PheCipher
 import virgil.crypto.phe.PheClient
-import java.lang.IllegalArgumentException
 
 /**
  * . _  _
@@ -63,9 +67,11 @@ class Protocol(protocolContext: ProtocolContext, val httpClient: HttpClientProto
     val pheClient: PheClient = protocolContext.pheClient
     val currentVersion: Int = protocolContext.version
     val updateToken: Passw0rdProtos.VersionedUpdateToken? = protocolContext.updateToken
-    lateinit var pheCipher: PheCipherStub
+    val pheCipher: PheCipher by lazy { PheCipher().apply { setupDefaults() } }
 
-    fun enrollAccount(password: String): Deferred<Pair<ByteArray, ByteArray>> = GlobalScope.async {
+    fun enrollAccount(password: String): Deferred<EnrollResult> = GlobalScope.async {
+        if (password.isBlank()) Utils.shouldNotBeEmpty("password")
+
         Passw0rdProtos.EnrollmentRequest.newBuilder().setVersion(currentVersion).build().run {
             httpClient.firePost(
                 this,
@@ -82,14 +88,21 @@ class Protocol(protocolContext: ProtocolContext, val httpClient: HttpClientProto
                     .build()
                     .toByteArray()
 
-                Pair(enrollmentRecord, record.accountKey)
+                EnrollResult(enrollmentRecord, record.accountKey)
             }
         }
     }
 
     fun verifyPassword(password: String, enrollmentRecord: ByteArray): Deferred<ByteArray> = GlobalScope.async {
-        val (version, record) = Passw0rdProtos.DatabaseRecord.parseFrom(enrollmentRecord).let {
-            it.version to it.record.toByteArray()
+        if (password.isBlank()) Utils.shouldNotBeEmpty("password")
+        if (enrollmentRecord.isEmpty()) Utils.shouldNotBeEmpty("enrollmentRecord")
+
+        val (version, record) = try {
+            Passw0rdProtos.DatabaseRecord.parseFrom(enrollmentRecord).let {
+                it.version to it.record.toByteArray()
+            }
+        } catch (e: InvalidProtocolBufferException) {
+            throw InvalidProtobufType()
         }
 
         val request = pheClient.createVerifyPasswordRequest(password.toByteArray(), record)
@@ -100,10 +113,12 @@ class Protocol(protocolContext: ProtocolContext, val httpClient: HttpClientProto
             .setRequest(ByteString.copyFrom(request))
             .build()
 
-        httpClient.firePost(verifyPasswordRequest,
-                            HttpClientProtobuf.AvailableRequests.VERIFY_PASSWORD,
-                            authToken = appToken,
-                            responseParser = Passw0rdProtos.VerifyPasswordResponse.parser()).let {
+        httpClient.firePost(
+            verifyPasswordRequest,
+            HttpClientProtobuf.AvailableRequests.VERIFY_PASSWORD,
+            authToken = appToken,
+            responseParser = Passw0rdProtos.VerifyPasswordResponse.parser()
+        ).let {
             val key = pheClient.checkResponseAndDecrypt(password.toByteArray(), record, it.response.toByteArray())
 
             if (key.isEmpty())
@@ -113,26 +128,45 @@ class Protocol(protocolContext: ProtocolContext, val httpClient: HttpClientProto
         }
     }
 
-    fun updateEnrollmentRecord(passwordRecord: ByteArray): Deferred<ByteArray> = GlobalScope.async {
-        if (updateToken?.updateToken!!.isEmpty) // TODO test nullable token
-            throw IllegalArgumentException("The update token can not be empty")
+    fun updateEnrollmentRecord(oldRecord: ByteArray): Deferred<ByteArray> = GlobalScope.async {
+        if (oldRecord.isEmpty()) Utils.shouldNotBeEmpty("oldRecord")
+        if (updateToken == null) Utils.shouldNotBeEmpty("update token")
 
-        val (version, record) = Passw0rdProtos.DatabaseRecord.parseFrom(passwordRecord).let {// TODO check record variable usage
-            it.version to it.record.toByteArray()
+        val (recordVersion, record) = try {
+            Passw0rdProtos.DatabaseRecord.parseFrom(oldRecord).let {
+                it.version to it.record.toByteArray()
+            }
+        } catch (e: InvalidProtocolBufferException) {
+            throw InvalidProtobufType()
         }
 
-        if (version == currentVersion)
-            return@async passwordRecord
+        if ((recordVersion + 1) == updateToken.version) {
+            val newRecord = pheClient.updateEnrollmentRecord(record, updateToken.updateToken.toByteArray())
 
-        if (version > currentVersion)
-            throw IllegalArgumentException("Record's version is greater than protocol's version")
-
-        pheClient.updateEnrollmentRecord(passwordRecord, updateToken.updateToken.toByteArray())
+            Passw0rdProtos.DatabaseRecord.newBuilder()
+                .setRecord(ByteString.copyFrom(newRecord))
+                .setVersion(updateToken.version).build()
+                .toByteArray()
+        } else {
+            throw IllegalArgumentException(
+                "Update Token version must be greater than current." +
+                        "Token version is ${updateToken.version}." +
+                        "Current version is $currentVersion."
+            )
+        }
     }
 
-    fun encrypt(text: String, accountKey: String): String =
-        pheCipher.encrypt(text, accountKey) // TODO add real encrypt and decrypt
+    fun encrypt(data: ByteArray, accountKey: ByteArray): ByteArray {
+        if (data.isEmpty()) Utils.shouldNotBeEmpty("data")
+        if (accountKey.isEmpty()) Utils.shouldNotBeEmpty("accountKey")
 
-    fun decrypt(text: String, accountKey: String): String =
-        pheCipher.decrypt(text, accountKey)
+        return pheCipher.encrypt(data, accountKey)
+    }
+
+    fun decrypt(data: ByteArray, accountKey: ByteArray): ByteArray {
+        if (data.isEmpty()) Utils.shouldNotBeEmpty("data")
+        if (accountKey.isEmpty()) Utils.shouldNotBeEmpty("accountKey")
+
+        return pheCipher.decrypt(data, accountKey)
+    }
 }

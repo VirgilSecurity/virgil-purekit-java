@@ -31,7 +31,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.passw0rd
+package com.virgilsecurity.passw0rd.protocol
 
 /**
  * . _  _
@@ -39,17 +39,13 @@ package com.virgilsecurity.passw0rd
  * -| || || |   Created by:
  * .| || || |-  Danylo Oliinyk
  * ..\_  || |   on
- * ....|  _/    2019-01-10
+ * ....|  _/    2019-01-17
  * ...-| | \    at Virgil Security
  * ....|_|-
  */
 
 /**
- * PheCipherStub class.
+ * ProtocolContextNegativeTest class.
  */
-interface PheCipherStub {
-
-    fun encrypt(text: String, accountKey: String): String
-
-    fun decrypt(text: String, accountKey: String): String
+class ProtocolContextNegativeTest {
 }

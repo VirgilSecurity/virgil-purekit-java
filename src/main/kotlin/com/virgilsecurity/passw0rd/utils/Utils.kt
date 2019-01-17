@@ -34,6 +34,7 @@
 package com.virgilsecurity.passw0rd.utils
 
 import java.lang.IllegalArgumentException
+import java.util.*
 
 /**
  * . _  _
