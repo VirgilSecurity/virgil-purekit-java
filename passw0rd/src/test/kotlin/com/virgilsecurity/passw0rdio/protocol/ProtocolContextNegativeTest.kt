@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019, Virgil Security, Inc.
+ * Copyright (c) 2015-2018, Virgil Security, Inc.
  *
  * Lead Maintainer: Virgil Security Inc. <support@virgilsecurity.com>
  *
@@ -36,16 +36,13 @@ package com.virgilsecurity.passw0rd.protocol
 import com.virgilsecurity.passw0rd.Protocol
 import com.virgilsecurity.passw0rd.ProtocolContext
 import com.virgilsecurity.passw0rd.client.HttpClientProtobuf
-import com.virgilsecurity.passw0rd.data.InvalidProtobufType
 import com.virgilsecurity.passw0rd.data.ProtocolException
 import com.virgilsecurity.passw0rd.utils.PropertyManager
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import kotlin.random.Random
 
 /**
  * . _  _
@@ -59,19 +56,19 @@ import kotlin.random.Random
  */
 
 /**
- * ProtocolNegativeTest class.
+ * ProtocolContextNegativeTest class.
  */
-class ProtocolNegativeTest {
+class ProtocolContextNegativeTest {
 
     private lateinit var context: ProtocolContext
     private lateinit var protocol: Protocol
 
     @BeforeEach fun setup() {
         context = ProtocolContext.create(
-            PropertyManager.appToken,
-            PropertyManager.publicKey,
-            PropertyManager.secretKey,
-            ""
+                PropertyManager.appToken,
+                PropertyManager.publicKey,
+                PropertyManager.secretKey,
+                ""
         )
         Assertions.assertNotNull(context)
 
@@ -80,10 +77,10 @@ class ProtocolNegativeTest {
 
     @Test fun context_app_token_wrong() {
         context = ProtocolContext.create(
-            WRONG_CRED,
-            PropertyManager.publicKey,
-            PropertyManager.secretKey,
-            ""
+                WRONG_CRED,
+                PropertyManager.publicKey,
+                PropertyManager.secretKey,
+                ""
         )
         Assertions.assertNotNull(context)
 
@@ -93,7 +90,7 @@ class ProtocolNegativeTest {
             try {
                 protocol.enrollAccount(PASSWORD).await()
             } catch (t: Throwable) {
-                assertTrue(t is ProtocolException)
+                Assertions.assertTrue(t is ProtocolException)
             }
         }
     }
@@ -101,10 +98,10 @@ class ProtocolNegativeTest {
     @Test fun context_public_key_wrong() {
         assertThrows<IllegalArgumentException> {
             context = ProtocolContext.create(
-                PropertyManager.appToken,
-                WRONG_CRED,
-                PropertyManager.secretKey,
-                ""
+                    PropertyManager.appToken,
+                    WRONG_CRED,
+                    PropertyManager.secretKey,
+                    ""
             )
         }
     }
@@ -112,10 +109,10 @@ class ProtocolNegativeTest {
     @Test fun context_secret_key_wrong() {
         assertThrows<IllegalArgumentException> {
             context = ProtocolContext.create(
-                PropertyManager.appToken,
-                PropertyManager.publicKey,
-                WRONG_CRED,
-                ""
+                    PropertyManager.appToken,
+                    PropertyManager.publicKey,
+                    WRONG_CRED,
+                    ""
             )
         }
     }
@@ -123,99 +120,15 @@ class ProtocolNegativeTest {
     @Test fun context_update_token_wrong() {
         assertThrows<IllegalArgumentException> {
             context = ProtocolContext.create(
-                PropertyManager.appToken,
-                PropertyManager.publicKey,
-                PropertyManager.secretKey,
-                WRONG_CRED
+                    PropertyManager.appToken,
+                    PropertyManager.publicKey,
+                    PropertyManager.secretKey,
+                    WRONG_CRED
             )
         }
     }
 
-    @Test fun enroll_with_empty_pass() {
-        runBlocking {
-            try {
-                protocol.enrollAccount("").await()
-            } catch (t: Throwable) {
-                assertTrue(t is IllegalArgumentException)
-            }
-        }
-    }
-
-    @Test fun verify_with_empty_pass() {
-        runBlocking {
-            try {
-                protocol.verifyPassword("", ByteArray(0)).await()
-            } catch (t: Throwable) {
-                assertTrue(t is IllegalArgumentException)
-            }
-        }
-    }
-
-    @Test fun verify_with_empty_record() {
-        runBlocking {
-            try {
-                protocol.verifyPassword(PASSWORD, ByteArray(0)).await()
-            } catch (t: Throwable) {
-                assertTrue(t is IllegalArgumentException)
-            }
-        }
-    }
-
-    @Test fun verify_with_wrong_record() {
-        runBlocking {
-            try {
-                protocol.verifyPassword(PASSWORD, Random.nextBytes(RANDOM_BYTES_SIZE)).await()
-            } catch (t: Throwable) {
-                assertTrue(t is InvalidProtobufType)
-            }
-        }
-    }
-
-    @Test fun update_token_empty() {
-        var failed = false
-        runBlocking {
-            try {
-                protocol.updateEnrollmentRecord(Random.nextBytes(RANDOM_BYTES_SIZE)).await()
-            } catch (e: IllegalArgumentException) {
-                failed = true
-            }
-        }
-        assertTrue(failed)
-    }
-
-    @Test fun update_token_empty_record() {
-        var failed = false
-        runBlocking {
-            try {
-                protocol.updateEnrollmentRecord(ByteArray(0)).await()
-            } catch (e: IllegalArgumentException) {
-                failed = true
-            }
-        }
-        assertTrue(failed)
-    }
-
-    @Test fun update_with_wrong_record() {
-        context = ProtocolContext.create(
-            PropertyManager.appToken,
-            PropertyManager.publicKey,
-            PropertyManager.secretKey,
-            PropertyManager.updateToken
-        )
-        protocol = Protocol(context, HttpClientProtobuf(PropertyManager.serverAddress))
-
-        runBlocking {
-            try {
-                protocol.updateEnrollmentRecord(Random.nextBytes(RANDOM_BYTES_SIZE)).await()
-            } catch (t: Throwable) {
-                assertTrue(t is InvalidProtobufType)
-            }
-        }
-    }
-
     companion object {
-        const val RANDOM_BYTES_SIZE = 32
-
         private const val WRONG_CRED = "WRONG_CRED"
         private const val PASSWORD = "PASSWORD"
     }

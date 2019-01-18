@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019, Virgil Security, Inc.
+ * Copyright (c) 2015-2018, Virgil Security, Inc.
  *
  * Lead Maintainer: Virgil Security Inc. <support@virgilsecurity.com>
  *
@@ -33,12 +33,10 @@
 
 package com.virgilsecurity.passw0rd.client
 
-import com.virgilsecurity.passw0rd.ProtocolContext
-import com.virgilsecurity.passw0rd.data.ProtocolException
 import com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos
 import com.virgilsecurity.passw0rd.utils.PropertyManager
+import com.virgilsecurity.passw0rd.data.ProtocolException
 import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.util.*
@@ -67,9 +65,9 @@ class HttpClientTest {
 
     @Test fun response_proto_parse() {
         val version = parseVersionAndContent(
-            PropertyManager.publicKey,
-            PREFIX_PUBLIC_KEY,
-            KEY_PUBLIC_KEY
+                PropertyManager.publicKey,
+                PREFIX_PUBLIC_KEY,
+                KEY_PUBLIC_KEY
         ).first
 
         try {

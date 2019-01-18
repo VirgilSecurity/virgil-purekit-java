@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019, Virgil Security, Inc.
+ * Copyright (c) 2015-2018, Virgil Security, Inc.
  *
  * Lead Maintainer: Virgil Security Inc. <support@virgilsecurity.com>
  *
@@ -31,7 +31,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.passw0rd.protocol
+package com.virgilsecurity.passw0rd.utils
+
+import java.lang.IllegalArgumentException
+import java.util.*
 
 /**
  * . _  _
@@ -39,13 +42,22 @@ package com.virgilsecurity.passw0rd.protocol
  * -| || || |   Created by:
  * .| || || |-  Danylo Oliinyk
  * ..\_  || |   on
- * ....|  _/    2019-01-17
+ * ....|  _/    2019-01-02
  * ...-| | \    at Virgil Security
  * ....|_|-
  */
 
 /**
- * ProtocolContextNegativeTest class.
+ * Utils class.
  */
-class ProtocolContextNegativeTest {
+object Utils {
+
+    /**
+     * Just to make code a little bit more elegant/concise.
+     *
+     * @throws IllegalArgumentException
+     */
+    @Throws(IllegalArgumentException::class)
+    fun shouldNotBeEmpty(argumentName: String): Nothing =
+        throw IllegalArgumentException("Parameter $argumentName should not be empty")
 }

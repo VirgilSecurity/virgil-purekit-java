@@ -31,6 +31,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-rootProject.name = 'passw0rd'
-include 'phe-protos'
+rootProject.name = 'sdk-kotlin'
+include 'passw0rd-protos', 'passw0rd'
 

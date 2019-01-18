@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019, Virgil Security, Inc.
+ * Copyright (c) 2015-2018, Virgil Security, Inc.
  *
  * Lead Maintainer: Virgil Security Inc. <support@virgilsecurity.com>
  *
@@ -7,7 +7,7 @@
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *  
+ *
  *     (1) Redistributions of source code must retain the above copyright notice, this
  *     list of conditions and the following disclaimer.
  *
@@ -31,58 +31,28 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-buildscript {
-    ext.versions = [
-            // Virgil
-            virgilSdk  : '5.0.5',
+package com.virgilsecurity.passw0rd.data
 
-            // Http client
-            fuel      : '1.15.1',
+/**
+ * . _  _
+ * .| || | _
+ * -| || || |   Created by:
+ * .| || || |-  Danylo Oliinyk
+ * ..\_  || |   on
+ * ....|  _/    12/13/18
+ * ...-| | \    at Virgil Security
+ * ....|_|-
+ */
 
-            // Kotlin
-            kotlin     : '1.3.11',
-            coroutines : '1.0.1',
+/**
+ * Exceptions class.
+ */
 
-            // Gradle
-            gardle     : '3.2.1',
+class ProtocolException @JvmOverloads constructor(
+    val errorCode: Int = -1,
+    message: String? = "Unknown error"
+) : Throwable(message) // TODO take service + http errors
 
-            // Protobuf
-            protobuf    : '3.6.1',
+class InvalidPasswordException(message: String?) : Throwable(message)
 
-            // Docs
-            dokka      : '0.9.17',
-
-            // Tests
-            junit      : '5.2.0',
-            junitPlugin: '1.0.0',
-
-    ]
-    repositories {
-        jcenter()
-        mavenCentral()
-    }
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin"
-        classpath "org.junit.platform:junit-platform-gradle-plugin:$versions.junitPlugin"
-        classpath "org.jetbrains.dokka:dokka-gradle-plugin:$versions.dokka"
-    }
-}
-
-allprojects {
-    repositories {
-        jcenter()
-        mavenCentral()
-    }
-}
-
-task clean(type: Delete) {
-    delete rootProject.buildDir
-}
-
-task installPassw0rd() {
-    dependsOn ':passw0rd-protos:install', ':passw0rd:install'
-}
-
-task publishPassw0rd() {
-    dependsOn ':passw0rd-protos:publish', ':passw0rd:publish'
-}
+class InvalidProtobufType(message: String? = "Can not parse model you have given.") : Throwable(message)

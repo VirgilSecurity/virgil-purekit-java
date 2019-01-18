@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019, Virgil Security, Inc.
+ * Copyright (c) 2015-2018, Virgil Security, Inc.
  *
  * Lead Maintainer: Virgil Security Inc. <support@virgilsecurity.com>
  *
@@ -33,15 +33,14 @@
 
 package com.virgilsecurity.passw0rd.protocol
 
+import com.virgilsecurity.passw0rd.utils.PropertyManager
 import com.virgilsecurity.passw0rd.Protocol
 import com.virgilsecurity.passw0rd.ProtocolContext
 import com.virgilsecurity.passw0rd.client.HttpClientProtobuf
 import com.virgilsecurity.passw0rd.data.InvalidPasswordException
 import com.virgilsecurity.passw0rd.utils.EnrollResult
-import com.virgilsecurity.passw0rd.utils.PropertyManager
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -66,10 +65,10 @@ class ProtocolTest {
 
     @BeforeEach fun setup() {
         context = ProtocolContext.create(
-            PropertyManager.appToken,
-            PropertyManager.publicKey,
-            PropertyManager.secretKey,
-            ""
+                PropertyManager.appToken,
+                PropertyManager.publicKey,
+                PropertyManager.secretKey,
+                ""
         )
         assertNotNull(context)
 
@@ -103,10 +102,10 @@ class ProtocolTest {
 
         // After token rotate
         context = ProtocolContext.create(
-            PropertyManager.appToken,
-            PropertyManager.publicKey,
-            PropertyManager.secretKey,
-            PropertyManager.updateToken
+                PropertyManager.appToken,
+                PropertyManager.publicKey,
+                PropertyManager.secretKey,
+                PropertyManager.updateToken
         )
         assertNotNull(context)
 
@@ -134,12 +133,10 @@ class ProtocolTest {
         assertTrue(enrollResult!!.enrollmentRecord.isNotEmpty())
         assertTrue(enrollResult!!.accountKey.size == 32)
 
-        val encryptedData =
-            protocol.encrypt(TEXT.toByteArray(), enrollResult!!.accountKey)
+        val encryptedData = protocol.encrypt(TEXT.toByteArray(), enrollResult!!.accountKey)
         assertNotNull(encryptedData)
 
-        val decryptedData =
-            protocol.decrypt(encryptedData, enrollResult!!.accountKey)
+        val decryptedData = protocol.decrypt(encryptedData, enrollResult!!.accountKey)
         assertNotNull(decryptedData)
         assertEquals(TEXT, String(decryptedData))
     }

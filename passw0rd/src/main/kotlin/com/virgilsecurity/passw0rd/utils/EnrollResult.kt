@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019, Virgil Security, Inc.
+ * Copyright (c) 2015-2018, Virgil Security, Inc.
  *
  * Lead Maintainer: Virgil Security Inc. <support@virgilsecurity.com>
  *
@@ -7,7 +7,7 @@
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *  
+ *
  *     (1) Redistributions of source code must retain the above copyright notice, this
  *     list of conditions and the following disclaimer.
  *
@@ -31,58 +31,39 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-buildscript {
-    ext.versions = [
-            // Virgil
-            virgilSdk  : '5.0.5',
+package com.virgilsecurity.passw0rd.utils
 
-            // Http client
-            fuel      : '1.15.1',
+/**
+ * . _  _
+ * .| || | _
+ * -| || || |   Created by:
+ * .| || || |-  Danylo Oliinyk
+ * ..\_  || |   on
+ * ....|  _/    2019-01-17
+ * ...-| | \    at Virgil Security
+ * ....|_|-
+ */
 
-            // Kotlin
-            kotlin     : '1.3.11',
-            coroutines : '1.0.1',
+/**
+ * EnrollResult class.
+ */
+data class EnrollResult(val enrollmentRecord: ByteArray, val accountKey: ByteArray) {
 
-            // Gradle
-            gardle     : '3.2.1',
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
 
-            // Protobuf
-            protobuf    : '3.6.1',
+        other as EnrollResult
 
-            // Docs
-            dokka      : '0.9.17',
+        if (!enrollmentRecord.contentEquals(other.enrollmentRecord)) return false
+        if (!accountKey.contentEquals(other.accountKey)) return false
 
-            // Tests
-            junit      : '5.2.0',
-            junitPlugin: '1.0.0',
-
-    ]
-    repositories {
-        jcenter()
-        mavenCentral()
+        return true
     }
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin"
-        classpath "org.junit.platform:junit-platform-gradle-plugin:$versions.junitPlugin"
-        classpath "org.jetbrains.dokka:dokka-gradle-plugin:$versions.dokka"
+
+    override fun hashCode(): Int {
+        var result = enrollmentRecord.contentHashCode()
+        result = 31 * result + accountKey.contentHashCode()
+        return result
     }
-}
-
-allprojects {
-    repositories {
-        jcenter()
-        mavenCentral()
-    }
-}
-
-task clean(type: Delete) {
-    delete rootProject.buildDir
-}
-
-task installPassw0rd() {
-    dependsOn ':passw0rd-protos:install', ':passw0rd:install'
-}
-
-task publishPassw0rd() {
-    dependsOn ':passw0rd-protos:publish', ':passw0rd:publish'
 }
