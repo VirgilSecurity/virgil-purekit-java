@@ -33,9 +33,6 @@
 
 package com.virgilsecurity.passw0rd.utils
 
-import java.lang.IllegalArgumentException
-import java.util.*
-
 /**
  * . _  _
  * .| || | _
@@ -53,7 +50,7 @@ import java.util.*
 object Utils {
 
     /**
-     * Just to make code a little bit more elegant/concise.
+     * This function intention is just to make code a little bit more elegant/concise.
      *
      * @throws IllegalArgumentException
      */

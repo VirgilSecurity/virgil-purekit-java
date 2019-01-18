@@ -45,7 +45,7 @@ package com.virgilsecurity.passw0rd.utils
  */
 
 /**
- * EnrollResult class.
+ * EnrollResult class is intended to simplify work with return type of *Protocol#enrollAccount* method.
  */
 data class EnrollResult(val enrollmentRecord: ByteArray, val accountKey: ByteArray) {
 

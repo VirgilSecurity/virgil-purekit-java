@@ -35,10 +35,11 @@ package com.virgilsecurity.passw0rd
 
 import com.google.protobuf.ByteString
 import com.google.protobuf.InvalidProtocolBufferException
-import com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos
 import com.virgilsecurity.passw0rd.client.HttpClientProtobuf
 import com.virgilsecurity.passw0rd.data.InvalidPasswordException
 import com.virgilsecurity.passw0rd.data.InvalidProtobufType
+import com.virgilsecurity.passw0rd.data.ProtocolException
+import com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos
 import com.virgilsecurity.passw0rd.utils.EnrollResult
 import com.virgilsecurity.passw0rd.utils.Utils
 import kotlinx.coroutines.Deferred
@@ -46,6 +47,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import virgil.crypto.phe.PheCipher
 import virgil.crypto.phe.PheClient
+import virgil.crypto.phe.PheException
 
 /**
  * . _  _
@@ -59,7 +61,7 @@ import virgil.crypto.phe.PheClient
  */
 
 /**
- * Protocol class.
+ * Protocol class implements passw0rd client-server protocol.
  */
 class Protocol(protocolContext: ProtocolContext, private val httpClient: HttpClientProtobuf = HttpClientProtobuf()) {
 
@@ -69,6 +71,13 @@ class Protocol(protocolContext: ProtocolContext, private val httpClient: HttpCli
     private val updateToken: Passw0rdProtos.VersionedUpdateToken? = protocolContext.updateToken
     private val pheCipher: PheCipher by lazy { PheCipher().apply { setupDefaults() } }
 
+    /**
+     * This function requests pseudo-random data from server and uses it to protect [password] and data encryption key.
+     *
+     * @throws IllegalArgumentException
+     * @throws ProtocolException
+     * @throws PheException
+     */
     fun enrollAccount(password: String): Deferred<EnrollResult> = GlobalScope.async {
         if (password.isBlank()) Utils.shouldNotBeEmpty("password")
 
@@ -93,6 +102,15 @@ class Protocol(protocolContext: ProtocolContext, private val httpClient: HttpCli
         }
     }
 
+    /**
+     * This function verifies a [password] against [enrollmentRecord] using passw0rd service.
+     *
+     * @throws IllegalArgumentException
+     * @throws ProtocolException
+     * @throws PheException
+     * @throws InvalidPasswordException
+     * @throws InvalidProtobufType
+     */
     fun verifyPassword(password: String, enrollmentRecord: ByteArray): Deferred<ByteArray> = GlobalScope.async {
         if (password.isBlank()) Utils.shouldNotBeEmpty("password")
         if (enrollmentRecord.isEmpty()) Utils.shouldNotBeEmpty("enrollmentRecord")
@@ -128,6 +146,14 @@ class Protocol(protocolContext: ProtocolContext, private val httpClient: HttpCli
         }
     }
 
+    /**
+     * This function increments record version and updates [oldRecord] with provided [updateToken] from
+     * [ProtocolContext] and returns updated record.
+     *
+     * @throws IllegalArgumentException
+     * @throws PheException
+     * @throws InvalidProtobufType
+     */
     fun updateEnrollmentRecord(oldRecord: ByteArray): Deferred<ByteArray> = GlobalScope.async {
         if (oldRecord.isEmpty()) Utils.shouldNotBeEmpty("oldRecord")
         if (updateToken == null) Utils.shouldNotBeEmpty("update token")
@@ -156,6 +182,12 @@ class Protocol(protocolContext: ProtocolContext, private val httpClient: HttpCli
         }
     }
 
+    /**
+     * This function encrypts provided [data] using [accountKey].
+     *
+     * @throws IllegalArgumentException
+     * @throws PheException
+     */
     fun encrypt(data: ByteArray, accountKey: ByteArray): ByteArray {
         if (data.isEmpty()) Utils.shouldNotBeEmpty("data")
         if (accountKey.isEmpty()) Utils.shouldNotBeEmpty("accountKey")
@@ -163,6 +195,12 @@ class Protocol(protocolContext: ProtocolContext, private val httpClient: HttpCli
         return pheCipher.encrypt(data, accountKey)
     }
 
+    /**
+     * This function decrypts provided [data] using [accountKey].
+     *
+     * @throws IllegalArgumentException
+     * @throws PheException
+     */
     fun decrypt(data: ByteArray, accountKey: ByteArray): ByteArray {
         if (data.isEmpty()) Utils.shouldNotBeEmpty("data")
         if (accountKey.isEmpty()) Utils.shouldNotBeEmpty("accountKey")

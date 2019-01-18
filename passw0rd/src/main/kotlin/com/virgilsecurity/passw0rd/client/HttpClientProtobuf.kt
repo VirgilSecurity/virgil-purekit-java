@@ -36,8 +36,8 @@ package com.virgilsecurity.passw0rd.client
 import com.github.kittinunf.fuel.Fuel
 import com.google.protobuf.Message
 import com.google.protobuf.Parser
-import com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos
 import com.virgilsecurity.passw0rd.data.ProtocolException
+import com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos
 
 /**
  * . _  _
@@ -51,46 +51,81 @@ import com.virgilsecurity.passw0rd.data.ProtocolException
  */
 
 /**
- * HttpClientProtobuf class.
+ * HttpClientProtobuf class is an implementation of http client specifically for work with Protobuf.
  */
 class HttpClientProtobuf(val serviceBaseUrl: String = SERVICE_BASE_URL) {
 
-    fun fireGet(
-        endpoint: AvailableRequests,
-        headers: MutableMap<String, String> = mutableMapOf(),
-        authToken: String,
-        responseType: Message
-    ): Message {
+    /**
+     * This function issues GET request to the specified [serviceBaseUrl] (or default one if not specified) + provided
+     * [endpoint] (Request address will be: [serviceBaseUrl]/[endpoint]).
+     *
+     * You can provide your headers, but keep in mind that *AppToken*, *User-Agent* and *Content-Type* are already
+     * present (and will be overridden if you try to provide them).
+     *
+     * For authorization provided [authToken] will be mapped to *AppToken* key in header.
+     *
+     * You have to specify [responseParser] that will be used to parse Protobuf message that service will answer to
+     * your request. It should be correct Protobuf message. To get [Parser] you have to call *<YourProto>.parser()*
+     * function. The type of [Parser] you specified is your *return* type.
+     *
+     * @throws ProtocolException
+     */
+    fun <O> fireGet(
+            endpoint: AvailableRequests,
+            headers: MutableMap<String, String> = mutableMapOf(),
+            authToken: String,
+            responseParser: Parser<O>
+    ): O where O : Message {
         headers.putAll(mapOf(APP_TOKEN_KEY to authToken))
         headers.putAll(mapOf(PROTO_REQUEST_TYPE_KEY to PROTO_REQUEST_TYPE))
         headers.putAll(mapOf(USER_AGENT_KEY to USER_AGENT))
 
         val response = Fuel.get(serviceBaseUrl + extractRequestType(endpoint))
-            .header(headers)
-            .response()
-            .second
+                .header(headers)
+                .response()
+                .second
 
         if (response.statusCode > 299)
-            return Passw0rdProtos.HttpError.parseFrom(response.data)
+            Passw0rdProtos.HttpError.parseFrom(response.data).run {
+                throw ProtocolException(this.code, this.message)
+            }
 
-        return responseType.parserForType.parseFrom(response.data)
+        return responseParser.parseFrom(response.data)
     }
 
-    fun <I, O> firePost(
-        data: I,
-        endpoint: AvailableRequests,
-        headers: MutableMap<String, String> = mutableMapOf(),
-        authToken: String,
-        responseParser: Parser<O>
-    ): O where I : Message, O : Message {
+    /**
+     * This function issues POST request to the specified [serviceBaseUrl] (or default one if not specified) + provided
+     * [endpoint] (Request address will be: [serviceBaseUrl]/[endpoint]).
+     *
+     * Provided [data] will be serialized to [ByteArray] and placed in the *body* of this request and should be correct
+     * Protobuf message.
+     *
+     * You can provide your headers, but keep in mind that *AppToken*, *User-Agent* and *Content-Type* are already
+     * present (and will be overridden if you try to provide them).
+     *
+     * For authorization provided [authToken] will be mapped to *AppToken* key in header.
+     *
+     * You have to specify [responseParser] that will be used to parse Protobuf message that service will answer to
+     * your request. It should be correct Protobuf message. To get [Parser] you have to call *<YourProto>.parser()*
+     * function. The type of [Parser] you specified is your *return* type.
+     *
+     * @throws ProtocolException
+     */
+    fun <O> firePost(
+            data: Message,
+            endpoint: AvailableRequests,
+            headers: MutableMap<String, String> = mutableMapOf(),
+            authToken: String,
+            responseParser: Parser<O>
+    ): O where O : Message {
         headers.putAll(mapOf(APP_TOKEN_KEY to authToken))
         headers.putAll(mapOf(PROTO_REQUEST_TYPE_KEY to PROTO_REQUEST_TYPE))
         headers.putAll(mapOf(USER_AGENT_KEY to USER_AGENT))
 
         val result = Fuel.post(serviceBaseUrl + extractRequestType(endpoint))
-            .body(data.toByteArray())
-            .header(headers)
-            .response()
+                .body(data.toByteArray())
+                .header(headers)
+                .response()
 
         val response = result.second
 
@@ -102,22 +137,40 @@ class HttpClientProtobuf(val serviceBaseUrl: String = SERVICE_BASE_URL) {
         return responseParser.parseFrom(response.data)
     }
 
+    /**
+     * This function issues PUT request to the specified [serviceBaseUrl] (or default one if not specified) + provided
+     * [endpoint] (Request address will be: [serviceBaseUrl]/[endpoint]).
+     *
+     * Provided [data] will be serialized to [ByteArray] and placed in the *body* of this request and should be correct
+     * Protobuf message.
+     *
+     * You can provide your headers, but keep in mind that *AppToken*, *User-Agent* and *Content-Type* are already
+     * present (and will be overridden if you try to provide them).
+     *
+     * For authorization provided [authToken] will be mapped to *AppToken* key in header.
+     *
+     * You have to specify [responseParser] that will be used to parse Protobuf message that service will answer to
+     * your request. It should be correct Protobuf message. To get [Parser] you have to call *<YourProto>.parser()*
+     * function. The type of [Parser] you specified is your *return* type.
+     *
+     * @throws ProtocolException
+     */
     fun <I, O> firePut(
-        data: I,
-        endpoint: AvailableRequests,
-        headers: MutableMap<String, String> = mutableMapOf(),
-        authToken: String,
-        responseParser: Parser<O>
+            data: I,
+            endpoint: AvailableRequests,
+            headers: MutableMap<String, String> = mutableMapOf(),
+            authToken: String,
+            responseParser: Parser<O>
     ): O where I : Message, O : Message {
         headers.putAll(mapOf(APP_TOKEN_KEY to authToken))
         headers.putAll(mapOf(PROTO_REQUEST_TYPE_KEY to PROTO_REQUEST_TYPE))
         headers.putAll(mapOf(USER_AGENT_KEY to USER_AGENT))
 
         val response = Fuel.put(serviceBaseUrl + extractRequestType(endpoint))
-            .body(data.toByteArray())
-            .header(headers)
-            .response()
-            .second
+                .body(data.toByteArray())
+                .header(headers)
+                .response()
+                .second
 
         if (response.statusCode > 299)
             Passw0rdProtos.HttpError.parseFrom(response.data).run {
@@ -127,33 +180,56 @@ class HttpClientProtobuf(val serviceBaseUrl: String = SERVICE_BASE_URL) {
         return responseParser.parseFrom(response.data)
     }
 
-    fun fireDelete(
-        endpoint: AvailableRequests,
-        headers: MutableMap<String, String> = mutableMapOf(),
-        authToken: String,
-        responseType: Message
-    ): Message {
+    /**
+     * This function issues DELETE request to the specified [serviceBaseUrl] (or default one if not specified)
+     * + provided [endpoint] (Request address will be: [serviceBaseUrl]/[endpoint]).
+     *
+     * You can provide your headers, but keep in mind that *AppToken*, *User-Agent* and *Content-Type* are already
+     * present (and will be overridden if you try to provide them).
+     *
+     * For authorization provided [authToken] will be mapped to *AppToken* key in header.
+     *
+     * You have to specify [responseParser] that will be used to parse Protobuf message that service will answer to
+     * your request. It should be correct Protobuf message. To get [Parser] you have to call *<YourProto>.parser()*
+     * function. The type of [Parser] you specified is your *return* type.
+     *
+     * @throws ProtocolException
+     */
+    fun <O> fireDelete(
+            endpoint: AvailableRequests,
+            headers: MutableMap<String, String> = mutableMapOf(),
+            authToken: String,
+            responseParser: Parser<O>
+    ): O where O : Message {
         headers.putAll(mapOf(APP_TOKEN_KEY to authToken))
         headers.putAll(mapOf(PROTO_REQUEST_TYPE_KEY to PROTO_REQUEST_TYPE))
         headers.putAll(mapOf(USER_AGENT_KEY to USER_AGENT))
 
         val response = Fuel.delete(serviceBaseUrl + extractRequestType(endpoint))
-            .header(headers)
-            .response()
-            .second
+                .header(headers)
+                .response()
+                .second
 
         if (response.statusCode > 299)
-            return Passw0rdProtos.HttpError.parseFrom(response.data)
+            Passw0rdProtos.HttpError.parseFrom(response.data).run {
+                throw ProtocolException(this.code, this.message)
+            } // TODO try to get message/code if it's not a Passw0rdProtos.HttpError type.
 
-        return responseType.parserForType.parseFrom(response.data)
+        return responseParser.parseFrom(response.data)
     }
 
+    /**
+     * This functions extracts string value from provided [AvailableRequests] parameter.
+     */
     private fun extractRequestType(availableRequests: AvailableRequests) =
-        when (availableRequests) {
-            AvailableRequests.ENROLL -> "/enroll"
-            AvailableRequests.VERIFY_PASSWORD -> "/verify-password"
-        }
+            when (availableRequests) {
+                AvailableRequests.ENROLL -> "/enroll"
+                AvailableRequests.VERIFY_PASSWORD -> "/verify-password"
+            }
 
+    /**
+     * Enum of available requests
+     */
     enum class AvailableRequests {
         ENROLL,
         VERIFY_PASSWORD

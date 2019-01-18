@@ -51,36 +51,39 @@ import java.util.*
  */
 
 /**
- * ProtocolContext class.
+ * ProtocolContext class holds and validates protocol input parameters.
  */
 class ProtocolContext(
-    val appToken: String,
-    val pheClient: PheClient,
-    val version: Int,
-    val updateToken: Passw0rdProtos.VersionedUpdateToken?
+        val appToken: String,
+        val pheClient: PheClient,
+        val version: Int,
+        val updateToken: Passw0rdProtos.VersionedUpdateToken?
 ) {
 
     companion object {
+        /**
+         * This function validates input parameters and prepares them for being used in Protocol.
+         */
         fun create(
-            appToken: String,
-            servicePublicKey: String,
-            clientSecretKey: String,
-            updateToken: String
+                appToken: String,
+                servicePublicKey: String,
+                clientSecretKey: String,
+                updateToken: String
         ): ProtocolContext {
             if (appToken.isBlank()) Utils.shouldNotBeEmpty("appToken")
             if (servicePublicKey.isBlank()) Utils.shouldNotBeEmpty("servicePublicKey")
             if (clientSecretKey.isBlank()) Utils.shouldNotBeEmpty("clientSecretKey")
 
             val (publicVersion, publicBytes) = parseVersionAndContent(
-                servicePublicKey,
-                PREFIX_PUBLIC_KEY,
-                KEY_PUBLIC_KEY
+                    servicePublicKey,
+                    PREFIX_PUBLIC_KEY,
+                    KEY_PUBLIC_KEY
             )
 
             val (secretVersion, secretBytes) = parseVersionAndContent(
-                clientSecretKey,
-                PREFIX_SECRET_KEY,
-                KEY_SECRET_KEY
+                    clientSecretKey,
+                    PREFIX_SECRET_KEY,
+                    KEY_SECRET_KEY
             )
 
             if (publicVersion != secretVersion)
@@ -94,16 +97,14 @@ class ProtocolContext(
 
             if (updateToken.isNotBlank()) {
                 val (tokenVersion, content) = parseVersionAndContent(
-                    updateToken,
-                    PREFIX_UPDATE_TOKEN,
-                    KEY_UPDATE_TOKEN
+                        updateToken,
+                        PREFIX_UPDATE_TOKEN,
+                        KEY_UPDATE_TOKEN
                 )
 
                 if (tokenVersion != currentVersion + 1)
-                    throw IllegalArgumentException(
-                        "Incorrect token version $tokenVersion. " +
-                                "Should be {$tokenVersion + 1}."
-                    )
+                    throw IllegalArgumentException("Incorrect token version $tokenVersion. " +
+                                                           "Should be {$tokenVersion + 1}.")
 
                 currentVersion = tokenVersion
 
@@ -113,43 +114,42 @@ class ProtocolContext(
                 pheClient.setKeys(rotateKeysResult.newClientPrivateKey, rotateKeysResult.newServerPublicKey)
 
                 versionedUpdateToken = Passw0rdProtos.VersionedUpdateToken
-                    .newBuilder()
-                    .setVersion(tokenVersion)
-                    .setUpdateToken(ByteString.copyFrom(content))
-                    .build()
+                        .newBuilder()
+                        .setVersion(tokenVersion)
+                        .setUpdateToken(ByteString.copyFrom(content))
+                        .build()
             }
 
             return ProtocolContext(appToken, pheClient, currentVersion, versionedUpdateToken)
         }
 
+        /**
+         * This function splits string into 3 parts: Prefix, version and decoded base64 content.
+         */
         private fun parseVersionAndContent(forParse: String, prefix: String, name: String): Pair<Int, ByteArray> {
             val parsedParts = forParse.split('.')
             if (parsedParts.size != 3)
-                throw java.lang.IllegalArgumentException(
-                    "Provided \'$name\' has wrong parts count. " +
-                            "Should be \'3\'. Actual is \'{${parsedParts.size}}\'. "
-                )
+                throw IllegalArgumentException("Provided \'$name\' has wrong parts count. " +
+                                                       "Should be \'3\'. Actual is \'{${parsedParts.size}}\'. ")
 
             if (parsedParts[0] != prefix)
-                throw java.lang.IllegalArgumentException(
-                    "Wrong token prefix. Should be \'$prefix\'. " +
-                            "Actual is \'{$parsedParts[0]}\'."
-                )
+                throw IllegalArgumentException("Wrong token prefix. Should be \'$prefix\'. " +
+                                                       "Actual is \'{$parsedParts[0]}\'.")
 
             val version: Int
             try {
                 version = parsedParts[1].toInt()
                 if (version < 1)
-                    throw java.lang.IllegalArgumentException("$name version can not be zero or negative number.")
+                    throw IllegalArgumentException("$name version can not be zero or negative number.")
             } catch (e: NumberFormatException) {
-                throw java.lang.IllegalArgumentException("$name version can not be parsed.")
+                throw IllegalArgumentException("$name version can not be parsed.")
             }
 
             val content: ByteArray
             try {
                 content = Base64.getDecoder().decode(parsedParts[2])
-            } catch (e: java.lang.IllegalArgumentException) {
-                throw java.lang.IllegalArgumentException("$name content can not be parsed.")
+            } catch (e: IllegalArgumentException) {
+                throw IllegalArgumentException("$name content can not be parsed.")
             }
 
             return Pair(version, content)
