@@ -33,6 +33,8 @@
 
 package com.virgilsecurity.passw0rd.utils
 
+import kotlinx.coroutines.Deferred
+
 /**
  * . _  _
  * .| || | _
@@ -45,14 +47,13 @@ package com.virgilsecurity.passw0rd.utils
  */
 
 /**
- * Utils class.
+ * DeferredExt class is extensions class to call coroutine-based method from java.
  */
-object ThreadUtils {
 
-    @JvmStatic
-    fun pause() {
-        Thread.sleep(ANTI_LIMIT_TIMEOUT)
-    }
+fun <T> Deferred<T>.addResultListener() {
 
-    private const val ANTI_LIMIT_TIMEOUT = 1 * 1000L // 1 second
+}
+
+fun String.lol() {
+
 }

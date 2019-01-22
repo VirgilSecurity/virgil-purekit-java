@@ -33,6 +33,8 @@
 
 package com.virgilsecurity.passw0rd.utils
 
+import java.util.*
+
 /**
  * . _  _
  * .| || | _
@@ -57,4 +59,44 @@ object Utils {
     @Throws(IllegalArgumentException::class)
     fun shouldNotBeEmpty(argumentName: String): Nothing =
         throw IllegalArgumentException("Parameter $argumentName should not be empty")
+
+    /**
+     * This function splits string into 3 parts: Prefix, version and decoded base64 content.
+     */
+    fun parseVersionAndContent(forParse: String, prefix: String, name: String): Pair<Int, ByteArray> {
+        val parsedParts = forParse.split('.')
+        if (parsedParts.size != 3)
+            throw IllegalArgumentException("Provided \'$name\' has wrong parts count. " +
+                                                   "Should be \'3\'. Actual is \'{${parsedParts.size}}\'. ")
+
+        if (parsedParts[0] != prefix)
+            throw IllegalArgumentException("Wrong token prefix. Should be \'$prefix\'. " +
+                                                   "Actual is \'{$parsedParts[0]}\'.")
+
+        val version: Int
+        try {
+            version = parsedParts[1].toInt()
+            if (version < 1)
+                throw IllegalArgumentException("$name version can not be zero or negative number.")
+        } catch (e: NumberFormatException) {
+            throw IllegalArgumentException("$name version can not be parsed.")
+        }
+
+        val content: ByteArray
+        try {
+            content = Base64.getDecoder().decode(parsedParts[2])
+        } catch (e: IllegalArgumentException) {
+            throw IllegalArgumentException("$name content can not be parsed.")
+        }
+
+        return Pair(version, content)
+    }
+
+    const val PREFIX_UPDATE_TOKEN = "UT"
+    const val PREFIX_SECRET_KEY = "SK"
+    const val PREFIX_PUBLIC_KEY = "PK"
+
+    const val KEY_UPDATE_TOKEN = "Update Token"
+    const val KEY_SECRET_KEY = "Secret Key"
+    const val KEY_PUBLIC_KEY = "Public Key"
 }

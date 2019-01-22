@@ -33,8 +33,6 @@
 
 package com.virgilsecurity.passw0rd.protocol
 
-import com.virgilsecurity.passw0rd.Protocol
-import com.virgilsecurity.passw0rd.ProtocolContext
 import com.virgilsecurity.passw0rd.client.HttpClientProtobuf
 import com.virgilsecurity.passw0rd.data.ProtocolException
 import com.virgilsecurity.passw0rd.utils.PropertyManager

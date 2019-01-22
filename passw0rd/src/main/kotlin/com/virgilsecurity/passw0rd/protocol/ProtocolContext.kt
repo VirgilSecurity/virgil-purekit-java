@@ -31,13 +31,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.passw0rd
+package com.virgilsecurity.passw0rd.protocol
 
 import com.google.protobuf.ByteString
 import com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos
 import com.virgilsecurity.passw0rd.utils.Utils
 import virgil.crypto.phe.PheClient
-import java.util.*
 
 /**
  * . _  _
@@ -64,6 +63,7 @@ class ProtocolContext private constructor(
         /**
          * This function validates input parameters and prepares them for being used in Protocol.
          */
+        @JvmStatic
         fun create(
                 appToken: String,
                 servicePublicKey: String,
@@ -74,16 +74,16 @@ class ProtocolContext private constructor(
             if (servicePublicKey.isBlank()) Utils.shouldNotBeEmpty("servicePublicKey")
             if (clientSecretKey.isBlank()) Utils.shouldNotBeEmpty("clientSecretKey")
 
-            val (publicVersion, publicBytes) = parseVersionAndContent(
+            val (publicVersion, publicBytes) = Utils.parseVersionAndContent(
                     servicePublicKey,
-                    PREFIX_PUBLIC_KEY,
-                    KEY_PUBLIC_KEY
+                    Utils.PREFIX_PUBLIC_KEY,
+                    Utils.KEY_PUBLIC_KEY
             )
 
-            val (secretVersion, secretBytes) = parseVersionAndContent(
+            val (secretVersion, secretBytes) = Utils.parseVersionAndContent(
                     clientSecretKey,
-                    PREFIX_SECRET_KEY,
-                    KEY_SECRET_KEY
+                    Utils.PREFIX_SECRET_KEY,
+                    Utils.KEY_SECRET_KEY
             )
 
             if (publicVersion != secretVersion)
@@ -97,10 +97,10 @@ class ProtocolContext private constructor(
             var versionedUpdateToken: Passw0rdProtos.VersionedUpdateToken? = null
 
             if (updateToken.isNotBlank()) {
-                val (tokenVersion, content) = parseVersionAndContent(
+                val (tokenVersion, content) = Utils.parseVersionAndContent(
                         updateToken,
-                        PREFIX_UPDATE_TOKEN,
-                        KEY_UPDATE_TOKEN
+                        Utils.PREFIX_UPDATE_TOKEN,
+                        Utils.KEY_UPDATE_TOKEN
                 )
 
                 if (tokenVersion != currentVersion + 1)
@@ -122,47 +122,10 @@ class ProtocolContext private constructor(
                         .build()
             }
 
-            return ProtocolContext(appToken, pheClients, currentVersion, versionedUpdateToken)
+            return ProtocolContext(appToken,
+                                                                        pheClients,
+                                                                        currentVersion,
+                                                                        versionedUpdateToken)
         }
-
-        /**
-         * This function splits string into 3 parts: Prefix, version and decoded base64 content.
-         */
-        private fun parseVersionAndContent(forParse: String, prefix: String, name: String): Pair<Int, ByteArray> {
-            val parsedParts = forParse.split('.')
-            if (parsedParts.size != 3)
-                throw IllegalArgumentException("Provided \'$name\' has wrong parts count. " +
-                                                       "Should be \'3\'. Actual is \'{${parsedParts.size}}\'. ")
-
-            if (parsedParts[0] != prefix)
-                throw IllegalArgumentException("Wrong token prefix. Should be \'$prefix\'. " +
-                                                       "Actual is \'{$parsedParts[0]}\'.")
-
-            val version: Int
-            try {
-                version = parsedParts[1].toInt()
-                if (version < 1)
-                    throw IllegalArgumentException("$name version can not be zero or negative number.")
-            } catch (e: NumberFormatException) {
-                throw IllegalArgumentException("$name version can not be parsed.")
-            }
-
-            val content: ByteArray
-            try {
-                content = Base64.getDecoder().decode(parsedParts[2])
-            } catch (e: IllegalArgumentException) {
-                throw IllegalArgumentException("$name content can not be parsed.")
-            }
-
-            return Pair(version, content)
-        }
-
-        private const val PREFIX_UPDATE_TOKEN = "UT"
-        private const val PREFIX_SECRET_KEY = "SK"
-        private const val PREFIX_PUBLIC_KEY = "PK"
-
-        private const val KEY_UPDATE_TOKEN = "Update Token"
-        private const val KEY_SECRET_KEY = "Secret Key"
-        private const val KEY_PUBLIC_KEY = "Public Key"
     }
 }

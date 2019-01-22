@@ -34,54 +34,63 @@
 package com.virgilsecurity.passw0rd.utils
 
 object PropertyManager {
+    @JvmStatic
     val appToken: String by lazy {
         if (System.getProperty(APP_TOKEN) != null)
             System.getProperty(APP_TOKEN)
         else
             System.getenv(APP_TOKEN)
     }
+    @JvmStatic
     val publicKeyOld: String by lazy {
         if (System.getProperty(PUBLIC_KEY_OLD) != null)
             System.getProperty(PUBLIC_KEY_OLD)
         else
             System.getenv(PUBLIC_KEY_OLD)
     }
+    @JvmStatic
     val secretKeyOld: String by lazy {
         if (System.getProperty(SECRET_KEY_OLD) != null)
             System.getProperty(SECRET_KEY_OLD)
         else
             System.getenv(SECRET_KEY_OLD)
     }
+    @JvmStatic
     val publicKeyNew: String by lazy {
         if (System.getProperty(PUBLIC_KEY_NEW) != null)
             System.getProperty(PUBLIC_KEY_NEW)
         else
             System.getenv(PUBLIC_KEY_NEW)
     }
+    @JvmStatic
     val secretKeyNew: String by lazy {
         if (System.getProperty(SECRET_KEY_NEW) != null)
             System.getProperty(SECRET_KEY_NEW)
         else
             System.getenv(SECRET_KEY_NEW)
     }
+    @JvmStatic
     val publicKeyWrong: String by lazy {
         if (System.getProperty(PUBLIC_KEY_WRONG) != null)
             System.getProperty(PUBLIC_KEY_WRONG)
         else
             System.getenv(PUBLIC_KEY_WRONG)
     }
+    @JvmStatic
     val updateTokenOld: String by lazy {
         if (System.getProperty(UPDATE_TOKEN_OLD) != null)
             System.getProperty(UPDATE_TOKEN_OLD)
         else
             System.getenv(UPDATE_TOKEN_OLD)
     }
+    @JvmStatic
     val updateTokenNew: String by lazy {
         if (System.getProperty(UPDATE_TOKEN_NEW) != null)
             System.getProperty(UPDATE_TOKEN_NEW)
         else
             System.getenv(UPDATE_TOKEN_NEW)
     }
+    @JvmStatic
     val serverAddress: String by lazy {
         if (System.getProperty(SERVER_ADDRESS) != null)
             System.getProperty(SERVER_ADDRESS)

@@ -33,8 +33,6 @@
 
 package com.virgilsecurity.passw0rd.protocol
 
-import com.virgilsecurity.passw0rd.Protocol
-import com.virgilsecurity.passw0rd.ProtocolContext
 import com.virgilsecurity.passw0rd.client.HttpClientProtobuf
 import com.virgilsecurity.passw0rd.data.InvalidPasswordException
 import com.virgilsecurity.passw0rd.data.InvalidProofException
@@ -43,6 +41,7 @@ import com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos
 import com.virgilsecurity.passw0rd.utils.EnrollResult
 import com.virgilsecurity.passw0rd.utils.PropertyManager
 import com.virgilsecurity.passw0rd.utils.ThreadUtils
+import com.virgilsecurity.passw0rd.utils.lol
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
@@ -79,7 +78,8 @@ class ProtocolTest {
         )
         assertNotNull(context)
 
-        protocol = Protocol(context, HttpClientProtobuf(PropertyManager.serverAddress))
+        protocol = Protocol(context,
+                            HttpClientProtobuf(PropertyManager.serverAddress))
     }
 
     // HTC-1
@@ -115,7 +115,8 @@ class ProtocolTest {
                 propertyManager.updateTokenNew
         )
 
-        val protocol = Protocol(protocolContext, HttpClientProtobuf(PropertyManager.serverAddress))
+        val protocol = Protocol(protocolContext,
+                                HttpClientProtobuf(PropertyManager.serverAddress))
 
         var enrollResult: EnrollResult? = null
         runBlocking {
@@ -177,7 +178,8 @@ class ProtocolTest {
                 propertyManager.updateTokenNew
         )
 
-        val protocolNew = Protocol(protocolContextNew, HttpClientProtobuf(PropertyManager.serverAddress))
+        val protocolNew = Protocol(protocolContextNew,
+                                   HttpClientProtobuf(PropertyManager.serverAddress))
 
         assertThrows<InvalidProofException> {
             runBlocking {
@@ -213,11 +215,13 @@ class ProtocolTest {
                 propertyManager.updateTokenNew
         )
 
-        val protocolNew = Protocol(protocolContextNew, HttpClientProtobuf(PropertyManager.serverAddress))
+        val protocolNew = Protocol(protocolContextNew,
+                                   HttpClientProtobuf(PropertyManager.serverAddress))
 
         var record: ByteArray? = null
         runBlocking {
-            record = protocolNew.updateEnrollmentRecord(enrollResult!!.enrollmentRecord).await()
+            record = RecordUpdater.updateEnrollmentRecord(enrollResult!!.enrollmentRecord,
+                                                          PropertyManager.updateTokenNew).await()
         }
         assertNotNull(record)
 
@@ -253,7 +257,8 @@ class ProtocolTest {
                 propertyManager.updateTokenNew
         )
 
-        val protocol = Protocol(protocolContext, HttpClientProtobuf(PropertyManager.serverAddress))
+        val protocol = Protocol(protocolContext,
+                                HttpClientProtobuf(PropertyManager.serverAddress))
 
         var enrollResult: EnrollResult? = null
         runBlocking {
@@ -267,7 +272,8 @@ class ProtocolTest {
 
         assertThrows<IllegalArgumentException> {
             runBlocking {
-                protocol.updateEnrollmentRecord(enrollResult!!.enrollmentRecord).await()
+                RecordUpdater.updateEnrollmentRecord(enrollResult!!.enrollmentRecord, PropertyManager.updateTokenNew)
+                        .await()
             }
         }
     }
@@ -283,7 +289,8 @@ class ProtocolTest {
                 propertyManager.updateTokenNew
         )
 
-        val protocol = Protocol(protocolContext, HttpClientProtobuf(PropertyManager.serverAddress))
+        val protocol = Protocol(protocolContext,
+                                HttpClientProtobuf(PropertyManager.serverAddress))
 
         var enrollResult: EnrollResult? = null
         runBlocking {
@@ -301,7 +308,8 @@ class ProtocolTest {
 
         assertThrows<IllegalArgumentException> {
             runBlocking {
-                protocol.updateEnrollmentRecord(enrollResult!!.enrollmentRecord).await()
+                RecordUpdater.updateEnrollmentRecord(enrollResult!!.enrollmentRecord, PropertyManager.updateTokenNew)
+                        .await()
             }
         }
 
@@ -348,11 +356,13 @@ class ProtocolTest {
         )
         assertNotNull(context)
 
-        protocol = Protocol(context, HttpClientProtobuf(PropertyManager.serverAddress))
+        protocol = Protocol(context,
+                            HttpClientProtobuf(PropertyManager.serverAddress))
 
         var newRecord: ByteArray? = null
         runBlocking {
-            newRecord = protocol.updateEnrollmentRecord(enrollResult!!.enrollmentRecord).await()
+            newRecord = RecordUpdater.updateEnrollmentRecord(enrollResult!!.enrollmentRecord,
+                                                             PropertyManager.updateTokenNew).await()
         }
         assertNotNull(newRecord)
 

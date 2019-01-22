@@ -33,11 +33,9 @@
 
 package com.virgilsecurity.passw0rd.protocol
 
-import com.virgilsecurity.passw0rd.utils.PropertyManager
-import com.virgilsecurity.passw0rd.Protocol
-import com.virgilsecurity.passw0rd.ProtocolContext
 import com.virgilsecurity.passw0rd.client.HttpClientProtobuf
 import com.virgilsecurity.passw0rd.data.InvalidProtobufTypeException
+import com.virgilsecurity.passw0rd.utils.PropertyManager
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -73,7 +71,8 @@ class ProtocolNegativeTest {
         )
         Assertions.assertNotNull(context)
 
-        protocol = Protocol(context, HttpClientProtobuf(PropertyManager.serverAddress))
+        protocol = Protocol(context,
+                            HttpClientProtobuf(PropertyManager.serverAddress))
     }
 
     // HTC-11
@@ -121,7 +120,8 @@ class ProtocolNegativeTest {
         var failed = false
         runBlocking {
             try {
-                protocol.updateEnrollmentRecord(Random.nextBytes(RANDOM_BYTES_SIZE)).await()
+                RecordUpdater.updateEnrollmentRecord(Random.nextBytes(RANDOM_BYTES_SIZE),
+                                                     "").await()
             } catch (e: IllegalArgumentException) {
                 failed = true
             }
@@ -133,7 +133,7 @@ class ProtocolNegativeTest {
         var failed = false
         runBlocking {
             try {
-                protocol.updateEnrollmentRecord(ByteArray(0)).await()
+                RecordUpdater.updateEnrollmentRecord(ByteArray(0), PropertyManager.updateTokenNew).await()
             } catch (e: IllegalArgumentException) {
                 failed = true
             }
@@ -148,11 +148,13 @@ class ProtocolNegativeTest {
                 PropertyManager.secretKeyNew,
                 PropertyManager.updateTokenNew
         )
-        protocol = Protocol(context, HttpClientProtobuf(PropertyManager.serverAddress))
+        protocol = Protocol(context,
+                            HttpClientProtobuf(PropertyManager.serverAddress))
 
         runBlocking {
             try {
-                protocol.updateEnrollmentRecord(Random.nextBytes(RANDOM_BYTES_SIZE)).await()
+                RecordUpdater.updateEnrollmentRecord(Random.nextBytes(RANDOM_BYTES_SIZE),
+                                                     PropertyManager.updateTokenNew).await()
             } catch (t: Throwable) {
                 assertTrue(t is InvalidProtobufTypeException)
             }

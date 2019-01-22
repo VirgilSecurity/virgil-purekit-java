@@ -33,7 +33,6 @@
 
 package com.virgilsecurity.passw0rd.protocol
 
-import com.virgilsecurity.passw0rd.ProtocolContext
 import com.virgilsecurity.passw0rd.utils.PropertyManager
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test

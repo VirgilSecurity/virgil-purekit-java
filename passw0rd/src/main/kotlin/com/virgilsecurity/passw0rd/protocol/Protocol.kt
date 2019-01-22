@@ -31,7 +31,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.passw0rd
+package com.virgilsecurity.passw0rd.protocol
 
 import com.google.protobuf.ByteString
 import com.google.protobuf.InvalidProtocolBufferException
@@ -45,7 +45,6 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import virgil.crypto.phe.PheCipher
 import virgil.crypto.phe.PheClient
-import virgil.crypto.phe.PheClientEnrollAccountResult
 import virgil.crypto.phe.PheException
 
 /**
@@ -62,12 +61,14 @@ import virgil.crypto.phe.PheException
 /**
  * Protocol class implements passw0rd client-server protocol.
  */
-class Protocol(protocolContext: ProtocolContext, private val httpClient: HttpClientProtobuf = HttpClientProtobuf()) {
+class Protocol @JvmOverloads constructor(
+        protocolContext: ProtocolContext,
+        private val httpClient: HttpClientProtobuf = HttpClientProtobuf()
+) {
 
     private val appToken: String = protocolContext.appToken
     private val pheClients: Map<Int, PheClient> = protocolContext.pheClients
     private val currentVersion: Int = protocolContext.version
-    private val updateToken: Passw0rdProtos.VersionedUpdateToken? = protocolContext.updateToken
     private val pheCipher: PheCipher by lazy { PheCipher().apply { setupDefaults() } }
 
     /**
@@ -77,6 +78,7 @@ class Protocol(protocolContext: ProtocolContext, private val httpClient: HttpCli
      * @throws ProtocolException
      * @throws PheException
      */
+    @Throws(IllegalArgumentException::class, ProtocolException::class, PheException::class)
     fun enrollAccount(password: String): Deferred<EnrollResult> = GlobalScope.async {
         if (password.isBlank()) Utils.shouldNotBeEmpty("password")
 
@@ -115,6 +117,11 @@ class Protocol(protocolContext: ProtocolContext, private val httpClient: HttpCli
      * @throws InvalidPasswordException
      * @throws InvalidProtobufTypeException
      */
+    @Throws(IllegalArgumentException::class,
+            ProtocolException::class,
+            PheException::class,
+            InvalidPasswordException::class,
+            InvalidProtobufTypeException::class)
     fun verifyPassword(password: String, enrollmentRecord: ByteArray): Deferred<ByteArray> = GlobalScope.async {
         if (password.isBlank()) Utils.shouldNotBeEmpty("password")
         if (enrollmentRecord.isEmpty()) Utils.shouldNotBeEmpty("enrollmentRecord")
@@ -160,49 +167,12 @@ class Protocol(protocolContext: ProtocolContext, private val httpClient: HttpCli
     }
 
     /**
-     * This function increments record version and updates [oldRecord] with provided [updateToken] from
-     * [ProtocolContext] and returns updated record.
-     *
-     * @throws IllegalArgumentException
-     * @throws PheException
-     * @throws InvalidProtobufTypeException
-     */
-    fun updateEnrollmentRecord(oldRecord: ByteArray): Deferred<ByteArray> = GlobalScope.async {
-        if (oldRecord.isEmpty()) Utils.shouldNotBeEmpty("oldRecord")
-        if (updateToken == null) Utils.shouldNotBeEmpty("update token")
-
-        val (recordVersion, record) = try {
-            Passw0rdProtos.DatabaseRecord.parseFrom(oldRecord).let {
-                it.version to it.record.toByteArray()
-            }
-        } catch (e: InvalidProtocolBufferException) {
-            throw InvalidProtobufTypeException()
-        }
-
-        if ((recordVersion + 1) == updateToken.version) {
-            val newRecord =
-                    pheClients[updateToken.version]!!.updateEnrollmentRecord(record,
-                                                                             updateToken.updateToken.toByteArray())
-
-            Passw0rdProtos.DatabaseRecord.newBuilder()
-                    .setRecord(ByteString.copyFrom(newRecord))
-                    .setVersion(updateToken.version).build()
-                    .toByteArray()
-        } else {
-            throw IllegalArgumentException(
-                    "Update Token version must be greater by 1 than current. " +
-                            "Token version is ${updateToken.version}. " +
-                            "Current version is $currentVersion."
-            )
-        }
-    }
-
-    /**
      * This function encrypts provided [data] using [accountKey].
      *
      * @throws IllegalArgumentException
      * @throws PheException
      */
+    @Throws(IllegalArgumentException::class, PheException::class)
     fun encrypt(data: ByteArray, accountKey: ByteArray): ByteArray {
         if (data.isEmpty()) Utils.shouldNotBeEmpty("data")
         if (accountKey.isEmpty()) Utils.shouldNotBeEmpty("accountKey")
@@ -216,6 +186,7 @@ class Protocol(protocolContext: ProtocolContext, private val httpClient: HttpCli
      * @throws IllegalArgumentException
      * @throws PheException
      */
+    @Throws(IllegalArgumentException::class, PheException::class)
     fun decrypt(data: ByteArray, accountKey: ByteArray): ByteArray {
         if (data.isEmpty()) Utils.shouldNotBeEmpty("data")
         if (accountKey.isEmpty()) Utils.shouldNotBeEmpty("accountKey")
