@@ -53,9 +53,9 @@ import java.util.*
 /**
  * ProtocolContext class holds and validates protocol input parameters.
  */
-class ProtocolContext(
+class ProtocolContext private constructor(
         val appToken: String,
-        val pheClient: PheClient,
+        val pheClients: Map<Int, PheClient>,
         val version: Int,
         val updateToken: Passw0rdProtos.VersionedUpdateToken?
 ) {
@@ -89,8 +89,9 @@ class ProtocolContext(
             if (publicVersion != secretVersion)
                 throw IllegalArgumentException("Public and Secret keys must have the same version.")
 
-            var pheClient = PheClient()
-            pheClient.setKeys(secretBytes, publicBytes)
+            val pheClients = mutableMapOf<Int, PheClient>().apply {
+                put(publicVersion, PheClient().apply { setKeys(secretBytes, publicBytes) })
+            }
 
             var currentVersion = publicVersion
             var versionedUpdateToken: Passw0rdProtos.VersionedUpdateToken? = null
@@ -108,10 +109,11 @@ class ProtocolContext(
 
                 currentVersion = tokenVersion
 
-                val rotateKeysResult = pheClient.rotateKeys(content)
+                val rotateKeysResult = pheClients[publicVersion]!!.rotateKeys(content)
 
-                pheClient = PheClient() // New client for new keys
-                pheClient.setKeys(rotateKeysResult.newClientPrivateKey, rotateKeysResult.newServerPublicKey)
+                pheClients[tokenVersion] = PheClient().apply {
+                    setKeys(rotateKeysResult.newClientPrivateKey, rotateKeysResult.newServerPublicKey)
+                }
 
                 versionedUpdateToken = Passw0rdProtos.VersionedUpdateToken
                         .newBuilder()
@@ -120,7 +122,7 @@ class ProtocolContext(
                         .build()
             }
 
-            return ProtocolContext(appToken, pheClient, currentVersion, versionedUpdateToken)
+            return ProtocolContext(appToken, pheClients, currentVersion, versionedUpdateToken)
         }
 
         /**

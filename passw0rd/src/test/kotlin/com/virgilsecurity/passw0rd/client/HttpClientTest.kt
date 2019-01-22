@@ -65,7 +65,7 @@ class HttpClientTest {
 
     @Test fun response_proto_parse() {
         val version = parseVersionAndContent(
-                PropertyManager.publicKey,
+                PropertyManager.publicKeyNew,
                 PREFIX_PUBLIC_KEY,
                 KEY_PUBLIC_KEY
         ).first

@@ -33,14 +33,9 @@
 
 package com.virgilsecurity.passw0rd.protocol
 
-import com.virgilsecurity.passw0rd.Protocol
 import com.virgilsecurity.passw0rd.ProtocolContext
-import com.virgilsecurity.passw0rd.client.HttpClientProtobuf
-import com.virgilsecurity.passw0rd.data.ProtocolException
 import com.virgilsecurity.passw0rd.utils.PropertyManager
-import kotlinx.coroutines.runBlocking
-import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
@@ -50,86 +45,54 @@ import org.junit.jupiter.api.assertThrows
  * -| || || |   Created by:
  * .| || || |-  Danylo Oliinyk
  * ..\_  || |   on
- * ....|  _/    2019-01-17
+ * ....|  _/    2019-01-22
  * ...-| | \    at Virgil Security
  * ....|_|-
  */
 
 /**
- * ProtocolContextNegativeTest class.
+ * ProtocolContextTest class.
  */
-class ProtocolContextNegativeTest {
+class ProtocolContextTest {
 
-    private lateinit var context: ProtocolContext
-    private lateinit var protocol: Protocol
-
-    @BeforeEach fun setup() {
-        context = ProtocolContext.create(
+    // HTC-8
+    @Test fun one_key_context() {
+        val context = ProtocolContext.create(
                 PropertyManager.appToken,
                 PropertyManager.publicKeyNew,
                 PropertyManager.secretKeyNew,
                 ""
         )
-        Assertions.assertNotNull(context)
-
-        protocol = Protocol(context, HttpClientProtobuf(PropertyManager.serverAddress))
+        assertNotNull(context)
+        assertEquals(2, context.version)
+        assertEquals(1, context.pheClients.size)
+        assertNull(context.updateToken)
     }
 
-    @Test fun context_app_token_wrong() {
-        context = ProtocolContext.create(
-                WRONG_CRED,
-                PropertyManager.publicKeyNew,
-                PropertyManager.secretKeyNew,
-                ""
+    // HTC-9
+    @Test fun context_with_update_token() {
+        val context = ProtocolContext.create(
+                PropertyManager.appToken,
+                PropertyManager.publicKeyOld,
+                PropertyManager.secretKeyOld,
+                PropertyManager.updateTokenOld
         )
-        Assertions.assertNotNull(context)
-
-        protocol = Protocol(context, HttpClientProtobuf(PropertyManager.serverAddress))
-
-        runBlocking {
-            try {
-                protocol.enrollAccount(PASSWORD).await()
-            } catch (t: Throwable) {
-                Assertions.assertTrue(t is ProtocolException)
-            }
-        }
+        assertNotNull(context)
+        assertEquals(2, context.version)
+        assertNotNull(context.updateToken)
+        assertNotNull(context.pheClients[context.updateToken!!.version]) // Current keys
+        assertNotNull(context.pheClients[context.updateToken!!.version - 1]) // Previous keys
     }
 
-    @Test fun context_public_key_wrong() {
+    // HTC-10
+    @Test fun context_with_wrong_update_token() {
         assertThrows<IllegalArgumentException> {
-            context = ProtocolContext.create(
+            ProtocolContext.create(
                     PropertyManager.appToken,
-                    WRONG_CRED,
-                    PropertyManager.secretKeyNew,
-                    ""
+                    PropertyManager.publicKeyOld,
+                    PropertyManager.secretKeyOld,
+                    PropertyManager.updateTokenNew
             )
         }
-    }
-
-    @Test fun context_secret_key_wrong() {
-        assertThrows<IllegalArgumentException> {
-            context = ProtocolContext.create(
-                    PropertyManager.appToken,
-                    PropertyManager.publicKeyNew,
-                    WRONG_CRED,
-                    ""
-            )
-        }
-    }
-
-    @Test fun context_update_token_wrong() {
-        assertThrows<IllegalArgumentException> {
-            context = ProtocolContext.create(
-                    PropertyManager.appToken,
-                    PropertyManager.publicKeyNew,
-                    PropertyManager.secretKeyNew,
-                    WRONG_CRED
-            )
-        }
-    }
-
-    companion object {
-        private const val WRONG_CRED = "WRONG_CRED"
-        private const val PASSWORD = "PASSWORD"
     }
 }

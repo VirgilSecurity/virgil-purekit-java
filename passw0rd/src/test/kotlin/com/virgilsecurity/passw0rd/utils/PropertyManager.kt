@@ -34,40 +34,68 @@
 package com.virgilsecurity.passw0rd.utils
 
 object PropertyManager {
-        val appToken: String by lazy {
-            if (System.getProperty(APP_TOKEN) != null)
-                System.getProperty(APP_TOKEN)
-            else
-                System.getenv(APP_TOKEN)
-        }
-        val secretKey: String by lazy {
-            if (System.getProperty(SECRET_KEY) != null)
-                System.getProperty(SECRET_KEY)
-            else
-                System.getenv(SECRET_KEY)
-        }
-        val publicKey: String by lazy {
-            if (System.getProperty(PUBLIC_KEY) != null)
-                System.getProperty(PUBLIC_KEY)
-            else
-                System.getenv(PUBLIC_KEY)
-        }
-        val updateToken: String by lazy {
-            if (System.getProperty(UPDATE_TOKEN) != null)
-                System.getProperty(UPDATE_TOKEN)
-            else
-                System.getenv(UPDATE_TOKEN)
-        }
-        val serverAddress: String by lazy {
-            if (System.getProperty(SERVER_ADDRESS) != null)
-                System.getProperty(SERVER_ADDRESS)
-            else
-                System.getenv(SERVER_ADDRESS)
-        }
-
-        private const val APP_TOKEN = "APP_TOKEN"
-        private const val SECRET_KEY = "SECRET_KEY"
-        private const val PUBLIC_KEY = "PUBLIC_KEY"
-        private const val UPDATE_TOKEN = "UPDATE_TOKEN"
-        private const val SERVER_ADDRESS = "SERVER_ADDRESS"
+    val appToken: String by lazy {
+        if (System.getProperty(APP_TOKEN) != null)
+            System.getProperty(APP_TOKEN)
+        else
+            System.getenv(APP_TOKEN)
     }
+    val publicKeyOld: String by lazy {
+        if (System.getProperty(PUBLIC_KEY_OLD) != null)
+            System.getProperty(PUBLIC_KEY_OLD)
+        else
+            System.getenv(PUBLIC_KEY_OLD)
+    }
+    val secretKeyOld: String by lazy {
+        if (System.getProperty(SECRET_KEY_OLD) != null)
+            System.getProperty(SECRET_KEY_OLD)
+        else
+            System.getenv(SECRET_KEY_OLD)
+    }
+    val publicKeyNew: String by lazy {
+        if (System.getProperty(PUBLIC_KEY_NEW) != null)
+            System.getProperty(PUBLIC_KEY_NEW)
+        else
+            System.getenv(PUBLIC_KEY_NEW)
+    }
+    val secretKeyNew: String by lazy {
+        if (System.getProperty(SECRET_KEY_NEW) != null)
+            System.getProperty(SECRET_KEY_NEW)
+        else
+            System.getenv(SECRET_KEY_NEW)
+    }
+    val publicKeyWrong: String by lazy {
+        if (System.getProperty(PUBLIC_KEY_WRONG) != null)
+            System.getProperty(PUBLIC_KEY_WRONG)
+        else
+            System.getenv(PUBLIC_KEY_WRONG)
+    }
+    val updateTokenOld: String by lazy {
+        if (System.getProperty(UPDATE_TOKEN_OLD) != null)
+            System.getProperty(UPDATE_TOKEN_OLD)
+        else
+            System.getenv(UPDATE_TOKEN_OLD)
+    }
+    val updateTokenNew: String by lazy {
+        if (System.getProperty(UPDATE_TOKEN_NEW) != null)
+            System.getProperty(UPDATE_TOKEN_NEW)
+        else
+            System.getenv(UPDATE_TOKEN_NEW)
+    }
+    val serverAddress: String by lazy {
+        if (System.getProperty(SERVER_ADDRESS) != null)
+            System.getProperty(SERVER_ADDRESS)
+        else
+            System.getenv(SERVER_ADDRESS)
+    }
+
+    private const val APP_TOKEN = "APP_TOKEN"
+    private const val PUBLIC_KEY_OLD = "PUBLIC_KEY_OLD"
+    private const val SECRET_KEY_OLD = "SECRET_KEY_OLD"
+    private const val PUBLIC_KEY_NEW = "PUBLIC_KEY_NEW"
+    private const val SECRET_KEY_NEW = "SECRET_KEY_NEW"
+    private const val PUBLIC_KEY_WRONG = "PUBLIC_KEY_WRONG"
+    private const val UPDATE_TOKEN_OLD = "UPDATE_TOKEN_OLD"
+    private const val UPDATE_TOKEN_NEW = "UPDATE_TOKEN_NEW"
+    private const val SERVER_ADDRESS = "SERVER_ADDRESS"
+}

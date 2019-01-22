@@ -36,9 +36,7 @@ package com.virgilsecurity.passw0rd
 import com.google.protobuf.ByteString
 import com.google.protobuf.InvalidProtocolBufferException
 import com.virgilsecurity.passw0rd.client.HttpClientProtobuf
-import com.virgilsecurity.passw0rd.data.InvalidPasswordException
-import com.virgilsecurity.passw0rd.data.InvalidProtobufType
-import com.virgilsecurity.passw0rd.data.ProtocolException
+import com.virgilsecurity.passw0rd.data.*
 import com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos
 import com.virgilsecurity.passw0rd.utils.EnrollResult
 import com.virgilsecurity.passw0rd.utils.Utils
@@ -47,6 +45,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import virgil.crypto.phe.PheCipher
 import virgil.crypto.phe.PheClient
+import virgil.crypto.phe.PheClientEnrollAccountResult
 import virgil.crypto.phe.PheException
 
 /**
@@ -66,7 +65,7 @@ import virgil.crypto.phe.PheException
 class Protocol(protocolContext: ProtocolContext, private val httpClient: HttpClientProtobuf = HttpClientProtobuf()) {
 
     private val appToken: String = protocolContext.appToken
-    private val pheClient: PheClient = protocolContext.pheClient
+    private val pheClients: Map<Int, PheClient> = protocolContext.pheClients
     private val currentVersion: Int = protocolContext.version
     private val updateToken: Passw0rdProtos.VersionedUpdateToken? = protocolContext.updateToken
     private val pheCipher: PheCipher by lazy { PheCipher().apply { setupDefaults() } }
@@ -83,24 +82,32 @@ class Protocol(protocolContext: ProtocolContext, private val httpClient: HttpCli
 
         Passw0rdProtos.EnrollmentRequest.newBuilder().setVersion(currentVersion).build().run {
             httpClient.firePost(
-                this,
-                HttpClientProtobuf.AvailableRequests.ENROLL,
-                authToken = appToken,
-                responseParser = Passw0rdProtos.EnrollmentResponse.parser()
+                    this,
+                    HttpClientProtobuf.AvailableRequests.ENROLL,
+                    authToken = appToken,
+                    responseParser = Passw0rdProtos.EnrollmentResponse.parser()
             ).let { response ->
-                val record = pheClient.enrollAccount(response.response.toByteArray(), password.toByteArray())
+                val enrollResult = try {
+                    pheClients[response.version]!!.enrollAccount(response.response.toByteArray(),
+                                                                 password.toByteArray())
+                } catch (exception: PheException) {
+                    throw InvalidProofException()
+                }
 
                 val enrollmentRecord = Passw0rdProtos.DatabaseRecord
-                    .newBuilder()
-                    .setVersion(version)
-                    .setRecord(ByteString.copyFrom(record.enrollmentRecord))
-                    .build()
-                    .toByteArray()
+                        .newBuilder()
+                        .setVersion(currentVersion)
+                        .setRecord(ByteString.copyFrom(enrollResult.enrollmentRecord))
+                        .build()
+                        .toByteArray()
 
-                EnrollResult(enrollmentRecord, record.accountKey)
+                EnrollResult(enrollmentRecord, enrollResult.accountKey)
             }
         }
     }
+
+    fun shouldNotBeEmpty2(argumentName: String): Nothing =
+            throw IllegalArgumentException("Parameter $argumentName should not be empty")
 
     /**
      * This function verifies a [password] against [enrollmentRecord] using passw0rd service.
@@ -109,7 +116,7 @@ class Protocol(protocolContext: ProtocolContext, private val httpClient: HttpCli
      * @throws ProtocolException
      * @throws PheException
      * @throws InvalidPasswordException
-     * @throws InvalidProtobufType
+     * @throws InvalidProtobufTypeException
      */
     fun verifyPassword(password: String, enrollmentRecord: ByteArray): Deferred<ByteArray> = GlobalScope.async {
         if (password.isBlank()) Utils.shouldNotBeEmpty("password")
@@ -120,24 +127,33 @@ class Protocol(protocolContext: ProtocolContext, private val httpClient: HttpCli
                 it.version to it.record.toByteArray()
             }
         } catch (e: InvalidProtocolBufferException) {
-            throw InvalidProtobufType()
+            throw InvalidProtobufTypeException()
         }
 
-        val request = pheClient.createVerifyPasswordRequest(password.toByteArray(), record)
+        if (pheClients[version] == null)
+            throw NoKeysFoundException("Unable to find keys corresponding to record's version $version.")
+
+        val request = pheClients[version]!!.createVerifyPasswordRequest(password.toByteArray(), record)
 
         val verifyPasswordRequest = Passw0rdProtos.VerifyPasswordRequest
-            .newBuilder()
-            .setVersion(version)
-            .setRequest(ByteString.copyFrom(request))
-            .build()
+                .newBuilder()
+                .setVersion(version)
+                .setRequest(ByteString.copyFrom(request))
+                .build()
 
         httpClient.firePost(
-            verifyPasswordRequest,
-            HttpClientProtobuf.AvailableRequests.VERIFY_PASSWORD,
-            authToken = appToken,
-            responseParser = Passw0rdProtos.VerifyPasswordResponse.parser()
+                verifyPasswordRequest,
+                HttpClientProtobuf.AvailableRequests.VERIFY_PASSWORD,
+                authToken = appToken,
+                responseParser = Passw0rdProtos.VerifyPasswordResponse.parser()
         ).let {
-            val key = pheClient.checkResponseAndDecrypt(password.toByteArray(), record, it.response.toByteArray())
+            val key = try {
+                pheClients[version]!!.checkResponseAndDecrypt(password.toByteArray(),
+                                                              record,
+                                                              it.response.toByteArray())
+            } catch (exception: PheException) {
+                throw InvalidProofException()
+            }
 
             if (key.isEmpty())
                 throw InvalidPasswordException("The password you specified is wrong.")
@@ -152,7 +168,7 @@ class Protocol(protocolContext: ProtocolContext, private val httpClient: HttpCli
      *
      * @throws IllegalArgumentException
      * @throws PheException
-     * @throws InvalidProtobufType
+     * @throws InvalidProtobufTypeException
      */
     fun updateEnrollmentRecord(oldRecord: ByteArray): Deferred<ByteArray> = GlobalScope.async {
         if (oldRecord.isEmpty()) Utils.shouldNotBeEmpty("oldRecord")
@@ -163,21 +179,23 @@ class Protocol(protocolContext: ProtocolContext, private val httpClient: HttpCli
                 it.version to it.record.toByteArray()
             }
         } catch (e: InvalidProtocolBufferException) {
-            throw InvalidProtobufType()
+            throw InvalidProtobufTypeException()
         }
 
         if ((recordVersion + 1) == updateToken.version) {
-            val newRecord = pheClient.updateEnrollmentRecord(record, updateToken.updateToken.toByteArray())
+            val newRecord =
+                    pheClients[updateToken.version]!!.updateEnrollmentRecord(record,
+                                                                             updateToken.updateToken.toByteArray())
 
             Passw0rdProtos.DatabaseRecord.newBuilder()
-                .setRecord(ByteString.copyFrom(newRecord))
-                .setVersion(updateToken.version).build()
-                .toByteArray()
+                    .setRecord(ByteString.copyFrom(newRecord))
+                    .setVersion(updateToken.version).build()
+                    .toByteArray()
         } else {
             throw IllegalArgumentException(
-                "Update Token version must be greater by 1 than current." +
-                        "Token version is ${updateToken.version}." +
-                        "Current version is $currentVersion."
+                    "Update Token version must be greater by 1 than current. " +
+                            "Token version is ${updateToken.version}. " +
+                            "Current version is $currentVersion."
             )
         }
     }

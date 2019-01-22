@@ -31,7 +31,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.passw0rd.data
+package com.virgilsecurity.passw0rd.utils
 
 /**
  * . _  _
@@ -39,39 +39,19 @@ package com.virgilsecurity.passw0rd.data
  * -| || || |   Created by:
  * .| || || |-  Danylo Oliinyk
  * ..\_  || |   on
- * ....|  _/    12/13/18
+ * ....|  _/    2019-01-22
  * ...-| | \    at Virgil Security
  * ....|_|-
  */
 
 /**
- * Exceptions class.
+ * Utils class.
  */
+object ThreadUtils {
 
-/**
- * Exception that is been thrown when passw0rd service answers with some error.
- */
-class ProtocolException @JvmOverloads constructor(
-    val errorCode: Int = -1,
-    message: String? = "Unknown error"
-) : Throwable(message) // TODO take service + http errors
+    fun pause() {
+        Thread.sleep(ANTI_LIMIT_TIMEOUT)
+    }
 
-/**
- * Exception that is been thrown when wrong password is used to perform some action.
- */
-class InvalidPasswordException(message: String?) : Throwable(message)
-
-/**
- * Exception that is been thrown when trying to parse Protobuf message with wrong type.
- */
-class InvalidProtobufTypeException(message: String? = "Can not parse model you have given.") : Throwable(message)
-
-/**
- * Exception that is been thrown when no keys was found.
- */
-class NoKeysFoundException(message: String? = "Can not parse model you have given.") : Throwable(message)
-
-/**
- * Exception that is been thrown when the proof is wrong.
- */
-class InvalidProofException(message: String? = "Can not parse model you have given.") : Throwable(message)
+    private const val ANTI_LIMIT_TIMEOUT = 1 * 1000L // 1 second
+}
