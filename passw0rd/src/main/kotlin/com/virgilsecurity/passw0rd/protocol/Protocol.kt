@@ -43,9 +43,11 @@ import com.virgilsecurity.passw0rd.utils.Utils
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
+import kotlinx.coroutines.future.asCompletableFuture
 import virgil.crypto.phe.PheCipher
 import virgil.crypto.phe.PheClient
 import virgil.crypto.phe.PheException
+import java.util.concurrent.CompletableFuture
 
 /**
  * . _  _
@@ -79,7 +81,7 @@ class Protocol @JvmOverloads constructor(
      * @throws PheException
      */
     @Throws(IllegalArgumentException::class, ProtocolException::class, PheException::class)
-    fun enrollAccount(password: String): Deferred<EnrollResult> = GlobalScope.async {
+    fun enrollAccount(password: String): CompletableFuture<EnrollResult> = GlobalScope.async {
         if (password.isBlank()) Utils.shouldNotBeEmpty("password")
 
         Passw0rdProtos.EnrollmentRequest.newBuilder().setVersion(currentVersion).build().run {
@@ -106,7 +108,7 @@ class Protocol @JvmOverloads constructor(
                 EnrollResult(enrollmentRecord, enrollResult.accountKey)
             }
         }
-    }
+    }.asCompletableFuture()
 
     /**
      * This function verifies a [password] against [enrollmentRecord] using passw0rd service.
@@ -122,7 +124,7 @@ class Protocol @JvmOverloads constructor(
             PheException::class,
             InvalidPasswordException::class,
             InvalidProtobufTypeException::class)
-    fun verifyPassword(password: String, enrollmentRecord: ByteArray): Deferred<ByteArray> = GlobalScope.async {
+    fun verifyPassword(password: String, enrollmentRecord: ByteArray): CompletableFuture<ByteArray> = GlobalScope.async {
         if (password.isBlank()) Utils.shouldNotBeEmpty("password")
         if (enrollmentRecord.isEmpty()) Utils.shouldNotBeEmpty("enrollmentRecord")
 
@@ -164,7 +166,7 @@ class Protocol @JvmOverloads constructor(
 
             key
         }
-    }
+    }.asCompletableFuture()
 
     /**
      * This function encrypts provided [data] using [accountKey].

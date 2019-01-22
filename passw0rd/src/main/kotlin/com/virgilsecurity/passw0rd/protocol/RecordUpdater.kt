@@ -42,8 +42,10 @@ import com.virgilsecurity.passw0rd.utils.Utils
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
+import kotlinx.coroutines.future.asCompletableFuture
 import virgil.crypto.phe.PheClient
 import virgil.crypto.phe.PheException
+import java.util.concurrent.CompletableFuture
 
 /**
  * . _  _
@@ -68,8 +70,9 @@ object RecordUpdater {
      * @throws PheException
      * @throws InvalidProtobufTypeException
      */
+    @JvmStatic
     @Throws(IllegalArgumentException::class, PheException::class, InvalidProtobufTypeException::class)
-    fun updateEnrollmentRecord(oldRecord: ByteArray, updateToken: String): Deferred<ByteArray> = GlobalScope.async {
+    fun updateEnrollmentRecord(oldRecord: ByteArray, updateToken: String): CompletableFuture<ByteArray> = GlobalScope.async {
         if (oldRecord.isEmpty()) Utils.shouldNotBeEmpty("oldRecord")
         if (updateToken.isBlank()) Utils.shouldNotBeEmpty("update token")
 
@@ -101,5 +104,5 @@ object RecordUpdater {
                             "Current version is $recordVersion."
             )
         }
-    }
+    }.asCompletableFuture()
 }

@@ -41,7 +41,7 @@ import com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos
 import com.virgilsecurity.passw0rd.utils.EnrollResult
 import com.virgilsecurity.passw0rd.utils.PropertyManager
 import com.virgilsecurity.passw0rd.utils.ThreadUtils
-import com.virgilsecurity.passw0rd.utils.lol
+import kotlinx.coroutines.future.await
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach

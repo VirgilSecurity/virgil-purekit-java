@@ -44,18 +44,19 @@ package com.virgilsecurity.passw0rd.protocol;
  * ....|_|-
  */
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.virgilsecurity.passw0rd.client.HttpClientProtobuf;
 import com.virgilsecurity.passw0rd.data.InvalidPasswordException;
-import com.virgilsecurity.passw0rd.data.InvalidProofException;
-import com.virgilsecurity.passw0rd.data.NoKeysFoundException;
+import com.virgilsecurity.passw0rd.data.InvalidProtobufTypeException;
 import com.virgilsecurity.passw0rd.data.ProtocolException;
-import com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos;
 import com.virgilsecurity.passw0rd.utils.EnrollResult;
 import com.virgilsecurity.passw0rd.utils.PropertyManager;
 import com.virgilsecurity.passw0rd.utils.ThreadUtils;
-import kotlinx.coroutines.Deferred;
+import java.util.concurrent.ExecutionException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -64,96 +65,86 @@ import org.junit.jupiter.api.Test;
  */
 class ProtocolTestJava {
 
-//    private static final String WRONG = "WRONG";
-//    private static final String PASSWORD = "p@ssw0Rd";
-//    private static final int ACCOUNT_KEY_SIZE = 32;
-//    private static final String TEXT = "The best text ever.";
-//
-//    private ProtocolContext context;
-//    private Protocol protocol;
-//
-//    @BeforeEach void setup() {
-//        context = ProtocolContext.create(
-//                PropertyManager.getAppToken(),
-//                PropertyManager.getPublicKeyNew(),
-//                PropertyManager.getSecretKeyNew(),
-//                ""
-//        );
-//        assertNotNull(context);
-//
-//        protocol = new Protocol(context, new HttpClientProtobuf(PropertyManager.getServerAddress()));
-//    }
-//
-//    @Test void enroll_verify_update_full_flow() throws ProtocolException {
-//        ThreadUtils.pause();
-//
-//        EnrollResult enrollResult = null;
-//
-//        Deferred<EnrollResult> deferredResult = protocol.enrollAccount(PASSWORD);
-//            enrollResult = deferredResult.();
-//
-//        assertNotNull(enrollResult)
-//        assertTrue(enrollResult !!.enrollmentRecord.isNotEmpty())
-//        assertTrue(enrollResult !!.accountKey.size == 32)
-//
-//        var verifyKey:ByteArray ? = null
-//        runBlocking {
-//            verifyKey = protocol.verifyPassword(PASSWORD, enrollResult !!.enrollmentRecord).await()
-//        }
-//        assertArrayEquals(enrollResult !!.accountKey, verifyKey)
-//
-//        var failed = false
-//        runBlocking {
-//            try {
-//                protocol.verifyPassword("$WRONG $PASSWORD", enrollResult !!.enrollmentRecord).await()
-//            } catch (e:InvalidPasswordException){
-//                failed = true
-//            }
-//        }
-//        assertTrue(failed)
-//
-//        // After token rotate
-//        context = ProtocolContext.create(
-//                PropertyManager.appToken,
-//                PropertyManager.publicKeyNew,
-//                PropertyManager.secretKeyNew,
-//                PropertyManager.updateTokenNew
-//        )
-//        assertNotNull(context)
-//
-//        protocol = Protocol(context,
-//                            HttpClientProtobuf(PropertyManager.serverAddress))
-//
-//        var newRecord:ByteArray ? = null
-//        runBlocking {
-//            newRecord = RecordUpdater.updateEnrollmentRecord(enrollResult !!.enrollmentRecord,
-//                    PropertyManager.updateTokenNew).await()
-//        }
-//        assertNotNull(newRecord)
-//
-//        var verifyKeyNew:ByteArray ? = null
-//        runBlocking {
-//            verifyKeyNew = protocol.verifyPassword(PASSWORD, newRecord !!).await()
-//        }
-//        assertArrayEquals(enrollResult !!.accountKey, verifyKeyNew)
-//    }
-//
-//    @Test fun encrypt_decrypt() {
-//        ThreadUtils.pause()
-//
-//        var enrollResult:EnrollResult ? = null
-//        runBlocking {
-//            enrollResult = protocol.enrollAccount(PASSWORD).await()
-//        }
-//        assertNotNull(enrollResult)
-//        assertTrue(enrollResult !!.enrollmentRecord.isNotEmpty())
-//        assertTrue(enrollResult !!.accountKey.size == 32)
-//
-//        val encryptedData = protocol.encrypt(TEXT.toByteArray(), enrollResult !!.accountKey)
-//        assertNotNull(encryptedData)
-//
-//        val decryptedData = protocol.decrypt(encryptedData, enrollResult !!.accountKey)
-//        assertNotNull(decryptedData)
-//        assertEquals(TEXT, String(decryptedData))
-//    }
+    private static final String WRONG = "WRONG";
+    private static final String PASSWORD = "p@ssw0Rd";
+    private static final String TEXT = "The best text ever.";
+    private static final int ACCOUNT_KEY_SIZE = 32;
+
+    private ProtocolContext context;
+    private Protocol protocol;
+
+    @BeforeEach void setup() {
+        context = ProtocolContext.create(
+                PropertyManager.getAppToken(),
+                PropertyManager.getPublicKeyNew(),
+                PropertyManager.getSecretKeyNew(),
+                ""
+        );
+        assertNotNull(context);
+
+        protocol = new Protocol(context, new HttpClientProtobuf(PropertyManager.getServerAddress()));
+    }
+
+    @Test void enroll_verify_update_full_flow()
+            throws ProtocolException,
+            ExecutionException,
+            InterruptedException,
+            InvalidProtobufTypeException,
+            InvalidPasswordException {
+        ThreadUtils.pause();
+
+        EnrollResult enrollResult = protocol.enrollAccount(PASSWORD).get();
+        ;
+        assertNotNull(enrollResult);
+        assertTrue(enrollResult.getEnrollmentRecord().length != 0); // Not empty
+        assertEquals(ACCOUNT_KEY_SIZE, enrollResult.getAccountKey().length);
+
+        byte[] verifyKey = protocol.verifyPassword(PASSWORD, enrollResult.getEnrollmentRecord()).get();
+        assertArrayEquals(enrollResult.getAccountKey(), verifyKey);
+
+        boolean failed = false;
+        try {
+            protocol.verifyPassword(WRONG + PASSWORD, enrollResult.getEnrollmentRecord()).get();
+        } catch (ExecutionException t) {
+            if (t.getCause() instanceof InvalidPasswordException)
+                failed = true;
+        }
+        assertTrue(failed);
+
+        // After token rotate
+        context = ProtocolContext.create(
+                PropertyManager.getAppToken(),
+                PropertyManager.getPublicKeyNew(),
+                PropertyManager.getSecretKeyNew(),
+                PropertyManager.getUpdateTokenNew()
+        );
+        assertNotNull(context);
+
+        protocol = new Protocol(context, new HttpClientProtobuf(PropertyManager.getServerAddress()));
+
+        byte[] newRecord;
+        newRecord = RecordUpdater.updateEnrollmentRecord(enrollResult.getEnrollmentRecord(),
+                                                         PropertyManager.getUpdateTokenNew()).get();
+        assertNotNull(newRecord);
+
+        byte[] verifyKeyNew;
+        verifyKeyNew = protocol.verifyPassword(PASSWORD, newRecord).get();
+        assertArrayEquals(enrollResult.getAccountKey(), verifyKeyNew);
+    }
+
+    @Test void encrypt_decrypt() throws InterruptedException, ProtocolException, ExecutionException {
+        ThreadUtils.pause();
+
+        EnrollResult enrollResult = protocol.enrollAccount(PASSWORD).get();
+        assertNotNull(enrollResult);
+        assertTrue(enrollResult.getEnrollmentRecord().length != 0); // Not empty
+        assertEquals(ACCOUNT_KEY_SIZE, enrollResult.getAccountKey().length);
+
+        byte[] encryptedData = protocol.encrypt(TEXT.getBytes(), enrollResult.getAccountKey());
+        assertNotNull(encryptedData);
+
+        byte[] decryptedData = protocol.decrypt(encryptedData, enrollResult.getAccountKey());
+        assertNotNull(decryptedData);
+        assertEquals(TEXT, new String(decryptedData));
+    }
 }

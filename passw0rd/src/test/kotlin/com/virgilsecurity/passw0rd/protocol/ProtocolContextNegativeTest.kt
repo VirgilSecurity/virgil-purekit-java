@@ -36,6 +36,7 @@ package com.virgilsecurity.passw0rd.protocol
 import com.virgilsecurity.passw0rd.client.HttpClientProtobuf
 import com.virgilsecurity.passw0rd.data.ProtocolException
 import com.virgilsecurity.passw0rd.utils.PropertyManager
+import kotlinx.coroutines.future.await
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach

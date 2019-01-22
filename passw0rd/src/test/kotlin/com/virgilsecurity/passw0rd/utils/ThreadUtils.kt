@@ -50,6 +50,7 @@ package com.virgilsecurity.passw0rd.utils
 object ThreadUtils {
 
     @JvmStatic
+    @Throws(InterruptedException::class)
     fun pause() {
         Thread.sleep(ANTI_LIMIT_TIMEOUT)
     }
