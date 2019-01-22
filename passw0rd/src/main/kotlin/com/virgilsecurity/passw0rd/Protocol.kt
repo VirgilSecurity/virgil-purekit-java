@@ -106,9 +106,6 @@ class Protocol(protocolContext: ProtocolContext, private val httpClient: HttpCli
         }
     }
 
-    fun shouldNotBeEmpty2(argumentName: String): Nothing =
-            throw IllegalArgumentException("Parameter $argumentName should not be empty")
-
     /**
      * This function verifies a [password] against [enrollmentRecord] using passw0rd service.
      *
