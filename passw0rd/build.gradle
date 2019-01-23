@@ -48,16 +48,17 @@ apply plugin: 'org.jetbrains.dokka'
 sourceCompatibility = 1.8
 
 dependencies {
-    implementation files('src/main/libs/common-5.0.1-SNAPSHOT.jar')
-    implementation files('src/main/libs/foundation-5.0.1-SNAPSHOT.jar')
-    implementation files('src/main/libs/phe-5.0.1-SNAPSHOT.jar')
-
     implementation project(":passw0rd-protos")
 
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$versions.kotlin"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.coroutines"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:0.27.0-eap13"
+
+    // Phe crypto
+    implementation "com.virgilsecurity.crypto:common:5.0.1-SNAPSHOT"
+    implementation "com.virgilsecurity.crypto:foundation:5.0.1-SNAPSHOT"
+    implementation "com.virgilsecurity.crypto:phe:5.0.1-SNAPSHOT"
 
     // Http client
     implementation "com.github.kittinunf.fuel:fuel:$versions.fuel"
