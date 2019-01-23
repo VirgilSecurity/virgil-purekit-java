@@ -83,12 +83,9 @@ hs_err_pid*
 
 ### Gradle ###
 .gradle
+!gradle-wrapper.jar
 gradle.properties
 /com.virgilsecurity.passw0rd.protobuf.build/
-
-# Gradle wrapper
-gradle-wrapper.jar
-gradle-wrapper.properties
 
 # Ignore Gradle GUI config
 gradle-app.setting
