@@ -36,10 +36,11 @@ package com.virgilsecurity.passw0rd.protocol
 import com.google.protobuf.ByteString
 import com.google.protobuf.InvalidProtocolBufferException
 import com.virgilsecurity.passw0rd.data.InvalidProtobufTypeException
-import com.virgilsecurity.passw0rd.data.ProtocolException
 import com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos
-import com.virgilsecurity.passw0rd.utils.Utils
-import kotlinx.coroutines.Deferred
+import com.virgilsecurity.passw0rd.utils.KEY_UPDATE_TOKEN
+import com.virgilsecurity.passw0rd.utils.PREFIX_UPDATE_TOKEN
+import com.virgilsecurity.passw0rd.utils.parseVersionAndContent
+import com.virgilsecurity.passw0rd.utils.requires
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.future.asCompletableFuture
@@ -73,36 +74,31 @@ object RecordUpdater {
     @JvmStatic
     @Throws(IllegalArgumentException::class, PheException::class, InvalidProtobufTypeException::class)
     fun updateEnrollmentRecord(oldRecord: ByteArray, updateToken: String): CompletableFuture<ByteArray> = GlobalScope.async {
-        if (oldRecord.isEmpty()) Utils.shouldNotBeEmpty("oldRecord")
-        if (updateToken.isBlank()) Utils.shouldNotBeEmpty("update token")
+        requires(oldRecord.isNotEmpty(), "oldRecord")
+        requires(updateToken.isNotBlank(), "update token")
 
-        val (recordVersion, record) = try {
-            Passw0rdProtos.DatabaseRecord.parseFrom(oldRecord).let {
-                it.version to it.record.toByteArray()
-            }
+        val databaseRecord = try {
+            Passw0rdProtos.DatabaseRecord.parseFrom(oldRecord)
         } catch (e: InvalidProtocolBufferException) {
             throw InvalidProtobufTypeException()
         }
+        val (recordVersion, record) = databaseRecord.version to databaseRecord.record.toByteArray()
 
-        val (tokenVersion, tokenContent) = Utils.parseVersionAndContent(
-                updateToken,
-                Utils.PREFIX_UPDATE_TOKEN,
-                Utils.KEY_UPDATE_TOKEN
+        val (tokenVersion, tokenContent) = updateToken.parseVersionAndContent(
+                PREFIX_UPDATE_TOKEN,
+                KEY_UPDATE_TOKEN
         )
 
-        if ((recordVersion + 1) == tokenVersion) {
-            val newRecord = PheClient().updateEnrollmentRecord(record, tokenContent)
-
-            Passw0rdProtos.DatabaseRecord.newBuilder()
-                    .setRecord(ByteString.copyFrom(newRecord))
-                    .setVersion(tokenVersion).build()
-                    .toByteArray()
-        } else {
-            throw IllegalArgumentException(
-                    "Update Token version must be greater by 1 than current. " +
-                            "Token version is $tokenVersion. " +
-                            "Current version is $recordVersion."
-            )
+        require(recordVersion + 1 == tokenVersion) {
+            "Update Token version must be greater by 1 than current. " +
+                    "Token version is $tokenVersion. " +
+                    "Current version is $recordVersion."
         }
+
+        val newRecord = PheClient().updateEnrollmentRecord(record, tokenContent)
+        Passw0rdProtos.DatabaseRecord.newBuilder()
+                .setRecord(ByteString.copyFrom(newRecord))
+                .setVersion(tokenVersion).build()
+                .toByteArray()
     }.asCompletableFuture()
 }

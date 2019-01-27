@@ -35,7 +35,7 @@ package com.virgilsecurity.passw0rd.protocol
 
 import com.google.protobuf.ByteString
 import com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos
-import com.virgilsecurity.passw0rd.utils.Utils
+import com.virgilsecurity.passw0rd.utils.*
 import virgil.crypto.phe.PheClient
 
 /**
@@ -70,24 +70,21 @@ class ProtocolContext private constructor(
                 clientSecretKey: String,
                 updateToken: String
         ): ProtocolContext {
-            if (appToken.isBlank()) Utils.shouldNotBeEmpty("appToken")
-            if (servicePublicKey.isBlank()) Utils.shouldNotBeEmpty("servicePublicKey")
-            if (clientSecretKey.isBlank()) Utils.shouldNotBeEmpty("clientSecretKey")
+            requires(appToken.isNotBlank(), "appToken")
+            requires(servicePublicKey.isNotBlank(), "servicePublicKey")
+            requires(clientSecretKey.isNotBlank(), "clientSecretKey")
 
-            val (publicVersion, publicBytes) = Utils.parseVersionAndContent(
-                    servicePublicKey,
-                    Utils.PREFIX_PUBLIC_KEY,
-                    Utils.KEY_PUBLIC_KEY
+            val (publicVersion, publicBytes) = servicePublicKey.parseVersionAndContent(
+                    PREFIX_PUBLIC_KEY,
+                    KEY_PUBLIC_KEY
             )
 
-            val (secretVersion, secretBytes) = Utils.parseVersionAndContent(
-                    clientSecretKey,
-                    Utils.PREFIX_SECRET_KEY,
-                    Utils.KEY_SECRET_KEY
+            val (secretVersion, secretBytes) = clientSecretKey.parseVersionAndContent(
+                    PREFIX_SECRET_KEY,
+                    KEY_SECRET_KEY
             )
 
-            if (publicVersion != secretVersion)
-                throw IllegalArgumentException("Public and Secret keys must have the same version.")
+            require(publicVersion == secretVersion) { "Public and Secret keys must have the same version." }
 
             val pheClients = mutableMapOf<Int, PheClient>().apply {
                 put(publicVersion, PheClient().apply { setKeys(secretBytes, publicBytes) })
@@ -97,15 +94,14 @@ class ProtocolContext private constructor(
             var versionedUpdateToken: Passw0rdProtos.VersionedUpdateToken? = null
 
             if (updateToken.isNotBlank()) {
-                val (tokenVersion, content) = Utils.parseVersionAndContent(
-                        updateToken,
-                        Utils.PREFIX_UPDATE_TOKEN,
-                        Utils.KEY_UPDATE_TOKEN
+                val (tokenVersion, content) = updateToken.parseVersionAndContent(
+                        PREFIX_UPDATE_TOKEN,
+                        KEY_UPDATE_TOKEN
                 )
 
-                if (tokenVersion != currentVersion + 1)
-                    throw IllegalArgumentException("Incorrect token version $tokenVersion. " +
-                                                           "Should be {$tokenVersion + 1}.")
+                require(tokenVersion == currentVersion + 1) {
+                    "Incorrect token version $tokenVersion. Should be {$tokenVersion + 1}."
+                }
 
                 currentVersion = tokenVersion
 
@@ -122,10 +118,7 @@ class ProtocolContext private constructor(
                         .build()
             }
 
-            return ProtocolContext(appToken,
-                                                                        pheClients,
-                                                                        currentVersion,
-                                                                        versionedUpdateToken)
+            return ProtocolContext(appToken, pheClients, currentVersion, versionedUpdateToken)
         }
     }
 }
