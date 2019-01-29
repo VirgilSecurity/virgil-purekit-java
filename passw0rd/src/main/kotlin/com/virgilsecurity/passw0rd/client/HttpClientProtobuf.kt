@@ -58,7 +58,7 @@ import com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos
 /**
  * HttpClientProtobuf class is an implementation of http client specifically for work with Protobuf.
  */
-class HttpClientProtobuf(private val serviceBaseUrl: String = SERVICE_BASE_URL) {
+class HttpClientProtobuf(val serviceBaseUrl: String = SERVICE_BASE_URL) {
 
     /**
      * This function issues GET request to the specified [serviceBaseUrl] (or default one if not specified) + provided
