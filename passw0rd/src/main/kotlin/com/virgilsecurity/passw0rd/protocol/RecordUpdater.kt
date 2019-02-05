@@ -77,12 +77,13 @@ object RecordUpdater {
         requires(oldRecord.isNotEmpty(), "oldRecord")
         requires(updateToken.isNotBlank(), "update token")
 
-        val databaseRecord = try {
-            Passw0rdProtos.DatabaseRecord.parseFrom(oldRecord)
+        val (recordVersion, record) = try {
+            with(Passw0rdProtos.DatabaseRecord.parseFrom(oldRecord)) {
+                version to record.toByteArray()
+            }
         } catch (e: InvalidProtocolBufferException) {
             throw InvalidProtobufTypeException()
         }
-        val (recordVersion, record) = databaseRecord.version to databaseRecord.record.toByteArray()
 
         val (tokenVersion, tokenContent) = updateToken.parseVersionAndContent(
                 PREFIX_UPDATE_TOKEN,

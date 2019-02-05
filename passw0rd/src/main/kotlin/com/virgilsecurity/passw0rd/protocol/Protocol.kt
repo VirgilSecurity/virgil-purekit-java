@@ -83,31 +83,32 @@ class Protocol @JvmOverloads constructor(
     fun enrollAccount(password: String): CompletableFuture<EnrollResult> = GlobalScope.async {
         requires(password.isNotBlank(), "password")
 
-        val enrollmentRequest = Passw0rdProtos.EnrollmentRequest.newBuilder().setVersion(currentVersion).build()
-        val response = httpClient.firePost(
-                enrollmentRequest,
-                HttpClientProtobuf.AvailableRequests.ENROLL,
-                authToken = appToken,
-                responseParser = Passw0rdProtos.EnrollmentResponse.parser()
-        )
+        with(Passw0rdProtos.EnrollmentRequest.newBuilder().setVersion(currentVersion).build()) {
+            with(httpClient.firePost(
+                    this,
+                    HttpClientProtobuf.AvailableRequests.ENROLL,
+                    authToken = appToken,
+                    responseParser = Passw0rdProtos.EnrollmentResponse.parser()
+            )) {
+                val pheClient = pheClients[version]
+                        ?: throw NoKeysFoundException("Unable to find keys corresponding to record's version $version.")
 
-        val pheClient = pheClients[response.version]
-                ?: throw NoKeysFoundException("Unable to find keys corresponding to record's version ${response.version}.")
+                val enrollResult = try {
+                    pheClient.enrollAccount(response.toByteArray(), password.toByteArray())
+                } catch (exception: PheException) {
+                    throw InvalidProofException()
+                }
 
-        val enrollResult = try {
-            pheClient.enrollAccount(response.response.toByteArray(), password.toByteArray())
-        } catch (exception: PheException) {
-            throw InvalidProofException()
+                val enrollmentRecord = Passw0rdProtos.DatabaseRecord
+                        .newBuilder()
+                        .setVersion(currentVersion)
+                        .setRecord(ByteString.copyFrom(enrollResult.enrollmentRecord))
+                        .build()
+                        .toByteArray()
+
+                EnrollResult(enrollmentRecord, enrollResult.accountKey)
+            }
         }
-
-        val enrollmentRecord = Passw0rdProtos.DatabaseRecord
-                .newBuilder()
-                .setVersion(currentVersion)
-                .setRecord(ByteString.copyFrom(enrollResult.enrollmentRecord))
-                .build()
-                .toByteArray()
-
-        EnrollResult(enrollmentRecord, enrollResult.accountKey)
     }.asCompletableFuture()
 
     /**
@@ -130,12 +131,13 @@ class Protocol @JvmOverloads constructor(
         requires(password.isNotBlank(), "password")
         requires(enrollmentRecord.isNotEmpty(), "enrollmentRecord")
 
-        val databaseRecord = try {
-            Passw0rdProtos.DatabaseRecord.parseFrom(enrollmentRecord)
+        val (version, record) = try {
+            with(Passw0rdProtos.DatabaseRecord.parseFrom(enrollmentRecord)) {
+                version to record.toByteArray()
+            }
         } catch (e: InvalidProtocolBufferException) {
             throw InvalidProtobufTypeException()
         }
-        val (version, record) = databaseRecord.version to databaseRecord.record.toByteArray()
 
         val pheClient = pheClients[version]
                 ?: throw NoKeysFoundException("Unable to find keys corresponding to record's version $version.")
@@ -148,21 +150,22 @@ class Protocol @JvmOverloads constructor(
                 .setRequest(ByteString.copyFrom(request))
                 .build()
 
-        val response = httpClient.firePost(
+        with(httpClient.firePost(
                 verifyPasswordRequest,
                 HttpClientProtobuf.AvailableRequests.VERIFY_PASSWORD,
                 authToken = appToken,
                 responseParser = Passw0rdProtos.VerifyPasswordResponse.parser()
-        )
-        val key = try {
-            pheClient.checkResponseAndDecrypt(password.toByteArray(), record, response.response.toByteArray())
-        } catch (exception: PheException) {
-            throw InvalidProofException()
+        )) {
+            val key = try {
+                pheClient.checkResponseAndDecrypt(password.toByteArray(), record, response.toByteArray())
+            } catch (exception: PheException) {
+                throw InvalidProofException()
+            }
+            if (key.isEmpty()) {
+                throw InvalidPasswordException("The password you specified is wrong.")
+            }
+            key
         }
-        if (key.isEmpty()) {
-            throw InvalidPasswordException("The password you specified is wrong.")
-        }
-        key
     }.asCompletableFuture()
 
     /**
