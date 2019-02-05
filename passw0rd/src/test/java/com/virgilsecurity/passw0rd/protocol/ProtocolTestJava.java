@@ -33,17 +33,6 @@
 
 package com.virgilsecurity.passw0rd.protocol;
 
-/**
- * . _  _
- * .| || | _
- * -| || || |   Created by:
- * .| || || |-  Danylo Oliinyk
- * ..\_  || |   on
- * ....|  _/    2019-01-22
- * ...-| | \    at Virgil Security
- * ....|_|-
- */
-
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -59,6 +48,11 @@ import com.virgilsecurity.passw0rd.utils.ThreadUtils;
 import java.util.concurrent.ExecutionException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+/**
+ * Created by: Danylo Oliinyk.
+ * On 01/22/2019 at Virgil Security.
+ */
 
 /**
  * ProtocolTestJava class.

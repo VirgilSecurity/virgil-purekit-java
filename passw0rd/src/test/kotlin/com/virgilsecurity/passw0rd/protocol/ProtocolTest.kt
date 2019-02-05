@@ -49,14 +49,8 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
 /**
- * . _  _
- * .| || | _
- * -| || || |   Created by:
- * .| || || |-  Danylo Oliinyk
- * ..\_  || |   on
- * ....|  _/    2019-01-04
- * ...-| | \    at Virgil Security
- * ....|_|-
+ * Created by: Danylo Oliinyk.
+ * On 01/04/2019 at Virgil Security.
  */
 
 /**

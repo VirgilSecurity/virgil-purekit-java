@@ -34,14 +34,8 @@
 package com.virgilsecurity.passw0rd.data
 
 /**
- * . _  _
- * .| || | _
- * -| || || |   Created by:
- * .| || || |-  Danylo Oliinyk
- * ..\_  || |   on
- * ....|  _/    12/13/18
- * ...-| | \    at Virgil Security
- * ....|_|-
+ * Created by: Danylo Oliinyk.
+ * On 12/13/2018 at Virgil Security.
  */
 
 /**

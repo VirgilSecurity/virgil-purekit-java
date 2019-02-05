@@ -40,7 +40,6 @@ import com.virgilsecurity.passw0rd.data.*
 import com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos
 import com.virgilsecurity.passw0rd.utils.EnrollResult
 import com.virgilsecurity.passw0rd.utils.Utils
-import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.future.asCompletableFuture
@@ -50,14 +49,8 @@ import virgil.crypto.phe.PheException
 import java.util.concurrent.CompletableFuture
 
 /**
- * . _  _
- * .| || | _
- * -| || || |   Created by:
- * .| || || |-  Danylo Oliinyk
- * ..\_  || |   on
- * ....|  _/    12/14/18
- * ...-| | \    at Virgil Security
- * ....|_|-
+ * Created by: Danylo Oliinyk.
+ * On 12/14/2018 at Virgil Security.
  */
 
 /**

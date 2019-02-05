@@ -40,14 +40,8 @@ import com.virgilsecurity.passw0rd.data.ProtocolException
 import com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos
 
 /**
- * . _  _
- * .| || | _
- * -| || || |   Created by:
- * .| || || |-  Danylo Oliinyk
- * ..\_  || |   on
- * ....|  _/    2019-01-03
- * ...-| | \    at Virgil Security
- * ....|_|-
+ * Created by: Danylo Oliinyk.
+ * On 01/03/2019 at Virgil Security.
  */
 
 /**

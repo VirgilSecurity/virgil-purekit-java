@@ -48,14 +48,8 @@ import virgil.crypto.phe.PheException
 import java.util.concurrent.CompletableFuture
 
 /**
- * . _  _
- * .| || | _
- * -| || || |   Created by:
- * .| || || |-  Danylo Oliinyk
- * ..\_  || |   on
- * ....|  _/    2019-01-22
- * ...-| | \    at Virgil Security
- * ....|_|-
+ * Created by: Danylo Oliinyk.
+ * On 01/22/2018 at Virgil Security.
  */
 
 /**

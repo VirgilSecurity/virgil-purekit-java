@@ -36,14 +36,8 @@ package com.virgilsecurity.passw0rd.utils
 import java.util.*
 
 /**
- * . _  _
- * .| || | _
- * -| || || |   Created by:
- * .| || || |-  Danylo Oliinyk
- * ..\_  || |   on
- * ....|  _/    2019-01-02
- * ...-| | \    at Virgil Security
- * ....|_|-
+ * Created by: Danylo Oliinyk.
+ * On 01/02/2019 at Virgil Security.
  */
 
 /**
