@@ -34,11 +34,6 @@
 package com.virgilsecurity.passw0rd.utils
 
 /**
- * Created by: Danylo Oliinyk.
- * On 01/22/2019 at Virgil Security.
- */
-
-/**
  * Utils class.
  */
 object ThreadUtils {

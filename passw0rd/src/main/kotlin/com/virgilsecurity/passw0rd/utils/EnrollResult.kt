@@ -34,11 +34,6 @@
 package com.virgilsecurity.passw0rd.utils
 
 /**
- * Created by: Danylo Oliinyk.
- * On 01/17/2019 at Virgil Security.
- */
-
-/**
  * EnrollResult class is intended to simplify work with return type of *Protocol#enrollAccount* method.
  */
 data class EnrollResult(val enrollmentRecord: ByteArray, val accountKey: ByteArray) {

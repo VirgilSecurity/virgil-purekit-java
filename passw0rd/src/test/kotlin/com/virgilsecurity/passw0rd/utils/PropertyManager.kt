@@ -33,11 +33,6 @@
 
 package com.virgilsecurity.passw0rd.utils
 
-/**
- * Created by: Danylo Oliinyk.
- * On 01/04/2019 at Virgil Security.
- */
-
 object PropertyManager {
     @JvmStatic
     val appToken: String by lazy {

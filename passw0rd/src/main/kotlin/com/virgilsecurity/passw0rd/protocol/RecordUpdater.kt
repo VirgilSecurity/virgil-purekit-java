@@ -48,11 +48,6 @@ import virgil.crypto.phe.PheException
 import java.util.concurrent.CompletableFuture
 
 /**
- * Created by: Danylo Oliinyk.
- * On 01/22/2018 at Virgil Security.
- */
-
-/**
  * RecordUpdater class is for updating records.
  */
 object RecordUpdater {

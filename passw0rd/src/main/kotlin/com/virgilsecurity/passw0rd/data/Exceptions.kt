@@ -34,11 +34,6 @@
 package com.virgilsecurity.passw0rd.data
 
 /**
- * Created by: Danylo Oliinyk.
- * On 12/13/2018 at Virgil Security.
- */
-
-/**
  * Exceptions class.
  */
 

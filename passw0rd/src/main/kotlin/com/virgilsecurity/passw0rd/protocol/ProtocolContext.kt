@@ -39,11 +39,6 @@ import com.virgilsecurity.passw0rd.utils.Utils
 import virgil.crypto.phe.PheClient
 
 /**
- * Created by: Danylo Oliinyk.
- * On 12/13/2018 at Virgil Security.
- */
-
-/**
  * ProtocolContext class holds and validates protocol input parameters.
  */
 class ProtocolContext private constructor(

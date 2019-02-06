@@ -49,11 +49,6 @@ import virgil.crypto.phe.PheException
 import java.util.concurrent.CompletableFuture
 
 /**
- * Created by: Danylo Oliinyk.
- * On 12/14/2018 at Virgil Security.
- */
-
-/**
  * Protocol class implements passw0rd client-server protocol.
  */
 class Protocol @JvmOverloads constructor(

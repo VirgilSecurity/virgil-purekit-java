@@ -40,11 +40,6 @@ import com.virgilsecurity.passw0rd.data.ProtocolException
 import com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos
 
 /**
- * Created by: Danylo Oliinyk.
- * On 01/03/2019 at Virgil Security.
- */
-
-/**
  * HttpClientProtobuf class is an implementation of http client specifically for work with Protobuf.
  */
 class HttpClientProtobuf(val serviceBaseUrl: String = SERVICE_BASE_URL) {

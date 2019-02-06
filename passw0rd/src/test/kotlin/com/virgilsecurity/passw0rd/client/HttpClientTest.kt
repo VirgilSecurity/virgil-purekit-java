@@ -42,11 +42,6 @@ import org.junit.jupiter.api.Test
 import java.util.*
 
 /**
- * Created by: Danylo Oliinyk.
- * On 01/17/2019 at Virgil Security.
- */
-
-/**
  * HttpClientTest class.
  */
 class HttpClientTest {

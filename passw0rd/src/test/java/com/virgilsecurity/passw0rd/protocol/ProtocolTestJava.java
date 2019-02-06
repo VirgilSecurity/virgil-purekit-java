@@ -50,11 +50,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
- * Created by: Danylo Oliinyk.
- * On 01/22/2019 at Virgil Security.
- */
-
-/**
  * ProtocolTestJava class.
  */
 class ProtocolTestJava {
