@@ -53,12 +53,12 @@ dependencies {
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$versions.kotlin"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.coroutines"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:0.27.0-eap13"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:$versions.coroutinesJdk8"
 
     // Phe crypto
-    implementation "com.virgilsecurity.crypto:common:5.0.1-SNAPSHOT"
-    implementation "com.virgilsecurity.crypto:foundation:5.0.1-SNAPSHOT"
-    implementation "com.virgilsecurity.crypto:phe:5.0.1-SNAPSHOT"
+    implementation "com.virgilsecurity.crypto:common:$versions.virgil"
+    implementation "com.virgilsecurity.crypto:foundation:$versions.virgil"
+    implementation "com.virgilsecurity.crypto:phe:$versions.virgil"
 
     // Http client
     implementation "com.github.kittinunf.fuel:fuel:$versions.fuel"

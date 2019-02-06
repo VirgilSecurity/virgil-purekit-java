@@ -36,17 +36,6 @@ package com.virgilsecurity.passw0rd.utils
 import java.util.*
 
 /**
- * . _  _
- * .| || | _
- * -| || || |   Created by:
- * .| || || |-  Danylo Oliinyk
- * ..\_  || |   on
- * ....|  _/    2019-01-02
- * ...-| | \    at Virgil Security
- * ....|_|-
- */
-
-/**
  * This function intention is just to make code a little bit more elegant/concise.
  *
  * @throws IllegalArgumentException

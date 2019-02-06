@@ -49,17 +49,6 @@ import virgil.crypto.phe.PheException
 import java.util.concurrent.CompletableFuture
 
 /**
- * . _  _
- * .| || | _
- * -| || || |   Created by:
- * .| || || |-  Danylo Oliinyk
- * ..\_  || |   on
- * ....|  _/    12/14/18
- * ...-| | \    at Virgil Security
- * ....|_|-
- */
-
-/**
  * Protocol class implements passw0rd client-server protocol.
  */
 class Protocol @JvmOverloads constructor(
@@ -89,12 +78,13 @@ class Protocol @JvmOverloads constructor(
                     HttpClientProtobuf.AvailableRequests.ENROLL,
                     authToken = appToken,
                     responseParser = Passw0rdProtos.EnrollmentResponse.parser()
-            )) {
-                val pheClient = pheClients[version]
-                        ?: throw NoKeysFoundException("Unable to find keys corresponding to record's version $version.")
 
+            ).let { response ->
+                val pheClient = pheClients[response.version]
+                        ?: throw NoKeysFoundException("Unable to find keys corresponding to record's version $version.")
+                   
                 val enrollResult = try {
-                    pheClient.enrollAccount(response.toByteArray(), password.toByteArray())
+                    pheClient.enrollAccount(response.response.toByteArray(), password.toByteArray())
                 } catch (exception: PheException) {
                     throw InvalidProofException()
                 }

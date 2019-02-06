@@ -49,17 +49,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
 /**
- * . _  _
- * .| || | _
- * -| || || |   Created by:
- * .| || || |-  Danylo Oliinyk
- * ..\_  || |   on
- * ....|  _/    2019-01-04
- * ...-| | \    at Virgil Security
- * ....|_|-
- */
-
-/**
  * ProtocolTest class.
  */
 class ProtocolTest {

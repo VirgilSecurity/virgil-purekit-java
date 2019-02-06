@@ -45,17 +45,6 @@ import org.junit.jupiter.api.Test
 import kotlin.random.Random
 
 /**
- * . _  _
- * .| || | _
- * -| || || |   Created by:
- * .| || || |-  Danylo Oliinyk
- * ..\_  || |   on
- * ....|  _/    2019-01-17
- * ...-| | \    at Virgil Security
- * ....|_|-
- */
-
-/**
  * ProtocolNegativeTest class.
  */
 class ProtocolNegativeTest {
