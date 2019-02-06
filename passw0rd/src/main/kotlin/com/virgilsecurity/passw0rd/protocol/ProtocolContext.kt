@@ -34,6 +34,7 @@
 package com.virgilsecurity.passw0rd.protocol
 
 import com.google.protobuf.ByteString
+import com.virgilsecurity.passw0rd.data.NoKeysFoundException
 import com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos
 import com.virgilsecurity.passw0rd.utils.*
 import virgil.crypto.phe.PheClient
@@ -94,7 +95,11 @@ class ProtocolContext private constructor(
 
                 currentVersion = tokenVersion
 
-                val rotateKeysResult = pheClients[publicVersion]!!.rotateKeys(content)
+                val pheClient = pheClients[publicVersion]
+                        ?: throw NoKeysFoundException("Unable to find keys corresponding to " +
+                                                              "record's version $publicVersion.")
+
+                val rotateKeysResult = pheClient.rotateKeys(content)
 
                 pheClients[tokenVersion] = PheClient().apply {
                     setKeys(rotateKeysResult.newClientPrivateKey, rotateKeysResult.newServerPublicKey)
