@@ -33,7 +33,12 @@
 
 package com.virgilsecurity.passw0rd.client
 
-import com.github.kittinunf.fuel.Fuel
+import com.github.kittinunf.fuel.core.Response
+import com.github.kittinunf.fuel.core.isSuccessful
+import com.github.kittinunf.fuel.httpDelete
+import com.github.kittinunf.fuel.httpGet
+import com.github.kittinunf.fuel.httpPost
+import com.github.kittinunf.fuel.httpPut
 import com.google.protobuf.Message
 import com.google.protobuf.Parser
 import com.virgilsecurity.passw0rd.data.ProtocolException
@@ -59,26 +64,26 @@ class HttpClientProtobuf(val serviceBaseUrl: String = SERVICE_BASE_URL) {
      *
      * @throws ProtocolException
      */
-    fun <O> fireGet(
+    @Throws(ProtocolException::class)
+    fun <O : Message> fireGet(
             endpoint: AvailableRequests,
             headers: MutableMap<String, String> = mutableMapOf(),
             authToken: String,
             responseParser: Parser<O>
-    ): O where O : Message {
-        headers.putAll(mapOf(APP_TOKEN_KEY to authToken))
-        headers.putAll(mapOf(PROTO_REQUEST_TYPE_KEY to PROTO_REQUEST_TYPE))
-        headers.putAll(mapOf(USER_AGENT_KEY to USER_AGENT))
+    ): O {
+        headers.putAll(
+                mapOf(
+                        APP_TOKEN_KEY to authToken,
+                        PROTO_REQUEST_TYPE_KEY to PROTO_REQUEST_TYPE,
+                        USER_AGENT_KEY to USER_AGENT
+                )
+        )
 
-        val response = Fuel.get(serviceBaseUrl + extractRequestType(endpoint))
+        val (_, response, _) = "$serviceBaseUrl${endpoint.type}".httpGet()
                 .header(headers)
                 .response()
-                .second
 
-        if (response.statusCode > 299)
-            Passw0rdProtos.HttpError.parseFrom(response.data).run {
-                throw ProtocolException(this.code, this.message)
-            }
-
+        checkIfResponseSuccessful(response)
         return responseParser.parseFrom(response.data)
     }
 
@@ -100,29 +105,28 @@ class HttpClientProtobuf(val serviceBaseUrl: String = SERVICE_BASE_URL) {
      *
      * @throws ProtocolException
      */
-    fun <O> firePost(
+    @Throws(ProtocolException::class)
+    fun <O : Message> firePost(
             data: Message,
             endpoint: AvailableRequests,
             headers: MutableMap<String, String> = mutableMapOf(),
             authToken: String,
             responseParser: Parser<O>
-    ): O where O : Message {
-        headers.putAll(mapOf(APP_TOKEN_KEY to authToken))
-        headers.putAll(mapOf(PROTO_REQUEST_TYPE_KEY to PROTO_REQUEST_TYPE))
-        headers.putAll(mapOf(USER_AGENT_KEY to USER_AGENT))
+    ): O {
+        headers.putAll(
+                mapOf(
+                        APP_TOKEN_KEY to authToken,
+                        PROTO_REQUEST_TYPE_KEY to PROTO_REQUEST_TYPE,
+                        USER_AGENT_KEY to USER_AGENT
+                )
+        )
 
-        val result = Fuel.post(serviceBaseUrl + extractRequestType(endpoint))
+        val (_, response, _) = "$serviceBaseUrl${endpoint.type}".httpPost()
                 .body(data.toByteArray())
                 .header(headers)
                 .response()
 
-        val response = result.second
-
-        if (response.statusCode > 299)
-            Passw0rdProtos.HttpError.parseFrom(response.data).run {
-                throw ProtocolException(this.code, this.message)
-            }
-
+        checkIfResponseSuccessful(response)
         return responseParser.parseFrom(response.data)
     }
 
@@ -144,28 +148,28 @@ class HttpClientProtobuf(val serviceBaseUrl: String = SERVICE_BASE_URL) {
      *
      * @throws ProtocolException
      */
-    fun <I, O> firePut(
+    @Throws(ProtocolException::class)
+    fun <I : Message, O : Message> firePut(
             data: I,
             endpoint: AvailableRequests,
             headers: MutableMap<String, String> = mutableMapOf(),
             authToken: String,
             responseParser: Parser<O>
-    ): O where I : Message, O : Message {
-        headers.putAll(mapOf(APP_TOKEN_KEY to authToken))
-        headers.putAll(mapOf(PROTO_REQUEST_TYPE_KEY to PROTO_REQUEST_TYPE))
-        headers.putAll(mapOf(USER_AGENT_KEY to USER_AGENT))
+    ): O {
+        headers.putAll(
+                mapOf(
+                        APP_TOKEN_KEY to authToken,
+                        PROTO_REQUEST_TYPE_KEY to PROTO_REQUEST_TYPE,
+                        USER_AGENT_KEY to USER_AGENT
+                )
+        )
 
-        val response = Fuel.put(serviceBaseUrl + extractRequestType(endpoint))
+        val (_, response, _) = "$serviceBaseUrl${endpoint.type}".httpPut()
                 .body(data.toByteArray())
                 .header(headers)
                 .response()
-                .second
 
-        if (response.statusCode > 299)
-            Passw0rdProtos.HttpError.parseFrom(response.data).run {
-                throw ProtocolException(this.code, this.message)
-            }
-
+        checkIfResponseSuccessful(response)
         return responseParser.parseFrom(response.data)
     }
 
@@ -184,44 +188,39 @@ class HttpClientProtobuf(val serviceBaseUrl: String = SERVICE_BASE_URL) {
      *
      * @throws ProtocolException
      */
-    fun <O> fireDelete(
+    @Throws(ProtocolException::class)
+    fun <O : Message> fireDelete(
             endpoint: AvailableRequests,
             headers: MutableMap<String, String> = mutableMapOf(),
             authToken: String,
             responseParser: Parser<O>
-    ): O where O : Message {
-        headers.putAll(mapOf(APP_TOKEN_KEY to authToken))
-        headers.putAll(mapOf(PROTO_REQUEST_TYPE_KEY to PROTO_REQUEST_TYPE))
-        headers.putAll(mapOf(USER_AGENT_KEY to USER_AGENT))
+    ): O {
+        headers.putAll(
+                mapOf(
+                        APP_TOKEN_KEY to authToken,
+                        PROTO_REQUEST_TYPE_KEY to PROTO_REQUEST_TYPE,
+                        USER_AGENT_KEY to USER_AGENT
+                )
+        )
 
-        val response = Fuel.delete(serviceBaseUrl + extractRequestType(endpoint))
+        val (_, response, _) = "$serviceBaseUrl${endpoint.type}".httpDelete()
                 .header(headers)
                 .response()
-                .second
 
-        if (response.statusCode > 299)
-            Passw0rdProtos.HttpError.parseFrom(response.data).run {
-                throw ProtocolException(this.code, this.message)
-            } // TODO try to get message/code if it's not a Passw0rdProtos.HttpError type.
-
+        // TODO try to get message/code if it's not a Passw0rdProtos.HttpError type.
+        checkIfResponseSuccessful(response)
         return responseParser.parseFrom(response.data)
     }
 
     /**
-     * This functions extracts string value from provided [AvailableRequests] parameter.
+     * Throws an [ProtocolException] if the [response] is not successful.
      */
-    private fun extractRequestType(availableRequests: AvailableRequests) =
-            when (availableRequests) {
-                AvailableRequests.ENROLL -> "/enroll"
-                AvailableRequests.VERIFY_PASSWORD -> "/verify-password"
-            }
-
-    /**
-     * Enum of available requests
-     */
-    enum class AvailableRequests {
-        ENROLL,
-        VERIFY_PASSWORD
+    @Throws(ProtocolException::class)
+    private fun checkIfResponseSuccessful(response: Response) {
+        if (!response.isSuccessful) {
+            val error = Passw0rdProtos.HttpError.parseFrom(response.data)
+            throw ProtocolException(error.code, error.message)
+        }
     }
 
     companion object {
@@ -235,5 +234,13 @@ class HttpClientProtobuf(val serviceBaseUrl: String = SERVICE_BASE_URL) {
 
         private const val USER_AGENT_KEY = "User-Agent"
         private const val USER_AGENT = "passw0rd/java"
+    }
+
+    /**
+     * Enum of available requests
+     */
+    enum class AvailableRequests(val type: String) {
+        ENROLL("/enroll"),
+        VERIFY_PASSWORD("/verify-password")
     }
 }

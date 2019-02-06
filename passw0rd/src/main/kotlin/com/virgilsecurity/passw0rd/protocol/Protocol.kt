@@ -39,7 +39,7 @@ import com.virgilsecurity.passw0rd.client.HttpClientProtobuf
 import com.virgilsecurity.passw0rd.data.*
 import com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos
 import com.virgilsecurity.passw0rd.utils.EnrollResult
-import com.virgilsecurity.passw0rd.utils.Utils
+import com.virgilsecurity.passw0rd.utils.requires
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.future.asCompletableFuture
@@ -70,21 +70,21 @@ class Protocol @JvmOverloads constructor(
      */
     @Throws(IllegalArgumentException::class, ProtocolException::class, PheException::class)
     fun enrollAccount(password: String): CompletableFuture<EnrollResult> = GlobalScope.async {
-        if (password.isBlank()) Utils.shouldNotBeEmpty("password")
+        requires(password.isNotBlank(), "password")
 
-        Passw0rdProtos.EnrollmentRequest.newBuilder().setVersion(currentVersion).build().run {
-            httpClient.firePost(
+        with(Passw0rdProtos.EnrollmentRequest.newBuilder().setVersion(currentVersion).build()) {
+            with(httpClient.firePost(
                     this,
                     HttpClientProtobuf.AvailableRequests.ENROLL,
                     authToken = appToken,
                     responseParser = Passw0rdProtos.EnrollmentResponse.parser()
+
             ).let { response ->
                 val pheClient = pheClients[response.version]
-                        ?: throw IllegalArgumentException("Can\'t find client of version ${response.version}")
-
+                        ?: throw NoKeysFoundException("Unable to find keys corresponding to record's version $version.")
+                   
                 val enrollResult = try {
-                    pheClient.enrollAccount(response.response.toByteArray(),
-                                            password.toByteArray())
+                    pheClient.enrollAccount(response.response.toByteArray(), password.toByteArray())
                 } catch (exception: PheException) {
                     throw InvalidProofException()
                 }
@@ -110,18 +110,20 @@ class Protocol @JvmOverloads constructor(
      * @throws InvalidPasswordException
      * @throws InvalidProtobufTypeException
      */
-    @Throws(IllegalArgumentException::class,
+    @Throws(
+            IllegalArgumentException::class,
             ProtocolException::class,
             PheException::class,
             InvalidPasswordException::class,
-            InvalidProtobufTypeException::class)
+            InvalidProtobufTypeException::class
+    )
     fun verifyPassword(password: String, enrollmentRecord: ByteArray): CompletableFuture<ByteArray> = GlobalScope.async {
-        if (password.isBlank()) Utils.shouldNotBeEmpty("password")
-        if (enrollmentRecord.isEmpty()) Utils.shouldNotBeEmpty("enrollmentRecord")
+        requires(password.isNotBlank(), "password")
+        requires(enrollmentRecord.isNotEmpty(), "enrollmentRecord")
 
         val (version, record) = try {
-            Passw0rdProtos.DatabaseRecord.parseFrom(enrollmentRecord).let {
-                it.version to it.record.toByteArray()
+            with(Passw0rdProtos.DatabaseRecord.parseFrom(enrollmentRecord)) {
+                version to record.toByteArray()
             }
         } catch (e: InvalidProtocolBufferException) {
             throw InvalidProtobufTypeException()
@@ -138,23 +140,20 @@ class Protocol @JvmOverloads constructor(
                 .setRequest(ByteString.copyFrom(request))
                 .build()
 
-        httpClient.firePost(
+        with(httpClient.firePost(
                 verifyPasswordRequest,
                 HttpClientProtobuf.AvailableRequests.VERIFY_PASSWORD,
                 authToken = appToken,
                 responseParser = Passw0rdProtos.VerifyPasswordResponse.parser()
-        ).let {
+        )) {
             val key = try {
-                pheClient.checkResponseAndDecrypt(password.toByteArray(),
-                                                  record,
-                                                  it.response.toByteArray())
+                pheClient.checkResponseAndDecrypt(password.toByteArray(), record, response.toByteArray())
             } catch (exception: PheException) {
                 throw InvalidProofException()
             }
-
-            if (key.isEmpty())
+            if (key.isEmpty()) {
                 throw InvalidPasswordException("The password you specified is wrong.")
-
+            }
             key
         }
     }.asCompletableFuture()
@@ -167,8 +166,8 @@ class Protocol @JvmOverloads constructor(
      */
     @Throws(IllegalArgumentException::class, PheException::class)
     fun encrypt(data: ByteArray, accountKey: ByteArray): ByteArray {
-        if (data.isEmpty()) Utils.shouldNotBeEmpty("data")
-        if (accountKey.isEmpty()) Utils.shouldNotBeEmpty("accountKey")
+        requires(data.isNotEmpty(), "data")
+        requires(accountKey.isNotEmpty(), "accountKey")
 
         return pheCipher.encrypt(data, accountKey)
     }
@@ -181,8 +180,8 @@ class Protocol @JvmOverloads constructor(
      */
     @Throws(IllegalArgumentException::class, PheException::class)
     fun decrypt(data: ByteArray, accountKey: ByteArray): ByteArray {
-        if (data.isEmpty()) Utils.shouldNotBeEmpty("data")
-        if (accountKey.isEmpty()) Utils.shouldNotBeEmpty("accountKey")
+        requires(data.isNotEmpty(), "data")
+        requires(accountKey.isNotEmpty(), "accountKey")
 
         return pheCipher.decrypt(data, accountKey)
     }
