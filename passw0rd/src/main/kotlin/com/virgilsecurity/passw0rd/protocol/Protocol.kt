@@ -84,9 +84,12 @@ class Protocol @JvmOverloads constructor(
                     authToken = appToken,
                     responseParser = Passw0rdProtos.EnrollmentResponse.parser()
             ).let { response ->
+                val pheClient = pheClients[response.version]
+                        ?: throw IllegalArgumentException("Can\'t find client of version ${response.version}")
+
                 val enrollResult = try {
-                    pheClients[response.version]!!.enrollAccount(response.response.toByteArray(),
-                                                                 password.toByteArray())
+                    pheClient.enrollAccount(response.response.toByteArray(),
+                                            password.toByteArray())
                 } catch (exception: PheException) {
                     throw InvalidProofException()
                 }
@@ -129,10 +132,10 @@ class Protocol @JvmOverloads constructor(
             throw InvalidProtobufTypeException()
         }
 
-        if (pheClients[version] == null)
-            throw NoKeysFoundException("Unable to find keys corresponding to record's version $version.")
+        val pheClient = pheClients[version]
+                ?: throw NoKeysFoundException("Unable to find keys corresponding to record's version $version.")
 
-        val request = pheClients[version]!!.createVerifyPasswordRequest(password.toByteArray(), record)
+        val request = pheClient.createVerifyPasswordRequest(password.toByteArray(), record)
 
         val verifyPasswordRequest = Passw0rdProtos.VerifyPasswordRequest
                 .newBuilder()
@@ -147,9 +150,9 @@ class Protocol @JvmOverloads constructor(
                 responseParser = Passw0rdProtos.VerifyPasswordResponse.parser()
         ).let {
             val key = try {
-                pheClients[version]!!.checkResponseAndDecrypt(password.toByteArray(),
-                                                              record,
-                                                              it.response.toByteArray())
+                pheClient.checkResponseAndDecrypt(password.toByteArray(),
+                                                  record,
+                                                  it.response.toByteArray())
             } catch (exception: PheException) {
                 throw InvalidProofException()
             }

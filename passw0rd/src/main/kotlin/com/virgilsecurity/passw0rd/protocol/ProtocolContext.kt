@@ -117,9 +117,9 @@ class ProtocolContext private constructor(
             }
 
             return ProtocolContext(appToken,
-                                                                        pheClients,
-                                                                        currentVersion,
-                                                                        versionedUpdateToken)
+                                   pheClients,
+                                   currentVersion,
+                                   versionedUpdateToken)
         }
     }
 }
