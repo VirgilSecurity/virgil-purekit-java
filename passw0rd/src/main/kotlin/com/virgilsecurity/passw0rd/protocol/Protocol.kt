@@ -79,12 +79,12 @@ class Protocol @JvmOverloads constructor(
                     authToken = appToken,
                     responseParser = Passw0rdProtos.EnrollmentResponse.parser()
 
-            ).let { response ->
-                val pheClient = pheClients[response.version]
+            )) {
+                val pheClient = pheClients[this.version]
                         ?: throw NoKeysFoundException("Unable to find keys corresponding to record's version $version.")
-                   
+
                 val enrollResult = try {
-                    pheClient.enrollAccount(response.response.toByteArray(), password.toByteArray())
+                    pheClient.enrollAccount(this.response.toByteArray(), password.toByteArray())
                 } catch (exception: PheException) {
                     throw InvalidProofException()
                 }
