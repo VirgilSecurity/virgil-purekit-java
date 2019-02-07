@@ -39,6 +39,20 @@ Install passw0rd SDK library with the following code:
 
 #### Maven
 
+Add `jcenter` repository:
+
+```
+<repositories>
+	<repository>
+		<id>jcenter</id>
+		<name>jCenter</name>
+		<url>http://jcenter.bintray.com</url>
+	</repository>
+</repositories>
+```
+
+Add `passw0rd` dependency:
+
 ```
 <dependencies>
     <dependency>
@@ -50,6 +64,16 @@ Install passw0rd SDK library with the following code:
 ```
 
 #### Gradle
+
+Add `jcenter` repository:
+
+```
+repositories {
+    jcenter()
+}
+```
+
+Add `passw0rd` dependency:
 
 ```
 implementation "com.virgilsecurity:passw0rd:<latest-version>"
