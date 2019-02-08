@@ -1,6 +1,7 @@
 # Passw0rd SDK Kotlin/Java
 
-[![Build Status](https://travis-ci.com/passw0rd/sdk-kotlin.svg?branch=dev)](https://travis-ci.com/passw0rd/sdk-kotlin)'[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.virgilsecurity/passw0rd/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.virgilsecurity/passw0rd)
+[![Build Status](https://travis-ci.com/VirgilSecurity/virgil-passw0rd-kotlin.svg?branch=master)](https://travis-ci.com/VirgilSecurity/virgil-passw0rd-kotlin)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.virgilsecurity/passw0rd/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.virgilsecurity/passw0rd)
 [![GitHub license](https://img.shields.io/badge/license-BSD%203--Clause-blue.svg)](https://github.com/VirgilSecurity/virgil/blob/master/LICENSE)
 
 
@@ -146,8 +147,9 @@ fun enrollAccount(password: String, protocol: Protocol) {
 
     //save record to database
     println("Database record:\n" + Base64.getEncoder().encodeToString(enrollResult.enrollmentRecord))
+    val encryptionKey = enrollResult.accountKey
     //use accountKey for protecting user data
-    val encrypted = PheCipher().encrypt(data, enrollResult.accountKey)
+    val encrypted = PheCipher().encrypt(data, encryptionKey)
 }
 ```
 
@@ -160,14 +162,14 @@ Use this flow when a user already has his or her own passw0rd's `record` in your
 
 ```kotlin
 fun verifyPassword(password: String, record: ByteArray, protocol: Protocol) {
-    val accountKey = try {
+    val encryptionKey = try {
         protocol.verifyPassword(password, record)
     } catch (exception: InvalidPasswordException) {
         // Invalid password handling
     }
 
     //use encryptionKey for decrypting user data
-    val decrypted = PheCipher().decrypt(encrypted, accountKey)
+    val decrypted = PheCipher().decrypt(encrypted, encryptionKey)
     ...
 }
 ```
