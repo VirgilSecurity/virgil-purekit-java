@@ -91,7 +91,7 @@ fun initPassw0rd(): Protocol {
             appToken = "PT.OSoPhirdopvijQlFPKdlSydN9BUrn5oEuDwf3Hqps",
             servicePublicKey = "PK.1.BEn/hnuyKV0inZL+kaRUZNvwQ/jkhDQdALrw6VdfvhZhPQQHWyYO+fRlJYZweUz1FGH3WxcZBjA0tL4wn7kE0ls=",
             clientSecretKey = "SK.1.xxx",
-            updateToken = "")
+            updateToken = "") // updateToken needs to be empty
 
     return Protocol(context)
 }
@@ -297,7 +297,7 @@ fun initPassw0rdNew(): Protocol {
             appToken = "APP_TOKEN_HERE",
             servicePublicKey = "NEW_SERVICE_PUBLIC_KEY_HERE",
             clientSecretKey = "NEW_APP_SECRET_KEY_HERE",
-            updateToken = "")
+            updateToken = "") // updateToken needs to be empty
 
     return Protocol(context)
 }
