@@ -1,6 +1,7 @@
 # Passw0rd SDK Kotlin/Java
 
-[![Build Status](https://travis-ci.com/passw0rd/sdk-kotlin.svg?branch=dev)](https://travis-ci.com/passw0rd/sdk-kotlin)'[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.virgilsecurity/passw0rd/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.virgilsecurity/passw0rd)
+[![Build Status](https://travis-ci.com/VirgilSecurity/virgil-passw0rd-kotlin.svg?branch=master)](https://travis-ci.com/VirgilSecurity/virgil-passw0rd-kotlin)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.virgilsecurity/passw0rd/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.virgilsecurity/passw0rd)
 [![GitHub license](https://img.shields.io/badge/license-BSD%203--Clause-blue.svg)](https://github.com/VirgilSecurity/virgil/blob/master/LICENSE)
 
 
@@ -90,7 +91,7 @@ fun initPassw0rd(): Protocol {
             appToken = "PT.OSoPhirdopvijQlFPKdlSydN9BUrn5oEuDwf3Hqps",
             servicePublicKey = "PK.1.BEn/hnuyKV0inZL+kaRUZNvwQ/jkhDQdALrw6VdfvhZhPQQHWyYO+fRlJYZweUz1FGH3WxcZBjA0tL4wn7kE0ls=",
             clientSecretKey = "SK.1.xxx",
-            updateToken = "")
+            updateToken = "") // updateToken needs to be empty
 
     return Protocol(context)
 }
@@ -146,8 +147,9 @@ fun enrollAccount(password: String, protocol: Protocol) {
 
     //save record to database
     println("Database record:\n" + Base64.getEncoder().encodeToString(enrollResult.enrollmentRecord))
+    val encryptionKey = enrollResult.accountKey
     //use accountKey for protecting user data
-    val encrypted = PheCipher().encrypt(data, enrollResult.accountKey)
+    val encrypted = PheCipher().encrypt(data, encryptionKey)
 }
 ```
 
@@ -160,14 +162,14 @@ Use this flow when a user already has his or her own passw0rd's `record` in your
 
 ```kotlin
 fun verifyPassword(password: String, record: ByteArray, protocol: Protocol) {
-    val accountKey = try {
+    val encryptionKey = try {
         protocol.verifyPassword(password, record)
     } catch (exception: InvalidPasswordException) {
         // Invalid password handling
     }
 
     //use encryptionKey for decrypting user data
-    val decrypted = PheCipher().decrypt(encrypted, accountKey)
+    val decrypted = PheCipher().decrypt(encrypted, encryptionKey)
     ...
 }
 ```
@@ -295,7 +297,7 @@ fun initPassw0rdNew(): Protocol {
             appToken = "APP_TOKEN_HERE",
             servicePublicKey = "NEW_SERVICE_PUBLIC_KEY_HERE",
             clientSecretKey = "NEW_APP_SECRET_KEY_HERE",
-            updateToken = "")
+            updateToken = "") // updateToken needs to be empty
 
     return Protocol(context)
 }
