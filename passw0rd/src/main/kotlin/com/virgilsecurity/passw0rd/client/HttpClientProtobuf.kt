@@ -39,15 +39,17 @@ import com.github.kittinunf.fuel.httpDelete
 import com.github.kittinunf.fuel.httpGet
 import com.github.kittinunf.fuel.httpPost
 import com.github.kittinunf.fuel.httpPut
+import com.google.protobuf.InvalidProtocolBufferException
 import com.google.protobuf.Message
 import com.google.protobuf.Parser
 import com.virgilsecurity.passw0rd.data.ProtocolException
+import com.virgilsecurity.passw0rd.data.ProtocolHttpException
 import com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos
 
 /**
  * HttpClientProtobuf class is an implementation of http client specifically for work with Protobuf.
  */
-class HttpClientProtobuf(val serviceBaseUrl: String = SERVICE_BASE_URL) {
+class HttpClientProtobuf(val serviceBaseUrl: String = VIRGIL_SERVICE_BASE_URL) {
 
     /**
      * This function issues GET request to the specified [serviceBaseUrl] (or default one if not specified) + provided
@@ -63,8 +65,9 @@ class HttpClientProtobuf(val serviceBaseUrl: String = SERVICE_BASE_URL) {
      * function. The type of [Parser] you specified is your *return* type.
      *
      * @throws ProtocolException
+     * @throws ProtocolHttpException
      */
-    @Throws(ProtocolException::class)
+    @Throws(ProtocolException::class, ProtocolHttpException::class)
     fun <O : Message> fireGet(
             endpoint: AvailableRequests,
             headers: MutableMap<String, String> = mutableMapOf(),
@@ -104,8 +107,9 @@ class HttpClientProtobuf(val serviceBaseUrl: String = SERVICE_BASE_URL) {
      * function. The type of [Parser] you specified is your *return* type.
      *
      * @throws ProtocolException
+     * @throws ProtocolHttpException
      */
-    @Throws(ProtocolException::class)
+    @Throws(ProtocolException::class, ProtocolHttpException::class)
     fun <O : Message> firePost(
             data: Message,
             endpoint: AvailableRequests,
@@ -147,8 +151,9 @@ class HttpClientProtobuf(val serviceBaseUrl: String = SERVICE_BASE_URL) {
      * function. The type of [Parser] you specified is your *return* type.
      *
      * @throws ProtocolException
+     * @throws ProtocolHttpException
      */
-    @Throws(ProtocolException::class)
+    @Throws(ProtocolException::class, ProtocolHttpException::class)
     fun <I : Message, O : Message> firePut(
             data: I,
             endpoint: AvailableRequests,
@@ -187,8 +192,9 @@ class HttpClientProtobuf(val serviceBaseUrl: String = SERVICE_BASE_URL) {
      * function. The type of [Parser] you specified is your *return* type.
      *
      * @throws ProtocolException
+     * @throws ProtocolHttpException
      */
-    @Throws(ProtocolException::class)
+    @Throws(ProtocolException::class, ProtocolHttpException::class)
     fun <O : Message> fireDelete(
             endpoint: AvailableRequests,
             headers: MutableMap<String, String> = mutableMapOf(),
@@ -207,25 +213,33 @@ class HttpClientProtobuf(val serviceBaseUrl: String = SERVICE_BASE_URL) {
                 .header(headers)
                 .response()
 
-        // TODO try to get message/code if it's not a Passw0rdProtos.HttpError type.
         checkIfResponseSuccessful(response)
         return responseParser.parseFrom(response.data)
     }
 
     /**
-     * Throws an [ProtocolException] if the [response] is not successful.
+     * Throws an [ProtocolException] or [ProtocolHttpException] if the [response] is not successful.
      */
-    @Throws(ProtocolException::class)
+    @Throws(ProtocolException::class, ProtocolHttpException::class)
     private fun checkIfResponseSuccessful(response: Response) {
         if (!response.isSuccessful) {
-            val error = Passw0rdProtos.HttpError.parseFrom(response.data)
-            throw ProtocolException(error.code, error.message)
+            try {
+                val error = Passw0rdProtos.HttpError.parseFrom(response.data)
+                throw ProtocolException(error.code, error.message)
+            } catch (exception: InvalidProtocolBufferException) {
+                val errorMessage = String(response.data)
+                if (errorMessage.isNotBlank())
+                    throw ProtocolHttpException(message = errorMessage)
+                else
+                    throw ProtocolHttpException(response.statusCode, response.responseMessage)
+            }
         }
     }
 
     companion object {
         private const val SERVICE_VERSION = "v1"
-        private const val SERVICE_BASE_URL = "https://api.passw0rd.io/phe/$SERVICE_VERSION"
+        private const val PASSW0RD_SERVICE_BASE_URL = "https://api.passw0rd.io/phe/$SERVICE_VERSION"
+        private const val VIRGIL_SERVICE_BASE_URL = "https://api.virgilsecurity.com/phe/$SERVICE_VERSION"
 
         private const val PROTO_REQUEST_TYPE_KEY = "Content-Type"
         private const val PROTO_REQUEST_TYPE = "application/protobuf"
@@ -242,5 +256,10 @@ class HttpClientProtobuf(val serviceBaseUrl: String = SERVICE_BASE_URL) {
     enum class AvailableRequests(val type: String) {
         ENROLL("/enroll"),
         VERIFY_PASSWORD("/verify-password")
+    }
+
+    enum class DefaultBaseUrls(val url: String) {
+        PASSW0RD(PASSW0RD_SERVICE_BASE_URL),
+        VIRGIL(VIRGIL_SERVICE_BASE_URL)
     }
 }

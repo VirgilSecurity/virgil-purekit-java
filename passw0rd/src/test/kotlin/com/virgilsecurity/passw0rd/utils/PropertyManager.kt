@@ -91,7 +91,7 @@ object PropertyManager {
             System.getenv(UPDATE_TOKEN_NEW)
     }
     @JvmStatic
-    val serverAddress: String by lazy {
+    val serverAddress: String? by lazy {
         if (System.getProperty(SERVER_ADDRESS) != null)
             System.getProperty(SERVER_ADDRESS)
         else

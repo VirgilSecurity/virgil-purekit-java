@@ -71,7 +71,11 @@ class ProtocolTestJava {
         );
         assertNotNull(context);
 
-        protocol = new Protocol(context, new HttpClientProtobuf(PropertyManager.getServerAddress()));
+        String serverAddress = PropertyManager.getServerAddress();
+        if (serverAddress != null)
+            protocol = new Protocol(context, new HttpClientProtobuf(serverAddress));
+        else
+            protocol = new Protocol(context);
     }
 
     @Test void enroll_verify_update_full_flow()
@@ -83,7 +87,7 @@ class ProtocolTestJava {
         ThreadUtils.pause();
 
         EnrollResult enrollResult = protocol.enrollAccount(PASSWORD).get();
-        ;
+
         assertNotNull(enrollResult);
         assertTrue(enrollResult.getEnrollmentRecord().length != 0); // Not empty
         assertEquals(ACCOUNT_KEY_SIZE, enrollResult.getAccountKey().length);
@@ -109,7 +113,11 @@ class ProtocolTestJava {
         );
         assertNotNull(context);
 
-        protocol = new Protocol(context, new HttpClientProtobuf(PropertyManager.getServerAddress()));
+        String serverAddress = PropertyManager.getServerAddress();
+        if (serverAddress != null)
+            protocol = new Protocol(context, new HttpClientProtobuf(serverAddress));
+        else
+            protocol = new Protocol(context);
 
         byte[] newRecord;
         newRecord = RecordUpdater.updateEnrollmentRecord(enrollResult.getEnrollmentRecord(),

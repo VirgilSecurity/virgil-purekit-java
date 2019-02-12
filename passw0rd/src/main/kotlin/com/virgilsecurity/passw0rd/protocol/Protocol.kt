@@ -38,8 +38,7 @@ import com.google.protobuf.InvalidProtocolBufferException
 import com.virgilsecurity.passw0rd.client.HttpClientProtobuf
 import com.virgilsecurity.passw0rd.data.*
 import com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos
-import com.virgilsecurity.passw0rd.utils.EnrollResult
-import com.virgilsecurity.passw0rd.utils.requires
+import com.virgilsecurity.passw0rd.utils.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.future.asCompletableFuture
@@ -53,8 +52,18 @@ import java.util.concurrent.CompletableFuture
  */
 class Protocol @JvmOverloads constructor(
         protocolContext: ProtocolContext,
-        private val httpClient: HttpClientProtobuf = HttpClientProtobuf()
+        defaultHttpClient: HttpClientProtobuf? = null
 ) {
+
+    private val httpClient: HttpClientProtobuf by lazy {
+        defaultHttpClient ?: when (protocolContext.appToken.prefix()) {
+            PREFIX_PASSW0RD_APP_TOKEN -> HttpClientProtobuf(HttpClientProtobuf.DefaultBaseUrls.PASSW0RD.url)
+            PREFIX_VIRGIL_APP_TOKEN -> HttpClientProtobuf(HttpClientProtobuf.DefaultBaseUrls.VIRGIL.url)
+            else -> throw IllegalArgumentException("App token is wrong. Should be $PREFIX_PASSW0RD_APP_TOKEN" +
+                                                           "or $PREFIX_VIRGIL_APP_TOKEN." +
+                                                           "Current is ${protocolContext.appToken.prefix()}.")
+        }
+    }
 
     private val appToken: String = protocolContext.appToken
     private val pheClients: Map<Int, PheClient> = protocolContext.pheClients
@@ -66,6 +75,7 @@ class Protocol @JvmOverloads constructor(
      *
      * @throws IllegalArgumentException
      * @throws ProtocolException
+     * @throws ProtocolHttpException
      * @throws PheException
      */
     @Throws(IllegalArgumentException::class, ProtocolException::class, PheException::class)
@@ -106,6 +116,7 @@ class Protocol @JvmOverloads constructor(
      *
      * @throws IllegalArgumentException
      * @throws ProtocolException
+     * @throws ProtocolHttpException
      * @throws PheException
      * @throws InvalidPasswordException
      * @throws InvalidProtobufTypeException

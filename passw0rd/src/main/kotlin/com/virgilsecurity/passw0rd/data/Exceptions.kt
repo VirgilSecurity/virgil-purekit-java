@@ -38,12 +38,20 @@ package com.virgilsecurity.passw0rd.data
  */
 
 /**
- * Exception that is been thrown when passw0rd service answers with some error.
+ * Exception that is thrown when passw0rd service answers with some error.
  */
 class ProtocolException @JvmOverloads constructor(
     val errorCode: Int = -1,
     message: String? = "Unknown error"
-) : Throwable(message) // TODO take service + http errors
+) : Throwable(message)
+
+/**
+ * Exception that is thrown when passw0rd service answers with some error but not with default protobuf type.
+ */
+class ProtocolHttpException @JvmOverloads constructor(
+    val errorCode: Int = -1,
+    message: String? = "Unknown error"
+) : Throwable(message)
 
 /**
  * Exception that is been thrown when wrong password is used to perform some action.

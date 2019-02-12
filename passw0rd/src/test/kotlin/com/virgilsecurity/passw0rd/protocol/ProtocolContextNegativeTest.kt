@@ -60,25 +60,59 @@ class ProtocolContextNegativeTest {
         )
         Assertions.assertNotNull(context)
 
-        protocol = Protocol(context, HttpClientProtobuf(PropertyManager.serverAddress))
+        val serverAddress = PropertyManager.serverAddress
+        protocol = if (serverAddress != null)
+            Protocol(context, HttpClientProtobuf(serverAddress))
+        else
+            Protocol(context)
     }
 
     @Test fun context_app_token_wrong() {
         context = ProtocolContext.create(
-                WRONG_CRED,
+                WRONG_APP_TOKEN,
                 PropertyManager.publicKeyNew,
                 PropertyManager.secretKeyNew,
                 ""
         )
         Assertions.assertNotNull(context)
 
-        protocol = Protocol(context, HttpClientProtobuf(PropertyManager.serverAddress))
+        val serverAddress = PropertyManager.serverAddress
+        val protocol = if (serverAddress != null)
+            Protocol(context, HttpClientProtobuf(serverAddress))
+        else
+            Protocol(context)
 
         runBlocking {
             try {
                 protocol.enrollAccount(PASSWORD).await()
             } catch (t: Throwable) {
                 Assertions.assertTrue(t is ProtocolException)
+            }
+        }
+    }
+
+    @Test fun context_app_token_wrong_prefix() {
+        if (PropertyManager.serverAddress == null) { // If serverAddress is not null - we use default http client
+            context = ProtocolContext.create(        // and not checking app token prefix.
+                    WRONG_CRED,
+                    PropertyManager.publicKeyNew,
+                    PropertyManager.secretKeyNew,
+                    ""
+            )
+            Assertions.assertNotNull(context)
+
+            val serverAddress = PropertyManager.serverAddress
+            val protocol = if (serverAddress != null)
+                Protocol(context, HttpClientProtobuf(serverAddress))
+            else
+                Protocol(context)
+
+            runBlocking {
+                try {
+                    protocol.enrollAccount(PASSWORD).await()
+                } catch (t: Throwable) {
+                    Assertions.assertTrue(t is IllegalArgumentException)
+                }
             }
         }
     }
@@ -118,6 +152,7 @@ class ProtocolContextNegativeTest {
 
     companion object {
         private const val WRONG_CRED = "WRONG_CRED"
+        private const val WRONG_APP_TOKEN = "AT.1.WRONG_APP_TOKEN"
         private const val PASSWORD = "PASSWORD"
     }
 }

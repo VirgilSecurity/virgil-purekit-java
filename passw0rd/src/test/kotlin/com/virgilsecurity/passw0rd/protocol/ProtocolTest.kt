@@ -38,20 +38,21 @@ import com.virgilsecurity.passw0rd.data.InvalidPasswordException
 import com.virgilsecurity.passw0rd.data.InvalidProofException
 import com.virgilsecurity.passw0rd.data.NoKeysFoundException
 import com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos
-import com.virgilsecurity.passw0rd.utils.EnrollResult
-import com.virgilsecurity.passw0rd.utils.PropertyManager
-import com.virgilsecurity.passw0rd.utils.ThreadUtils
+import com.virgilsecurity.passw0rd.utils.*
 import kotlinx.coroutines.future.await
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import virgil.crypto.phe.PheClient
 
 /**
  * ProtocolTest class.
  */
 class ProtocolTest {
+
+    // TODO run tests for both - Virgil and Passw0rd environments
 
     private val propertyManager = PropertyManager
 
@@ -67,8 +68,11 @@ class ProtocolTest {
         )
         assertNotNull(context)
 
-        protocol = Protocol(context,
-                            HttpClientProtobuf(PropertyManager.serverAddress))
+        val serverAddress = PropertyManager.serverAddress
+        protocol = if (serverAddress != null)
+            Protocol(context, HttpClientProtobuf(serverAddress))
+        else
+            Protocol(context)
     }
 
     // HTC-1
@@ -104,8 +108,11 @@ class ProtocolTest {
                 propertyManager.updateTokenNew
         )
 
-        val protocol = Protocol(protocolContext,
-                                HttpClientProtobuf(PropertyManager.serverAddress))
+        val serverAddress = PropertyManager.serverAddress
+        val protocol = if (serverAddress != null)
+            Protocol(protocolContext, HttpClientProtobuf(serverAddress))
+        else
+            Protocol(protocolContext)
 
         var enrollResult: EnrollResult? = null
         runBlocking {
@@ -167,8 +174,11 @@ class ProtocolTest {
                 propertyManager.updateTokenNew
         )
 
-        val protocolNew = Protocol(protocolContextNew,
-                                   HttpClientProtobuf(PropertyManager.serverAddress))
+        val serverAddress = PropertyManager.serverAddress
+        val protocolNew = if (serverAddress != null)
+            Protocol(protocolContextNew, HttpClientProtobuf(serverAddress))
+        else
+            Protocol(protocolContextNew)
 
         assertThrows<InvalidProofException> {
             runBlocking {
@@ -204,8 +214,11 @@ class ProtocolTest {
                 propertyManager.updateTokenNew
         )
 
-        val protocolNew = Protocol(protocolContextNew,
-                                   HttpClientProtobuf(PropertyManager.serverAddress))
+        val serverAddress = PropertyManager.serverAddress
+        val protocolNew = if (serverAddress != null)
+            Protocol(protocolContextNew, HttpClientProtobuf(serverAddress))
+        else
+            Protocol(protocolContextNew)
 
         var record: ByteArray? = null
         runBlocking {
@@ -246,8 +259,11 @@ class ProtocolTest {
                 propertyManager.updateTokenNew
         )
 
-        val protocol = Protocol(protocolContext,
-                                HttpClientProtobuf(PropertyManager.serverAddress))
+        val serverAddress = PropertyManager.serverAddress
+        val protocol = if (serverAddress != null)
+            Protocol(protocolContext, HttpClientProtobuf(serverAddress))
+        else
+            Protocol(protocolContext)
 
         var enrollResult: EnrollResult? = null
         runBlocking {
@@ -278,8 +294,11 @@ class ProtocolTest {
                 propertyManager.updateTokenNew
         )
 
-        val protocol = Protocol(protocolContext,
-                                HttpClientProtobuf(PropertyManager.serverAddress))
+        val serverAddress = PropertyManager.serverAddress
+        val protocol = if (serverAddress != null)
+            Protocol(protocolContext, HttpClientProtobuf(serverAddress))
+        else
+            Protocol(protocolContext)
 
         var enrollResult: EnrollResult? = null
         runBlocking {
@@ -345,8 +364,11 @@ class ProtocolTest {
         )
         assertNotNull(context)
 
-        protocol = Protocol(context,
-                            HttpClientProtobuf(PropertyManager.serverAddress))
+        val serverAddress = PropertyManager.serverAddress
+        val protocol = if (serverAddress != null)
+            Protocol(context, HttpClientProtobuf(serverAddress))
+        else
+            Protocol(context)
 
         var newRecord: ByteArray? = null
         runBlocking {

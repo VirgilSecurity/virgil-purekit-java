@@ -61,8 +61,11 @@ class ProtocolNegativeTest {
         )
         Assertions.assertNotNull(context)
 
-        protocol = Protocol(context,
-                            HttpClientProtobuf(PropertyManager.serverAddress))
+        val serverAddress = PropertyManager.serverAddress
+        protocol = if (serverAddress != null)
+            Protocol(context, HttpClientProtobuf(serverAddress))
+        else
+            Protocol(context)
     }
 
     // HTC-11
@@ -132,15 +135,6 @@ class ProtocolNegativeTest {
     }
 
     @Test fun update_with_wrong_record() {
-        context = ProtocolContext.create(
-                PropertyManager.appToken,
-                PropertyManager.publicKeyNew,
-                PropertyManager.secretKeyNew,
-                PropertyManager.updateTokenNew
-        )
-        protocol = Protocol(context,
-                            HttpClientProtobuf(PropertyManager.serverAddress))
-
         runBlocking {
             try {
                 RecordUpdater.updateEnrollmentRecord(Random.nextBytes(RANDOM_BYTES_SIZE),
