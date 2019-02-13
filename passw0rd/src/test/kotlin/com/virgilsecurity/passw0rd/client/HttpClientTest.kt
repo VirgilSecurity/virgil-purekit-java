@@ -33,12 +33,11 @@
 
 package com.virgilsecurity.passw0rd.client
 
-import com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos
-import com.virgilsecurity.passw0rd.utils.PropertyManager
 import com.virgilsecurity.passw0rd.data.ProtocolException
-import com.virgilsecurity.passw0rd.protocol.Protocol
+import com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos
 import com.virgilsecurity.passw0rd.utils.PREFIX_PASSW0RD_APP_TOKEN
 import com.virgilsecurity.passw0rd.utils.PREFIX_VIRGIL_APP_TOKEN
+import com.virgilsecurity.passw0rd.utils.PropertyManager
 import com.virgilsecurity.passw0rd.utils.prefix
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach

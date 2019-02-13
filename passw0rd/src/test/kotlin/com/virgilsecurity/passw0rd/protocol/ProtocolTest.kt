@@ -33,19 +33,20 @@
 
 package com.virgilsecurity.passw0rd.protocol
 
-import com.virgilsecurity.passw0rd.client.HttpClientProtobuf
 import com.virgilsecurity.passw0rd.data.InvalidPasswordException
 import com.virgilsecurity.passw0rd.data.InvalidProofException
 import com.virgilsecurity.passw0rd.data.NoKeysFoundException
 import com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos
-import com.virgilsecurity.passw0rd.utils.*
+import com.virgilsecurity.passw0rd.utils.EnrollResult
+import com.virgilsecurity.passw0rd.utils.PropertyManager
+import com.virgilsecurity.passw0rd.utils.ProtocolUtils
+import com.virgilsecurity.passw0rd.utils.ThreadUtils
 import kotlinx.coroutines.future.await
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import virgil.crypto.phe.PheClient
 
 /**
  * ProtocolTest class.
@@ -54,25 +55,10 @@ class ProtocolTest {
 
     // TODO run tests for both - Virgil and Passw0rd environments
 
-    private val propertyManager = PropertyManager
-
-    private lateinit var context: ProtocolContext
     private lateinit var protocol: Protocol
 
     @BeforeEach fun setup() {
-        context = ProtocolContext.create(
-                PropertyManager.appToken,
-                PropertyManager.publicKeyNew,
-                PropertyManager.secretKeyNew,
-                ""
-        )
-        assertNotNull(context)
-
-        val serverAddress = PropertyManager.serverAddress
-        protocol = if (serverAddress != null)
-            Protocol(context, HttpClientProtobuf(serverAddress))
-        else
-            Protocol(context)
+        protocol = ProtocolUtils.initProtocol(updateToken = "")
     }
 
     // HTC-1
@@ -101,18 +87,7 @@ class ProtocolTest {
     @Test fun enroll_first_key_with_update_token() {
         ThreadUtils.pause()
 
-        val protocolContext = ProtocolContext.create(
-                propertyManager.appToken,
-                propertyManager.publicKeyNew,
-                propertyManager.secretKeyNew,
-                propertyManager.updateTokenNew
-        )
-
-        val serverAddress = PropertyManager.serverAddress
-        val protocol = if (serverAddress != null)
-            Protocol(protocolContext, HttpClientProtobuf(serverAddress))
-        else
-            Protocol(protocolContext)
+        val protocol = ProtocolUtils.initProtocol()
 
         var enrollResult: EnrollResult? = null
         runBlocking {
@@ -167,18 +142,8 @@ class ProtocolTest {
         assertEquals(ACCOUNT_KEY_SIZE, enrollResult!!.accountKey.size)
         assertEquals(2, enrollmentResponse.version)
 
-        val protocolContextNew = ProtocolContext.create(
-                propertyManager.appToken,
-                propertyManager.publicKeyWrong, // Wrong public key
-                propertyManager.secretKeyNew,
-                propertyManager.updateTokenNew
-        )
-
-        val serverAddress = PropertyManager.serverAddress
-        val protocolNew = if (serverAddress != null)
-            Protocol(protocolContextNew, HttpClientProtobuf(serverAddress))
-        else
-            Protocol(protocolContextNew)
+        // Using wrong public key
+        val protocolNew = ProtocolUtils.initProtocol(publicKey = PropertyManager.publicKeyWrong)
 
         assertThrows<InvalidProofException> {
             runBlocking {
@@ -207,18 +172,7 @@ class ProtocolTest {
         assertEquals(ACCOUNT_KEY_SIZE, enrollResult!!.accountKey.size)
         assertEquals(2, enrollmentResponse.version)
 
-        val protocolContextNew = ProtocolContext.create(
-                propertyManager.appToken,
-                propertyManager.publicKeyNew,
-                propertyManager.secretKeyNew,
-                propertyManager.updateTokenNew
-        )
-
-        val serverAddress = PropertyManager.serverAddress
-        val protocolNew = if (serverAddress != null)
-            Protocol(protocolContextNew, HttpClientProtobuf(serverAddress))
-        else
-            Protocol(protocolContextNew)
+        val protocolNew = ProtocolUtils.initProtocol()
 
         var record: ByteArray? = null
         runBlocking {
@@ -252,18 +206,7 @@ class ProtocolTest {
     @Test fun update_on_already_migrated() {
         ThreadUtils.pause()
 
-        val protocolContext = ProtocolContext.create(
-                propertyManager.appToken,
-                propertyManager.publicKeyNew,
-                propertyManager.secretKeyNew,
-                propertyManager.updateTokenNew
-        )
-
-        val serverAddress = PropertyManager.serverAddress
-        val protocol = if (serverAddress != null)
-            Protocol(protocolContext, HttpClientProtobuf(serverAddress))
-        else
-            Protocol(protocolContext)
+        val protocol = ProtocolUtils.initProtocol()
 
         var enrollResult: EnrollResult? = null
         runBlocking {
@@ -287,18 +230,7 @@ class ProtocolTest {
     @Test fun update_with_wrong_version() {
         ThreadUtils.pause()
 
-        val protocolContext = ProtocolContext.create(
-                propertyManager.appToken,
-                propertyManager.publicKeyNew,
-                propertyManager.secretKeyNew,
-                propertyManager.updateTokenNew
-        )
-
-        val serverAddress = PropertyManager.serverAddress
-        val protocol = if (serverAddress != null)
-            Protocol(protocolContext, HttpClientProtobuf(serverAddress))
-        else
-            Protocol(protocolContext)
+        val protocol = ProtocolUtils.initProtocol()
 
         var enrollResult: EnrollResult? = null
         runBlocking {
@@ -356,19 +288,7 @@ class ProtocolTest {
         assertTrue(failed)
 
         // After token rotate
-        context = ProtocolContext.create(
-                PropertyManager.appToken,
-                PropertyManager.publicKeyNew,
-                PropertyManager.secretKeyNew,
-                PropertyManager.updateTokenNew
-        )
-        assertNotNull(context)
-
-        val serverAddress = PropertyManager.serverAddress
-        val protocol = if (serverAddress != null)
-            Protocol(context, HttpClientProtobuf(serverAddress))
-        else
-            Protocol(context)
+        val protocol = ProtocolUtils.initProtocol()
 
         var newRecord: ByteArray? = null
         runBlocking {

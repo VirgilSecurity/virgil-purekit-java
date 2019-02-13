@@ -33,12 +33,11 @@
 
 package com.virgilsecurity.passw0rd.protocol
 
-import com.virgilsecurity.passw0rd.client.HttpClientProtobuf
 import com.virgilsecurity.passw0rd.data.InvalidProtobufTypeException
 import com.virgilsecurity.passw0rd.utils.PropertyManager
+import com.virgilsecurity.passw0rd.utils.ProtocolUtils
 import kotlinx.coroutines.future.await
 import kotlinx.coroutines.runBlocking
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -49,23 +48,10 @@ import kotlin.random.Random
  */
 class ProtocolNegativeTest {
 
-    private lateinit var context: ProtocolContext
     private lateinit var protocol: Protocol
 
     @BeforeEach fun setup() {
-        context = ProtocolContext.create(
-                PropertyManager.appToken,
-                PropertyManager.publicKeyNew,
-                PropertyManager.secretKeyNew,
-                ""
-        )
-        Assertions.assertNotNull(context)
-
-        val serverAddress = PropertyManager.serverAddress
-        protocol = if (serverAddress != null)
-            Protocol(context, HttpClientProtobuf(serverAddress))
-        else
-            Protocol(context)
+        protocol = ProtocolUtils.initProtocol(updateToken = "")
     }
 
     // HTC-11
