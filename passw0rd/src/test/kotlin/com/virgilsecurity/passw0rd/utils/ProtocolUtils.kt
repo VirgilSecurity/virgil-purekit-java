@@ -46,15 +46,16 @@ object ProtocolUtils {
     /**
      * This function initializes [Protocol] with specified credentials.
      * Or if any of arguments is not specified next values will be used:
-     * appToken -> PropertyManager.appToken,
-     * publicKey -> PropertyManager.publicKeyNew,
-     * secretKey -> PropertyManager.secretKeyNew,
-     * updateToken -> PropertyManager.updateTokenNew,
+     * virgilAppToken -> PropertyManager.virgilAppToken,
+     * publicKey -> PropertyManager.virgilPublicKeyNew,
+     * secretKey -> PropertyManager.virgilSecretKeyNew,
+     * updateToken -> PropertyManager.virgilUpdateTokenNew,
      */
-    fun initProtocol(appToken: String = PropertyManager.appToken,
-                     publicKey: String = PropertyManager.publicKeyNew,
-                     secretKey: String = PropertyManager.secretKeyNew,
-                     updateToken: String = PropertyManager.updateTokenNew): Protocol {
+    @JvmOverloads @JvmStatic fun initProtocol(serverAddress: String? = PropertyManager.virgilServerAddress,
+                                              appToken: String = PropertyManager.virgilAppToken,
+                                              publicKey: String = PropertyManager.virgilPublicKeyNew,
+                                              secretKey: String = PropertyManager.virgilSecretKeyNew,
+                                              updateToken: String = PropertyManager.virgilUpdateTokenNew): Protocol {
 
         val context = ProtocolContext.create(
                 appToken,
@@ -63,8 +64,6 @@ object ProtocolUtils {
                 updateToken
         )
         Assertions.assertNotNull(context)
-
-        val serverAddress = PropertyManager.serverAddress
 
         return if (serverAddress != null)
             Protocol(context, HttpClientProtobuf(serverAddress))

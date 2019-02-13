@@ -44,26 +44,22 @@ import com.virgilsecurity.passw0rd.utils.ThreadUtils
 import kotlinx.coroutines.future.await
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments
+import org.junit.jupiter.params.provider.MethodSource
 
 /**
  * ProtocolTest class.
  */
 class ProtocolTest {
 
-    // TODO run tests for both - Virgil and Passw0rd environments
-
-    private lateinit var protocol: Protocol
-
-    @BeforeEach fun setup() {
-        protocol = ProtocolUtils.initProtocol(updateToken = "")
-    }
-
     // HTC-1
-    @Test fun enroll_first_key() {
+    @ParameterizedTest @MethodSource("testArgumentsNoToken")
+    fun enroll_first_key(serverAddress: String, appToken: String, publicKey: String, secretKey: String) {
         ThreadUtils.pause()
+
+        val protocol = ProtocolUtils.initProtocol(serverAddress, appToken, publicKey, secretKey, updateToken = "")
 
         var enrollResult: EnrollResult? = null
         runBlocking {
@@ -84,10 +80,15 @@ class ProtocolTest {
     }
 
     // HTC-2
-    @Test fun enroll_first_key_with_update_token() {
+    @ParameterizedTest @MethodSource("testArguments")
+    fun enroll_first_key_with_update_token(serverAddress: String,
+                                           appToken: String,
+                                           publicKey: String,
+                                           secretKey: String,
+                                           updateToken: String) {
         ThreadUtils.pause()
 
-        val protocol = ProtocolUtils.initProtocol()
+        val protocol = ProtocolUtils.initProtocol(serverAddress, appToken, publicKey, secretKey, updateToken)
 
         var enrollResult: EnrollResult? = null
         runBlocking {
@@ -108,8 +109,11 @@ class ProtocolTest {
     }
 
     // HTC-3
-    @Test fun enroll_verify_wrong_pass() {
+    @ParameterizedTest @MethodSource("testArgumentsNoToken")
+    fun enroll_verify_wrong_pass(serverAddress: String, appToken: String, publicKey: String, secretKey: String) {
         ThreadUtils.pause()
+
+        val protocol = ProtocolUtils.initProtocol(serverAddress, appToken, publicKey, secretKey, updateToken = "")
 
         var enrollResult: EnrollResult? = null
         runBlocking {
@@ -129,8 +133,16 @@ class ProtocolTest {
     }
 
     // HTC-4
-    @Test fun enroll_wrong_service_key() {
+    @ParameterizedTest @MethodSource("testArgumentsWithWrongKey")
+    fun enroll_wrong_service_key(serverAddress: String,
+                                 appToken: String,
+                                 publicKey: String,
+                                 publicKeyWrong: String,
+                                 secretKey: String,
+                                 updateToken: String) {
         ThreadUtils.pause()
+
+        val protocol = ProtocolUtils.initProtocol(serverAddress, appToken, publicKey, secretKey, updateToken = "")
 
         var enrollResult: EnrollResult? = null
         runBlocking {
@@ -143,7 +155,7 @@ class ProtocolTest {
         assertEquals(2, enrollmentResponse.version)
 
         // Using wrong public key
-        val protocolNew = ProtocolUtils.initProtocol(publicKey = PropertyManager.publicKeyWrong)
+        val protocolNew = ProtocolUtils.initProtocol(serverAddress, appToken, publicKeyWrong, secretKey, updateToken)
 
         assertThrows<InvalidProofException> {
             runBlocking {
@@ -159,8 +171,15 @@ class ProtocolTest {
     }
 
     // HTC-5
-    @Test fun update_enrollment() {
+    @ParameterizedTest @MethodSource("testArguments")
+    fun update_enrollment(serverAddress: String,
+                          appToken: String,
+                          publicKey: String,
+                          secretKey: String,
+                          updateToken: String) {
         ThreadUtils.pause()
+
+        val protocol = ProtocolUtils.initProtocol(serverAddress, appToken, publicKey, secretKey, updateToken = "")
 
         var enrollResult: EnrollResult? = null
         runBlocking {
@@ -172,12 +191,12 @@ class ProtocolTest {
         assertEquals(ACCOUNT_KEY_SIZE, enrollResult!!.accountKey.size)
         assertEquals(2, enrollmentResponse.version)
 
-        val protocolNew = ProtocolUtils.initProtocol()
+        val protocolNew = ProtocolUtils.initProtocol(serverAddress, appToken, publicKey, secretKey, updateToken)
 
         var record: ByteArray? = null
         runBlocking {
             record = RecordUpdater.updateEnrollmentRecord(enrollResult!!.enrollmentRecord,
-                                                          PropertyManager.updateTokenNew).await()
+                                                          updateToken).await()
         }
         assertNotNull(record)
 
@@ -203,10 +222,15 @@ class ProtocolTest {
     }
 
     // HTC-6
-    @Test fun update_on_already_migrated() {
+    @ParameterizedTest @MethodSource("testArguments")
+    fun update_on_already_migrated(serverAddress: String,
+                                   appToken: String,
+                                   publicKey: String,
+                                   secretKey: String,
+                                   updateToken: String) {
         ThreadUtils.pause()
 
-        val protocol = ProtocolUtils.initProtocol()
+        val protocol = ProtocolUtils.initProtocol(serverAddress, appToken, publicKey, secretKey, updateToken)
 
         var enrollResult: EnrollResult? = null
         runBlocking {
@@ -220,17 +244,23 @@ class ProtocolTest {
 
         assertThrows<IllegalArgumentException> {
             runBlocking {
-                RecordUpdater.updateEnrollmentRecord(enrollResult!!.enrollmentRecord, PropertyManager.updateTokenNew)
+                RecordUpdater.updateEnrollmentRecord(enrollResult!!.enrollmentRecord,
+                                                     updateToken)
                         .await()
             }
         }
     }
 
     // HTC-7
-    @Test fun update_with_wrong_version() {
+    @ParameterizedTest @MethodSource("testArguments")
+    fun update_with_wrong_version(serverAddress: String,
+                                  appToken: String,
+                                  publicKey: String,
+                                  secretKey: String,
+                                  updateToken: String) {
         ThreadUtils.pause()
 
-        val protocol = ProtocolUtils.initProtocol()
+        val protocol = ProtocolUtils.initProtocol(serverAddress, appToken, publicKey, secretKey, updateToken)
 
         var enrollResult: EnrollResult? = null
         runBlocking {
@@ -248,7 +278,8 @@ class ProtocolTest {
 
         assertThrows<IllegalArgumentException> {
             runBlocking {
-                RecordUpdater.updateEnrollmentRecord(enrollResult!!.enrollmentRecord, PropertyManager.updateTokenNew)
+                RecordUpdater.updateEnrollmentRecord(enrollResult!!.enrollmentRecord,
+                                                     updateToken)
                         .await()
             }
         }
@@ -260,8 +291,15 @@ class ProtocolTest {
         }
     }
 
-    @Test fun enroll_verify_update_full_flow() {
+    @ParameterizedTest @MethodSource("testArguments")
+    fun enroll_verify_update_full_flow(serverAddress: String,
+                                       appToken: String,
+                                       publicKey: String,
+                                       secretKey: String,
+                                       updateToken: String) {
         ThreadUtils.pause()
+
+        val protocol = ProtocolUtils.initProtocol(serverAddress, appToken, publicKey, secretKey, updateToken = "")
 
         var enrollResult: EnrollResult? = null
         runBlocking {
@@ -288,24 +326,27 @@ class ProtocolTest {
         assertTrue(failed)
 
         // After token rotate
-        val protocol = ProtocolUtils.initProtocol()
+        val protocolNew = ProtocolUtils.initProtocol(serverAddress, appToken, publicKey, secretKey, updateToken)
 
         var newRecord: ByteArray? = null
         runBlocking {
             newRecord = RecordUpdater.updateEnrollmentRecord(enrollResult!!.enrollmentRecord,
-                                                             PropertyManager.updateTokenNew).await()
+                                                             updateToken).await()
         }
         assertNotNull(newRecord)
 
         var verifyKeyNew: ByteArray? = null
         runBlocking {
-            verifyKeyNew = protocol.verifyPassword(PASSWORD, newRecord!!).await()
+            verifyKeyNew = protocolNew.verifyPassword(PASSWORD, newRecord!!).await()
         }
         assertArrayEquals(enrollResult!!.accountKey, verifyKeyNew)
     }
 
-    @Test fun encrypt_decrypt() {
+    @ParameterizedTest @MethodSource("testArgumentsNoToken")
+    fun encrypt_decrypt(serverAddress: String, appToken: String, publicKey: String, secretKey: String) {
         ThreadUtils.pause()
+
+        val protocol = ProtocolUtils.initProtocol(serverAddress, appToken, publicKey, secretKey, updateToken = "")
 
         var enrollResult: EnrollResult? = null
         runBlocking {
@@ -329,5 +370,44 @@ class ProtocolTest {
         private const val ACCOUNT_KEY_SIZE = 32
 
         const val TEXT = "The best text ever."
+
+        @JvmStatic fun testArgumentsNoToken() = listOf(
+                Arguments.of(PropertyManager.virgilServerAddress,
+                             PropertyManager.virgilAppToken,
+                             PropertyManager.virgilPublicKeyNew,
+                             PropertyManager.virgilSecretKeyNew),
+                Arguments.of(PropertyManager.passw0rdServerAddress,
+                             PropertyManager.passw0rdAppToken,
+                             PropertyManager.passw0rdPublicKeyNew,
+                             PropertyManager.passw0rdSecretKeyNew)
+        )
+
+        @JvmStatic fun testArguments() = listOf(
+                Arguments.of(PropertyManager.virgilServerAddress,
+                             PropertyManager.virgilAppToken,
+                             PropertyManager.virgilPublicKeyNew,
+                             PropertyManager.virgilSecretKeyNew,
+                             PropertyManager.virgilUpdateTokenNew),
+                Arguments.of(PropertyManager.passw0rdServerAddress,
+                             PropertyManager.passw0rdAppToken,
+                             PropertyManager.passw0rdPublicKeyNew,
+                             PropertyManager.passw0rdSecretKeyNew,
+                             PropertyManager.passw0rdUpdateTokenNew)
+        )
+
+        @JvmStatic fun testArgumentsWithWrongKey() = listOf(
+                Arguments.of(PropertyManager.virgilServerAddress,
+                             PropertyManager.virgilAppToken,
+                             PropertyManager.virgilPublicKeyNew,
+                             PropertyManager.virgilPublicKeyWrong,
+                             PropertyManager.virgilSecretKeyNew,
+                             PropertyManager.virgilUpdateTokenNew),
+                Arguments.of(PropertyManager.passw0rdServerAddress,
+                             PropertyManager.passw0rdAppToken,
+                             PropertyManager.passw0rdPublicKeyNew,
+                             PropertyManager.passw0rdPublicKeyWrong,
+                             PropertyManager.passw0rdSecretKeyNew,
+                             PropertyManager.passw0rdUpdateTokenNew)
+        )
     }
 }

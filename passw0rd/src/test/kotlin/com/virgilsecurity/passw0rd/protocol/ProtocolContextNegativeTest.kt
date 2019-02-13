@@ -48,12 +48,6 @@ import org.junit.jupiter.api.assertThrows
  */
 class ProtocolContextNegativeTest {
 
-    private lateinit var protocol: Protocol
-
-    @BeforeEach fun setup() {
-        protocol = ProtocolUtils.initProtocol(updateToken = "")
-    }
-
     @Test fun context_app_token_wrong() {
         val protocol = ProtocolUtils.initProtocol(appToken = WRONG_APP_TOKEN, updateToken = "")
 
@@ -67,7 +61,7 @@ class ProtocolContextNegativeTest {
     }
 
     @Test fun context_app_token_wrong_prefix() {
-        if (PropertyManager.serverAddress == null) { // If serverAddress is not null - we use default http client
+        if (PropertyManager.virgilServerAddress == null) { // If virgilServerAddress is not null - we use default http client
             val protocol = ProtocolUtils.initProtocol(appToken = WRONG_CRED, updateToken = "")
 
             runBlocking {
@@ -83,9 +77,9 @@ class ProtocolContextNegativeTest {
     @Test fun context_public_key_wrong() {
         assertThrows<IllegalArgumentException> {
             ProtocolContext.create(
-                    PropertyManager.appToken,
+                    PropertyManager.virgilAppToken,
                     WRONG_CRED,
-                    PropertyManager.secretKeyNew,
+                    PropertyManager.virgilSecretKeyNew,
                     ""
             )
         }
@@ -94,8 +88,8 @@ class ProtocolContextNegativeTest {
     @Test fun context_secret_key_wrong() {
         assertThrows<IllegalArgumentException> {
             ProtocolContext.create(
-                    PropertyManager.appToken,
-                    PropertyManager.publicKeyNew,
+                    PropertyManager.virgilAppToken,
+                    PropertyManager.virgilPublicKeyNew,
                     WRONG_CRED,
                     ""
             )
@@ -105,9 +99,9 @@ class ProtocolContextNegativeTest {
     @Test fun context_update_token_wrong() {
         assertThrows<IllegalArgumentException> {
             ProtocolContext.create(
-                    PropertyManager.appToken,
-                    PropertyManager.publicKeyNew,
-                    PropertyManager.secretKeyNew,
+                    PropertyManager.virgilAppToken,
+                    PropertyManager.virgilPublicKeyNew,
+                    PropertyManager.virgilSecretKeyNew,
                     WRONG_CRED
             )
         }

@@ -44,10 +44,15 @@ import com.virgilsecurity.passw0rd.data.InvalidProtobufTypeException;
 import com.virgilsecurity.passw0rd.data.ProtocolException;
 import com.virgilsecurity.passw0rd.utils.EnrollResult;
 import com.virgilsecurity.passw0rd.utils.PropertyManager;
+import com.virgilsecurity.passw0rd.utils.ProtocolUtils;
 import com.virgilsecurity.passw0rd.utils.ThreadUtils;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 /**
  * ProtocolTestJava class.
@@ -59,32 +64,20 @@ class ProtocolTestJava {
     private static final String TEXT = "The best text ever.";
     private static final int ACCOUNT_KEY_SIZE = 32;
 
-    private ProtocolContext context;
-    private Protocol protocol;
-
-    @BeforeEach void setup() {
-        context = ProtocolContext.create(
-                PropertyManager.getAppToken(),
-                PropertyManager.getPublicKeyNew(),
-                PropertyManager.getSecretKeyNew(),
-                ""
-        );
-        assertNotNull(context);
-
-        String serverAddress = PropertyManager.getServerAddress();
-        if (serverAddress != null)
-            protocol = new Protocol(context, new HttpClientProtobuf(serverAddress));
-        else
-            protocol = new Protocol(context);
-    }
-
-    @Test void enroll_verify_update_full_flow()
+    @ParameterizedTest @MethodSource("testArguments")
+    void enroll_verify_update_full_flow(String serverAddress,
+                                        String appToken,
+                                        String publicKey,
+                                        String secretKey,
+                                        String updateToken)
             throws ProtocolException,
             ExecutionException,
             InterruptedException,
             InvalidProtobufTypeException,
             InvalidPasswordException {
         ThreadUtils.pause();
+
+        Protocol protocol = ProtocolUtils.initProtocol(serverAddress, appToken, publicKey, secretKey, "");
 
         EnrollResult enrollResult = protocol.enrollAccount(PASSWORD).get();
 
@@ -105,32 +98,25 @@ class ProtocolTestJava {
         assertTrue(failed);
 
         // After token rotate
-        context = ProtocolContext.create(
-                PropertyManager.getAppToken(),
-                PropertyManager.getPublicKeyNew(),
-                PropertyManager.getSecretKeyNew(),
-                PropertyManager.getUpdateTokenNew()
-        );
-        assertNotNull(context);
-
-        String serverAddress = PropertyManager.getServerAddress();
-        if (serverAddress != null)
-            protocol = new Protocol(context, new HttpClientProtobuf(serverAddress));
-        else
-            protocol = new Protocol(context);
+        Protocol protocolNew = ProtocolUtils.initProtocol(serverAddress, appToken, publicKey, secretKey, updateToken);
 
         byte[] newRecord;
-        newRecord = RecordUpdater.updateEnrollmentRecord(enrollResult.getEnrollmentRecord(),
-                                                         PropertyManager.getUpdateTokenNew()).get();
+        newRecord = RecordUpdater.updateEnrollmentRecord(enrollResult.getEnrollmentRecord(), updateToken).get();
         assertNotNull(newRecord);
 
         byte[] verifyKeyNew;
-        verifyKeyNew = protocol.verifyPassword(PASSWORD, newRecord).get();
+        verifyKeyNew = protocolNew.verifyPassword(PASSWORD, newRecord).get();
         assertArrayEquals(enrollResult.getAccountKey(), verifyKeyNew);
     }
 
-    @Test void encrypt_decrypt() throws InterruptedException, ProtocolException, ExecutionException {
+    @ParameterizedTest @MethodSource("testArgumentsNoToken")
+    void encrypt_decrypt(String serverAddress,
+                         String appToken,
+                         String publicKey,
+                         String secretKey) throws InterruptedException, ProtocolException, ExecutionException {
         ThreadUtils.pause();
+
+        Protocol protocol = ProtocolUtils.initProtocol(serverAddress, appToken, publicKey, secretKey, "");
 
         EnrollResult enrollResult = protocol.enrollAccount(PASSWORD).get();
         assertNotNull(enrollResult);
@@ -143,5 +129,31 @@ class ProtocolTestJava {
         byte[] decryptedData = protocol.decrypt(encryptedData, enrollResult.getAccountKey());
         assertNotNull(decryptedData);
         assertEquals(TEXT, new String(decryptedData));
+    }
+
+    private static Stream<Arguments> testArgumentsNoToken() {
+        return Stream.of(
+                Arguments.of(PropertyManager.getVirgilServerAddress(),
+                             PropertyManager.getVirgilAppToken(),
+                             PropertyManager.getVirgilPublicKeyNew(),
+                             PropertyManager.getVirgilSecretKeyNew()),
+                Arguments.of(PropertyManager.getPassw0rdServerAddress(),
+                             PropertyManager.getPassw0rdAppToken(),
+                             PropertyManager.getPassw0rdPublicKeyNew(),
+                             PropertyManager.getPassw0rdSecretKeyNew()));
+    }
+
+    private static Stream<Arguments> testArguments() {
+        return Stream.of(
+                Arguments.of(PropertyManager.getVirgilServerAddress(),
+                             PropertyManager.getVirgilAppToken(),
+                             PropertyManager.getVirgilPublicKeyNew(),
+                             PropertyManager.getVirgilSecretKeyNew(),
+                             PropertyManager.getVirgilUpdateTokenNew()),
+                Arguments.of(PropertyManager.getPassw0rdServerAddress(),
+                             PropertyManager.getPassw0rdAppToken(),
+                             PropertyManager.getPassw0rdPublicKeyNew(),
+                             PropertyManager.getPassw0rdSecretKeyNew(),
+                             PropertyManager.getPassw0rdUpdateTokenNew()));
     }
 }

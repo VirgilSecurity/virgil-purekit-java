@@ -40,8 +40,9 @@ import com.virgilsecurity.passw0rd.utils.PREFIX_VIRGIL_APP_TOKEN
 import com.virgilsecurity.passw0rd.utils.PropertyManager
 import com.virgilsecurity.passw0rd.utils.prefix
 import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments
+import org.junit.jupiter.params.provider.MethodSource
 import java.util.*
 
 /**
@@ -49,26 +50,22 @@ import java.util.*
  */
 class HttpClientTest {
 
-    lateinit var httpClient: HttpClientProtobuf
-
-    @BeforeEach fun setup() {
-        val serverAddress = PropertyManager.serverAddress
-        httpClient = if (serverAddress != null) {
+    @ParameterizedTest @MethodSource("testArguments")
+    fun response_proto_parse(serverAddress: String?, appToken: String, publicKeyNew: String) {
+        val httpClient = if (serverAddress != null) {
             HttpClientProtobuf(serverAddress)
         } else {
             when {
-                PropertyManager.appToken.prefix() == PREFIX_PASSW0RD_APP_TOKEN ->
+                appToken.prefix() == PREFIX_PASSW0RD_APP_TOKEN ->
                     HttpClientProtobuf(HttpClientProtobuf.DefaultBaseUrls.PASSW0RD.url)
-                PropertyManager.appToken.prefix() == PREFIX_VIRGIL_APP_TOKEN ->
+                appToken.prefix() == PREFIX_VIRGIL_APP_TOKEN ->
                     HttpClientProtobuf(HttpClientProtobuf.DefaultBaseUrls.VIRGIL.url)
                 else -> throw IllegalArgumentException("Wrong App token prefix")
             }
         }
-    }
 
-    @Test fun response_proto_parse() {
         val version = parseVersionAndContent(
-                PropertyManager.publicKeyNew,
+                publicKeyNew,
                 PREFIX_PUBLIC_KEY,
                 KEY_PUBLIC_KEY
         ).first
@@ -128,5 +125,14 @@ class HttpClientTest {
         private const val KEY_PUBLIC_KEY = "Public Key"
 
         private const val WRONG_TOKEN = "WRONG_TOKEN"
+
+        @JvmStatic fun testArguments() = listOf(
+                Arguments.of(PropertyManager.virgilServerAddress,
+                             PropertyManager.virgilAppToken,
+                             PropertyManager.virgilPublicKeyNew),
+                Arguments.of(PropertyManager.passw0rdServerAddress,
+                             PropertyManager.passw0rdAppToken,
+                             PropertyManager.passw0rdPublicKeyNew)
+        )
     }
 }

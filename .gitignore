@@ -94,9 +94,6 @@ gradle-app.setting
 .gradletasknamecache
 
 # Project-specific
-testsPassw0rdDev.sh
-testsPassw0rdStg.sh
-testsPassw0rdProd.sh
-testsVirgilDev.sh
-testsVirgilStg.sh
-testsVirgilProd.sh
+testsDev.sh
+testsStg.sh
+testsProd.sh

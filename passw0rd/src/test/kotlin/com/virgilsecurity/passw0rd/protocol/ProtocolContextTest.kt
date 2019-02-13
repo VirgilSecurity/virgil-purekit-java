@@ -37,6 +37,9 @@ import com.virgilsecurity.passw0rd.utils.PropertyManager
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments
+import org.junit.jupiter.params.provider.MethodSource
 
 /**
  * ProtocolContextTest class.
@@ -44,13 +47,9 @@ import org.junit.jupiter.api.assertThrows
 class ProtocolContextTest {
 
     // HTC-8
-    @Test fun one_key_context() {
-        val context = ProtocolContext.create(
-                PropertyManager.appToken,
-                PropertyManager.publicKeyNew,
-                PropertyManager.secretKeyNew,
-                ""
-        )
+    @ParameterizedTest @MethodSource("testArgumentsNoToken")
+    fun one_key_context(appToken: String, publicKeyNew: String, secretKeyNew: String) {
+        val context = ProtocolContext.create(appToken, publicKeyNew, secretKeyNew, "")
         assertNotNull(context)
         assertEquals(2, context.version)
         assertEquals(1, context.pheClients.size)
@@ -58,13 +57,9 @@ class ProtocolContextTest {
     }
 
     // HTC-9
-    @Test fun context_with_update_token() {
-        val context = ProtocolContext.create(
-                PropertyManager.appToken,
-                PropertyManager.publicKeyOld,
-                PropertyManager.secretKeyOld,
-                PropertyManager.updateTokenOld
-        )
+    @ParameterizedTest @MethodSource("testArguments")
+    fun context_with_update_token(appToken: String, publicKeyOld: String, secretKeyOld: String, updateTokenOld: String) {
+        val context = ProtocolContext.create(appToken, publicKeyOld, secretKeyOld, updateTokenOld)
         assertNotNull(context)
         assertEquals(2, context.version)
         assertNotNull(context.updateToken)
@@ -75,12 +70,34 @@ class ProtocolContextTest {
     // HTC-10
     @Test fun context_with_wrong_update_token() {
         assertThrows<IllegalArgumentException> {
-            ProtocolContext.create(
-                    PropertyManager.appToken,
-                    PropertyManager.publicKeyOld,
-                    PropertyManager.secretKeyOld,
-                    PropertyManager.updateTokenNew
+            ProtocolContext.create(PropertyManager.virgilAppToken,
+                                   PropertyManager.virgilPublicKeyOld,
+                                   PropertyManager.virgilSecretKeyOld,
+                                   PropertyManager.virgilUpdateTokenNew
             )
         }
+    }
+
+    companion object {
+
+        @JvmStatic fun testArgumentsNoToken() = listOf(
+                Arguments.of(PropertyManager.virgilAppToken,
+                             PropertyManager.virgilPublicKeyNew,
+                             PropertyManager.virgilSecretKeyNew),
+                Arguments.of(PropertyManager.passw0rdAppToken,
+                             PropertyManager.passw0rdPublicKeyNew,
+                             PropertyManager.passw0rdSecretKeyNew)
+        )
+
+        @JvmStatic fun testArguments() = listOf(
+                Arguments.of(PropertyManager.virgilAppToken,
+                             PropertyManager.virgilPublicKeyOld,
+                             PropertyManager.virgilSecretKeyOld,
+                             PropertyManager.virgilUpdateTokenOld),
+                Arguments.of(PropertyManager.passw0rdAppToken,
+                             PropertyManager.passw0rdPublicKeyOld,
+                             PropertyManager.passw0rdSecretKeyOld,
+                             PropertyManager.passw0rdUpdateTokenOld)
+        )
     }
 }

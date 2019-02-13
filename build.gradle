@@ -51,7 +51,7 @@ buildscript {
             dokka         : '0.9.17',
 
             // Tests
-            junit         : '5.2.0',
+            junit         : '5.3.1',
             junitPlugin   : '1.0.0',
 
     ]
