@@ -84,6 +84,8 @@ The **\<latest-version>** of the SDK can be found in the [Maven Central Reposito
 
 ### Configure SDK
 Here is an example of how to specify your credentials SDK class instance:
+
+`Kotlin`:
 ```kotlin
 // here set your passw0rd credentials
 fun initPassw0rd(): Protocol {
@@ -94,6 +96,19 @@ fun initPassw0rd(): Protocol {
             updateToken = "") // updateToken needs to be empty
 
     return Protocol(context)
+}
+```
+
+`Java`:
+```java
+Protocol initPassw0rd() {
+    ProtocolContext context = ProtocolContext.create(
+            "PT.OSoPhirdopvijQlFPKdlSydN9BUrn5oEuDwf3Hqps",
+            "PK.1.BEn/hnuyKV0inZL+kaRUZNvwQ/jkhDQdALrw6VdfvhZhPQQHWyYO+fRlJYZweUz1FGH3WxcZBjA0tL4wn7kE0ls=",
+            "SK.1.xxx",
+            ""); // updateToken needs to be empty
+
+    return new Protocol(context);
 }
 ```
 
@@ -140,6 +155,7 @@ So, in order to create a `record` for a new database or available one, go throug
 - Passw0rd SDK will send a request to Passw0rd Service to get enrollment.
 - Then, Passw0rd SDK will create a user's `record`. You need to store this unique user's `record` in your database in associated column.
 
+`Kotlin`:
 ```kotlin
 // create a new encrypted password record using user password or its hash
 fun enrollAccount(password: String, protocol: Protocol) {
@@ -153,6 +169,21 @@ fun enrollAccount(password: String, protocol: Protocol) {
 }
 ```
 
+`Java`:
+```java
+void enrollAccount(String password,
+                   Protocol protocol) throws ProtocolException, ExecutionException, InterruptedException {
+    EnrollResult enrollResult = protocol.enrollAccount(password).get();
+
+    //save record to database
+    System.out.println("Database record:\n" + Base64.getEncoder()
+                                                    .encodeToString(enrollResult.getEnrollmentRecord()));
+    byte[] encryptionKey = enrollResult.getAccountKey();
+    //use accountKey for protecting user data
+    byte[] encrypted = new PheCipher().encrypt(data, encryptionKey);
+}
+```
+
 When you've created a passw0rd's `record` *(record is enrollResult.enrollmentRecord)* for all users in your DB, you can delete the unnecessary column where user passwords were previously stored.
 
 
@@ -160,6 +191,7 @@ When you've created a passw0rd's `record` *(record is enrollResult.enrollmentRec
 
 Use this flow when a user already has his or her own passw0rd's `record` in your database. This function allows you to verify user's password with the `record` from your DB every time when the user signs in. You have to pass his or her `record` from your DB into the `verifyPassword` function:
 
+`Kotlin`:
 ```kotlin
 fun verifyPassword(password: String, record: ByteArray, protocol: Protocol) {
     val encryptionKey = try {
@@ -170,6 +202,25 @@ fun verifyPassword(password: String, record: ByteArray, protocol: Protocol) {
 
     //use encryptionKey for decrypting user data
     val decrypted = PheCipher().decrypt(encrypted, encryptionKey)
+    ...
+}
+```
+
+`Java`:
+```java
+void verifyPassword(String password,
+                    byte[] record,
+                    Protocol protocol) 
+        throws InvalidProtobufTypeException, ProtocolException, ExecutionException, InterruptedException {
+    byte[] encryptionKey;
+    try {
+        encryptionKey = protocol.verifyPassword(password, record).get();
+    } catch (InvalidPasswordException exception) {
+        // Invalid password handling
+    }
+
+    //use encryptionKey for decrypting user data
+    byte[] decrypted = new PheCipher().decrypt(encrypted, encryptionKey);
     ...
 }
 ```
@@ -187,6 +238,7 @@ In addition, this key is unique to a particular user and won't be changed even a
 
 Here is an example of data encryption/decryption with an `encryptionKey`:
 
+`Kotlin`:
 ```kotlin
 fun main() {
     // encryptionKey (accountKey) is obtained from proto.EnrollAccount() or proto.VerifyPassword() calls
@@ -200,6 +252,22 @@ fun main() {
     //use decrypted data
 }
 ```
+
+`Java`:
+```java
+void main() {
+    // encryptionKey (accountKey) is obtained from proto.EnrollAccount() or proto.VerifyPassword() calls
+
+    byte[] data = "Personal data".getBytes();
+    PheCipher cipher = new PheCipher();
+
+    byte[] ciphertext = cipher.encrypt(data, encryptionKey);
+    byte[] decrypted = cipher.decrypt(ciphertext, encryptionKey);
+
+    //use decrypted data
+}
+```
+
 Encryption is performed using AES256-GCM with key & nonce derived from the user's encryptionKey using HKDF and random 256-bit salt.
 
 Virgil Security has Zero knowledge about a user's `encryptionKey`, because the key is calculated every time when you execute `enrollAccount` or `verifyPassword` functions at your server side.
@@ -240,6 +308,7 @@ as a result, you get your `UPDATE_TOKEN`.
 **Step 2.** Initialize passw0rd SDK with the `UPDATE_TOKEN`.
 Move to passw0rd SDK configuration file and specify your `UPDATE_TOKEN`:
 
+`Kotlin`:
 ```kotlin
 // here set your passw0rd credentials
 fun initPassw0rd(): Protocol {
@@ -253,12 +322,27 @@ fun initPassw0rd(): Protocol {
 }
 ```
 
+`Java`:
+```java
+// here set your passw0rd credentials
+Protocol initPassw0rd() {
+    ProtocolContext context = ProtocolContext.create(
+            "PT.OSoPhirdopvijQlFPKdlSydN9BUrn5oEuDwf3Hqps",
+            "PK.1.BEn/hnuyKV0inZL+kaRUZNvwQ/jkhDQdALrw6VdfvhZhPQQHWyYO+fRlJYZweUz1FGH3WxcZBjA0tL4wn7kE0ls=",
+            "SK.1.00000fLr2JOu2Vf1+MbEzpdtEP1kUefA0PUJw2UyI0=",
+            "UT.2.00000000+0000000000000000000008UfxXDUU2FGkMvKhIgqjxA+hsAtf17K5j11Cnf07jB6uVEvxMJT0lMGv00000=");
+
+    return new Protocol(context);
+}
+```
+
 **Step 3.** Start migration. Use the `RecordUpdater.updateEnrollmentRecord()` SDK function to create a user's `newRecord` (you don't need to ask your users to create a new password). The `RecordUpdater.updateEnrollmentRecord()` function requires the `update_token` and user's `oldRecord` from your DB:
 
+`Kotlin`:
 ```kotlin
 fun main() {
     // Get old record from the database
-    oldRecord = ...
+    val oldRecord = ...
 
     // Update old record
     val newRecord = try {
@@ -269,6 +353,25 @@ fun main() {
 
     // Save new record to the database
     saveNewRecord(newRecord)
+}
+```
+
+`Java`:
+```java
+void main() throws InvalidProtobufTypeException, ExecutionException, InterruptedException {
+    // Get old record from the database
+    byte[] oldRecord = ...
+
+    // Update old record
+    byte[] newRecord;
+    try {
+        newRecord = RecordUpdater.updateEnrollmentRecord(oldRecord, "UPDATE_TOKEN").get();
+    } catch (IllegalArgumentException exception) {
+        // Handle already updated state
+    }
+
+    // Save new record to the database
+    saveNewRecord(newRecord);
 }
 ```
 
@@ -290,6 +393,7 @@ passw0rd application update-keys <service_public_key> <app_secret_key> <update_t
 
 **Step 5.** Move to passw0rd SDK configuration and replace your previous `APP_SECRET_KEY`,  `SERVICE_PUBLIC_KEY` with a new one (`APP_TOKEN` will be the same). Delete previous `APP_SECRET_KEY`, `SERVICE_PUBLIC_KEY` and `UPDATE_TOKEN`.
 
+`Kotlin`:
 ```kotlin
 // here set your passw0rd credentials
 fun initPassw0rdNew(): Protocol {
@@ -300,6 +404,19 @@ fun initPassw0rdNew(): Protocol {
             updateToken = "") // updateToken needs to be empty
 
     return Protocol(context)
+}
+```
+
+`Java`:
+```java
+Protocol initPassw0rdNew() {
+    ProtocolContext context = ProtocolContext.create(
+            "APP_TOKEN_HERE",
+            "NEW_SERVICE_PUBLIC_KEY_HERE",
+            "NEW_APP_SECRET_KEY_HERE",
+            ""); // updateToken needs to be empty
+
+    return new Protocol(context);
 }
 ```
 
