@@ -241,7 +241,7 @@ Here is an example of data encryption/decryption with an `encryptionKey`:
 `Kotlin`:
 ```kotlin
 fun main() {
-    // encryptionKey (accountKey) is obtained from proto.EnrollAccount() or proto.VerifyPassword() calls
+    // encryptionKey (accountKey) is obtained from protocol.enrollAccount() or protocol.verifyPassword() calls
 
     val data = "Personal data".toByteArray()
     val cipher = PheCipher()
@@ -256,7 +256,7 @@ fun main() {
 `Java`:
 ```java
 void main() {
-    // encryptionKey (accountKey) is obtained from proto.EnrollAccount() or proto.VerifyPassword() calls
+    // encryptionKey (accountKey) is obtained from protocol.enrollAccount() or protocol.verifyPassword() calls
 
     byte[] data = "Personal data".getBytes();
     PheCipher cipher = new PheCipher();
