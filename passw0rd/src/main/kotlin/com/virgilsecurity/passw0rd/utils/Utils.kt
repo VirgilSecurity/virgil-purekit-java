@@ -78,9 +78,16 @@ fun String.parseVersionAndContent(prefix: String, name: String): Pair<Int, ByteA
     return Pair(version, content)
 }
 
+/**
+ * This function splits string into 3 parts and returns firs one - prefix.
+ */
+fun String.prefix(): String = with(split('.')) { return this[0] }
+
 const val PREFIX_UPDATE_TOKEN = "UT"
 const val PREFIX_SECRET_KEY = "SK"
 const val PREFIX_PUBLIC_KEY = "PK"
+const val PREFIX_VIRGIL_APP_TOKEN = "AT"
+const val PREFIX_PASSW0RD_APP_TOKEN = "PT"
 
 const val KEY_UPDATE_TOKEN = "Update Token"
 const val KEY_SECRET_KEY = "Secret Key"

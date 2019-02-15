@@ -31,44 +31,43 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.passw0rd.data
+package com.virgilsecurity.passw0rd.utils
+
+import com.virgilsecurity.passw0rd.client.HttpClientProtobuf
+import com.virgilsecurity.passw0rd.protocol.Protocol
+import com.virgilsecurity.passw0rd.protocol.ProtocolContext
+import org.junit.jupiter.api.Assertions
 
 /**
- * Exceptions class.
+ * ProtocolUtils class.
  */
+object ProtocolUtils {
 
-/**
- * Exception that is thrown when passw0rd service answers with some error.
- */
-class ProtocolException @JvmOverloads constructor(
-    val errorCode: Int = -1,
-    message: String? = "Unknown error"
-) : Throwable(message)
+    /**
+     * This function initializes [Protocol] with specified credentials.
+     * Or if any of arguments is not specified next values will be used:
+     * virgilAppToken -> PropertyManager.virgilAppToken,
+     * publicKey -> PropertyManager.virgilPublicKeyNew,
+     * secretKey -> PropertyManager.virgilSecretKeyNew,
+     * updateToken -> PropertyManager.virgilUpdateTokenNew,
+     */
+    @JvmOverloads @JvmStatic fun initProtocol(serverAddress: String? = PropertyManager.virgilServerAddress,
+                                              appToken: String = PropertyManager.virgilAppToken,
+                                              publicKey: String = PropertyManager.virgilPublicKeyNew,
+                                              secretKey: String = PropertyManager.virgilSecretKeyNew,
+                                              updateToken: String = PropertyManager.virgilUpdateTokenNew): Protocol {
 
-/**
- * Exception that is thrown when passw0rd service answers with some error but not with default protobuf type.
- */
-class ProtocolHttpException @JvmOverloads constructor(
-    val errorCode: Int = -1,
-    message: String? = "Unknown error"
-) : Throwable(message)
+        val context = ProtocolContext.create(
+                appToken,
+                publicKey,
+                secretKey,
+                updateToken
+        )
+        Assertions.assertNotNull(context)
 
-/**
- * Exception that is been thrown when wrong password is used to perform some action.
- */
-class InvalidPasswordException(message: String?) : Throwable(message)
-
-/**
- * Exception that is been thrown when trying to parse Protobuf message with wrong type.
- */
-class InvalidProtobufTypeException(message: String? = "Can not parse model you have given.") : Throwable(message)
-
-/**
- * Exception that is been thrown when no keys was found.
- */
-class NoKeysFoundException(message: String? = "Can not parse model you have given.") : Throwable(message)
-
-/**
- * Exception that is been thrown when the proof is wrong.
- */
-class InvalidProofException(message: String? = "Can not parse model you have given.") : Throwable(message)
+        return if (serverAddress != null)
+            Protocol(context, HttpClientProtobuf(serverAddress))
+        else
+            Protocol(context)
+    }
+}

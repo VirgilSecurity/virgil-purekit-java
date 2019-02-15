@@ -33,9 +33,9 @@
 
 package com.virgilsecurity.passw0rd.protocol
 
-import com.virgilsecurity.passw0rd.client.HttpClientProtobuf
 import com.virgilsecurity.passw0rd.data.ProtocolException
 import com.virgilsecurity.passw0rd.utils.PropertyManager
+import com.virgilsecurity.passw0rd.utils.ProtocolUtils
 import kotlinx.coroutines.future.await
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions
@@ -48,31 +48,8 @@ import org.junit.jupiter.api.assertThrows
  */
 class ProtocolContextNegativeTest {
 
-    private lateinit var context: ProtocolContext
-    private lateinit var protocol: Protocol
-
-    @BeforeEach fun setup() {
-        context = ProtocolContext.create(
-                PropertyManager.appToken,
-                PropertyManager.publicKeyNew,
-                PropertyManager.secretKeyNew,
-                ""
-        )
-        Assertions.assertNotNull(context)
-
-        protocol = Protocol(context, HttpClientProtobuf(PropertyManager.serverAddress))
-    }
-
     @Test fun context_app_token_wrong() {
-        context = ProtocolContext.create(
-                WRONG_CRED,
-                PropertyManager.publicKeyNew,
-                PropertyManager.secretKeyNew,
-                ""
-        )
-        Assertions.assertNotNull(context)
-
-        protocol = Protocol(context, HttpClientProtobuf(PropertyManager.serverAddress))
+        val protocol = ProtocolUtils.initProtocol(appToken = WRONG_APP_TOKEN, updateToken = "")
 
         runBlocking {
             try {
@@ -83,12 +60,26 @@ class ProtocolContextNegativeTest {
         }
     }
 
+    @Test fun context_app_token_wrong_prefix() {
+        if (PropertyManager.virgilServerAddress == null) { // If virgilServerAddress is not null - we use default http client
+            val protocol = ProtocolUtils.initProtocol(appToken = WRONG_CRED, updateToken = "")
+
+            runBlocking {
+                try {
+                    protocol.enrollAccount(PASSWORD).await()
+                } catch (t: Throwable) {
+                    Assertions.assertTrue(t is IllegalArgumentException)
+                }
+            }
+        }
+    }
+
     @Test fun context_public_key_wrong() {
         assertThrows<IllegalArgumentException> {
-            context = ProtocolContext.create(
-                    PropertyManager.appToken,
+            ProtocolContext.create(
+                    PropertyManager.virgilAppToken,
                     WRONG_CRED,
-                    PropertyManager.secretKeyNew,
+                    PropertyManager.virgilSecretKeyNew,
                     ""
             )
         }
@@ -96,9 +87,9 @@ class ProtocolContextNegativeTest {
 
     @Test fun context_secret_key_wrong() {
         assertThrows<IllegalArgumentException> {
-            context = ProtocolContext.create(
-                    PropertyManager.appToken,
-                    PropertyManager.publicKeyNew,
+            ProtocolContext.create(
+                    PropertyManager.virgilAppToken,
+                    PropertyManager.virgilPublicKeyNew,
                     WRONG_CRED,
                     ""
             )
@@ -107,10 +98,10 @@ class ProtocolContextNegativeTest {
 
     @Test fun context_update_token_wrong() {
         assertThrows<IllegalArgumentException> {
-            context = ProtocolContext.create(
-                    PropertyManager.appToken,
-                    PropertyManager.publicKeyNew,
-                    PropertyManager.secretKeyNew,
+            ProtocolContext.create(
+                    PropertyManager.virgilAppToken,
+                    PropertyManager.virgilPublicKeyNew,
+                    PropertyManager.virgilSecretKeyNew,
                     WRONG_CRED
             )
         }
@@ -118,6 +109,7 @@ class ProtocolContextNegativeTest {
 
     companion object {
         private const val WRONG_CRED = "WRONG_CRED"
+        private const val WRONG_APP_TOKEN = "AT.1.WRONG_APP_TOKEN"
         private const val PASSWORD = "PASSWORD"
     }
 }

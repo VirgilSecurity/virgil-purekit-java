@@ -33,12 +33,16 @@
 
 package com.virgilsecurity.passw0rd.client
 
-import com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos
-import com.virgilsecurity.passw0rd.utils.PropertyManager
 import com.virgilsecurity.passw0rd.data.ProtocolException
+import com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos
+import com.virgilsecurity.passw0rd.utils.PREFIX_PASSW0RD_APP_TOKEN
+import com.virgilsecurity.passw0rd.utils.PREFIX_VIRGIL_APP_TOKEN
+import com.virgilsecurity.passw0rd.utils.PropertyManager
+import com.virgilsecurity.passw0rd.utils.prefix
 import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments
+import org.junit.jupiter.params.provider.MethodSource
 import java.util.*
 
 /**
@@ -46,15 +50,22 @@ import java.util.*
  */
 class HttpClientTest {
 
-    lateinit var httpClient: HttpClientProtobuf
+    @ParameterizedTest @MethodSource("testArguments")
+    fun response_proto_parse(serverAddress: String?, appToken: String, publicKeyNew: String) {
+        val httpClient = if (serverAddress != null) {
+            HttpClientProtobuf(serverAddress)
+        } else {
+            when {
+                appToken.prefix() == PREFIX_PASSW0RD_APP_TOKEN ->
+                    HttpClientProtobuf(HttpClientProtobuf.DefaultBaseUrls.PASSW0RD.url)
+                appToken.prefix() == PREFIX_VIRGIL_APP_TOKEN ->
+                    HttpClientProtobuf(HttpClientProtobuf.DefaultBaseUrls.VIRGIL.url)
+                else -> throw IllegalArgumentException("Wrong App token prefix")
+            }
+        }
 
-    @BeforeEach fun setup() {
-        httpClient = HttpClientProtobuf(PropertyManager.serverAddress)
-    }
-
-    @Test fun response_proto_parse() {
         val version = parseVersionAndContent(
-                PropertyManager.publicKeyNew,
+                publicKeyNew,
                 PREFIX_PUBLIC_KEY,
                 KEY_PUBLIC_KEY
         ).first
@@ -62,10 +73,10 @@ class HttpClientTest {
         try {
             Passw0rdProtos.EnrollmentRequest.newBuilder().setVersion(version).build().run {
                 httpClient.firePost(
-                    this,
-                    HttpClientProtobuf.AvailableRequests.ENROLL,
-                    authToken = WRONG_TOKEN,
-                    responseParser = Passw0rdProtos.EnrollmentResponse.parser()
+                        this,
+                        HttpClientProtobuf.AvailableRequests.ENROLL,
+                        authToken = WRONG_TOKEN,
+                        responseParser = Passw0rdProtos.EnrollmentResponse.parser()
                 )
             }
         } catch (t: Throwable) {
@@ -80,14 +91,14 @@ class HttpClientTest {
         val parsedParts = forParse.split('.')
         if (parsedParts.size != 3)
             throw java.lang.IllegalArgumentException(
-                "Provided \'$name\' has wrong parts count. " +
-                        "Should be \'3\'. Actual is \'{${parsedParts.size}}\'. "
+                    "Provided \'$name\' has wrong parts count. " +
+                            "Should be \'3\'. Actual is \'{${parsedParts.size}}\'. "
             )
 
         if (parsedParts[0] != prefix)
             throw java.lang.IllegalArgumentException(
-                "Wrong token prefix. Should be \'$prefix\'. " +
-                        "Actual is \'{$parsedParts[0]}\'."
+                    "Wrong token prefix. Should be \'$prefix\'. " +
+                            "Actual is \'{$parsedParts[0]}\'."
             )
 
         val version: Int
@@ -114,5 +125,14 @@ class HttpClientTest {
         private const val KEY_PUBLIC_KEY = "Public Key"
 
         private const val WRONG_TOKEN = "WRONG_TOKEN"
+
+        @JvmStatic fun testArguments() = listOf(
+                Arguments.of(PropertyManager.virgilServerAddress,
+                             PropertyManager.virgilAppToken,
+                             PropertyManager.virgilPublicKeyNew),
+                Arguments.of(PropertyManager.passw0rdServerAddress,
+                             PropertyManager.passw0rdAppToken,
+                             PropertyManager.passw0rdPublicKeyNew)
+        )
     }
 }

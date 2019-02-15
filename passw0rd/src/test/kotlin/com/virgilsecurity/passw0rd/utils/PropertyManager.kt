@@ -34,77 +34,156 @@
 package com.virgilsecurity.passw0rd.utils
 
 object PropertyManager {
+
+    // Virgil parameters
+
     @JvmStatic
-    val appToken: String by lazy {
-        if (System.getProperty(APP_TOKEN) != null)
-            System.getProperty(APP_TOKEN)
+    val virgilAppToken: String by lazy {
+        if (System.getProperty(VIRGIL_APP_TOKEN) != null)
+            System.getProperty(VIRGIL_APP_TOKEN)
         else
-            System.getenv(APP_TOKEN)
+            System.getenv(VIRGIL_APP_TOKEN)
     }
     @JvmStatic
-    val publicKeyOld: String by lazy {
-        if (System.getProperty(PUBLIC_KEY_OLD) != null)
-            System.getProperty(PUBLIC_KEY_OLD)
+    val virgilPublicKeyOld: String by lazy {
+        if (System.getProperty(VIRGIL_PUBLIC_KEY_OLD) != null)
+            System.getProperty(VIRGIL_PUBLIC_KEY_OLD)
         else
-            System.getenv(PUBLIC_KEY_OLD)
+            System.getenv(VIRGIL_PUBLIC_KEY_OLD)
     }
     @JvmStatic
-    val secretKeyOld: String by lazy {
-        if (System.getProperty(SECRET_KEY_OLD) != null)
-            System.getProperty(SECRET_KEY_OLD)
+    val virgilSecretKeyOld: String by lazy {
+        if (System.getProperty(VIRGIL_SECRET_KEY_OLD) != null)
+            System.getProperty(VIRGIL_SECRET_KEY_OLD)
         else
-            System.getenv(SECRET_KEY_OLD)
+            System.getenv(VIRGIL_SECRET_KEY_OLD)
     }
     @JvmStatic
-    val publicKeyNew: String by lazy {
-        if (System.getProperty(PUBLIC_KEY_NEW) != null)
-            System.getProperty(PUBLIC_KEY_NEW)
+    val virgilPublicKeyNew: String by lazy {
+        if (System.getProperty(VIRGIL_PUBLIC_KEY_NEW) != null)
+            System.getProperty(VIRGIL_PUBLIC_KEY_NEW)
         else
-            System.getenv(PUBLIC_KEY_NEW)
+            System.getenv(VIRGIL_PUBLIC_KEY_NEW)
     }
     @JvmStatic
-    val secretKeyNew: String by lazy {
-        if (System.getProperty(SECRET_KEY_NEW) != null)
-            System.getProperty(SECRET_KEY_NEW)
+    val virgilSecretKeyNew: String by lazy {
+        if (System.getProperty(VIRGIL_SECRET_KEY_NEW) != null)
+            System.getProperty(VIRGIL_SECRET_KEY_NEW)
         else
-            System.getenv(SECRET_KEY_NEW)
+            System.getenv(VIRGIL_SECRET_KEY_NEW)
     }
     @JvmStatic
-    val publicKeyWrong: String by lazy {
-        if (System.getProperty(PUBLIC_KEY_WRONG) != null)
-            System.getProperty(PUBLIC_KEY_WRONG)
+    val virgilPublicKeyWrong: String by lazy {
+        if (System.getProperty(VIRGIL_PUBLIC_KEY_WRONG) != null)
+            System.getProperty(VIRGIL_PUBLIC_KEY_WRONG)
         else
-            System.getenv(PUBLIC_KEY_WRONG)
+            System.getenv(VIRGIL_PUBLIC_KEY_WRONG)
     }
     @JvmStatic
-    val updateTokenOld: String by lazy {
-        if (System.getProperty(UPDATE_TOKEN_OLD) != null)
-            System.getProperty(UPDATE_TOKEN_OLD)
+    val virgilUpdateTokenOld: String by lazy {
+        if (System.getProperty(VIRGIL_UPDATE_TOKEN_OLD) != null)
+            System.getProperty(VIRGIL_UPDATE_TOKEN_OLD)
         else
-            System.getenv(UPDATE_TOKEN_OLD)
+            System.getenv(VIRGIL_UPDATE_TOKEN_OLD)
     }
     @JvmStatic
-    val updateTokenNew: String by lazy {
-        if (System.getProperty(UPDATE_TOKEN_NEW) != null)
-            System.getProperty(UPDATE_TOKEN_NEW)
+    val virgilUpdateTokenNew: String by lazy {
+        if (System.getProperty(VIRGIL_UPDATE_TOKEN_NEW) != null)
+            System.getProperty(VIRGIL_UPDATE_TOKEN_NEW)
         else
-            System.getenv(UPDATE_TOKEN_NEW)
+            System.getenv(VIRGIL_UPDATE_TOKEN_NEW)
     }
     @JvmStatic
-    val serverAddress: String by lazy {
-        if (System.getProperty(SERVER_ADDRESS) != null)
-            System.getProperty(SERVER_ADDRESS)
+    val virgilServerAddress: String? by lazy {
+        if (System.getProperty(VIRGIL_SERVER_ADDRESS) != null)
+            System.getProperty(VIRGIL_SERVER_ADDRESS)
         else
-            System.getenv(SERVER_ADDRESS)
+            System.getenv(VIRGIL_SERVER_ADDRESS)
     }
 
-    private const val APP_TOKEN = "APP_TOKEN"
-    private const val PUBLIC_KEY_OLD = "PUBLIC_KEY_OLD"
-    private const val SECRET_KEY_OLD = "SECRET_KEY_OLD"
-    private const val PUBLIC_KEY_NEW = "PUBLIC_KEY_NEW"
-    private const val SECRET_KEY_NEW = "SECRET_KEY_NEW"
-    private const val PUBLIC_KEY_WRONG = "PUBLIC_KEY_WRONG"
-    private const val UPDATE_TOKEN_OLD = "UPDATE_TOKEN_OLD"
-    private const val UPDATE_TOKEN_NEW = "UPDATE_TOKEN_NEW"
-    private const val SERVER_ADDRESS = "SERVER_ADDRESS"
+    // Passw0rd parameters
+
+    @JvmStatic
+    val passw0rdAppToken: String by lazy {
+        if (System.getProperty(PASSW0RD_APP_TOKEN) != null)
+            System.getProperty(PASSW0RD_APP_TOKEN)
+        else
+            System.getenv(PASSW0RD_APP_TOKEN)
+    }
+    @JvmStatic
+    val passw0rdPublicKeyOld: String by lazy {
+        if (System.getProperty(PASSW0RD_PUBLIC_KEY_OLD) != null)
+            System.getProperty(PASSW0RD_PUBLIC_KEY_OLD)
+        else
+            System.getenv(PASSW0RD_PUBLIC_KEY_OLD)
+    }
+    @JvmStatic
+    val passw0rdSecretKeyOld: String by lazy {
+        if (System.getProperty(PASSW0RD_SECRET_KEY_OLD) != null)
+            System.getProperty(PASSW0RD_SECRET_KEY_OLD)
+        else
+            System.getenv(PASSW0RD_SECRET_KEY_OLD)
+    }
+    @JvmStatic
+    val passw0rdPublicKeyNew: String by lazy {
+        if (System.getProperty(PASSW0RD_PUBLIC_KEY_NEW) != null)
+            System.getProperty(PASSW0RD_PUBLIC_KEY_NEW)
+        else
+            System.getenv(PASSW0RD_PUBLIC_KEY_NEW)
+    }
+    @JvmStatic
+    val passw0rdSecretKeyNew: String by lazy {
+        if (System.getProperty(PASSW0RD_SECRET_KEY_NEW) != null)
+            System.getProperty(PASSW0RD_SECRET_KEY_NEW)
+        else
+            System.getenv(PASSW0RD_SECRET_KEY_NEW)
+    }
+    @JvmStatic
+    val passw0rdPublicKeyWrong: String by lazy {
+        if (System.getProperty(PASSW0RD_PUBLIC_KEY_WRONG) != null)
+            System.getProperty(PASSW0RD_PUBLIC_KEY_WRONG)
+        else
+            System.getenv(PASSW0RD_PUBLIC_KEY_WRONG)
+    }
+    @JvmStatic
+    val passw0rdUpdateTokenOld: String by lazy {
+        if (System.getProperty(PASSW0RD_UPDATE_TOKEN_OLD) != null)
+            System.getProperty(PASSW0RD_UPDATE_TOKEN_OLD)
+        else
+            System.getenv(PASSW0RD_UPDATE_TOKEN_OLD)
+    }
+    @JvmStatic
+    val passw0rdUpdateTokenNew: String by lazy {
+        if (System.getProperty(PASSW0RD_UPDATE_TOKEN_NEW) != null)
+            System.getProperty(PASSW0RD_UPDATE_TOKEN_NEW)
+        else
+            System.getenv(PASSW0RD_UPDATE_TOKEN_NEW)
+    }
+    @JvmStatic
+    val passw0rdServerAddress: String? by lazy {
+        if (System.getProperty(PASSW0RD_SERVER_ADDRESS) != null)
+            System.getProperty(PASSW0RD_SERVER_ADDRESS)
+        else
+            System.getenv(PASSW0RD_SERVER_ADDRESS)
+    }
+
+    private const val VIRGIL_APP_TOKEN = "VIRGIL_APP_TOKEN"
+    private const val VIRGIL_PUBLIC_KEY_OLD = "VIRGIL_PUBLIC_KEY_OLD"
+    private const val VIRGIL_SECRET_KEY_OLD = "VIRGIL_SECRET_KEY_OLD"
+    private const val VIRGIL_PUBLIC_KEY_NEW = "VIRGIL_PUBLIC_KEY_NEW"
+    private const val VIRGIL_SECRET_KEY_NEW = "VIRGIL_SECRET_KEY_NEW"
+    private const val VIRGIL_PUBLIC_KEY_WRONG = "VIRGIL_PUBLIC_KEY_WRONG"
+    private const val VIRGIL_UPDATE_TOKEN_OLD = "VIRGIL_UPDATE_TOKEN_OLD"
+    private const val VIRGIL_UPDATE_TOKEN_NEW = "VIRGIL_UPDATE_TOKEN_NEW"
+    private const val VIRGIL_SERVER_ADDRESS = "VIRGIL_SERVER_ADDRESS"
+
+    private const val PASSW0RD_APP_TOKEN = "PASSW0RD_APP_TOKEN"
+    private const val PASSW0RD_PUBLIC_KEY_OLD = "PASSW0RD_PUBLIC_KEY_OLD"
+    private const val PASSW0RD_SECRET_KEY_OLD = "PASSW0RD_SECRET_KEY_OLD"
+    private const val PASSW0RD_PUBLIC_KEY_NEW = "PASSW0RD_PUBLIC_KEY_NEW"
+    private const val PASSW0RD_SECRET_KEY_NEW = "PASSW0RD_SECRET_KEY_NEW"
+    private const val PASSW0RD_PUBLIC_KEY_WRONG = "PASSW0RD_PUBLIC_KEY_WRONG"
+    private const val PASSW0RD_UPDATE_TOKEN_OLD = "PASSW0RD_UPDATE_TOKEN_OLD"
+    private const val PASSW0RD_UPDATE_TOKEN_NEW = "PASSW0RD_UPDATE_TOKEN_NEW"
+    private const val PASSW0RD_SERVER_ADDRESS = "PASSW0RD_SERVER_ADDRESS"
 }

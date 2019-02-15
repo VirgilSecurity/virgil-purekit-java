@@ -33,12 +33,11 @@
 
 package com.virgilsecurity.passw0rd.protocol
 
-import com.virgilsecurity.passw0rd.client.HttpClientProtobuf
 import com.virgilsecurity.passw0rd.data.InvalidProtobufTypeException
 import com.virgilsecurity.passw0rd.utils.PropertyManager
+import com.virgilsecurity.passw0rd.utils.ProtocolUtils
 import kotlinx.coroutines.future.await
 import kotlinx.coroutines.runBlocking
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -49,20 +48,10 @@ import kotlin.random.Random
  */
 class ProtocolNegativeTest {
 
-    private lateinit var context: ProtocolContext
     private lateinit var protocol: Protocol
 
     @BeforeEach fun setup() {
-        context = ProtocolContext.create(
-                PropertyManager.appToken,
-                PropertyManager.publicKeyNew,
-                PropertyManager.secretKeyNew,
-                ""
-        )
-        Assertions.assertNotNull(context)
-
-        protocol = Protocol(context,
-                            HttpClientProtobuf(PropertyManager.serverAddress))
+        protocol = ProtocolUtils.initProtocol(updateToken = "")
     }
 
     // HTC-11
@@ -123,7 +112,7 @@ class ProtocolNegativeTest {
         var failed = false
         runBlocking {
             try {
-                RecordUpdater.updateEnrollmentRecord(ByteArray(0), PropertyManager.updateTokenNew).await()
+                RecordUpdater.updateEnrollmentRecord(ByteArray(0), PropertyManager.virgilUpdateTokenNew).await()
             } catch (e: IllegalArgumentException) {
                 failed = true
             }
@@ -132,19 +121,10 @@ class ProtocolNegativeTest {
     }
 
     @Test fun update_with_wrong_record() {
-        context = ProtocolContext.create(
-                PropertyManager.appToken,
-                PropertyManager.publicKeyNew,
-                PropertyManager.secretKeyNew,
-                PropertyManager.updateTokenNew
-        )
-        protocol = Protocol(context,
-                            HttpClientProtobuf(PropertyManager.serverAddress))
-
         runBlocking {
             try {
                 RecordUpdater.updateEnrollmentRecord(Random.nextBytes(RANDOM_BYTES_SIZE),
-                                                     PropertyManager.updateTokenNew).await()
+                                                     PropertyManager.virgilUpdateTokenNew).await()
             } catch (t: Throwable) {
                 assertTrue(t is InvalidProtobufTypeException)
             }
