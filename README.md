@@ -90,7 +90,7 @@ Here is an example of how to specify your credentials SDK class instance:
 // here set your passw0rd credentials
 fun initPassw0rd(): Protocol {
     val context = ProtocolContext.create(
-            appToken = "PT.OSoPhirdopvijQlFPKdlSydN9BUrn5oEuDwf3Hqps",
+            appToken = "AT.OSoPhirdopvijQlFPKdlSydN9BUrn5oEuDwf3Hqps",
             servicePublicKey = "PK.1.BEn/hnuyKV0inZL+kaRUZNvwQ/jkhDQdALrw6VdfvhZhPQQHWyYO+fRlJYZweUz1FGH3WxcZBjA0tL4wn7kE0ls=",
             clientSecretKey = "SK.1.xxx",
             updateToken = "") // updateToken needs to be empty
@@ -103,7 +103,7 @@ fun initPassw0rd(): Protocol {
 ```java
 Protocol initPassw0rd() {
     ProtocolContext context = ProtocolContext.create(
-            "PT.OSoPhirdopvijQlFPKdlSydN9BUrn5oEuDwf3Hqps",
+            "AT.OSoPhirdopvijQlFPKdlSydN9BUrn5oEuDwf3Hqps",
             "PK.1.BEn/hnuyKV0inZL+kaRUZNvwQ/jkhDQdALrw6VdfvhZhPQQHWyYO+fRlJYZweUz1FGH3WxcZBjA0tL4wn7kE0ls=",
             "SK.1.xxx",
             ""); // updateToken needs to be empty
@@ -165,7 +165,9 @@ fun enrollAccount(password: String, protocol: Protocol) {
     println("Database record:\n" + Base64.getEncoder().encodeToString(enrollResult.enrollmentRecord))
     val encryptionKey = enrollResult.accountKey
     //use accountKey for protecting user data
-    val encrypted = PheCipher().encrypt(data, encryptionKey)
+    val cipher = PheCipher()
+    cipher.setupDefaults()
+    val encrypted = cipher.encrypt(data, encryptionKey)
 }
 ```
 
@@ -180,7 +182,9 @@ void enrollAccount(String password,
                                                     .encodeToString(enrollResult.getEnrollmentRecord()));
     byte[] encryptionKey = enrollResult.getAccountKey();
     //use accountKey for protecting user data
-    byte[] encrypted = new PheCipher().encrypt(data, encryptionKey);
+    PheCipher cipher = new PheCipher();
+    cipher.setupDefaults();
+    byte[] encrypted = cipher.encrypt(data, encryptionKey);
 }
 ```
 
@@ -201,7 +205,9 @@ fun verifyPassword(password: String, record: ByteArray, protocol: Protocol) {
     }
 
     //use encryptionKey for decrypting user data
-    val decrypted = PheCipher().decrypt(encrypted, encryptionKey)
+    val cipher = PheCipher()
+    cipher.setupDefaults()
+    val decrypted = cipher.decrypt(encrypted, encryptionKey)
     ...
 }
 ```
@@ -220,7 +226,9 @@ void verifyPassword(String password,
     }
 
     //use encryptionKey for decrypting user data
-    byte[] decrypted = new PheCipher().decrypt(encrypted, encryptionKey);
+    PheCipher cipher = new PheCipher();
+    cipher.setupDefaults();
+    byte[] decrypted = cipher.decrypt(encrypted, encryptionKey);
     ...
 }
 ```
@@ -245,6 +253,7 @@ fun main() {
 
     val data = "Personal data".toByteArray()
     val cipher = PheCipher()
+    cipher.setupDefaults()
     
     val ciphertext = cipher.encrypt(data, encryptionKey)
     val decrypted = cipher.decrypt(ciphertext, encryptionKey)
@@ -260,11 +269,12 @@ void main() {
 
     byte[] data = "Personal data".getBytes();
     PheCipher cipher = new PheCipher();
+    cipher.setupDefaults();
 
     byte[] ciphertext = cipher.encrypt(data, encryptionKey);
     byte[] decrypted = cipher.decrypt(ciphertext, encryptionKey);
 
-    //use decrypted data
+    // use decrypted data
 }
 ```
 
@@ -313,7 +323,7 @@ Move to passw0rd SDK configuration file and specify your `UPDATE_TOKEN`:
 // here set your passw0rd credentials
 fun initPassw0rd(): Protocol {
     val context = ProtocolContext.create(
-            appToken = "PT.OSoPhirdopvijQlFPKdlSydN9BUrn5oEuDwf3Hqps",
+            appToken = "AT.OSoPhirdopvijQlFPKdlSydN9BUrn5oEuDwf3Hqps",
             servicePublicKey = "PK.1.BEn/hnuyKV0inZL+kaRUZNvwQ/jkhDQdALrw6VdfvhZhPQQHWyYO+fRlJYZweUz1FGH3WxcZBjA0tL4wn7kE0ls=",
             clientSecretKey = "SK.1.00000fLr2JOu2Vf1+MbEzpdtEP1kUefA0PUJw2UyI0=",
             updateToken = "UT.2.00000000+0000000000000000000008UfxXDUU2FGkMvKhIgqjxA+hsAtf17K5j11Cnf07jB6uVEvxMJT0lMGv00000=")
@@ -327,7 +337,7 @@ fun initPassw0rd(): Protocol {
 // here set your passw0rd credentials
 Protocol initPassw0rd() {
     ProtocolContext context = ProtocolContext.create(
-            "PT.OSoPhirdopvijQlFPKdlSydN9BUrn5oEuDwf3Hqps",
+            "AT.OSoPhirdopvijQlFPKdlSydN9BUrn5oEuDwf3Hqps",
             "PK.1.BEn/hnuyKV0inZL+kaRUZNvwQ/jkhDQdALrw6VdfvhZhPQQHWyYO+fRlJYZweUz1FGH3WxcZBjA0tL4wn7kE0ls=",
             "SK.1.00000fLr2JOu2Vf1+MbEzpdtEP1kUefA0PUJw2UyI0=",
             "UT.2.00000000+0000000000000000000008UfxXDUU2FGkMvKhIgqjxA+hsAtf17K5j11Cnf07jB6uVEvxMJT0lMGv00000=");
