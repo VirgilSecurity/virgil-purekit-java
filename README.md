@@ -23,12 +23,10 @@ PHE is a new, more secure mechanism that protects user passwords and lessens the
 
 
 ## Register Your Account
-Before starting practicing with the SDK and usage examples be sure that:
-- you have a registered passw0rd Account
-- you created passw0rd Application
-- and you got your passw0rd application's credentials, such as: Application Access Token, Service Public Key, Client Secret Key
-
-If you don't have an account or a passw0rd project with its credentials, please use the [passw0rd CLI](https://github.com/passw0rd/cli) to get it.
+Before starting practicing with the SDK and usage examples make sure that:
+- you have a registered at [Virgil Dashboard](https://dashboard.virgilsecurity.com/)
+- you created an application for the Passw0rd use case
+- and you got your passw0rd application's credentials such as: `App Secret Key`, `Service Public Key`, `App Token`
 
 
 ## Install and Configure SDK
@@ -292,28 +290,9 @@ Also, use this flow in case your database has been COMPROMISED!
 
 There is how it works:
 
-**Step 1.** Get your `UPDATE_TOKEN` using [Passw0rd CLI](https://github.com/passw0rd/cli)
+**Step 1.** Get your `UPDATE_TOKEN` using [Virgil Dashboard](https://dashboard.virgilsecurity.com)
 
-- be sure you're logged in your account. To log in the account use the following command (2FA is required):
-
-```bash
-// FreeBSD / Linux / Mac OS
-./passw0rd login my@email.com
-
-// Windows OS
-passw0rd login my@email.com
-```
-
-- then, use the `rotate` command and your application token to get an `UPDATE_TOKEN`:
-
-```bash
-// FreeBSD / Linux / Mac OS
-./passw0rd application rotate <app_token>
-
-// Windows OS
-passw0rd application rotate <app_token>
-```
-as a result, you get your `UPDATE_TOKEN`.
+Move to your Application panel and press “Show update token” button to get the `update_token`.
 
 **Step 2.** Initialize passw0rd SDK with the `UPDATE_TOKEN`.
 Move to passw0rd SDK configuration file and specify your `UPDATE_TOKEN`:
@@ -391,14 +370,14 @@ Since the SDK is able to work simultaneously with two versions of user's records
 
 **Step 4.** Get a new `APP_SECRET_KEY` and `SERVICE_PUBLIC_KEY` of a specific application
 
-Use passw0rd CLI `update-keys` command and your `UPDATE_TOKEN` to update the `APP_SECRET_KEY` and `SERVICE_PUBLIC_KEY`:
+Use Virgil CLI `update-keys` command and your `UPDATE_TOKEN` to update the `APP_SECRET_KEY` and `SERVICE_PUBLIC_KEY`:
 
 ```bash
 // FreeBSD / Linux / Mac OS
-./passw0rd application update-keys <service_public_key> <app_secret_key> <update_token>
+./virgil passw0rd update-keys <service_public_key> <app_secret_key> <update_token>
 
 // Windows OS
-passw0rd application update-keys <service_public_key> <app_secret_key> <update_token>
+virgil passw0rd update-keys <service_public_key> <app_secret_key> <update_token>
 ```
 
 **Step 5.** Move to passw0rd SDK configuration and replace your previous `APP_SECRET_KEY`,  `SERVICE_PUBLIC_KEY` with a new one (`APP_TOKEN` will be the same). Delete previous `APP_SECRET_KEY`, `SERVICE_PUBLIC_KEY` and `UPDATE_TOKEN`.
@@ -431,7 +410,7 @@ Protocol initPassw0rdNew() {
 ```
 
 ## Docs
-* [Passw0rd][_passw0rd] home page
+* [Virgil Dashboard](https://dashboard.virgilsecurity.com)
 * [The PHE WhitePaper](https://virgilsecurity.com/wp-content/uploads/2018/11/PHE-Whitepaper-2018.pdf) - foundation principles of the protocol
 
 ## License
@@ -441,6 +420,6 @@ This library is released under the [3-clause BSD License](LICENSE.md).
 ## Support
 Our developer support team is here to help you. Find out more information on our [Help Center](https://help.virgilsecurity.com/).
 
-Also, get extra help from our support team: support@VirgilSecurity.com.
+You can find us on [Twitter](https://twitter.com/VirgilSecurity) or send us email support@VirgilSecurity.com.
 
-[_passw0rd]: https://passw0rd.io/
+Also, get extra help from our support team on [Slack](https://virgilsecurity.com/join-community).
