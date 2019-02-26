@@ -24,7 +24,7 @@ PHE is a new, more secure mechanism that protects user passwords and lessens the
 
 ## Register Your Account
 Before starting practicing with the SDK and usage examples make sure that:
-- you have a registered at [Virgil Dashboard](https://dashboard.virgilsecurity.com/)
+- you have registered at [Virgil Dashboard](https://dashboard.virgilsecurity.com/)
 - you created an application for the Passw0rd use case
 - and you got your passw0rd application's credentials such as: `App Secret Key`, `Service Public Key`, `App Token`
 
@@ -420,6 +420,6 @@ This library is released under the [3-clause BSD License](LICENSE.md).
 ## Support
 Our developer support team is here to help you. Find out more information on our [Help Center](https://help.virgilsecurity.com/).
 
-You can find us on [Twitter](https://twitter.com/VirgilSecurity) or send us email support@VirgilSecurity.com.
+You can find us on [Twitter](https://twitter.com/VirgilSecurity) or send an email to support@VirgilSecurity.com.
 
 Also, get extra help from our support team on [Slack](https://virgilsecurity.com/join-community).
