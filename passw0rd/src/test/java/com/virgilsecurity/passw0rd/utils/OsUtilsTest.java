@@ -7,7 +7,7 @@
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *  
+ *
  *     (1) Redistributions of source code must retain the above copyright notice, this
  *     list of conditions and the following disclaimer.
  *
@@ -31,56 +31,48 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-buildscript {
-    ext.versions = [
-            // Virgil
-            virgil     : '5.0.1',
+package com.virgilsecurity.passw0rd.utils;
 
-            // Http client
-            fuel          : '1.15.1',
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-            // Kotlin
-            kotlin        : '1.3.21',
-            coroutines    : '1.0.1',
-            coroutinesJdk8: '0.27.0-eap13',
+import org.junit.jupiter.api.Test;
 
-            // Protobuf
-            protobuf      : '3.6.1',
+/**
+ * OsUtilsTest class.
+ */
+class OsUtilsTest {
 
-            // Docs
-            dokka         : '0.9.17',
+  private static final String ANDROID_OS_NAME = "android";
+  private static final String LINUX_OS_NAME = "linux";
+  private static final String WINDOWS_OS_NAME = "windows";
+  private static final String MACOS_OS_NAME = "mac os";
+  private static final String VIRGIL_AGENT_MACOS = "darwin";
+  private static final String UNKNOWN_OS = "unknown";
 
-            // Tests
-            junit         : '5.3.1',
-            junitPlugin   : '1.0.0',
 
-    ]
-    repositories {
-        jcenter()
-        mavenCentral()
+  @Test void test_os_type() {
+    Class androidClass = null;
+    try {
+      androidClass = Class.forName("android.os.Build");
+    } catch (ClassNotFoundException e) {
+      // Leave androidClass as null
     }
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin"
-        classpath "org.junit.platform:junit-platform-gradle-plugin:$versions.junitPlugin"
-        classpath "org.jetbrains.dokka:dokka-gradle-plugin:$versions.dokka"
+
+    if (androidClass != null) {
+      assertEquals(ANDROID_OS_NAME, OsUtils.getOsAgentName());
+      return;
     }
-}
 
-allprojects {
-    repositories {
-        jcenter()
-        mavenCentral()
+    String osName = System.getProperty("os.name").toLowerCase();
+
+    if (osName.startsWith(LINUX_OS_NAME)) {
+      assertEquals(LINUX_OS_NAME, OsUtils.getOsAgentName());
+    } else if (osName.startsWith(WINDOWS_OS_NAME)) {
+      assertEquals(WINDOWS_OS_NAME, OsUtils.getOsAgentName());
+    } else if (osName.startsWith(MACOS_OS_NAME)) {
+      assertEquals(VIRGIL_AGENT_MACOS, OsUtils.getOsAgentName());
+    } else {
+      assertEquals(UNKNOWN_OS, OsUtils.getOsAgentName());
     }
-}
-
-task clean(type: Delete) {
-    delete rootProject.buildDir
-}
-
-task installPassw0rd() {
-    dependsOn ':passw0rd-protos:install', ':passw0rd:install'
-}
-
-task publishPassw0rd() {
-    dependsOn ':passw0rd-protos:publish', ':passw0rd:publish'
+  }
 }
