@@ -33,21 +33,18 @@
 
 package com.virgilsecurity.passw0rd.utils
 
-import com.virgilsecurity.passw0rd.build.VersionVirgilAgent
-import com.virgilsecurity.passw0rd.utils.FileUtils.versionFromGradle
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Test
-
+import java.io.File
 
 /**
- * VersionTest class.
+ * FileUtils class.
  */
-class VersionTest {
+object FileUtils {
 
-    @Test fun version_test() {
-        val versionExpected = VersionVirgilAgent.VERSION
-        val versionActual = versionFromGradle()
+    @JvmStatic fun versionFromGradle(): String =
+            File(System.getProperty("user.dir"), "build.gradle").readLines()
+                    .first { it.startsWith(VERSION_PREFIX) }
+                    .substringAfter(VERSION_PREFIX)
+                    .removeSuffix("\"")
 
-        assertEquals(versionExpected, versionActual)
-    }
+    private const val VERSION_PREFIX = "version \""
 }

@@ -43,11 +43,10 @@ import org.junit.jupiter.api.Test;
  */
 class VersionTestJava {
 
-  private static final String CURRENT_VERSION = "1.0.1";
-
   @Test void version_test() {
-    String version = VersionVirgilAgent.VERSION;
+    String versionExpected = VersionVirgilAgent.VERSION;
+    String versionActual = FileUtils.versionFromGradle();
 
-    assertEquals(CURRENT_VERSION, version);
+    assertEquals(versionExpected, versionActual);
   }
 }
