@@ -7,7 +7,7 @@
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *  
+ *
  *     (1) Redistributions of source code must retain the above copyright notice, this
  *     list of conditions and the following disclaimer.
  *
@@ -31,56 +31,20 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-buildscript {
-    ext.versions = [
-            // Virgil
-            virgil     : '5.0.1',
+package com.virgilsecurity.passw0rd.utils
 
-            // Http client
-            fuel          : '1.15.1',
+import java.io.File
 
-            // Kotlin
-            kotlin        : '1.3.21',
-            coroutines    : '1.0.1',
-            coroutinesJdk8: '0.27.0-eap13',
+/**
+ * FileUtils class.
+ */
+object FileUtils {
 
-            // Protobuf
-            protobuf      : '3.6.1',
+    @JvmStatic fun versionFromGradle(): String =
+            File(System.getProperty("user.dir"), "build.gradle").readLines()
+                    .first { it.startsWith(VERSION_PREFIX) }
+                    .substringAfter(VERSION_PREFIX)
+                    .removeSuffix("\"")
 
-            // Docs
-            dokka         : '0.9.17',
-
-            // Tests
-            junit         : '5.3.1',
-            junitPlugin   : '1.0.0',
-
-    ]
-    repositories {
-        jcenter()
-        mavenCentral()
-    }
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin"
-        classpath "org.junit.platform:junit-platform-gradle-plugin:$versions.junitPlugin"
-        classpath "org.jetbrains.dokka:dokka-gradle-plugin:$versions.dokka"
-    }
-}
-
-allprojects {
-    repositories {
-        jcenter()
-        mavenCentral()
-    }
-}
-
-task clean(type: Delete) {
-    delete rootProject.buildDir
-}
-
-task installPassw0rd() {
-    dependsOn ':passw0rd-protos:install', ':passw0rd:install'
-}
-
-task publishPassw0rd() {
-    dependsOn ':passw0rd-protos:publish', ':passw0rd:publish'
+    private const val VERSION_PREFIX = "version \""
 }

@@ -98,7 +98,7 @@ publishing {
                 licenses {
                     license {
                         name = 'Virgil Security, Inc. license'
-                        url = 'https://github.com/passw0rd/sdk-kotlin/blob/master/LICENSE.txt'
+                        url = 'https://github.com/virgilsecurity/virgil-passw0rd-kotlin/blob/master/LICENSE.txt'
                     }
                 }
                 developers {
@@ -110,9 +110,9 @@ publishing {
                     }
                 }
                 scm {
-                    connection = 'scm:git:https://github.com/passw0rd/sdk-kotlin.git'
-                    developerConnection = 'scm:git:git@github.com:passw0rd/sdk-kotlin.git'
-                    url = 'https://github.com/passw0rd/sdk-kotlin'
+                    connection = 'scm:git:https://github.com/virgilsecurity/virgil-passw0rd-kotlin.git'
+                    developerConnection = 'scm:git:git@github.com:virgilsecurity/virgil-passw0rd-kotlin.git'
+                    url = 'https://github.com/virgilsecurity/virgil-passw0rd-kotlin'
                 }
             }
         }

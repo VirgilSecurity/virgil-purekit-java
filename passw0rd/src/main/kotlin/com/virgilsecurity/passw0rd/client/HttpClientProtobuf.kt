@@ -42,14 +42,30 @@ import com.github.kittinunf.fuel.httpPut
 import com.google.protobuf.InvalidProtocolBufferException
 import com.google.protobuf.Message
 import com.google.protobuf.Parser
+import com.virgilsecurity.passw0rd.build.VersionVirgilAgent
 import com.virgilsecurity.passw0rd.data.ProtocolException
 import com.virgilsecurity.passw0rd.data.ProtocolHttpException
 import com.virgilsecurity.passw0rd.protobuf.build.Passw0rdProtos
+import com.virgilsecurity.passw0rd.utils.OsUtils
 
 /**
  * HttpClientProtobuf class is an implementation of http client specifically for work with Protobuf.
  */
-class HttpClientProtobuf(val serviceBaseUrl: String = VIRGIL_SERVICE_BASE_URL) {
+class HttpClientProtobuf {
+
+    private val virgilAgentHeader: String
+    private val serviceBaseUrl: String
+
+    constructor(serviceBaseUrl: String = VIRGIL_SERVICE_BASE_URL) {
+        virgilAgentHeader =
+                "$VIRGIL_AGENT_PRODUCT;$VIRGIL_AGENT_FAMILY;${OsUtils.osAgentName};${VersionVirgilAgent.VERSION}"
+        this.serviceBaseUrl = serviceBaseUrl
+    }
+
+    constructor(product: String, version: String, serviceBaseUrl: String = VIRGIL_SERVICE_BASE_URL) {
+        virgilAgentHeader = "$product;$VIRGIL_AGENT_FAMILY;${OsUtils.osAgentName};$version"
+        this.serviceBaseUrl = serviceBaseUrl
+    }
 
     /**
      * This function issues GET request to the specified [serviceBaseUrl] (or default one if not specified) + provided
@@ -78,7 +94,8 @@ class HttpClientProtobuf(val serviceBaseUrl: String = VIRGIL_SERVICE_BASE_URL) {
                 mapOf(
                         APP_TOKEN_KEY to authToken,
                         PROTO_REQUEST_TYPE_KEY to PROTO_REQUEST_TYPE,
-                        USER_AGENT_KEY to USER_AGENT
+                        USER_AGENT_KEY to USER_AGENT,
+                        VIRGIL_AGENT_HEADER_KEY to virgilAgentHeader
                 )
         )
 
@@ -121,7 +138,8 @@ class HttpClientProtobuf(val serviceBaseUrl: String = VIRGIL_SERVICE_BASE_URL) {
                 mapOf(
                         APP_TOKEN_KEY to authToken,
                         PROTO_REQUEST_TYPE_KEY to PROTO_REQUEST_TYPE,
-                        USER_AGENT_KEY to USER_AGENT
+                        USER_AGENT_KEY to USER_AGENT,
+                        VIRGIL_AGENT_HEADER_KEY to virgilAgentHeader
                 )
         )
 
@@ -165,7 +183,8 @@ class HttpClientProtobuf(val serviceBaseUrl: String = VIRGIL_SERVICE_BASE_URL) {
                 mapOf(
                         APP_TOKEN_KEY to authToken,
                         PROTO_REQUEST_TYPE_KEY to PROTO_REQUEST_TYPE,
-                        USER_AGENT_KEY to USER_AGENT
+                        USER_AGENT_KEY to USER_AGENT,
+                        VIRGIL_AGENT_HEADER_KEY to virgilAgentHeader
                 )
         )
 
@@ -205,7 +224,8 @@ class HttpClientProtobuf(val serviceBaseUrl: String = VIRGIL_SERVICE_BASE_URL) {
                 mapOf(
                         APP_TOKEN_KEY to authToken,
                         PROTO_REQUEST_TYPE_KEY to PROTO_REQUEST_TYPE,
-                        USER_AGENT_KEY to USER_AGENT
+                        USER_AGENT_KEY to USER_AGENT,
+                        VIRGIL_AGENT_HEADER_KEY to virgilAgentHeader
                 )
         )
 
@@ -248,6 +268,10 @@ class HttpClientProtobuf(val serviceBaseUrl: String = VIRGIL_SERVICE_BASE_URL) {
 
         private const val USER_AGENT_KEY = "User-Agent"
         private const val USER_AGENT = "passw0rd/java"
+
+        private const val VIRGIL_AGENT_HEADER_KEY = "virgil-agent"
+        private const val VIRGIL_AGENT_PRODUCT = "passw0rd"
+        private const val VIRGIL_AGENT_FAMILY = "jvm"
     }
 
     /**
