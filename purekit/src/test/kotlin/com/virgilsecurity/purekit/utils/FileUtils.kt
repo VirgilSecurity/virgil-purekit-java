@@ -7,7 +7,7 @@
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *  
+ *
  *     (1) Redistributions of source code must retain the above copyright notice, this
  *     list of conditions and the following disclaimer.
  *
@@ -31,6 +31,20 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-rootProject.name = 'virgil-purekit-kotlin'
-include 'purekit-protos', 'purekit'
+package com.virgilsecurity.purekit.utils
 
+import java.io.File
+
+/**
+ * FileUtils class.
+ */
+object FileUtils {
+
+    @JvmStatic fun versionFromGradle(): String =
+            File(System.getProperty("user.dir"), "build.gradle").readLines()
+                    .first { it.startsWith(VERSION_PREFIX) }
+                    .substringAfter(VERSION_PREFIX)
+                    .removeSuffix("\"")
+
+    private const val VERSION_PREFIX = "version \""
+}

@@ -7,7 +7,7 @@
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *  
+ *
  *     (1) Redistributions of source code must retain the above copyright notice, this
  *     list of conditions and the following disclaimer.
  *
@@ -31,6 +31,28 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-rootProject.name = 'virgil-purekit-kotlin'
-include 'purekit-protos', 'purekit'
+package com.virgilsecurity.purekit.utils
 
+/**
+ * EnrollResult class is intended to simplify work with return type of *Protocol#enrollAccount* method.
+ */
+data class EnrollResult(val enrollmentRecord: ByteArray, val accountKey: ByteArray) {
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as EnrollResult
+
+        if (!enrollmentRecord.contentEquals(other.enrollmentRecord)) return false
+        if (!accountKey.contentEquals(other.accountKey)) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = enrollmentRecord.contentHashCode()
+        result = 31 * result + accountKey.contentHashCode()
+        return result
+    }
+}

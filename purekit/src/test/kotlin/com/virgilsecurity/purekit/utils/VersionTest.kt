@@ -7,7 +7,7 @@
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *  
+ *
  *     (1) Redistributions of source code must retain the above copyright notice, this
  *     list of conditions and the following disclaimer.
  *
@@ -31,6 +31,23 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-rootProject.name = 'virgil-purekit-kotlin'
-include 'purekit-protos', 'purekit'
+package com.virgilsecurity.purekit.utils
 
+import com.virgilsecurity.purekit.build.VersionVirgilAgent
+import com.virgilsecurity.purekit.utils.FileUtils.versionFromGradle
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
+
+
+/**
+ * VersionTest class.
+ */
+class VersionTest {
+
+    @Test fun version_test() {
+        val versionExpected = VersionVirgilAgent.VERSION
+        val versionActual = versionFromGradle()
+
+        assertEquals(versionExpected, versionActual)
+    }
+}
