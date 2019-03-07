@@ -27,7 +27,7 @@ local.properties
 .idea/**/libraries
 
 # CMake
-cmake-com.virgilsecurity.passw0rd.protobuf.build-*/
+cmake-com.virgilsecurity.purekit.protobuf.build-*/
 
 # Mongo Explorer plugin
 .idea/**/mongoSettings.xml
@@ -47,7 +47,7 @@ atlassian-ide-plugin.xml
 # Crashlytics plugin (for Android Studio and IntelliJ)
 com_crashlytics_export_strings.xml
 crashlytics.properties
-crashlytics-com.virgilsecurity.passw0rd.protobuf.build.properties
+crashlytics-com.virgilsecurity.purekit.protobuf.build.properties
 fabric.properties
 
 # Editor-based Rest Client
@@ -85,7 +85,7 @@ hs_err_pid*
 .gradle
 !gradle-wrapper.jar
 gradle.properties
-/com.virgilsecurity.passw0rd.protobuf.build/
+/com.virgilsecurity.purekit.protobuf.build/
 
 # Ignore Gradle GUI config
 gradle-app.setting

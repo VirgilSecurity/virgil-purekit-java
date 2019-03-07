@@ -77,10 +77,10 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
-task installPassw0rd() {
-    dependsOn ':passw0rd-protos:install', ':passw0rd:install'
+task installPurekit() {
+    dependsOn ':purekit-protos:install', ':purekit:install'
 }
 
-task publishPassw0rd() {
-    dependsOn ':passw0rd-protos:publish', ':passw0rd:publish'
+task publishPurekit() {
+    dependsOn ':purekit-protos:publish', ':purekit:publish'
 }

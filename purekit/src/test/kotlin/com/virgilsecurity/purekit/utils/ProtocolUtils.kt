@@ -7,7 +7,7 @@
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *  
+ *
  *     (1) Redistributions of source code must retain the above copyright notice, this
  *     list of conditions and the following disclaimer.
  *
@@ -31,6 +31,43 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-rootProject.name = 'virgil-purekit-kotlin'
-include 'purekit-protos', 'purekit'
+package com.virgilsecurity.purekit.utils
 
+import com.virgilsecurity.purekit.client.HttpClientProtobuf
+import com.virgilsecurity.purekit.protocol.Protocol
+import com.virgilsecurity.purekit.protocol.ProtocolContext
+import org.junit.jupiter.api.Assertions
+
+/**
+ * ProtocolUtils class.
+ */
+object ProtocolUtils {
+
+    /**
+     * This function initializes [Protocol] with specified credentials.
+     * Or if any of arguments is not specified next values will be used:
+     * virgilAppToken -> PropertyManager.virgilAppToken,
+     * publicKey -> PropertyManager.virgilPublicKeyNew,
+     * secretKey -> PropertyManager.virgilSecretKeyNew,
+     * updateToken -> PropertyManager.virgilUpdateTokenNew,
+     */
+    @JvmOverloads @JvmStatic fun initProtocol(serverAddress: String? = PropertyManager.virgilServerAddress,
+                                              appToken: String = PropertyManager.virgilAppToken,
+                                              publicKey: String = PropertyManager.virgilPublicKeyNew,
+                                              secretKey: String = PropertyManager.virgilSecretKeyNew,
+                                              updateToken: String = PropertyManager.virgilUpdateTokenNew): Protocol {
+
+        val context = ProtocolContext.create(
+                appToken,
+                publicKey,
+                secretKey,
+                updateToken
+        )
+        Assertions.assertNotNull(context)
+
+        return if (serverAddress != null)
+            Protocol(context, HttpClientProtobuf(serverAddress))
+        else
+            Protocol(context)
+    }
+}
