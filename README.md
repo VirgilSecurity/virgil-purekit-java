@@ -89,10 +89,10 @@ Here is an example of how to specify your credentials SDK class instance:
 // here set your PURE app credentials
 fun initPureKit(): Protocol {
     val context = ProtocolContext.create(
-            appToken = "AT.OSoPhirdopvijQlFPKdlSydN9BUrn5oEuDwf3Hqps",
-            servicePublicKey = "PK.1.BEn/hnuyKV0inZL+kaRUZNvwQ/jkhDQdALrw6VdfvhZhPQQHWyYO+fRlJYZweUz1FGH3WxcZBjA0tL4wn7kE0ls=",
-            clientSecretKey = "SK.1.xxx",
-            updateToken = "") // updateToken needs to be empty
+        appToken = "AT.OSoPhirdopvijQlFPKdlSydN9BUrn5oEuDwf3Hqps",
+        servicePublicKey = "PK.1.BEn/hnuyKV0inZL+kaRUZNvwQ/jkhDQdALrw6VdfvhZhPQQHWyYO+fRlJYZweUz1FGH3WxcZBjA0tL4wn7kE0ls=",
+        clientSecretKey = "SK.1.xxx",
+        updateToken = "") // updateToken needs to be empty
 
     return Protocol(context)
 }
@@ -102,10 +102,10 @@ fun initPureKit(): Protocol {
 ```java
 Protocol initPureKit() {
     ProtocolContext context = ProtocolContext.create(
-            "AT.OSoPhirdopvijQlFPKdlSydN9BUrn5oEuDwf3Hqps",
-            "PK.1.BEn/hnuyKV0inZL+kaRUZNvwQ/jkhDQdALrw6VdfvhZhPQQHWyYO+fRlJYZweUz1FGH3WxcZBjA0tL4wn7kE0ls=",
-            "SK.1.xxx",
-            ""); // updateToken needs to be empty
+        "AT.OSoPhirdopvijQlFPKdlSydN9BUrn5oEuDwf3Hqps",
+        "PK.1.BEn/hnuyKV0inZL+kaRUZNvwQ/jkhDQdALrw6VdfvhZhPQQHWyYO+fRlJYZweUz1FGH3WxcZBjA0tL4wn7kE0ls=",
+        "SK.1.xxx",
+        ""); // updateToken needs to be empty
 
     return new Protocol(context);
 }
@@ -172,8 +172,7 @@ fun enrollAccount(password: String, protocol: Protocol) {
 
 `Java`:
 ```java
-void enrollAccount(String password,
-        Protocol protocol) throws ProtocolException, ExecutionException, InterruptedException {
+void enrollAccount(String password, Protocol protocol) throws ProtocolException, ExecutionException, InterruptedException {
     EnrollResult enrollResult = protocol.enrollAccount(password).get();
 
     //save pure record to database
