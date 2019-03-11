@@ -7,7 +7,7 @@
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *  
+ *
  *     (1) Redistributions of source code must retain the above copyright notice, this
  *     list of conditions and the following disclaimer.
  *
@@ -31,6 +31,44 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-rootProject.name = 'virgil-purekit-kotlin'
-include 'purekit-protos', 'purekit'
+package com.virgilsecurity.purekit.data
 
+/**
+ * Exceptions class.
+ */
+
+/**
+ * Exception that is thrown when purekit service answers with some error.
+ */
+class ProtocolException @JvmOverloads constructor(
+    val errorCode: Int = -1,
+    message: String? = "Unknown error"
+) : Throwable(message)
+
+/**
+ * Exception that is thrown when purekit service answers with some error but not with default protobuf type.
+ */
+class ProtocolHttpException @JvmOverloads constructor(
+    val errorCode: Int = -1,
+    message: String? = "Unknown error"
+) : Throwable(message)
+
+/**
+ * Exception that is been thrown when wrong password is used to perform some action.
+ */
+class InvalidPasswordException(message: String?) : Throwable(message)
+
+/**
+ * Exception that is been thrown when trying to parse Protobuf message with wrong type.
+ */
+class InvalidProtobufTypeException(message: String? = "Can not parse model you have given.") : Throwable(message)
+
+/**
+ * Exception that is been thrown when no keys was found.
+ */
+class NoKeysFoundException(message: String? = "Can not parse model you have given.") : Throwable(message)
+
+/**
+ * Exception that is been thrown when the proof is wrong.
+ */
+class InvalidProofException(message: String? = "Can not parse model you have given.") : Throwable(message)

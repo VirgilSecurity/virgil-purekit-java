@@ -86,6 +86,7 @@ hs_err_pid*
 !gradle-wrapper.jar
 gradle.properties
 /com.virgilsecurity.purekit.protobuf.build/
+build
 
 # Ignore Gradle GUI config
 gradle-app.setting
