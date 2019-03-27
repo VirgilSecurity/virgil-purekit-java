@@ -75,9 +75,6 @@ class Main {
 
   public static void main(String[] args) {
     Protocol protocol = initPureKit();
-    // Next step: Enroll user accounts
-
-    // Previous step: Initialize PureKit
 
     // Adding test users for the purpose of this guide.
     userTable.add(new User("alice123", "80815C001", "036-24-9546"));
@@ -96,8 +93,6 @@ class Main {
         System.out.printf("Error: %s\n\n", e.toString());
       }
     }
-
-    // Previous step: enroll accounts
 
     // Verify password of a user
     User user = userTable.get(0);
@@ -119,8 +114,6 @@ class Main {
       System.out.printf("Error: %s\n\n", e.toString());
     }
 
-    // Previous step: verify password
-
     // Use key for encrypting user data
     byte[] homeAddress = "1600 Pennsylvania Ave NW, Washington, DC 20500, EUA".getBytes();
 
@@ -137,8 +130,6 @@ class Main {
     System.out.printf("'%s's home address: %s\n", user.username, decryptedAddress);
 
     cipher.close();
-
-    // Previous step: initialize PureKit SDK with Update Token
 
     // Update user records & save to database
     String updateToken = "UT.2.CiDbvtC+i1NnGon/RDmus2FaNZnHfdE6nOgBCOkb2/gucBIgB0BfXesvdvsaplKVm0hFsjuuVxWr5esI2WxuGqwUKTE=";
