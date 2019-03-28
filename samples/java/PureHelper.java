@@ -64,6 +64,19 @@ public class PureHelper {
 
     return new Protocol(context);
   }
+  
+  // Initialize PureKit for records rotation 
+  private Protocol initProtocolRotating() {
+      // Set here your PureKit credentials and update token
+      ProtocolContext context = ProtocolContext.create(
+        "AT.GxqQu6z8kwIO3HuBYAJN1Wdv9YL5yBGl",
+        "PK.1.BBtpQGyPxJRXvA5mpc8HCHUMm9a+Zi88ZuOtU/LWhP+dLH+sSKbnHrTubj7+0+KZyaeeuTP34OfGBlCXLIIJT4I=",
+        "SK.1.w3IY3Q/7QMUow/poZFs9KpQ5ElsFUjYEbsjoFso2Oec=",
+        "UT.2.CiDbvtC+i1NnGon/RDmus2FaNZnHfdE6nOgBCOkb2/gucBIgB0BfXesvdvsaplKVm0hFsjuuVxWr5esI2WxuGqwUKTE="
+      );
+
+    return new Protocol(context);
+  }
 
   public EnrollResult enrollAccount(String password)
       throws ProtocolException, ExecutionException, InterruptedException {
