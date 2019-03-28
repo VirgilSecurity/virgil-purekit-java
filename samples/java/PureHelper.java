@@ -1,3 +1,4 @@
+
 /*
  * Copyright (c) 2015-2019, Virgil Security, Inc.
  *
@@ -48,12 +49,12 @@ public class PureHelper {
 
   private Protocol protocol;
 
-  private PureHelper(Protocol protocol) {
-    this.protocol = protocol;
+  public PureHelper() {
+    this.protocol = initProtocol();
   }
 
   // Initialize PureKit
-  public static PureHelper init() {
+  private Protocol initProtocol() {
     // Set here your PureKit credentials
     ProtocolContext context = ProtocolContext.create(
         "AT.GxqQu6z8kwIO3HuBYAJN1Wdv9YL5yBGl",
@@ -62,12 +63,11 @@ public class PureHelper {
         ""
     );
 
-    Protocol protocol = new Protocol(context);
-    return new PureHelper(protocol);
+    return new Protocol(context);
   }
-  
+
   // Initialize PureKit for records rotation 
-  public static PureHelper initRotating() {
+  private Protocol initProtocolRotating() {
       // Set here your PureKit credentials and update token
       ProtocolContext context = ProtocolContext.create(
         "AT.GxqQu6z8kwIO3HuBYAJN1Wdv9YL5yBGl",
@@ -76,8 +76,7 @@ public class PureHelper {
         "UT.2.CiDbvtC+i1NnGon/RDmus2FaNZnHfdE6nOgBCOkb2/gucBIgB0BfXesvdvsaplKVm0hFsjuuVxWr5esI2WxuGqwUKTE="
       );
 
-    Protocol protocol = new Protocol(context);
-    return new PureHelper(protocol);
+    return new Protocol(context);
   }
 
   public EnrollResult enrollAccount(String password)
