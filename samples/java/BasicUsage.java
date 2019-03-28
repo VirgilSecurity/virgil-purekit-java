@@ -45,7 +45,7 @@ class BasicUsage {
     users.add(new User("bob321", "411C315N1C3", "041-53-8723"));
 
     // Encapsulated PureKit functional
-    PureHelper helper = new PureHelper();
+    PureHelper helper = PureHelper.init();
 
     // Previous step: Initialize PureKit
 
