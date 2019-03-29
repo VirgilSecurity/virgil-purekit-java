@@ -43,7 +43,7 @@ object BasicUsage {
         users += User("alice123", "80815C001", "036-24-9546")
         users += User("bob321", "411C315N1C3", "041-53-8723")
 
-        // Encapsulated PureKit functional
+        // Encapsulated PureKit functionality
         val helper = PureHelper()
 
         // Previous step: Initialize PureKit
