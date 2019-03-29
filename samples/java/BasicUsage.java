@@ -45,7 +45,7 @@ class BasicUsage {
     users.add(new User("bob321", "411C315N1C3", "041-53-8723"));
 
     // Encapsulated PureKit functional
-    PureHelper helper = PureHelper.init();
+    PureHelper helper = new PureHelper();
 
     // Previous step: Initialize PureKit
 
@@ -56,7 +56,7 @@ class BasicUsage {
       // Ideally, you'll ask for users to create a new password, but
       // for this guide, we'll use existing password in DB
       try {
-        EnrollResult enrollResult = helper.enrollAccount(user.getPasswordHash());
+        EnrollResult enrollResult = helper.enrollAccount(user.getPasswordHash()).get();
 
         // Save record to database
         user.setRecord(Base64.getEncoder().encodeToString(enrollResult.getEnrollmentRecord()));
@@ -80,7 +80,7 @@ class BasicUsage {
     byte[] key = new byte[0];
 
     try {
-      key = helper.verifyPassword(userOne.getRecord(), "80815C001");
+      key = helper.verifyPassword(userOne.getRecord(), "80815C001").get();
 
       // Use key for decrypting user data
       String decryptedSsn = helper.decrypt(userOne.getSsn(), key);

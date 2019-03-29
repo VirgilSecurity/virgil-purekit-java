@@ -33,56 +33,14 @@
 
 // For the purpose of this guide, we'll use a simple struct and an array
 // to simulate a database. As you go, remove/replace with your actual database logic.
-class User {
+data class User(
+        var username: String,
+        // If you have any password field for authentication, it can and should
+        // be deprecated after enrolling the user with PureKit
+        var passwordHash: String,
 
-  private String username;
+        // Data to be protected
+        var ssn: String,
 
-  // If you have any password field for authentication, it can and should
-  // be deprecated after enrolling the user with PureKit
-  private String passwordHash;
-
-  // Data to be protected
-  private String ssn;
-
-  // Field needed for PureKit
-  private String record;
-
-  User(String username, String passwordHash, String ssn) {
-    this.username = username;
-    this.passwordHash = passwordHash;
-    this.ssn = ssn;
-    this.record = "";
-  }
-
-  public String getUsername() {
-    return username;
-  }
-
-  public void setUsername(String username) {
-    this.username = username;
-  }
-
-  public String getPasswordHash() {
-    return passwordHash;
-  }
-
-  public void setPasswordHash(String passwordHash) {
-    this.passwordHash = passwordHash;
-  }
-
-  public String getSsn() {
-    return ssn;
-  }
-
-  public void setSsn(String ssn) {
-    this.ssn = ssn;
-  }
-
-  public String getRecord() {
-    return record;
-  }
-
-  public void setRecord(String record) {
-    this.record = record;
-  }
-}
+        // Field needed for PureKit
+        var record: String = "")

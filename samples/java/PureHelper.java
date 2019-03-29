@@ -39,6 +39,7 @@ import com.virgilsecurity.purekit.protocol.Protocol;
 import com.virgilsecurity.purekit.protocol.ProtocolContext;
 import com.virgilsecurity.purekit.utils.EnrollResult;
 import java.util.Base64;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import virgil.crypto.phe.PheCipher;
 
@@ -79,10 +80,10 @@ public class PureHelper {
     return new Protocol(context);
   }
 
-  public EnrollResult enrollAccount(String password)
+  public CompletableFuture<EnrollResult> enrollAccount(String password)
       throws ProtocolException, ExecutionException, InterruptedException {
 
-    return protocol.enrollAccount(password).get();
+    return protocol.enrollAccount(password);
   }
 
   public String encrypt(byte[] data, byte[] accountKey) {
@@ -103,12 +104,12 @@ public class PureHelper {
   }
 
   // Verifies password and returns encryption key for a user
-  public byte[] verifyPassword(String base64record,
+  public CompletableFuture<byte[]> verifyPassword(String base64record,
                                String password)
       throws ProtocolException, InvalidProtobufTypeException, InvalidPasswordException,
       ExecutionException, InterruptedException {
 
     byte[] record = Base64.getDecoder().decode(base64record);
-    return protocol.verifyPassword(password, record).get();
+    return protocol.verifyPassword(password, record);
   }
 }
