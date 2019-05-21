@@ -56,9 +56,9 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:$versions.coroutinesJdk8"
 
     // Phe crypto
-    api "com.virgilsecurity.crypto:common:$versions.virgil"
-    api "com.virgilsecurity.crypto:foundation:$versions.virgil"
-    api "com.virgilsecurity.crypto:phe:$versions.virgil"
+    api "com.virgilsecurity.crypto:common:$versions.virgilCrypto"
+    api "com.virgilsecurity.crypto:foundation:$versions.virgilCrypto"
+    api "com.virgilsecurity.crypto:phe:$versions.virgilCrypto"
 
     // Http client
     implementation "com.github.kittinunf.fuel:fuel:$versions.fuel"

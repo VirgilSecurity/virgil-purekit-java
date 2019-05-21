@@ -34,7 +34,7 @@
 buildscript {
     ext.versions = [
             // Virgil
-            virgil     : '0.7.0',
+            virgilCrypto  : '0.7.0',
 
             // Http client
             fuel          : '1.15.1',
