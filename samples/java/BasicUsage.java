@@ -65,7 +65,7 @@ class BasicUsage {
         user.setPasswordHash("");
 
         // Use encryptionKey for protecting user data & save in database
-        user.setUsername(helper.encrypt(user.getSsn().getBytes(), enrollResult.getAccountKey()));
+        user.setSsn(helper.encrypt(user.getSsn().getBytes(), enrollResult.getAccountKey()));
 
         System.out.print("Success\n\n");
       } catch (Throwable e) {

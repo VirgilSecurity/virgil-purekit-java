@@ -64,7 +64,7 @@ object BasicUsage {
                 user.passwordHash = ""
 
                 // Use encryptionKey for protecting user data & save in database
-                user.username = helper.encrypt(user.ssn.toByteArray(), accountKey)
+                user.ssn = helper.encrypt(user.ssn.toByteArray(), accountKey)
 
                 print("Success\n\n")
             } catch (e: Throwable) {
