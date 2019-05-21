@@ -7,7 +7,7 @@
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *  
+ *
  *     (1) Redistributions of source code must retain the above copyright notice, this
  *     list of conditions and the following disclaimer.
  *
@@ -31,56 +31,41 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-buildscript {
-    ext.versions = [
-            // Virgil
-            virgil     : '0.7.0',
+package com.virgilsecurity.purekit.protocol
 
-            // Http client
-            fuel          : '1.15.1',
+import com.virgilsecurity.crypto.foundation.CtrDrbg
+import com.virgilsecurity.purekit.utils.PropertyManager
+import com.virgilsecurity.purekit.utils.ProtocolUtils
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Test
+import java.util.*
 
-            // Kotlin
-            kotlin        : '1.3.21',
-            coroutines    : '1.0.1',
-            coroutinesJdk8: '0.27.0-eap13',
+/**
+ * RecoveryTest class.
+ */
+class RecoveryTest {
 
-            // Protobuf
-            protobuf      : '3.6.1',
+    @Test fun recovery_feature_test() {
+        val rng = CtrDrbg()
+        rng.setupDefaults()
 
-            // Docs
-            dokka         : '0.9.17',
+        val recoveryKey = rng.random(32)
 
-            // Tests
-            junit         : '5.3.1',
-            junitPlugin   : '1.0.0',
+        val protocol = ProtocolUtils.initProtocol(PropertyManager.virgilServerAddress,
+                                                  PropertyManager.virgilAppToken,
+                                                  PropertyManager.virgilPublicKeyNew,
+                                                  PropertyManager.virgilSecretKeyNew,
+                                                  PropertyManager.virgilUpdateTokenNew)
 
-    ]
-    repositories {
-        jcenter()
-        mavenCentral()
+        val encrypted = protocol.encrypt("PASSWORD".toByteArray(), recoveryKey)
+        println(Base64.getEncoder().encodeToString(encrypted))
+
+        val decrypted = protocol.decrypt(encrypted, recoveryKey)
+        println(String(decrypted))
+        Assertions.assertEquals(PASSWORD, String(decrypted))
     }
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin"
-        classpath "org.junit.platform:junit-platform-gradle-plugin:$versions.junitPlugin"
-        classpath "org.jetbrains.dokka:dokka-gradle-plugin:$versions.dokka"
+
+    companion object {
+        private const val PASSWORD = "PASSWORD"
     }
-}
-
-allprojects {
-    repositories {
-        jcenter()
-        mavenCentral()
-    }
-}
-
-task clean(type: Delete) {
-    delete rootProject.buildDir
-}
-
-task installPurekit() {
-    dependsOn ':purekit-protos:publishToMavenLocal', ':purekit:publishToMavenLocal'
-}
-
-task publishPurekit() {
-    dependsOn ':purekit-protos:publish', ':purekit:publish'
 }
