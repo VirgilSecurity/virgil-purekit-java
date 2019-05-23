@@ -34,7 +34,7 @@
 buildscript {
     ext.versions = [
             // Virgil
-            virgil     : '5.0.1',
+            virgilCrypto  : '0.7.0',
 
             // Http client
             fuel          : '1.15.1',
@@ -78,7 +78,7 @@ task clean(type: Delete) {
 }
 
 task installPurekit() {
-    dependsOn ':purekit-protos:install', ':purekit:install'
+    dependsOn ':purekit-protos:publishToMavenLocal', ':purekit:publishToMavenLocal'
 }
 
 task publishPurekit() {

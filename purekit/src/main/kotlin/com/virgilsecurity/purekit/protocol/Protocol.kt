@@ -35,6 +35,9 @@ package com.virgilsecurity.purekit.protocol
 
 import com.google.protobuf.ByteString
 import com.google.protobuf.InvalidProtocolBufferException
+import com.virgilsecurity.crypto.phe.PheCipher
+import com.virgilsecurity.crypto.phe.PheClient
+import com.virgilsecurity.crypto.phe.PheException
 import com.virgilsecurity.purekit.client.HttpClientProtobuf
 import com.virgilsecurity.purekit.data.*
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtos
@@ -42,9 +45,6 @@ import com.virgilsecurity.purekit.utils.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.future.asCompletableFuture
-import virgil.crypto.phe.PheCipher
-import virgil.crypto.phe.PheClient
-import virgil.crypto.phe.PheException
 import java.util.concurrent.CompletableFuture
 
 /**

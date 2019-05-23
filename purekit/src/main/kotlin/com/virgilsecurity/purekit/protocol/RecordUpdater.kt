@@ -35,6 +35,8 @@ package com.virgilsecurity.purekit.protocol
 
 import com.google.protobuf.ByteString
 import com.google.protobuf.InvalidProtocolBufferException
+import com.virgilsecurity.crypto.phe.PheClient
+import com.virgilsecurity.crypto.phe.PheException
 import com.virgilsecurity.purekit.data.InvalidProtobufTypeException
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtos
 import com.virgilsecurity.purekit.utils.KEY_UPDATE_TOKEN
@@ -44,8 +46,6 @@ import com.virgilsecurity.purekit.utils.requires
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.future.asCompletableFuture
-import virgil.crypto.phe.PheClient
-import virgil.crypto.phe.PheException
 import java.util.concurrent.CompletableFuture
 
 /**

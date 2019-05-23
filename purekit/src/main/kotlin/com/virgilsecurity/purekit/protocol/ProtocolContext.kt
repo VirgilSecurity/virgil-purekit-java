@@ -34,10 +34,10 @@
 package com.virgilsecurity.purekit.protocol
 
 import com.google.protobuf.ByteString
+import com.virgilsecurity.crypto.phe.PheClient
 import com.virgilsecurity.purekit.data.NoKeysFoundException
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtos
 import com.virgilsecurity.purekit.utils.*
-import virgil.crypto.phe.PheClient
 
 /**
  * ProtocolContext class holds and validates protocol input parameters.
@@ -77,7 +77,11 @@ class ProtocolContext private constructor(
             require(publicVersion == secretVersion) { "Public and Secret keys must have the same version." }
 
             val pheClients = mutableMapOf<Int, PheClient>().apply {
-                put(publicVersion, PheClient().apply { setKeys(secretBytes, publicBytes) })
+                put(publicVersion,
+                    PheClient().apply {
+                        setupDefaults()
+                        setKeys(secretBytes, publicBytes)
+                    })
             }
 
             var currentVersion = publicVersion
@@ -102,6 +106,7 @@ class ProtocolContext private constructor(
                 val rotateKeysResult = pheClient.rotateKeys(content)
 
                 pheClients[tokenVersion] = PheClient().apply {
+                    setupDefaults()
                     setKeys(rotateKeysResult.newClientPrivateKey, rotateKeysResult.newServerPublicKey)
                 }
 
