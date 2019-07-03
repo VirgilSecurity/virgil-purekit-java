@@ -5,7 +5,7 @@
 [![GitHub license](https://img.shields.io/badge/license-BSD%203--Clause-blue.svg)](https://github.com/VirgilSecurity/virgil/blob/master/LICENSE)
 
 
-[Introduction](#introduction) | [Features](#features) | [Register Your Account](#register-your-account) | [Install and configure SDK](#install-and-configure-sdk) | [Prepare Your Database](#prepare-your-database) | [Usage Examples](#usage-examples) | [Docs](#docs) | [Support](#support)
+[Introduction](#introduction) | [Features](#features) | [Register Your Account](#register-your-account) | [Install and configure SDK](#install-and-configure-sdk) | [Prepare Your Database](#prepare-your-database) | [Database Recovery](#database-recovery) | [Usage Examples](#usage-examples) | [Docs](#docs) | [Support](#support)
 
 ## Introduction
 <img src="https://cdn.virgilsecurity.com/assets/images/github/logos/pure_grey_logo.png" align="left" hspace="0" vspace="0"></a>[Virgil Security](https://virgilsecurity.com) introduces an implementation of the [Password-Hardened Encryption (PHE) protocol](https://virgilsecurity.com/wp-content/uploads/2018/11/PHE-Whitepaper-2018.pdf) – a powerful and revolutionary cryptographic technology that provides stronger and more modern security, that secures users' data and lessens the security risks associated with weak passwords.
@@ -140,49 +140,176 @@ The column must have the following parameters:
 </tbody>
 </table>
 
+## Database Recovery
 
-## Usage Examples
+This step is __optional__. Use this step if you will need to move away from Pure without having to put your users through registering again.
 
-### Enroll User Record
+### Generate a recovery keypair
 
-Use this flow to create a new Pure `record` in your DB for a user.
+During the [Prepare Your Database](#prepare-your-database) step generate a recovery keypair (public and private key). The public key will be used to encrypt passwords hashes at the enrollment step. You will need to store the encrypted hashes in your database.
 
-> Remember, if you already have a database with user passwords, you don't have to wait until a user logs in into your system to implement PHE technology. You can go through your database and enroll (create) a user's `record` at any time.
+To generate a recovery keypair, [install Virgil Crypto Library](https://developer.virgilsecurity.com/docs/how-to/virgil-crypto/install-virgil-crypto) and use the code snippet below. Store the public key in your database and save the private key securely on another external device.
 
-So, in order to create a `record` for a new database or available one, go through the following operations:
-- Take a user's **password** (or its hash or whatever you use) and pass it into the `enrollAccount` function in a SDK on your Server side.
-- PureKit SDK will send a request to PHE Service to get enrollment.
-- Then, PureKit SDK will create a user's `record`. You need to store this unique user's `record` in your database in associated column.
+> You won’t be able to restore your recovery private key, so it is crucial not to lose it.
 
 `Kotlin`:
 ```kotlin
+import com.virgilsecurity.crypto.foundation.Base64;
+
+val virgilCrypto = VirgilCrypto()
+val recoveryKeyPair = virgilCrypto.generateKeyPair()
+
+val recoveryKey = recoveryKeyPair.privateKey
+
+// Export recovery private key
+val exportedRecoveryKey = virgilCrypto.exportPrivateKey(recoveryKey)
+val exportedKeyB64 = Base64.encode(exportedRecoveryKey).toString()
+
+// Store privateKey
+
+val publicKey = recoveryKeyPair.publicKey
+// Put to your DB
+```
+
+`Java`:
+```java
+import com.virgilsecurity.crypto.foundation.Base64;
+
+VirgilCrypto virgilCrypto = new VirgilCrypto();
+VirgilKeyPair recoveryKeyPair = virgilCrypto.generateKeyPair();
+
+VirgilPrivateKey recoveryKey = keyPair.getPrivateKey();
+// Export recovery private key
+byte[] exportedRecoveryKey = virgilCrypto.exportPrivateKey(recoveryKey);
+String exportedKeyB64 = new String(Base64.encode(exportedRecoveryKey));
+// Store privateKey
+
+VirgilPublicKey publicKey = keyPair.getPublicKey();
+// Put to your DB
+```
+
+### Prepare your database for storing encrypted password hashes
+
+Now you need to prepare your database for the future passwords hashes recovery. Create a column in your users table or a separate table for storing encrypted user password hashes.
+
+<table class="params">
+<thead>
+		<tr>
+			<th>Parameters</th>
+			<th>Type</th>
+			<th>Size (bytes)</th>
+			<th>Description</th>
+		</tr>
+</thead>
+
+<tbody>
+<tr>
+	<td>encrypted_password_hashes</td>
+	<td>bytearray</td>
+	<td>512</td>
+	<td>User password hash, encrypted with the recovery key.</td>
+</tr>
+</tbody>
+</table>
+
+Further, at the [enrollment step](#enroll-user-record) you'll need to encrypt users' password hashes with the generated recovery public key and save them to the `encrypted_password_hashes` column.
+
+### Recover password hashes
+
+Use this step if you're already moving away from Pure. 
+
+Password hashes recovery is carried out by decrypting the encrypted users password hashes in your database and replacing the Pure records with them.
+
+In order to recover the original password hashes, you need to prepare your recovery private key. If you don't have a recovery key, then you have to ask your users to go through the registration process again to restore their passwords.
+
+Use your recovery private key to get original password hashes:
+
+`Kotlin`:
+```kotlin
+import com.virgilsecurity.crypto.foundation.Base64;
+
+// Import recovery private key
+byte[] exportedKey = Base64.decode(exportedKeyB64.getBytes());
+VirgilPrivateKey recoveryPrivateKey = virgilCrypto.importPrivateKey(exportedKey).getPrivateKey();
+
+// decrypt password hashes and save them in database
+byte[] decryptedPasswordHash = virgilCrypto.decrypt(encryptedPasswordHash, recoveryPrivateKey);
+```
+
+`Java`:
+```java
+import com.virgilsecurity.crypto.foundation.Base64;
+
+// Import recovery private key
+byte[] exportedKey = Base64.decode(exportedKeyB64.getBytes());
+VirgilPrivateKey recoveryPrivateKey = virgilCrypto.importPrivateKey(exportedKey).getPrivateKey();
+
+// decrypt password hashes and save them in database
+byte[] decryptedPasswordHash = virgilCrypto.decrypt(encryptedPasswordHash, recoveryPrivateKey);
+```
+
+Save the decrypted users password hashes into your database. After the recovery process is done, you can delete all the Pure data and the recovery keypair.
+
+
+## Usage Examples
+
+> You can find out working sample for the following commands in [this directory](/samples)
+
+### Enroll User Record
+
+Use this flow to create a `PureRecord` in your DB for a user.
+
+> Remember, if you already have a database with user passwords, you don't have to wait until a user logs in into your system to implement PHE technology. You can go through your database and enroll (create) a user's Pure `Record` at any time.
+
+So, in order to create a Pure `Record` for a new database or available one, go through the following operations:
+- Take a user's **password** (or its hash or whatever you use) and pass it into the `EnrollAccount` function in a PureKit on your Server side.
+- PureKit will send a request to PureKit service to get enrollment.
+- Then, PureKit will create a user's Pure `Record`. You need to store this unique user's Pure `Record` in your database in associated column.
+- (optional) Encrypt your user password hashes with the recovery key generated in [Generate a recovery keypair](#generate-a-recovery-keypair) and save them to your database.
+
+`Kotlin`:
+```kotlin
+import com.virgilsecurity.crypto.foundation.Base64;
+
 // create a new encrypted password record using user password or its hash
 fun enrollAccount(password: String, protocol: Protocol) {
     val enrollResult = protocol.enrollAccount(password).get()
 
-    //save Pure record to database
-    println("Database record:\n" + Base64.getEncoder().encodeToString(enrollResult.enrollmentRecord))
+    // save Pure record to database
+    println("Database record:\n ${String(Base64.encode(enrollResult.enrollmentRecord))}")
     val encryptionKey = enrollResult.accountKey
-    //use accountKey for protecting user data
+
+    // use encryptionKey for protecting user data
     val cipher = PheCipher()
     cipher.setupDefaults()
-    val encrypted = cipher.encrypt(data, encryptionKey)
+    val encryptedUserData = cipher.encrypt(data, encryptionKey)
+
+    // (optional) use the generated recovery public key to encrypt a user password hash
+    // save encryptedPasswordHash into your database
+    val encryptedPasswordHash = virgilCrypto.encrypt(passwordHash.toByteArray(), recoveryPublicKey)
 }
 ```
 
 `Java`:
 ```java
+import com.virgilsecurity.crypto.foundation.Base64;
+
 void enrollAccount(String password, Protocol protocol) throws ProtocolException, ExecutionException, InterruptedException {
     EnrollResult enrollResult = protocol.enrollAccount(password).get();
 
     //save pure record to database
-    System.out.println("Database record:\n" + Base64.getEncoder()
-        .encodeToString(enrollResult.getEnrollmentRecord()));
+    System.out.println("Database record:\n" +
+        new String(Base64.encode(enrollResult.getEnrollmentRecord())));
     byte[] encryptionKey = enrollResult.getAccountKey();
-    //use accountKey for protecting user data
+
+    //use encryptionKey for protecting user data
     PheCipher cipher = new PheCipher();
     cipher.setupDefaults();
-    byte[] encrypted = cipher.encrypt(data, encryptionKey);
+    byte[] encryptedUserData = cipher.encrypt(data, encryptionKey);
+
+    //(optional) use the generated recovery public key to encrypt a user password hash
+    //save encryptedPasswordHash into your database
+    byte[] encryptedPasswordHash = virgilCrypto.encrypt(passwordHash.getBytes(), recoveryPublicKey);
 }
 ```
 
@@ -229,7 +356,7 @@ void verifyPassword(String password, byte[] record, Protocol protocol)
 }
 ```
 
-## Encrypt user data in your database
+### Encrypt user data in your database
 
 Not only user's password is a sensitive data. In this flow we will help you to protect any Personally identifiable information (PII) in your database.
 
@@ -279,7 +406,7 @@ Encryption is performed using AES256-GCM with key & nonce derived from the user'
 Virgil Security has Zero knowledge about a user's `encryptionKey`, because the key is calculated every time when you execute `enrollAccount` or `verifyPassword` functions at your server side.
 
 
-## Rotate app keys and user record
+### Rotate app keys and user record
 There can never be enough security, so you should rotate your sensitive data regularly (about once a week). Use this flow to get an `UPDATE_TOKEN` for updating user's `RECORD` in your database and to get a new `APP_SECRET_KEY` and `SERVICE_PUBLIC_KEY` of a specific application.
 
 Also, use this flow in case your database has been COMPROMISED!
