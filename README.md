@@ -408,8 +408,10 @@ Protocol initPureKitNew() {
 ```
 
 ## Docs
-* [Virgil Dashboard](https://dashboard.virgilsecurity.com)
+* [Virgil Dashboard](https://dashboard.virgilsecurity.com/)
 * [The PHE WhitePaper](https://virgilsecurity.com/wp-content/uploads/2018/11/PHE-Whitepaper-2018.pdf) - foundation principles of the protocol
+* [Kotlin Samples](/samples) - explore our Kotlin PURE samples to easily run the SDK
+* [PURE use-case](https://developer.virgilsecurity.com/docs/use-cases/v1/passwords-and-data-protection) - explore our use-case to protect user passwords and data in your database from data breaches
 
 ## License
 
