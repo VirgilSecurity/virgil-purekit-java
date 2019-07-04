@@ -5,7 +5,7 @@
 [![GitHub license](https://img.shields.io/badge/license-BSD%203--Clause-blue.svg)](https://github.com/VirgilSecurity/virgil/blob/master/LICENSE)
 
 
-[Introduction](#introduction) | [Features](#features) | [Register Your Account](#register-your-account) | [Install and configure SDK](#install-and-configure-sdk) | [Prepare Your Database](#prepare-your-database) | [Database Recovery](#database-recovery) | [Usage Examples](#usage-examples) | [Docs](#docs) | [Support](#support)
+[Introduction](#introduction) | [Features](#features) | [Register Your Account](#register-your-account) | [Install and configure SDK](#install-and-configure-sdk) | [Prepare Your Database](#prepare-your-database) | [Usage Examples](#usage-examples) | [Docs](#docs) | [Support](#support)
 
 ## Introduction
 <img src="https://cdn.virgilsecurity.com/assets/images/github/logos/pure_grey_logo.png" align="left" hspace="0" vspace="0"></a>[Virgil Security](https://virgilsecurity.com) introduces an implementation of the [Password-Hardened Encryption (PHE) protocol](https://virgilsecurity.com/wp-content/uploads/2018/11/PHE-Whitepaper-2018.pdf) – a powerful and revolutionary cryptographic technology that provides stronger and more modern security, that secures users' data and lessens the security risks associated with weak passwords.
@@ -81,6 +81,8 @@ implementation "com.virgilsecurity:purekit:<latest-version>"
 
 The **\<latest-version>** of the SDK can be found in the [Maven Central Repository](https://mvnrepository.com/artifact/com.virgilsecurity/purekit)  or in the header of current readme.
 
+To uninstall Pure, see the [Recover Password Hashes](#recover-password-hashes) section.
+
 ### Configure SDK
 Here is an example of how to specify your credentials SDK class instance:
 
@@ -140,13 +142,11 @@ The column must have the following parameters:
 </tbody>
 </table>
 
-## Database Recovery
+### Generate a recovery keypair
 
 This step is __optional__. Use this step if you will need to move away from Pure without having to put your users through registering again.
 
-### Generate a recovery keypair
-
-During the [Prepare Your Database](#prepare-your-database) step generate a recovery keypair (public and private key). The public key will be used to encrypt passwords hashes at the enrollment step. You will need to store the encrypted hashes in your database.
+To be able to move away from Pure without having to put your users through registering again, you need to generate a recovery keypair (public and private key). The public key will be used to encrypt passwords hashes at the enrollment step. You will need to store the encrypted hashes in your database.
 
 To generate a recovery keypair, [install Virgil Crypto Library](https://developer.virgilsecurity.com/docs/how-to/virgil-crypto/install-virgil-crypto) and use the code snippet below. Store the public key in your database and save the private key securely on another external device.
 
@@ -213,42 +213,6 @@ Now you need to prepare your database for the future passwords hashes recovery. 
 </table>
 
 Further, at the [enrollment step](#enroll-user-record) you'll need to encrypt users' password hashes with the generated recovery public key and save them to the `encrypted_password_hashes` column.
-
-### Recover password hashes
-
-Use this step if you're already moving away from Pure. 
-
-Password hashes recovery is carried out by decrypting the encrypted users password hashes in your database and replacing the Pure records with them.
-
-In order to recover the original password hashes, you need to prepare your recovery private key. If you don't have a recovery key, then you have to ask your users to go through the registration process again to restore their passwords.
-
-Use your recovery private key to get original password hashes:
-
-`Kotlin`:
-```kotlin
-import com.virgilsecurity.crypto.foundation.Base64;
-
-// Import recovery private key
-byte[] exportedKey = Base64.decode(exportedKeyB64.getBytes());
-VirgilPrivateKey recoveryPrivateKey = virgilCrypto.importPrivateKey(exportedKey).getPrivateKey();
-
-// decrypt password hashes and save them in database
-byte[] decryptedPasswordHash = virgilCrypto.decrypt(encryptedPasswordHash, recoveryPrivateKey);
-```
-
-`Java`:
-```java
-import com.virgilsecurity.crypto.foundation.Base64;
-
-// Import recovery private key
-byte[] exportedKey = Base64.decode(exportedKeyB64.getBytes());
-VirgilPrivateKey recoveryPrivateKey = virgilCrypto.importPrivateKey(exportedKey).getPrivateKey();
-
-// decrypt password hashes and save them in database
-byte[] decryptedPasswordHash = virgilCrypto.decrypt(encryptedPasswordHash, recoveryPrivateKey);
-```
-
-Save the decrypted users password hashes into your database. After the recovery process is done, you can delete all the Pure data and the recovery keypair.
 
 
 ## Usage Examples
@@ -533,6 +497,42 @@ Protocol initPureKitNew() {
     return new Protocol(context);
 }
 ```
+
+### Recover password hashes
+
+Use this step if you're uninstalling Pure. 
+
+Password hashes recovery is carried out by decrypting the encrypted users password hashes in your database and replacing the Pure records with them.
+
+In order to recover the original password hashes, you need to prepare your recovery private key. If you don't have a recovery key, then you have to ask your users to go through the registration process again to restore their passwords.
+
+Use your recovery private key to get original password hashes:
+
+`Kotlin`:
+```kotlin
+import com.virgilsecurity.crypto.foundation.Base64;
+
+// Import recovery private key
+byte[] exportedKey = Base64.decode(exportedKeyB64.getBytes());
+VirgilPrivateKey recoveryPrivateKey = virgilCrypto.importPrivateKey(exportedKey).getPrivateKey();
+
+// decrypt password hashes and save them in database
+byte[] decryptedPasswordHash = virgilCrypto.decrypt(encryptedPasswordHash, recoveryPrivateKey);
+```
+
+`Java`:
+```java
+import com.virgilsecurity.crypto.foundation.Base64;
+
+// Import recovery private key
+byte[] exportedKey = Base64.decode(exportedKeyB64.getBytes());
+VirgilPrivateKey recoveryPrivateKey = virgilCrypto.importPrivateKey(exportedKey).getPrivateKey();
+
+// decrypt password hashes and save them in database
+byte[] decryptedPasswordHash = virgilCrypto.decrypt(encryptedPasswordHash, recoveryPrivateKey);
+```
+
+Save the decrypted users password hashes into your database. After the recovery process is done, you can delete all the Pure data and the recovery keypair.
 
 ## Docs
 * [Virgil Dashboard](https://dashboard.virgilsecurity.com)
