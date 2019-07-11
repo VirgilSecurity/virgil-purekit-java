@@ -133,11 +133,8 @@ class ProtocolTestJava {
                 Arguments.of(PropertyManager.getVirgilServerAddress(),
                              PropertyManager.getVirgilAppToken(),
                              PropertyManager.getVirgilPublicKeyNew(),
-                             PropertyManager.getVirgilSecretKeyNew()),
-                Arguments.of(PropertyManager.getPurekitServerAddress(),
-                             PropertyManager.getPurekitAppToken(),
-                             PropertyManager.getPurekitPublicKeyNew(),
-                             PropertyManager.getPurekitSecretKeyNew()));
+                             PropertyManager.getVirgilSecretKeyNew())
+        );
     }
 
     private static Stream<Arguments> testArguments() {
@@ -146,11 +143,7 @@ class ProtocolTestJava {
                              PropertyManager.getVirgilAppToken(),
                              PropertyManager.getVirgilPublicKeyNew(),
                              PropertyManager.getVirgilSecretKeyNew(),
-                             PropertyManager.getVirgilUpdateTokenNew()),
-                Arguments.of(PropertyManager.getPurekitServerAddress(),
-                             PropertyManager.getPurekitAppToken(),
-                             PropertyManager.getPurekitPublicKeyNew(),
-                             PropertyManager.getPurekitSecretKeyNew(),
-                             PropertyManager.getPurekitUpdateTokenNew()));
+                             PropertyManager.getVirgilUpdateTokenNew())
+        );
     }
 }
