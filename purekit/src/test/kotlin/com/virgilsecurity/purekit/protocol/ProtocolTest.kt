@@ -375,11 +375,7 @@ class ProtocolTest {
                 Arguments.of(PropertyManager.virgilServerAddress,
                              PropertyManager.virgilAppToken,
                              PropertyManager.virgilPublicKeyNew,
-                             PropertyManager.virgilSecretKeyNew),
-                Arguments.of(PropertyManager.purekitServerAddress,
-                             PropertyManager.purekitAppToken,
-                             PropertyManager.purekitPublicKeyNew,
-                             PropertyManager.purekitSecretKeyNew)
+                             PropertyManager.virgilSecretKeyNew)
         )
 
         @JvmStatic fun testArguments() = listOf(
@@ -387,12 +383,7 @@ class ProtocolTest {
                              PropertyManager.virgilAppToken,
                              PropertyManager.virgilPublicKeyNew,
                              PropertyManager.virgilSecretKeyNew,
-                             PropertyManager.virgilUpdateTokenNew),
-                Arguments.of(PropertyManager.purekitServerAddress,
-                             PropertyManager.purekitAppToken,
-                             PropertyManager.purekitPublicKeyNew,
-                             PropertyManager.purekitSecretKeyNew,
-                             PropertyManager.purekitUpdateTokenNew)
+                             PropertyManager.virgilUpdateTokenNew)
         )
 
         @JvmStatic fun testArgumentsWithWrongKey() = listOf(
@@ -401,13 +392,7 @@ class ProtocolTest {
                              PropertyManager.virgilPublicKeyNew,
                              PropertyManager.virgilPublicKeyWrong,
                              PropertyManager.virgilSecretKeyNew,
-                             PropertyManager.virgilUpdateTokenNew),
-                Arguments.of(PropertyManager.purekitServerAddress,
-                             PropertyManager.purekitAppToken,
-                             PropertyManager.purekitPublicKeyNew,
-                             PropertyManager.purekitPublicKeyWrong,
-                             PropertyManager.purekitSecretKeyNew,
-                             PropertyManager.purekitUpdateTokenNew)
+                             PropertyManager.virgilUpdateTokenNew)
         )
     }
 }
