@@ -83,21 +83,14 @@ class ProtocolContextTest {
         @JvmStatic fun testArgumentsNoToken() = listOf(
                 Arguments.of(PropertyManager.virgilAppToken,
                              PropertyManager.virgilPublicKeyNew,
-                             PropertyManager.virgilSecretKeyNew),
-                Arguments.of(PropertyManager.purekitAppToken,
-                             PropertyManager.purekitPublicKeyNew,
-                             PropertyManager.purekitSecretKeyNew)
+                             PropertyManager.virgilSecretKeyNew)
         )
 
         @JvmStatic fun testArguments() = listOf(
                 Arguments.of(PropertyManager.virgilAppToken,
                              PropertyManager.virgilPublicKeyOld,
                              PropertyManager.virgilSecretKeyOld,
-                             PropertyManager.virgilUpdateTokenOld),
-                Arguments.of(PropertyManager.purekitAppToken,
-                             PropertyManager.purekitPublicKeyOld,
-                             PropertyManager.purekitSecretKeyOld,
-                             PropertyManager.purekitUpdateTokenOld)
+                             PropertyManager.virgilUpdateTokenOld)
         )
     }
 }

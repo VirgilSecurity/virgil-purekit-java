@@ -129,10 +129,7 @@ class HttpClientTest {
         @JvmStatic fun testArguments() = listOf(
                 Arguments.of(PropertyManager.virgilServerAddress,
                              PropertyManager.virgilAppToken,
-                             PropertyManager.virgilPublicKeyNew),
-                Arguments.of(PropertyManager.purekitServerAddress,
-                             PropertyManager.purekitAppToken,
-                             PropertyManager.purekitPublicKeyNew)
+                             PropertyManager.virgilPublicKeyNew)
         )
     }
 }
