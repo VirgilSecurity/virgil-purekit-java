@@ -31,26 +31,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-buildscript {
-    ext.versions = [
-            dokkaVersion: '0.9.17',
-    ]
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath "org.jetbrains.dokka:dokka-gradle-plugin:$versions.dokkaVersion"
-    }
-}
-
 plugins {
     id 'java'
     id 'java-library'
     id 'maven-publish'
     id 'signing'
 }
-
-apply from: "$rootDir/meta.gradle"
 
 group "com.virgilsecurity"
 version "0.1.0"
@@ -68,7 +54,7 @@ repositories {
 
 dependencies {
     // Protobuf
-    compile "com.google.protobuf:protobuf-java:$versions.protobuf"
+    compile "com.google.protobuf:protobuf-java:$versions.protobufVersion"
 }
 
 task sourcesJar(type: Jar) {
