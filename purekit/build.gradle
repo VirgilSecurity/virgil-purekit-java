@@ -55,6 +55,8 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.coroutines"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:$versions.coroutines"
 
+    implementation "com.virgilsecurity.sdk:crypto:5.2.1"
+
     // Phe crypto
     api "com.virgilsecurity.crypto:common:$versions.virgilCrypto"
     api "com.virgilsecurity.crypto:foundation:$versions.virgilCrypto"
