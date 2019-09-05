@@ -778,9 +778,9 @@ public final class PurekitProtosV3 {
     int getVersion();
 
     /**
-     * <code>bytes encrypted_phek = 2;</code>
+     * <code>bytes encrypted_phesk = 2;</code>
      */
-    com.google.protobuf.ByteString getEncryptedPhek();
+    com.google.protobuf.ByteString getEncryptedPhesk();
 
     /**
      * <code>bytes header = 3;</code>
@@ -800,7 +800,7 @@ public final class PurekitProtosV3 {
       super(builder);
     }
     private EncryptedGrant() {
-      encryptedPhek_ = com.google.protobuf.ByteString.EMPTY;
+      encryptedPhesk_ = com.google.protobuf.ByteString.EMPTY;
       header_ = com.google.protobuf.ByteString.EMPTY;
     }
 
@@ -841,7 +841,7 @@ public final class PurekitProtosV3 {
             }
             case 18: {
 
-              encryptedPhek_ = input.readBytes();
+              encryptedPhesk_ = input.readBytes();
               break;
             }
             case 26: {
@@ -890,13 +890,13 @@ public final class PurekitProtosV3 {
       return version_;
     }
 
-    public static final int ENCRYPTED_PHEK_FIELD_NUMBER = 2;
-    private com.google.protobuf.ByteString encryptedPhek_;
+    public static final int ENCRYPTED_PHESK_FIELD_NUMBER = 2;
+    private com.google.protobuf.ByteString encryptedPhesk_;
     /**
-     * <code>bytes encrypted_phek = 2;</code>
+     * <code>bytes encrypted_phesk = 2;</code>
      */
-    public com.google.protobuf.ByteString getEncryptedPhek() {
-      return encryptedPhek_;
+    public com.google.protobuf.ByteString getEncryptedPhesk() {
+      return encryptedPhesk_;
     }
 
     public static final int HEADER_FIELD_NUMBER = 3;
@@ -925,8 +925,8 @@ public final class PurekitProtosV3 {
       if (version_ != 0) {
         output.writeUInt32(1, version_);
       }
-      if (!encryptedPhek_.isEmpty()) {
-        output.writeBytes(2, encryptedPhek_);
+      if (!encryptedPhesk_.isEmpty()) {
+        output.writeBytes(2, encryptedPhesk_);
       }
       if (!header_.isEmpty()) {
         output.writeBytes(3, header_);
@@ -944,9 +944,9 @@ public final class PurekitProtosV3 {
         size += com.google.protobuf.CodedOutputStream
           .computeUInt32Size(1, version_);
       }
-      if (!encryptedPhek_.isEmpty()) {
+      if (!encryptedPhesk_.isEmpty()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(2, encryptedPhek_);
+          .computeBytesSize(2, encryptedPhesk_);
       }
       if (!header_.isEmpty()) {
         size += com.google.protobuf.CodedOutputStream
@@ -969,8 +969,8 @@ public final class PurekitProtosV3 {
 
       if (getVersion()
           != other.getVersion()) return false;
-      if (!getEncryptedPhek()
-          .equals(other.getEncryptedPhek())) return false;
+      if (!getEncryptedPhesk()
+          .equals(other.getEncryptedPhesk())) return false;
       if (!getHeader()
           .equals(other.getHeader())) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
@@ -986,8 +986,8 @@ public final class PurekitProtosV3 {
       hash = (19 * hash) + getDescriptor().hashCode();
       hash = (37 * hash) + VERSION_FIELD_NUMBER;
       hash = (53 * hash) + getVersion();
-      hash = (37 * hash) + ENCRYPTED_PHEK_FIELD_NUMBER;
-      hash = (53 * hash) + getEncryptedPhek().hashCode();
+      hash = (37 * hash) + ENCRYPTED_PHESK_FIELD_NUMBER;
+      hash = (53 * hash) + getEncryptedPhesk().hashCode();
       hash = (37 * hash) + HEADER_FIELD_NUMBER;
       hash = (53 * hash) + getHeader().hashCode();
       hash = (29 * hash) + unknownFields.hashCode();
@@ -1125,7 +1125,7 @@ public final class PurekitProtosV3 {
         super.clear();
         version_ = 0;
 
-        encryptedPhek_ = com.google.protobuf.ByteString.EMPTY;
+        encryptedPhesk_ = com.google.protobuf.ByteString.EMPTY;
 
         header_ = com.google.protobuf.ByteString.EMPTY;
 
@@ -1156,7 +1156,7 @@ public final class PurekitProtosV3 {
       public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3.EncryptedGrant buildPartial() {
         com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3.EncryptedGrant result = new com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3.EncryptedGrant(this);
         result.version_ = version_;
-        result.encryptedPhek_ = encryptedPhek_;
+        result.encryptedPhesk_ = encryptedPhesk_;
         result.header_ = header_;
         onBuilt();
         return result;
@@ -1209,8 +1209,8 @@ public final class PurekitProtosV3 {
         if (other.getVersion() != 0) {
           setVersion(other.getVersion());
         }
-        if (other.getEncryptedPhek() != com.google.protobuf.ByteString.EMPTY) {
-          setEncryptedPhek(other.getEncryptedPhek());
+        if (other.getEncryptedPhesk() != com.google.protobuf.ByteString.EMPTY) {
+          setEncryptedPhesk(other.getEncryptedPhesk());
         }
         if (other.getHeader() != com.google.protobuf.ByteString.EMPTY) {
           setHeader(other.getHeader());
@@ -1270,31 +1270,31 @@ public final class PurekitProtosV3 {
         return this;
       }
 
-      private com.google.protobuf.ByteString encryptedPhek_ = com.google.protobuf.ByteString.EMPTY;
+      private com.google.protobuf.ByteString encryptedPhesk_ = com.google.protobuf.ByteString.EMPTY;
       /**
-       * <code>bytes encrypted_phek = 2;</code>
+       * <code>bytes encrypted_phesk = 2;</code>
        */
-      public com.google.protobuf.ByteString getEncryptedPhek() {
-        return encryptedPhek_;
+      public com.google.protobuf.ByteString getEncryptedPhesk() {
+        return encryptedPhesk_;
       }
       /**
-       * <code>bytes encrypted_phek = 2;</code>
+       * <code>bytes encrypted_phesk = 2;</code>
        */
-      public Builder setEncryptedPhek(com.google.protobuf.ByteString value) {
+      public Builder setEncryptedPhesk(com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
   
-        encryptedPhek_ = value;
+        encryptedPhesk_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>bytes encrypted_phek = 2;</code>
+       * <code>bytes encrypted_phesk = 2;</code>
        */
-      public Builder clearEncryptedPhek() {
+      public Builder clearEncryptedPhesk() {
         
-        encryptedPhek_ = getDefaultInstance().getEncryptedPhek();
+        encryptedPhesk_ = getDefaultInstance().getEncryptedPhesk();
         onChanged();
         return this;
       }
@@ -1401,11 +1401,11 @@ public final class PurekitProtosV3 {
     java.lang.String[] descriptorData = {
       "\n\017purekitV3.proto\022\005build\"R\n\024EncryptedGra" +
       "ntHeader\022\025\n\rcreation_date\030\001 \001(\r\022\017\n\007user_" +
-      "id\030\002 \001(\t\022\022\n\nsession_id\030\003 \001(\t\"I\n\016Encrypte" +
-      "dGrant\022\017\n\007version\030\001 \001(\r\022\026\n\016encrypted_phe" +
-      "k\030\002 \001(\014\022\016\n\006header\030\003 \001(\014B<\n)com.virgilsec" +
-      "urity.purekit.protobuf.buildB\017PurekitPro" +
-      "tosV3b\006proto3"
+      "id\030\002 \001(\t\022\022\n\nsession_id\030\003 \001(\t\"J\n\016Encrypte" +
+      "dGrant\022\017\n\007version\030\001 \001(\r\022\027\n\017encrypted_phe" +
+      "sk\030\002 \001(\014\022\016\n\006header\030\003 \001(\014B<\n)com.virgilse" +
+      "curity.purekit.protobuf.buildB\017PurekitPr" +
+      "otosV3b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -1422,7 +1422,7 @@ public final class PurekitProtosV3 {
     internal_static_build_EncryptedGrant_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_build_EncryptedGrant_descriptor,
-        new java.lang.String[] { "Version", "EncryptedPhek", "Header", });
+        new java.lang.String[] { "Version", "EncryptedPhesk", "Header", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

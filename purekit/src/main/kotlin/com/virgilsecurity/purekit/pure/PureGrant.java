@@ -4,17 +4,17 @@ import java.util.Date;
 
 // TODO: Add builder?
 public class PureGrant {
-    private byte[] phek;
+    private byte[] phesk;
     private String userId;
     private String sessionId; // Optional
     private Date creationDate;
 
-    public byte[] getPhek() {
-        return phek;
+    public byte[] getPhesk() {
+        return phesk;
     }
 
-    public void setPhek(byte[] phek) {
-        this.phek = phek;
+    public void setPhesk(byte[] phesk) {
+        this.phesk = phesk;
     }
 
     public String getSessionId() {

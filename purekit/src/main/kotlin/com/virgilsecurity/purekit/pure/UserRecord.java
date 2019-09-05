@@ -7,6 +7,8 @@ public class UserRecord {
     private byte[] upk;
     private byte[] encryptedUsk;
 
+    private byte[] encryptedPwdHash;
+
     public String getUserId() {
         return userId;
     }
@@ -45,5 +47,13 @@ public class UserRecord {
 
     public void setEncryptedUsk(byte[] encryptedUsk) {
         this.encryptedUsk = encryptedUsk;
+    }
+
+    public byte[] getEncryptedPwdHash() {
+        return encryptedPwdHash;
+    }
+
+    public void setEncryptedPwdHash(byte[] encryptedPwdHash) {
+        this.encryptedPwdHash = encryptedPwdHash;
     }
 }
