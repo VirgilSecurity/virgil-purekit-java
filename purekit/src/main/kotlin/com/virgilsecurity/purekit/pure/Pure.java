@@ -1,18 +1,26 @@
 package com.virgilsecurity.purekit.pure;
 
 import com.google.protobuf.ByteString;
+import com.google.protobuf.InvalidProtocolBufferException;
+import com.virgilsecurity.crypto.foundation.Aes256Gcm;
+import com.virgilsecurity.crypto.foundation.AuthEncryptAuthEncryptResult;
+import com.virgilsecurity.crypto.foundation.Hkdf;
+import com.virgilsecurity.crypto.foundation.Sha512;
+import com.virgilsecurity.crypto.phe.PheCipher;
 import com.virgilsecurity.crypto.phe.PheClient;
 import com.virgilsecurity.crypto.phe.PheClientEnrollAccountResult;
 import com.virgilsecurity.crypto.phe.PheException;
 import com.virgilsecurity.purekit.data.ProtocolException;
 import com.virgilsecurity.purekit.data.ProtocolHttpException;
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtos;
+import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3;
 import com.virgilsecurity.sdk.crypto.KeyType;
 import com.virgilsecurity.sdk.crypto.VirgilCrypto;
 import com.virgilsecurity.sdk.crypto.VirgilKeyPair;
 import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
 
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Date;
 
 public class Pure {
@@ -24,6 +32,7 @@ public class Pure {
     private PheClient currentClient;
     private PheClient previousClient;
     private VirgilCrypto crypto;
+    private PheCipher cipher;
 
     public Pure(String authToken, byte[] authKey, PureStorage storage) {
         this.storage = storage;
@@ -31,11 +40,20 @@ public class Pure {
         this.client = new HttpPheClient(authToken);
         this.currentClient = new PheClient();
         this.crypto = new VirgilCrypto();
+        this.cipher = new PheCipher();
+        this.cipher.setRandom(this.crypto.getRng());
     }
 
-    public void registerUser(String userId, String password) throws ProtocolException, ProtocolHttpException, CryptoException {
+    private void registerUser(String userId, String password, boolean isUserNew) throws ProtocolException, ProtocolHttpException, CryptoException {
+        if (userId == null || userId.isEmpty()) {
+            throw new NullPointerException();
+        }
+        if (password == null || password.isEmpty()) {
+            throw new NullPointerException();
+        }
+
         PurekitProtos.EnrollmentRequest request = PurekitProtos.EnrollmentRequest.newBuilder().setVersion(this.currentVersion).build();
-        PurekitProtos.EnrollmentResponse response = client.enrollAccount(request);
+        PurekitProtos.EnrollmentResponse response = this.client.enrollAccount(request);
 
         PheClientEnrollAccountResult result = this.currentClient.enrollAccount(response.toByteArray(), password.getBytes());
 
@@ -45,6 +63,7 @@ public class Pure {
                 .build()
                 .toByteArray();
 
+        // TODO: Encrypt hashed password for backup?
         // FIXME: Do we need asymmetric crypto here?
         VirgilKeyPair pheKeyPair = this.crypto.generateKeyPair(KeyType.ED25519, result.getAccountKey());
 
@@ -53,6 +72,7 @@ public class Pure {
         byte[] privateKeyData = this.crypto.exportPrivateKey(userKeyPair.getPrivateKey());
 
         // TODO: Add backup key to this list
+        // TODO: Do we need signature here?
         byte[] encryptedUsk = this.crypto.encrypt(privateKeyData, Arrays.asList(pheKeyPair.getPublicKey()));
 
         UserRecord userRecord = new UserRecord();
@@ -62,7 +82,16 @@ public class Pure {
         userRecord.setUpk(this.crypto.exportPublicKey(userKeyPair.getPublicKey()));
         userRecord.setEncryptedUsk(encryptedUsk);
 
-        this.storage.insertUser(userRecord);
+        if (isUserNew) {
+            this.storage.insertUser(userRecord);
+        }
+        else {
+            this.storage.updateUser(userRecord);
+        }
+    }
+
+    public void registerUser(String userId, String password) throws ProtocolException, ProtocolHttpException, CryptoException {
+        this.registerUser(userId, password, true);
     }
 
     private PheClient getClient(int pheVersion) throws Exception {
@@ -78,6 +107,13 @@ public class Pure {
     }
 
     public PureGrant authenticateUser(String userId, String password, String sessionId) throws Exception, ProtocolHttpException, ProtocolException {
+        if (userId == null || userId.isEmpty()) {
+            throw new NullPointerException();
+        }
+        if (password == null || password.isEmpty()) {
+            throw new NullPointerException();
+        }
+
         UserRecord userRecord = this.storage.selectUser(userId);
 
         PheClient client = this.getClient(userRecord.getPheRecordVersion());
@@ -97,7 +133,10 @@ public class Pure {
 
         grant.setPhek(key);
         grant.setCreationDate(new Date());
-        grant.setSessionId(sessionId);
+
+        if (sessionId != null) {
+            grant.setSessionId(sessionId);
+        }
 
         return grant;
     }
@@ -107,8 +146,116 @@ public class Pure {
     }
 
     public String encryptGrantForUser(PureGrant grant) {
+        if (grant == null) {
+            throw new NullPointerException();
+        }
 
+        int timestamp = (int) (grant.getCreationDate().getTime() / 1000);
+        PurekitProtosV3.EncryptedGrantHeader header = PurekitProtosV3.EncryptedGrantHeader.newBuilder()
+                .setCreationDate(timestamp)
+                .setUserId(grant.getUserId())
+                .setSessionId(grant.getSessionId())
+                .build();
 
-        return "";
+        byte[] headerBytes = header.toByteArray();
+
+        // TODO: Add headerBytes as auth data
+        byte[] result = this.cipher.encrypt(grant.getPhek(), this.authKey);
+
+        PurekitProtosV3.EncryptedGrant encryptedGrant = PurekitProtosV3.EncryptedGrant.newBuilder()
+                .setVersion(1)
+                .setHeader(ByteString.copyFrom(headerBytes))
+                .setEncryptedPhek(ByteString.copyFrom(result))
+                .build();
+
+        return Base64.getEncoder().encodeToString(encryptedGrant.toByteArray());
+    }
+
+    public PureGrant decryptGrantFromUser(String encryptedGrantString) throws InvalidProtocolBufferException  {
+        if (encryptedGrantString == null || encryptedGrantString.isEmpty()) {
+            throw new NullPointerException();
+        }
+
+        byte[] encryptedGrantData = Base64.getDecoder().decode(encryptedGrantString);
+
+        PurekitProtosV3.EncryptedGrant encryptedGrant = PurekitProtosV3.EncryptedGrant.parseFrom(encryptedGrantData);
+
+        ByteString encryptedData = encryptedGrant.getEncryptedPhek();
+
+        // TODO: Add encryptedGrant.getHeader().toByteArray() as auth data
+        byte[] key = this.cipher.decrypt(encryptedData.toByteArray(), this.authKey);
+
+        PurekitProtosV3.EncryptedGrantHeader header = PurekitProtosV3.EncryptedGrantHeader.parseFrom(encryptedGrant.getHeader());
+
+        PureGrant grant = new PureGrant();
+
+        grant.setSessionId(header.getSessionId());
+        grant.setUserId(header.getUserId());
+        grant.setCreationDate(new Date((long)header.getCreationDate() * 1000));
+        grant.setPhek(key);
+
+        return grant;
+    }
+
+    public void changeUserPassword(String userId, String oldPassword, String newPassword) throws ProtocolException, ProtocolHttpException, CryptoException, Exception {
+        if (userId == null || userId.isEmpty()) {
+            throw new NullPointerException();
+        }
+        if (oldPassword == null || oldPassword.isEmpty()) {
+            throw new NullPointerException();
+        }
+        if (newPassword == null || newPassword.isEmpty()) {
+            throw new NullPointerException();
+        }
+
+        UserRecord userRecord = this.storage.selectUser(userId);
+
+        PheClient client = this.getClient(userRecord.getPheRecordVersion());
+
+        byte[] pheVerifyRequest = client.createVerifyPasswordRequest(oldPassword.getBytes(), userRecord.getPheRecord());
+
+        PurekitProtos.VerifyPasswordRequest verifyRequest = PurekitProtos.VerifyPasswordRequest.newBuilder()
+                .setVersion(userRecord.getPheRecordVersion())
+                .setRequest(ByteString.copyFrom(pheVerifyRequest))
+                .build();
+
+        PurekitProtos.VerifyPasswordResponse verifyResponse = this.client.verifyPassword(verifyRequest);
+
+        byte[] key = client.checkResponseAndDecrypt(oldPassword.getBytes(), userRecord.getPheRecord(), verifyResponse.getResponse().toByteArray());
+
+        PurekitProtos.EnrollmentRequest enrollRequest = PurekitProtos.EnrollmentRequest.newBuilder().setVersion(this.currentVersion).build();
+        PurekitProtos.EnrollmentResponse enrollResponse = this.client.enrollAccount(enrollRequest);
+
+        PheClientEnrollAccountResult enrollResult = this.currentClient.enrollAccount(enrollResponse.toByteArray(), newPassword.getBytes());
+
+        byte[] pheRecord = PurekitProtos.DatabaseRecord.newBuilder()
+                .setVersion(this.currentVersion)
+                .setRecord(ByteString.copyFrom(enrollResult.getEnrollmentRecord()))
+                .build()
+                .toByteArray();
+
+        userRecord.setPheRecord(pheRecord);
+        userRecord.setPheRecordVersion(this.currentVersion);
+
+        // TODO: Encrypt hashed password for backup?
+        // FIXME: Do we need asymmetric crypto here?
+        VirgilKeyPair pheKeyPair = this.crypto.generateKeyPair(KeyType.ED25519, enrollResult.getAccountKey());
+
+        byte[] oldEncryptedUsk = userRecord.getEncryptedUsk();
+
+        // TODO: Do we need signature here?
+        byte[] privateKeyData = this.crypto.decrypt(userRecord.getEncryptedUsk(), pheKeyPair.getPrivateKey());
+
+        // TODO: Add backup key to this list
+        // TODO: Do we need signature here?
+        byte[] newEncryptedUsk = this.crypto.encrypt(privateKeyData, Arrays.asList(pheKeyPair.getPublicKey()));
+
+        userRecord.setEncryptedUsk(newEncryptedUsk);
+
+        this.storage.updateUser(userRecord);
+    }
+
+    public void resetUserPassword(String userId, String newPassword) throws ProtocolException, ProtocolHttpException, CryptoException {
+        this.registerUser(userId, newPassword, false);
     }
 }

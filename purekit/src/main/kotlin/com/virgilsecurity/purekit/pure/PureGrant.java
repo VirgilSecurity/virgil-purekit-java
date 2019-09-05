@@ -2,7 +2,13 @@ package com.virgilsecurity.purekit.pure;
 
 import java.util.Date;
 
+// TODO: Add builder?
 public class PureGrant {
+    private byte[] phek;
+    private String userId;
+    private String sessionId; // Optional
+    private Date creationDate;
+
     public byte[] getPhek() {
         return phek;
     }
@@ -27,7 +33,11 @@ public class PureGrant {
         this.creationDate = creationDate;
     }
 
-    private byte[] phek;
-    private String sessionId;
-    private Date creationDate;
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 }
