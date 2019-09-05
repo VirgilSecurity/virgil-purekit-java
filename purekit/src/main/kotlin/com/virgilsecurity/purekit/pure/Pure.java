@@ -2,6 +2,7 @@ package com.virgilsecurity.purekit.pure;
 
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
+import com.sun.tools.javac.util.StringUtils;
 import com.virgilsecurity.crypto.foundation.Aes256Gcm;
 import com.virgilsecurity.crypto.foundation.AuthEncryptAuthEncryptResult;
 import com.virgilsecurity.crypto.foundation.Hkdf;
@@ -28,18 +29,32 @@ public class Pure {
     private byte[] authKey;
     private HttpPheClient client;
     private int currentVersion;
-    private String updateToken;
+    private byte[] updateToken;
     private PheClient currentClient;
     private PheClient previousClient;
     private VirgilCrypto crypto;
     private PheCipher cipher;
 
-    public Pure(String authToken, byte[] authKey, PureStorage storage) {
+    public Pure(String authToken, byte[] authKey, PureStorage storage, int currentVersion, String updateToken) {
         this.storage = storage;
         this.authKey = authKey;
         this.client = new HttpPheClient(authToken);
-        this.currentClient = new PheClient();
+        this.currentVersion = currentVersion;
         this.crypto = new VirgilCrypto();
+
+        if (updateToken != null) {
+            this.updateToken = Pure.parseUpdateToken(updateToken, currentVersion);
+            this.previousClient = new PheClient();
+            this.previousClient.setupDefaults();
+            // TODO:
+//            this.previousClient.setKeys();
+        }
+
+        this.currentClient = new PheClient();
+        this.currentClient.setupDefaults();
+        // TODO:
+//        this.currentClient.setKeys();
+
         this.cipher = new PheCipher();
         this.cipher.setRandom(this.crypto.getRng());
     }
@@ -223,6 +238,10 @@ public class Pure {
 
         byte[] key = client.checkResponseAndDecrypt(oldPassword.getBytes(), userRecord.getPheRecord(), verifyResponse.getResponse().toByteArray());
 
+        // TODO: Encrypt hashed password for backup?
+        // FIXME: Do we need asymmetric crypto here?
+        VirgilKeyPair oldPheKeyPair = this.crypto.generateKeyPair(KeyType.ED25519, key);
+
         PurekitProtos.EnrollmentRequest enrollRequest = PurekitProtos.EnrollmentRequest.newBuilder().setVersion(this.currentVersion).build();
         PurekitProtos.EnrollmentResponse enrollResponse = this.client.enrollAccount(enrollRequest);
 
@@ -239,16 +258,14 @@ public class Pure {
 
         // TODO: Encrypt hashed password for backup?
         // FIXME: Do we need asymmetric crypto here?
-        VirgilKeyPair pheKeyPair = this.crypto.generateKeyPair(KeyType.ED25519, enrollResult.getAccountKey());
-
-        byte[] oldEncryptedUsk = userRecord.getEncryptedUsk();
+        VirgilKeyPair newPheKeyPair = this.crypto.generateKeyPair(KeyType.ED25519, enrollResult.getAccountKey());
 
         // TODO: Do we need signature here?
-        byte[] privateKeyData = this.crypto.decrypt(userRecord.getEncryptedUsk(), pheKeyPair.getPrivateKey());
+        byte[] privateKeyData = this.crypto.decrypt(userRecord.getEncryptedUsk(), oldPheKeyPair.getPrivateKey());
 
         // TODO: Add backup key to this list
         // TODO: Do we need signature here?
-        byte[] newEncryptedUsk = this.crypto.encrypt(privateKeyData, Arrays.asList(pheKeyPair.getPublicKey()));
+        byte[] newEncryptedUsk = this.crypto.encrypt(privateKeyData, Arrays.asList(newPheKeyPair.getPublicKey()));
 
         userRecord.setEncryptedUsk(newEncryptedUsk);
 
@@ -257,5 +274,66 @@ public class Pure {
 
     public void resetUserPassword(String userId, String newPassword) throws ProtocolException, ProtocolHttpException, CryptoException {
         this.registerUser(userId, newPassword, false);
+    }
+
+    private static byte[] parseUpdateToken(String updateToken, int currentVersion) {
+        if (updateToken == null) {
+            return null;
+        }
+
+        String[] parts = updateToken.split(".");
+
+        if (parts.length != 3) {
+            throw new NullPointerException();
+        }
+
+        if (!parts[0].equals("UT")) {
+            throw new NullPointerException();
+        }
+
+        int version = Integer.parseInt(parts[1]);
+
+        if (version != currentVersion) {
+            throw new NullPointerException();
+        }
+
+        return Base64.getDecoder().decode(parts[2]);
+    }
+
+    public long performRotation() throws Exception {
+        if (this.updateToken == null) {
+            throw new NullPointerException();
+        }
+
+        if (this.currentVersion <= 1) {
+            return 0;
+        }
+
+        long rotated = 0;
+
+        PheClient pheClient = this.getClient(this.currentVersion - 1);
+
+        while (true) {
+            UserRecord[] userRecords = this.storage.selectUsers(this.currentVersion - 1);
+
+            if (userRecords.length == 0) {
+                break;
+            }
+
+            for (UserRecord userRecord: userRecords) {
+                assert userRecord.getPheRecordVersion() == this.currentVersion - 1;
+
+                byte[] newRecord = pheClient.updateEnrollmentRecord(userRecord.getPheRecord(), this.updateToken);
+
+                userRecord.setPheRecordVersion(this.currentVersion);
+                userRecord.setPheRecord(newRecord);
+
+                this.storage.updateUser(userRecord);
+
+                rotated += 1;
+            }
+        }
+
+        return rotated;
     }
 }
