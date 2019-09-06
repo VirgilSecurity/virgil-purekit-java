@@ -7,4 +7,5 @@ public interface PureStorage {
     UserRecord[] selectUsers(int pheRecordVersion);
     CellKey selectKey(String userId, String dataId);
     void insertKey(String userId, String dataId, byte[] cpk, byte[] encryptedCsk);
+    void updateKey(String userId, String dataId, byte[] encryptedCsk);
 }

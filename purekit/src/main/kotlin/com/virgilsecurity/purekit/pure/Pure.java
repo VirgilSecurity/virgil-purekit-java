@@ -11,6 +11,8 @@ import com.virgilsecurity.purekit.protobuf.build.PurekitProtos;
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3;
 import com.virgilsecurity.sdk.crypto.*;
 import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
+import com.virgilsecurity.sdk.crypto.exceptions.DecryptionException;
+import com.virgilsecurity.sdk.crypto.exceptions.EncryptionException;
 
 import java.util.Arrays;
 import java.util.Base64;
@@ -165,7 +167,7 @@ public class Pure {
         this.registerUser(userId, password, true);
     }
 
-    private PheClient getClient(int pheVersion) throws Exception {
+    private PheClient getClient(int pheVersion) throws NullPointerException {
         if (this.currentVersion == pheVersion) {
             return this.currentClient;
         }
@@ -173,11 +175,11 @@ public class Pure {
             return this.previousClient;
         }
         else {
-            throw new Exception();
+            throw new NullPointerException();
         }
     }
 
-    public PureGrant authenticateUser(String userId, String password, String sessionId) throws Exception, ProtocolHttpException, ProtocolException {
+    public AuthResult authenticateUser(String userId, String password, String sessionId) throws ProtocolHttpException, ProtocolException, CryptoException {
         if (userId == null || userId.isEmpty()) {
             throw new NullPointerException();
         }
@@ -203,28 +205,12 @@ public class Pure {
         byte[] phesd = client.checkResponseAndDecrypt(passwordHash, userRecord.getPheRecord(), response.getResponse().toByteArray());
 
         VirgilKeyPair phekp = this.crypto.generateKeyPair(phesd);
-        byte[] pheskData = this.crypto.exportPrivateKey(phekp.getPrivateKey());
 
-        PureGrant grant = new PureGrant();
+        byte[] usk = this.crypto.decrypt(userRecord.getEncryptedUsk(), phekp.getPrivateKey());
 
-        grant.setPhesk(pheskData);
-        grant.setCreationDate(new Date());
+        VirgilKeyPair ukp = this.crypto.importPrivateKey(usk);
 
-        if (sessionId != null) {
-            grant.setSessionId(sessionId);
-        }
-
-        return grant;
-    }
-
-    public PureGrant authenticateUser(String userId, String password) throws Exception, ProtocolHttpException, ProtocolException {
-        return this.authenticateUser(userId, password, null);
-    }
-
-    public String encryptGrantForUser(PureGrant grant) {
-        if (grant == null) {
-            throw new NullPointerException();
-        }
+        PureGrant grant = new PureGrant(ukp, userId, sessionId, new Date());
 
         int timestamp = (int) (grant.getCreationDate().getTime() / 1000);
         PurekitProtosV3.EncryptedGrantHeader header = PurekitProtosV3.EncryptedGrantHeader.newBuilder()
@@ -235,19 +221,37 @@ public class Pure {
 
         byte[] headerBytes = header.toByteArray();
 
-        // TODO: Add headerBytes as auth data
-        byte[] result = this.cipher.encrypt(grant.getPhesk(), this.ak);
+        byte[] phesk = this.crypto.exportPrivateKey(phekp.getPrivateKey());
 
-        PurekitProtosV3.EncryptedGrant encryptedGrant = PurekitProtosV3.EncryptedGrant.newBuilder()
+        // TODO: Add headerBytes as auth data
+        byte[] encryptedPhesk = this.cipher.encrypt(phesk, this.ak);
+
+        PurekitProtosV3.EncryptedGrant encryptedGrantData = PurekitProtosV3.EncryptedGrant.newBuilder()
                 .setVersion(1) /* FIXME */
                 .setHeader(ByteString.copyFrom(headerBytes))
-                .setEncryptedPhesk(ByteString.copyFrom(result))
+                .setEncryptedPhesk(ByteString.copyFrom(encryptedPhesk))
                 .build();
 
-        return Base64.getEncoder().encodeToString(encryptedGrant.toByteArray());
+        String encryptedGrant = Base64.getEncoder().encodeToString(encryptedGrantData.toByteArray());
+
+        return new AuthResult(grant, encryptedGrant);
     }
 
-    public PureGrant decryptGrantFromUser(String encryptedGrantString) throws InvalidProtocolBufferException  {
+    public AuthResult authenticateUser(String userId, String password) throws Exception, ProtocolHttpException, ProtocolException {
+        return this.authenticateUser(userId, password, null);
+    }
+
+    public PureGrant createAdminGrant(String userId, VirgilPrivateKey bupsk) throws CryptoException {
+        UserRecord userRecord = this.storage.selectUser(userId);
+
+        byte[] usk = this.crypto.decrypt(userRecord.getEncryptedUsk(), bupsk);
+
+        VirgilKeyPair upk = this.crypto.importPrivateKey(usk);
+
+        return new PureGrant(upk, userId, null, new Date());
+    }
+
+    public PureGrant decryptGrantFromUser(String encryptedGrantString) throws InvalidProtocolBufferException, CryptoException {
         if (encryptedGrantString == null || encryptedGrantString.isEmpty()) {
             throw new NullPointerException();
         }
@@ -259,21 +263,22 @@ public class Pure {
         ByteString encryptedData = encryptedGrant.getEncryptedPhesk();
 
         // TODO: Add encryptedGrant.getHeader().toByteArray() as auth data
-        byte[] key = this.cipher.decrypt(encryptedData.toByteArray(), this.ak);
+        byte[] phesk = this.cipher.decrypt(encryptedData.toByteArray(), this.ak);
+
+        VirgilKeyPair phekp = this.crypto.importPrivateKey(phesk);
 
         PurekitProtosV3.EncryptedGrantHeader header = PurekitProtosV3.EncryptedGrantHeader.parseFrom(encryptedGrant.getHeader());
 
-        PureGrant grant = new PureGrant();
+        UserRecord userRecord = this.storage.selectUser(header.getUserId());
 
-        grant.setSessionId(header.getSessionId());
-        grant.setUserId(header.getUserId());
-        grant.setCreationDate(new Date((long)header.getCreationDate() * 1000));
-        grant.setPhesk(key);
+        byte[] usk = this.crypto.decrypt(userRecord.getEncryptedUsk(), phekp.getPrivateKey());
 
-        return grant;
+        VirgilKeyPair ukp = this.crypto.importPrivateKey(usk);
+
+        return new PureGrant(ukp, header.getUserId(), header.getSessionId(), new Date((long)header.getCreationDate() * 1000));
     }
 
-    public void changeUserPassword(String userId, String oldPassword, String newPassword) throws ProtocolException, ProtocolHttpException, CryptoException, Exception {
+    public void changeUserPassword(String userId, String oldPassword, String newPassword) throws ProtocolException, ProtocolHttpException, CryptoException {
         if (userId == null || userId.isEmpty()) {
             throw new NullPointerException();
         }
@@ -398,8 +403,8 @@ public class Pure {
             byte[] cskData = this.crypto.exportPrivateKey(ckp.getPrivateKey());
 
             // TODO: Do we need signature here?
-            byte[] encrypted_csk = this.crypto.encrypt(cskData, Arrays.asList(upk));
-            this.storage.insertKey(userId, dataId, cpkData, encrypted_csk);
+            byte[] encryptedCsk = this.crypto.encrypt(cskData, Arrays.asList(upk));
+            this.storage.insertKey(userId, dataId, cpkData, encryptedCsk);
             cpk = ckp.getPublicKey();
         }
         // FIXME: Catch only already exists error
@@ -414,7 +419,7 @@ public class Pure {
         return this.crypto.encrypt(plainText, Arrays.asList(cpk));
     }
 
-    public byte[] decrypt(PureGrant grant, String dataId, byte[] cipherText) throws CryptoException {
+    public byte[] decrypt(PureGrant grant, String ownerUserId, String dataId, byte[] cipherText) throws CryptoException {
         if (grant == null) {
             throw new NullPointerException();
         }
@@ -422,18 +427,43 @@ public class Pure {
             throw new NullPointerException();
         }
 
-        UserRecord userRecord = this.storage.selectUser(grant.getUserId());
-        CellKey cellKey = this.storage.selectKey(grant.getUserId(), dataId);
+        String userId = ownerUserId;
 
-        byte[] usk = this.cipher.decrypt(userRecord.getEncryptedUsk(), grant.getPhesk());
+        if (userId == null) {
+            userId = grant.getUserId();
+        }
 
-        VirgilKeyPair ukp = this.crypto.importPrivateKey(usk);
+        CellKey cellKey = this.storage.selectKey(userId, dataId);
 
-        byte[] csk = this.crypto.decrypt(cellKey.getEncryptedPrivateKey(), ukp.getPrivateKey());
+        byte[] csk = this.crypto.decrypt(cellKey.getEncryptedPrivateKey(), grant.getUkp().getPrivateKey());
 
         VirgilKeyPair ckp = this.crypto.importPrivateKey(csk);
 
         // TODO: Add signature?
         return this.crypto.decrypt(cipherText, ckp.getPrivateKey());
+    }
+
+    public void share(PureGrant grant, String dataId, String otherUserId) throws CryptoException {
+        if (grant == null) {
+            throw new NullPointerException();
+        }
+        if (dataId == null || dataId.isEmpty()) {
+            throw new NullPointerException();
+        }
+        if (otherUserId == null || otherUserId.isEmpty()) {
+            throw new NullPointerException();
+        }
+
+        UserRecord otherUserRecord = this.storage.selectUser(otherUserId);
+        VirgilPublicKey otherUpk = this.crypto.importPublicKey(otherUserRecord.getUpk());
+
+        CellKey cellKey = this.storage.selectKey(grant.getUserId(), dataId);
+
+        byte[] csk = this.crypto.decrypt(cellKey.getEncryptedPrivateKey(), grant.getUkp().getPrivateKey());
+
+        // FIXME: Replace with adding participant instead of reencryption
+        byte[] encryptedCsk = this.crypto.encrypt(csk, Arrays.asList(grant.getUkp().getPublicKey(), otherUpk));
+
+        this.storage.updateKey(grant.getUserId(), dataId, encryptedCsk);
     }
 }
