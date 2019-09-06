@@ -17,48 +17,100 @@ import java.util.Base64;
 import java.util.Date;
 
 public class Pure {
+    private VirgilCrypto crypto;
+    private PheCipher cipher;
     private PureStorage storage;
+    private int currentVersion;
+    private PheClient currentClient;
+    private byte[] updateToken;
+    private PheClient previousClient;
     private byte[] ak;
     private VirgilPublicKey buppk;
     private VirgilPublicKey hpk;
     private HttpPheClient client;
-    private int currentVersion;
-    private byte[] updateToken;
-    private PheClient currentClient;
-    private PheClient previousClient;
-    private VirgilCrypto crypto;
-    private PheCipher cipher;
 
-    public Pure(String authToken,
-                byte[] ak,
-                byte[] buppk,
-                byte[] hpk,
-                PureStorage storage,
-                int currentVersion,
-                String updateToken) throws CryptoException {
-        this.storage = storage;
+    public Pure(PureContext context) throws CryptoException {
         this.crypto = new VirgilCrypto();
-        this.ak = ak;
-        this.buppk = this.crypto.importPublicKey(buppk);
-        this.hpk = this.crypto.importPublicKey(hpk);
-        this.client = new HttpPheClient(authToken);
-        this.currentVersion = currentVersion;
-
-        if (updateToken != null) {
-            this.updateToken = Pure.parseUpdateToken(updateToken, currentVersion);
-            this.previousClient = new PheClient();
-            this.previousClient.setupDefaults();
-            // TODO:
-//            this.previousClient.setKeys();
-        }
-
-        this.currentClient = new PheClient();
-        this.currentClient.setupDefaults();
-        // TODO:
-//        this.currentClient.setKeys();
-
         this.cipher = new PheCipher();
         this.cipher.setRandom(this.crypto.getRng());
+        this.storage = context.getStorage();
+        this.currentClient = new PheClient();
+        this.currentClient.setOperationRandom(this.crypto.getRng());
+        this.currentClient.setRandom(this.crypto.getRng());
+
+        ParseResult skResult = Pure.parseCredentials("SK", context.getServicePublicKey());
+        ParseResult pkResult = Pure.parseCredentials("PK", context.getAppSecretKey());
+
+        if (skResult.getVersion() != pkResult.getVersion()) {
+            throw new NullPointerException();
+        }
+
+        this.currentVersion = skResult.getVersion();
+        this.currentClient.setKeys(skResult.getPayload(), pkResult.getPayload());
+
+        if (context.getUpdateToken() != null) {
+            ParseResult utResult = Pure.parseCredentials("UT", context.getUpdateToken());
+
+            if (utResult.getVersion() != this.currentVersion + 1) {
+                throw new NullPointerException();
+            }
+
+            this.currentVersion += 1;
+            this.updateToken = utResult.getPayload();
+            this.previousClient = new PheClient();
+            this.previousClient.setOperationRandom(this.crypto.getRng());
+            this.previousClient.setRandom(this.crypto.getRng());
+            this.previousClient.setKeys(skResult.getPayload(), pkResult.getPayload());
+            this.currentClient.rotateKeys(utResult.getPayload());
+        }
+
+        // TODO: Check size
+        this.ak = context.getAk();
+        this.buppk = this.crypto.importPublicKey(context.getBuppk());
+        this.hpk = this.crypto.importPublicKey(context.getHpk());
+        this.client = new HttpPheClient(context.getAuthToken());
+    }
+
+    private static class ParseResult {
+        private byte[] payload;
+        private int version;
+
+        private byte[] getPayload() {
+            return payload;
+        }
+
+        private int getVersion() {
+            return version;
+        }
+
+        private ParseResult(byte[] payload, int version) {
+            this.payload = payload;
+            this.version = version;
+        }
+    }
+
+    private static ParseResult parseCredentials(String prefix, String credentials) {
+        if (prefix == null || prefix.isEmpty()) {
+            throw new NullPointerException();
+        }
+        if (credentials == null || credentials.isEmpty()) {
+            throw new NullPointerException();
+        }
+
+        String[] parts = credentials.split(".");
+
+        if (parts.length != 3) {
+            throw new NullPointerException();
+        }
+
+        if (!parts[0].equals(prefix)) {
+            throw new NullPointerException();
+        }
+
+        int version = Integer.parseInt(parts[1]);
+        byte[] payload = Base64.getDecoder().decode(parts[2]);;
+
+        return new ParseResult(payload, version);
     }
 
     private void registerUser(String userId, String password, boolean isUserNew) throws ProtocolException, ProtocolHttpException, CryptoException {
@@ -284,30 +336,6 @@ public class Pure {
 
     public void resetUserPassword(String userId, String newPassword) throws ProtocolException, ProtocolHttpException, CryptoException {
         this.registerUser(userId, newPassword, false);
-    }
-
-    private static byte[] parseUpdateToken(String updateToken, int currentVersion) {
-        if (updateToken == null) {
-            return null;
-        }
-
-        String[] parts = updateToken.split(".");
-
-        if (parts.length != 3) {
-            throw new NullPointerException();
-        }
-
-        if (!parts[0].equals("UT")) {
-            throw new NullPointerException();
-        }
-
-        int version = Integer.parseInt(parts[1]);
-
-        if (version != currentVersion) {
-            throw new NullPointerException();
-        }
-
-        return Base64.getDecoder().decode(parts[2]);
     }
 
     public long performRotation() throws Exception {
