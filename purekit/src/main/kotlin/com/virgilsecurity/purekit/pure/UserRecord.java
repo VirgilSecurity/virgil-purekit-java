@@ -6,7 +6,6 @@ public class UserRecord {
     private int pheRecordVersion;
     private byte[] upk;
     private byte[] encryptedUsk;
-
     private byte[] encryptedPwdHash;
 
     public String getUserId() {

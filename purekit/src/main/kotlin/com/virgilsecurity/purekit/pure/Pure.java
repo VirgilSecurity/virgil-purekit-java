@@ -18,6 +18,7 @@ import java.util.Date;
 
 public class Pure {
     private VirgilCrypto crypto;
+    private PureCrypto pureCrypto;
     private PheCipher cipher;
     private PureStorage storage;
     private int currentVersion;
@@ -31,6 +32,7 @@ public class Pure {
 
     public Pure(PureContext context) throws CryptoException {
         this.crypto = new VirgilCrypto();
+        this.pureCrypto = new PureCrypto(this.crypto);
         this.cipher = new PheCipher();
         this.cipher.setRandom(this.crypto.getRng());
         this.storage = context.getStorage();
@@ -374,7 +376,6 @@ public class Pure {
         return rotated;
     }
 
-    // TODO: How to update encrypted data?
     public byte[] encrypt(String userId, String dataId, byte[] plainText) throws CryptoException {
         if (userId == null || userId.isEmpty()) {
             throw new NullPointerException();
@@ -397,8 +398,8 @@ public class Pure {
             byte[] cskData = this.crypto.exportPrivateKey(ckp.getPrivateKey());
 
             // TODO: Do we need signature here?
-            byte[] encryptedCsk = this.crypto.encrypt(cskData, Arrays.asList(upk));
-            this.storage.insertKey(userId, dataId, cpkData, encryptedCsk);
+            PureCryptoData encryptedCskData = this.pureCrypto.encrypt(cskData, Arrays.asList(upk));
+            this.storage.insertKey(userId, dataId, cpkData, encryptedCskData.getCms(), encryptedCskData.getBody());
             cpk = ckp.getPublicKey();
         }
         // FIXME: Catch only already exists error
@@ -429,7 +430,7 @@ public class Pure {
 
         CellKey cellKey = this.storage.selectKey(userId, dataId);
 
-        byte[] csk = this.crypto.decrypt(cellKey.getEncryptedCsk(), grant.getUkp().getPrivateKey());
+        byte[] csk = this.pureCrypto.decrypt(new PureCryptoData(cellKey.getEncryptedCskCms(), cellKey.getEncryptedCskBody()), grant.getUkp().getPrivateKey());
 
         VirgilKeyPair ckp = this.crypto.importPrivateKey(csk);
 
@@ -448,17 +449,14 @@ public class Pure {
             throw new NullPointerException();
         }
 
+        CellKey cellKey = this.storage.selectKey(grant.getUserId(), dataId);
+
         UserRecord otherUserRecord = this.storage.selectUser(otherUserId);
         VirgilPublicKey otherUpk = this.crypto.importPublicKey(otherUserRecord.getUpk());
 
-        CellKey cellKey = this.storage.selectKey(grant.getUserId(), dataId);
+        byte[] encryptedCskCms = this.pureCrypto.addRecipient(cellKey.getEncryptedCskCms(), grant.getUkp().getPrivateKey(), otherUpk);
 
-        byte[] csk = this.crypto.decrypt(cellKey.getEncryptedCsk(), grant.getUkp().getPrivateKey());
-
-        // FIXME: Replace with adding participant instead of reencryption
-        byte[] encryptedCsk = this.crypto.encrypt(csk, Arrays.asList(grant.getUkp().getPublicKey(), otherUpk));
-
-        this.storage.updateKey(grant.getUserId(), dataId, encryptedCsk);
+        this.storage.updateKey(grant.getUserId(), dataId, encryptedCskCms);
     }
 
     public void unshare(PureGrant grant, String dataId, String otherUserId) throws CryptoException {
@@ -471,8 +469,11 @@ public class Pure {
 
         CellKey cellKey = this.storage.selectKey(grant.getUserId(), dataId);
 
-        // TODO: Replace with adding participant instead of reencryption
+        UserRecord otherUserRecord = this.storage.selectUser(otherUserId);
+        VirgilPublicKey otherUpk = this.crypto.importPublicKey(otherUserRecord.getUpk());
 
-        this.storage.updateKey(grant.getUserId(), dataId, cellKey.getEncryptedCsk());
+        byte[] encryptedCskCms = this.pureCrypto.deleteRecipient(cellKey.getEncryptedCskCms(), grant.getUkp().getPrivateKey(), otherUpk);
+
+        this.storage.updateKey(grant.getUserId(), dataId, encryptedCskCms);
     }
 }

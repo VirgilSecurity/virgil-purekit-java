@@ -1,22 +1,26 @@
 package com.virgilsecurity.purekit.pure;
 
 public class CellKey {
+
+    public CellKey(byte[] cpk, byte[] encryptedCskCms, byte[] encryptedCskBody) {
+        this.cpk = cpk;
+        this.encryptedCskCms = encryptedCskCms;
+        this.encryptedCskBody = encryptedCskBody;
+    }
+
     public byte[] getCpk() {
         return cpk;
     }
 
-    public void setCpk(byte[] cpk) {
-        this.cpk = cpk;
+    public byte[] getEncryptedCskCms() {
+        return encryptedCskCms;
     }
 
-    public byte[] getEncryptedCsk() {
-        return encryptedCsk;
-    }
-
-    public void setEncryptedCsk(byte[] encryptedCsk) {
-        this.encryptedCsk = encryptedCsk;
+    public byte[] getEncryptedCskBody() {
+        return encryptedCskBody;
     }
 
     private byte[] cpk;
-    private byte[] encryptedCsk;
+    private byte[] encryptedCskCms;
+    private byte[] encryptedCskBody;
 }

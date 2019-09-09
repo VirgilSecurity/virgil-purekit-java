@@ -1,5 +1,6 @@
 package com.virgilsecurity.purekit.protocol;
 
+import com.virgilsecurity.crypto.foundation.FoundationException;
 import com.virgilsecurity.purekit.data.ProtocolException;
 import com.virgilsecurity.purekit.data.ProtocolHttpException;
 import com.virgilsecurity.purekit.pure.*;
@@ -69,12 +70,10 @@ class PureTestJava {
         }
 
         @Override
-        public void insertKey(String userId, String dataId, byte[] cpk, byte[] encryptedCsk) {
+        public void insertKey(String userId, String dataId, byte[] cpk, byte[] encryptedCskCms, byte[] encryptedCskBody) {
             HashMap<String, CellKey> map = this.keys.getOrDefault(userId, new HashMap<>());
 
-            CellKey cellKey = new CellKey();
-            cellKey.setEncryptedCsk(encryptedCsk);
-            cellKey.setCpk(cpk);
+            CellKey cellKey = new CellKey(cpk, encryptedCskCms, encryptedCskBody);
 
             map.put(dataId, cellKey);
 
@@ -82,12 +81,14 @@ class PureTestJava {
         }
 
         @Override
-        public void updateKey(String userId, String dataId, byte[] encryptedCsk) {
+        public void updateKey(String userId, String dataId, byte[] encryptedCskCms) {
             HashMap<String, CellKey> map = this.keys.get(userId);
 
             CellKey cellKey = map.get(dataId);
 
-            cellKey.setEncryptedCsk(encryptedCsk);
+            CellKey newCellKey = new CellKey(cellKey.getCpk(), encryptedCskCms, cellKey.getEncryptedCskBody());
+
+            map.put(dataId, newCellKey);
         }
     }
 
@@ -195,6 +196,81 @@ class PureTestJava {
             byte[] plainText = pure.decrypt(authResult.getGrant(), null, dataId, cipherText);
 
             assertArrayEquals(text, plainText);
+        }
+        catch (Exception | ProtocolHttpException e) {
+            fail(e);
+        }
+    }
+
+    @ParameterizedTest @MethodSource("testArgumentsNoToken")
+    void share(String serverAddress,
+               String appToken,
+               String publicKey,
+               String secretKey) throws InterruptedException, ProtocolException, ExecutionException {
+        ThreadUtils.pause();
+
+        try {
+            Pure pure = this.setupPure(serverAddress, appToken, publicKey, secretKey);
+
+            String userId1 = UUID.randomUUID().toString();
+            String userId2 = UUID.randomUUID().toString();
+            String password1 = UUID.randomUUID().toString();
+            String password2 = UUID.randomUUID().toString();
+            String dataId = UUID.randomUUID().toString();
+            byte[] text = UUID.randomUUID().toString().getBytes();
+
+            pure.registerUser(userId1, password1);
+            pure.registerUser(userId2, password2);
+
+            AuthResult authResult1 = pure.authenticateUser(userId1, password1);
+            AuthResult authResult2 = pure.authenticateUser(userId2, password2);
+
+            byte[] cipherText = pure.encrypt(userId1, dataId, text);
+
+            pure.share(authResult1.getGrant(), dataId, userId2);
+
+            byte[] plainText1 = pure.decrypt(authResult1.getGrant(), null, dataId, cipherText);
+            byte[] plainText2 = pure.decrypt(authResult2.getGrant(), userId1, dataId, cipherText);
+
+            assertArrayEquals(text, plainText1);
+            assertArrayEquals(text, plainText2);
+        }
+        catch (Exception | ProtocolHttpException e) {
+            fail(e);
+        }
+    }
+
+    @ParameterizedTest @MethodSource("testArgumentsNoToken")
+    void unshare(String serverAddress,
+                 String appToken,
+                 String publicKey,
+                 String secretKey) throws InterruptedException, ProtocolException, ExecutionException {
+        ThreadUtils.pause();
+
+        try {
+            Pure pure = this.setupPure(serverAddress, appToken, publicKey, secretKey);
+
+            String userId1 = UUID.randomUUID().toString();
+            String userId2 = UUID.randomUUID().toString();
+            String password1 = UUID.randomUUID().toString();
+            String password2 = UUID.randomUUID().toString();
+            String dataId = UUID.randomUUID().toString();
+            byte[] text = UUID.randomUUID().toString().getBytes();
+
+            pure.registerUser(userId1, password1);
+            pure.registerUser(userId2, password2);
+
+            AuthResult authResult1 = pure.authenticateUser(userId1, password1);
+            AuthResult authResult2 = pure.authenticateUser(userId2, password2);
+
+            byte[] cipherText = pure.encrypt(userId1, dataId, text);
+
+            pure.share(authResult1.getGrant(), dataId, userId2);
+            pure.unshare(authResult1.getGrant(), dataId, userId2);
+
+            assertThrows(FoundationException.class, () -> {
+                pure.decrypt(authResult2.getGrant(), userId1, dataId, cipherText);
+            });
         }
         catch (Exception | ProtocolHttpException e) {
             fail(e);
