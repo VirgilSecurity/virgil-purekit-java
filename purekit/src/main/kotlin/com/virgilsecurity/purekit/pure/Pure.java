@@ -130,12 +130,6 @@ public class Pure {
 
         PheClientEnrollAccountResult result = this.currentClient.enrollAccount(response.getResponse().toByteArray(), passwordHash);
 
-        byte[] pheRecord = PurekitProtos.DatabaseRecord.newBuilder()
-                .setVersion(this.currentVersion)
-                .setRecord(ByteString.copyFrom(result.getEnrollmentRecord()))
-                .build()
-                .toByteArray();
-
         VirgilKeyPair phekp = this.crypto.generateKeyPair(result.getAccountKey());
 
         VirgilKeyPair ukp = this.crypto.generateKeyPair();
@@ -147,7 +141,7 @@ public class Pure {
 
         UserRecord userRecord = new UserRecord();
         userRecord.setUserId(userId);
-        userRecord.setPheRecord(pheRecord);
+        userRecord.setPheRecord(result.getEnrollmentRecord());
         userRecord.setPheRecordVersion(this.currentVersion);
         userRecord.setUpk(this.crypto.exportPublicKey(ukp.getPublicKey()));
         userRecord.setEncryptedUsk(encryptedUsk);
@@ -211,11 +205,15 @@ public class Pure {
         PureGrant grant = new PureGrant(ukp, userId, sessionId, new Date());
 
         int timestamp = (int) (grant.getCreationDate().getTime() / 1000);
-        PurekitProtosV3.EncryptedGrantHeader header = PurekitProtosV3.EncryptedGrantHeader.newBuilder()
+        PurekitProtosV3.EncryptedGrantHeader.Builder headerBuilder = PurekitProtosV3.EncryptedGrantHeader.newBuilder()
                 .setCreationDate(timestamp)
-                .setUserId(grant.getUserId())
-                .setSessionId(grant.getSessionId())
-                .build();
+                .setUserId(grant.getUserId());
+
+        if (sessionId != null) {
+            headerBuilder.setSessionId(sessionId);
+        }
+
+        PurekitProtosV3.EncryptedGrantHeader header = headerBuilder.build();
 
         byte[] headerBytes = header.toByteArray();
 
