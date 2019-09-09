@@ -11,8 +11,6 @@ import com.virgilsecurity.purekit.protobuf.build.PurekitProtos;
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3;
 import com.virgilsecurity.sdk.crypto.*;
 import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
-import com.virgilsecurity.sdk.crypto.exceptions.DecryptionException;
-import com.virgilsecurity.sdk.crypto.exceptions.EncryptionException;
 
 import java.util.Arrays;
 import java.util.Base64;
@@ -40,8 +38,8 @@ public class Pure {
         this.currentClient.setOperationRandom(this.crypto.getRng());
         this.currentClient.setRandom(this.crypto.getRng());
 
-        ParseResult skResult = Pure.parseCredentials("SK", context.getServicePublicKey());
-        ParseResult pkResult = Pure.parseCredentials("PK", context.getAppSecretKey());
+        ParseResult skResult = Pure.parseCredentials("SK", context.getAppSecretKey());
+        ParseResult pkResult = Pure.parseCredentials("PK", context.getServicePublicKey());
 
         if (skResult.getVersion() != pkResult.getVersion()) {
             throw new NullPointerException();
@@ -70,7 +68,7 @@ public class Pure {
         this.ak = context.getAk();
         this.buppk = this.crypto.importPublicKey(context.getBuppk());
         this.hpk = this.crypto.importPublicKey(context.getHpk());
-        this.client = new HttpPheClient(context.getAuthToken());
+        this.client = new HttpPheClient(context.getAuthToken(), context.getServiceAddress());
     }
 
     private static class ParseResult {
@@ -99,7 +97,7 @@ public class Pure {
             throw new NullPointerException();
         }
 
-        String[] parts = credentials.split(".");
+        String[] parts = credentials.split("\\.");
 
         if (parts.length != 3) {
             throw new NullPointerException();
@@ -130,7 +128,7 @@ public class Pure {
 
         byte[] encryptedPwdHash = this.crypto.encrypt(passwordHash, Arrays.asList(this.hpk));
 
-        PheClientEnrollAccountResult result = this.currentClient.enrollAccount(response.toByteArray(), passwordHash);
+        PheClientEnrollAccountResult result = this.currentClient.enrollAccount(response.getResponse().toByteArray(), passwordHash);
 
         byte[] pheRecord = PurekitProtos.DatabaseRecord.newBuilder()
                 .setVersion(this.currentVersion)
@@ -412,7 +410,7 @@ public class Pure {
             // Key already exists
             CellKey cellKey = this.storage.selectKey(userId, dataId);
 
-            cpk = this.crypto.importPublicKey(cellKey.getPublicKey());
+            cpk = this.crypto.importPublicKey(cellKey.getCpk());
         }
 
         // TODO: Add signature?
@@ -435,7 +433,7 @@ public class Pure {
 
         CellKey cellKey = this.storage.selectKey(userId, dataId);
 
-        byte[] csk = this.crypto.decrypt(cellKey.getEncryptedPrivateKey(), grant.getUkp().getPrivateKey());
+        byte[] csk = this.crypto.decrypt(cellKey.getEncryptedCsk(), grant.getUkp().getPrivateKey());
 
         VirgilKeyPair ckp = this.crypto.importPrivateKey(csk);
 
@@ -459,11 +457,26 @@ public class Pure {
 
         CellKey cellKey = this.storage.selectKey(grant.getUserId(), dataId);
 
-        byte[] csk = this.crypto.decrypt(cellKey.getEncryptedPrivateKey(), grant.getUkp().getPrivateKey());
+        byte[] csk = this.crypto.decrypt(cellKey.getEncryptedCsk(), grant.getUkp().getPrivateKey());
 
         // FIXME: Replace with adding participant instead of reencryption
         byte[] encryptedCsk = this.crypto.encrypt(csk, Arrays.asList(grant.getUkp().getPublicKey(), otherUpk));
 
         this.storage.updateKey(grant.getUserId(), dataId, encryptedCsk);
+    }
+
+    public void unshare(PureGrant grant, String dataId, String otherUserId) throws CryptoException {
+        if (dataId == null || dataId.isEmpty()) {
+            throw new NullPointerException();
+        }
+        if (otherUserId == null || otherUserId.isEmpty()) {
+            throw new NullPointerException();
+        }
+
+        CellKey cellKey = this.storage.selectKey(grant.getUserId(), dataId);
+
+        // TODO: Replace with adding participant instead of reencryption
+
+        this.storage.updateKey(grant.getUserId(), dataId, cellKey.getEncryptedCsk());
     }
 }

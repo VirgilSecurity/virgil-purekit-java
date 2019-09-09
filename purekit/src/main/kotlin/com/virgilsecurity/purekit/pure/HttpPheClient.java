@@ -5,20 +5,22 @@ import com.virgilsecurity.purekit.data.ProtocolException;
 import com.virgilsecurity.purekit.data.ProtocolHttpException;
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtos;
 
+import java.util.LinkedHashMap;
+
 public class HttpPheClient {
     private String authToken;
     private HttpClientProtobuf client;
 
-    public HttpPheClient(String authToken) {
+    public HttpPheClient(String authToken, String serviceAddress) {
         this.authToken = authToken;
-        this.client = new HttpClientProtobuf("FIXME");
+        this.client = new HttpClientProtobuf(serviceAddress);
     }
 
     public PurekitProtos.EnrollmentResponse enrollAccount(PurekitProtos.EnrollmentRequest request) throws ProtocolException, ProtocolHttpException {
         return this.client.firePost(
                 request,
                 HttpClientProtobuf.AvailableRequests.ENROLL,
-                null,
+                new LinkedHashMap<String, String>(),
                 this.authToken,
                 PurekitProtos.EnrollmentResponse.parser()
         );
@@ -28,7 +30,7 @@ public class HttpPheClient {
         return this.client.firePost(
                 request,
                 HttpClientProtobuf.AvailableRequests.VERIFY_PASSWORD,
-                null,
+                new LinkedHashMap<String, String>(),
                 this.authToken,
                 PurekitProtos.VerifyPasswordResponse.parser()
         );

@@ -73,4 +73,13 @@ public class PureContext {
     private String appSecretKey;
     private String servicePublicKey;
     private String updateToken;
+    private String serviceAddress;
+
+    public String getServiceAddress() {
+        return serviceAddress;
+    }
+
+    public void setServiceAddress(String serviceAddress) {
+        this.serviceAddress = serviceAddress;
+    }
 }
