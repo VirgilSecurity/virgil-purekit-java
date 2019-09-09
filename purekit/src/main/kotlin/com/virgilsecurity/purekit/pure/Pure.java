@@ -219,8 +219,7 @@ public class Pure {
 
         byte[] phesk = this.crypto.exportPrivateKey(phekp.getPrivateKey());
 
-        // TODO: Add headerBytes as auth data
-        byte[] encryptedPhesk = this.cipher.encrypt(phesk, this.ak);
+        byte[] encryptedPhesk = this.cipher.authEncrypt(phesk, headerBytes, this.ak);
 
         PurekitProtosV3.EncryptedGrant encryptedGrantData = PurekitProtosV3.EncryptedGrant.newBuilder()
                 .setVersion(1) /* FIXME */
@@ -258,8 +257,7 @@ public class Pure {
 
         ByteString encryptedData = encryptedGrant.getEncryptedPhesk();
 
-        // TODO: Add encryptedGrant.getHeader().toByteArray() as auth data
-        byte[] phesk = this.cipher.decrypt(encryptedData.toByteArray(), this.ak);
+        byte[] phesk = this.cipher.authDecrypt(encryptedData.toByteArray(), encryptedGrant.getHeader().toByteArray(), this.ak);
 
         VirgilKeyPair phekp = this.crypto.importPrivateKey(phesk);
 
