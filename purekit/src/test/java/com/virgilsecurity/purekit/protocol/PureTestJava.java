@@ -70,6 +70,10 @@ class PureTestJava {
         public CellKey selectKey(String userId, String dataId) {
             HashMap<String, CellKey> map = this.keys.get(userId);
 
+            if (map == null) {
+                return null;
+            }
+
             return map.get(dataId);
         }
 
@@ -79,7 +83,9 @@ class PureTestJava {
 
             CellKey cellKey = new CellKey(cpk, encryptedCskCms, encryptedCskBody);
 
-            map.put(dataId, cellKey);
+            if (map.putIfAbsent(dataId, cellKey) != null) {
+                throw new PureStorageKeyAlreadyExistsException();
+            }
 
             this.keys.put(userId, map);
         }

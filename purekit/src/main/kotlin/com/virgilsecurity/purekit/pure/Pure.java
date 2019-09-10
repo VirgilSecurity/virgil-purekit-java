@@ -398,28 +398,34 @@ public class Pure {
 
         VirgilPublicKey cpk;
 
-        // Try to generate and save new key
-        try {
-            UserRecord userRecord = this.storage.selectUser(userId);
+        // Key already exists
+        CellKey cellKey1 = this.storage.selectKey(userId, dataId);
 
-            VirgilPublicKey upk = this.crypto.importPublicKey(userRecord.getUpk());
+        if (cellKey1 == null) {
+            // Try to generate and save new key
+            try {
+                UserRecord userRecord = this.storage.selectUser(userId);
 
-            VirgilKeyPair ckp = this.crypto.generateKeyPair();
+                VirgilPublicKey upk = this.crypto.importPublicKey(userRecord.getUpk());
 
-            byte[] cpkData = this.crypto.exportPublicKey(ckp.getPublicKey());
-            byte[] cskData = this.crypto.exportPrivateKey(ckp.getPrivateKey());
+                VirgilKeyPair ckp = this.crypto.generateKeyPair();
 
-            // TODO: Do we need signature here?
-            PureCryptoData encryptedCskData = this.pureCrypto.encrypt(cskData, Arrays.asList(upk));
-            this.storage.insertKey(userId, dataId, cpkData, encryptedCskData.getCms(), encryptedCskData.getBody());
-            cpk = ckp.getPublicKey();
+                byte[] cpkData = this.crypto.exportPublicKey(ckp.getPublicKey());
+                byte[] cskData = this.crypto.exportPrivateKey(ckp.getPrivateKey());
+
+                // TODO: Do we need signature here?
+                PureCryptoData encryptedCskData = this.pureCrypto.encrypt(cskData, Arrays.asList(upk));
+                this.storage.insertKey(userId, dataId, cpkData, encryptedCskData.getCms(), encryptedCskData.getBody());
+                cpk = ckp.getPublicKey();
+            }
+            catch (PureStorageKeyAlreadyExistsException e) {
+                CellKey cellKey2 = this.storage.selectKey(userId, dataId);
+
+                cpk = this.crypto.importPublicKey(cellKey2.getCpk());
+            }
         }
-        // FIXME: Catch only already exists error
-        catch (Exception e) {
-            // Key already exists
-            CellKey cellKey = this.storage.selectKey(userId, dataId);
-
-            cpk = this.crypto.importPublicKey(cellKey.getCpk());
+        else {
+            cpk = this.crypto.importPublicKey(cellKey1.getCpk());
         }
 
         // TODO: Add signature?
