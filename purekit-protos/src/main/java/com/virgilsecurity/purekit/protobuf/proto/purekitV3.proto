@@ -46,6 +46,6 @@ message EncryptedGrantHeader {
 
 message EncryptedGrant {
     uint32 version = 1;
-    bytes encrypted_phesk = 2;
+    bytes encrypted_phek = 2;
     bytes header = 3;
 }

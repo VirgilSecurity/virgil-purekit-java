@@ -11,6 +11,7 @@ import com.virgilsecurity.purekit.protobuf.build.PurekitProtos;
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3;
 import com.virgilsecurity.sdk.crypto.*;
 import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
+import com.virgilsecurity.sdk.crypto.exceptions.EncryptionException;
 
 import java.util.Arrays;
 import java.util.Base64;
@@ -132,22 +133,18 @@ public class Pure {
 
         PheClientEnrollAccountResult result = this.currentClient.enrollAccount(response.getResponse().toByteArray(), passwordHash);
 
-        VirgilKeyPair phekp = this.crypto.generateKeyPair(result.getAccountKey());
-
         VirgilKeyPair ukp = this.crypto.generateKeyPair();
 
         byte[] uskData = this.crypto.exportPrivateKey(ukp.getPrivateKey());
 
-        // TODO: Do we need signature here?
-        byte[] encryptedUsk = this.crypto.encrypt(uskData, Arrays.asList(phekp.getPublicKey(), this.buppk));
+        byte[] encryptedUsk = this.cipher.encrypt(uskData, result.getAccountKey());
 
-        UserRecord userRecord = new UserRecord();
-        userRecord.setUserId(userId);
-        userRecord.setPheRecord(result.getEnrollmentRecord());
-        userRecord.setPheRecordVersion(this.currentVersion);
-        userRecord.setUpk(this.crypto.exportPublicKey(ukp.getPublicKey()));
-        userRecord.setEncryptedUsk(encryptedUsk);
-        userRecord.setEncryptedPwdHash(encryptedPwdHash);
+        // TODO: Do we need signature here?
+        byte[] encryptedUskBackup = this.crypto.encrypt(uskData, Arrays.asList(this.buppk));
+
+        UserRecord userRecord = new UserRecord(userId,
+                result.getEnrollmentRecord(), this.currentVersion,
+                this.crypto.exportPublicKey(ukp.getPublicKey()), encryptedUsk, encryptedUskBackup, encryptedPwdHash);
 
         if (isUserNew) {
             this.storage.insertUser(userRecord);
@@ -196,13 +193,11 @@ public class Pure {
 
         PurekitProtos.VerifyPasswordResponse response = this.client.verifyPassword(request);
 
-        byte[] phesd = client.checkResponseAndDecrypt(passwordHash, userRecord.getPheRecord(), response.getResponse().toByteArray());
+        byte[] phek = client.checkResponseAndDecrypt(passwordHash, userRecord.getPheRecord(), response.getResponse().toByteArray());
 
-        VirgilKeyPair phekp = this.crypto.generateKeyPair(phesd);
+        byte[] uskData = this.cipher.decrypt(userRecord.getEncryptedUsk(), phek);
 
-        byte[] usk = this.crypto.decrypt(userRecord.getEncryptedUsk(), phekp.getPrivateKey());
-
-        VirgilKeyPair ukp = this.crypto.importPrivateKey(usk);
+        VirgilKeyPair ukp = this.crypto.importPrivateKey(uskData);
 
         PureGrant grant = new PureGrant(ukp, userId, sessionId, new Date());
 
@@ -219,14 +214,12 @@ public class Pure {
 
         byte[] headerBytes = header.toByteArray();
 
-        byte[] phesk = this.crypto.exportPrivateKey(phekp.getPrivateKey());
-
-        byte[] encryptedPhesk = this.cipher.authEncrypt(phesk, headerBytes, this.ak);
+        byte[] encryptedPhek = this.cipher.authEncrypt(phek, headerBytes, this.ak);
 
         PurekitProtosV3.EncryptedGrant encryptedGrantData = PurekitProtosV3.EncryptedGrant.newBuilder()
                 .setVersion(1) /* FIXME */
                 .setHeader(ByteString.copyFrom(headerBytes))
-                .setEncryptedPhesk(ByteString.copyFrom(encryptedPhesk))
+                .setEncryptedPhek(ByteString.copyFrom(encryptedPhek))
                 .build();
 
         String encryptedGrant = Base64.getEncoder().encodeToString(encryptedGrantData.toByteArray());
@@ -241,7 +234,7 @@ public class Pure {
     public PureGrant createAdminGrant(String userId, VirgilPrivateKey bupsk) throws CryptoException {
         UserRecord userRecord = this.storage.selectUser(userId);
 
-        byte[] usk = this.crypto.decrypt(userRecord.getEncryptedUsk(), bupsk);
+        byte[] usk = this.crypto.decrypt(userRecord.getEncryptedUskBackup(), bupsk);
 
         VirgilKeyPair upk = this.crypto.importPrivateKey(usk);
 
@@ -257,24 +250,51 @@ public class Pure {
 
         PurekitProtosV3.EncryptedGrant encryptedGrant = PurekitProtosV3.EncryptedGrant.parseFrom(encryptedGrantData);
 
-        ByteString encryptedData = encryptedGrant.getEncryptedPhesk();
+        ByteString encryptedData = encryptedGrant.getEncryptedPhek();
 
-        byte[] phesk = this.cipher.authDecrypt(encryptedData.toByteArray(), encryptedGrant.getHeader().toByteArray(), this.ak);
-
-        VirgilKeyPair phekp = this.crypto.importPrivateKey(phesk);
+        byte[] phek = this.cipher.authDecrypt(encryptedData.toByteArray(), encryptedGrant.getHeader().toByteArray(), this.ak);
 
         PurekitProtosV3.EncryptedGrantHeader header = PurekitProtosV3.EncryptedGrantHeader.parseFrom(encryptedGrant.getHeader());
 
         UserRecord userRecord = this.storage.selectUser(header.getUserId());
 
-        byte[] usk = this.crypto.decrypt(userRecord.getEncryptedUsk(), phekp.getPrivateKey());
+        byte[] usk = this.cipher.decrypt(userRecord.getEncryptedUsk(), phek);
 
         VirgilKeyPair ukp = this.crypto.importPrivateKey(usk);
 
-        return new PureGrant(ukp, header.getUserId(), header.getSessionId(), new Date((long)header.getCreationDate() * 1000));
+        String sessionId = header.getSessionId();
+
+        if (sessionId.isEmpty()) {
+            sessionId = null;
+        }
+
+        return new PureGrant(ukp, header.getUserId(), sessionId, new Date((long)header.getCreationDate() * 1000));
     }
 
-    public void changeUserPassword(String userId, String oldPassword, String newPassword) throws ProtocolException, ProtocolHttpException, CryptoException {
+    private void changeUserPassword(UserRecord userRecord, byte[] privateKeyData, String newPassword) throws ProtocolException, ProtocolHttpException, EncryptionException {
+        if (newPassword == null || newPassword.isEmpty()) {
+            throw new NullPointerException();
+        }
+
+        byte[] newPasswordHash = this.crypto.computeHash(newPassword.getBytes(), HashAlgorithm.SHA512);
+
+        PurekitProtos.EnrollmentRequest enrollRequest = PurekitProtos.EnrollmentRequest.newBuilder().setVersion(this.currentVersion).build();
+        PurekitProtos.EnrollmentResponse enrollResponse = this.client.enrollAccount(enrollRequest);
+
+        PheClientEnrollAccountResult enrollResult = this.currentClient.enrollAccount(enrollResponse.getResponse().toByteArray(), newPasswordHash);
+
+        // TODO: Do we need signature here?
+        byte[] newEncryptedUsk = this.cipher.encrypt(privateKeyData, enrollResult.getAccountKey());
+
+        byte[] encryptedPwdHash = this.crypto.encrypt(newPasswordHash, Arrays.asList(this.hpk));
+
+        UserRecord newUserRecord = new UserRecord(userRecord.getUserId(), enrollResult.getEnrollmentRecord(), this.currentVersion,
+                userRecord.getUpk(), newEncryptedUsk, userRecord.getEncryptedUskBackup(), encryptedPwdHash);
+
+        this.storage.updateUser(newUserRecord);
+    }
+
+    public void changeUserPassword(String userId, String oldPassword, String newPassword) throws ProtocolException, ProtocolHttpException, EncryptionException {
         if (userId == null || userId.isEmpty()) {
             throw new NullPointerException();
         }
@@ -286,7 +306,6 @@ public class Pure {
         }
 
         byte[] oldPasswordHash = this.crypto.computeHash(oldPassword.getBytes(), HashAlgorithm.SHA512);
-        byte[] newPasswordHash = this.crypto.computeHash(newPassword.getBytes(), HashAlgorithm.SHA512);
 
         UserRecord userRecord = this.storage.selectUser(userId);
 
@@ -303,36 +322,24 @@ public class Pure {
 
         byte[] oldPhek = client.checkResponseAndDecrypt(oldPasswordHash, userRecord.getPheRecord(), verifyResponse.getResponse().toByteArray());
 
-        VirgilKeyPair oldPhekp = this.crypto.generateKeyPair(oldPhek);
+        byte[] privateKeyData = this.cipher.decrypt(userRecord.getEncryptedUsk(), oldPhek);
 
-        PurekitProtos.EnrollmentRequest enrollRequest = PurekitProtos.EnrollmentRequest.newBuilder().setVersion(this.currentVersion).build();
-        PurekitProtos.EnrollmentResponse enrollResponse = this.client.enrollAccount(enrollRequest);
+        this.changeUserPassword(userRecord, privateKeyData, newPassword);
+    }
 
-        PheClientEnrollAccountResult enrollResult = this.currentClient.enrollAccount(enrollResponse.toByteArray(), newPasswordHash);
+    public void restoreUserPassword(PureGrant grant, String newPassword) throws CryptoException, ProtocolHttpException, ProtocolException {
+        if (grant == null) {
+            throw new NullPointerException();
+        }
+        if (newPassword == null || newPassword.isEmpty()) {
+            throw new NullPointerException();
+        }
 
-        byte[] pheRecord = PurekitProtos.DatabaseRecord.newBuilder()
-                .setVersion(this.currentVersion)
-                .setRecord(ByteString.copyFrom(enrollResult.getEnrollmentRecord()))
-                .build()
-                .toByteArray();
+        UserRecord userRecord = this.storage.selectUser(grant.getUserId());
 
-        userRecord.setPheRecord(pheRecord);
-        userRecord.setPheRecordVersion(this.currentVersion);
+        byte[] privateKeyData = this.crypto.exportPrivateKey(grant.getUkp().getPrivateKey());
 
-        VirgilKeyPair newPhekp = this.crypto.generateKeyPair(enrollResult.getAccountKey());
-
-        // TODO: Do we need signature here?
-        byte[] privateKeyData = this.crypto.decrypt(userRecord.getEncryptedUsk(), oldPhekp.getPrivateKey());
-
-        // TODO: Do we need signature here?
-        byte[] newEncryptedUsk = this.crypto.encrypt(privateKeyData, Arrays.asList(newPhekp.getPublicKey(), this.buppk));
-
-        userRecord.setEncryptedUsk(newEncryptedUsk);
-
-        byte[] encryptedPwdHash = this.crypto.encrypt(newPasswordHash, Arrays.asList(this.hpk));
-        userRecord.setEncryptedPwdHash(encryptedPwdHash);
-
-        this.storage.updateUser(userRecord);
+        this.changeUserPassword(userRecord, privateKeyData, newPassword);
     }
 
     public void resetUserPassword(String userId, String newPassword) throws ProtocolException, ProtocolHttpException, CryptoException {
@@ -348,32 +355,37 @@ public class Pure {
             return 0;
         }
 
-        long rotated = 0;
+        long rotations = 0;
 
         PheClient pheClient = this.getClient(this.currentVersion - 1);
 
         while (true) {
-            UserRecord[] userRecords = this.storage.selectUsers(this.currentVersion - 1);
+            Iterable<UserRecord> userRecords = this.storage.selectUsers(this.currentVersion - 1);
 
-            if (userRecords.length == 0) {
-                break;
-            }
+            long currentRotations = 0;
 
             for (UserRecord userRecord: userRecords) {
                 assert userRecord.getPheRecordVersion() == this.currentVersion - 1;
 
                 byte[] newRecord = pheClient.updateEnrollmentRecord(userRecord.getPheRecord(), this.updateToken);
 
-                userRecord.setPheRecordVersion(this.currentVersion);
-                userRecord.setPheRecord(newRecord);
+                UserRecord newUserRecord = new UserRecord(userRecord.getUserId(), newRecord, this.currentVersion,
+                        userRecord.getUpk(), userRecord.getEncryptedUsk(), userRecord.getEncryptedUskBackup(), userRecord.getEncryptedPwdHash());
 
-                this.storage.updateUser(userRecord);
+                this.storage.updateUser(newUserRecord);
 
-                rotated += 1;
+                currentRotations += 1;
+            }
+
+            if (currentRotations == 0) {
+                break;
+            }
+            else {
+                rotations += currentRotations;
             }
         }
 
-        return rotated;
+        return rotations;
     }
 
     public byte[] encrypt(String userId, String dataId, byte[] plainText) throws CryptoException {
