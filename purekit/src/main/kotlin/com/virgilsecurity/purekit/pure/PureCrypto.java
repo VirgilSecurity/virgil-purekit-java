@@ -64,19 +64,19 @@ public class PureCrypto {
         MessageInfoEditor infoEditor = new MessageInfoEditor();
         infoEditor.setRandom(this.crypto.getRng());
 
-        infoEditor.unpack(cms, privateKey.getIdentifier(), privateKey.getPrivateKey());
+        infoEditor.unpack(cms);
+        infoEditor.unlock(privateKey.getIdentifier(), privateKey.getPrivateKey());
 
         infoEditor.addKeyRecipient(publicKey.getIdentifier(), publicKey.getPublicKey());
 
         return infoEditor.pack();
     }
 
-    public byte[] deleteRecipient(byte[] cms, VirgilPrivateKey /* FIXME */ privateKey, VirgilPublicKey publicKey) {
+    public byte[] deleteRecipient(byte[] cms, VirgilPublicKey publicKey) {
         MessageInfoEditor infoEditor = new MessageInfoEditor();
         infoEditor.setRandom(this.crypto.getRng());
 
-        infoEditor.unpack(cms, privateKey.getIdentifier(), privateKey.getPrivateKey());
-
+        infoEditor.unpack(cms);
         infoEditor.removeKeyRecipient(publicKey.getIdentifier());
 
         return infoEditor.pack();

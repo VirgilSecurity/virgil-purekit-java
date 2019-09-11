@@ -490,7 +490,7 @@ public class Pure {
         UserRecord otherUserRecord = this.storage.selectUser(otherUserId);
         VirgilPublicKey otherUpk = this.crypto.importPublicKey(otherUserRecord.getUpk());
 
-        byte[] encryptedCskCms = this.pureCrypto.deleteRecipient(cellKey.getEncryptedCskCms(), grant.getUkp().getPrivateKey(), otherUpk);
+        byte[] encryptedCskCms = this.pureCrypto.deleteRecipient(cellKey.getEncryptedCskCms(), otherUpk);
 
         this.storage.updateKey(grant.getUserId(), dataId, encryptedCskCms);
     }
