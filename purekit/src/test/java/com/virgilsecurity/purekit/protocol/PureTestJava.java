@@ -24,13 +24,12 @@ import static com.virgilsecurity.crypto.phe.PheException.ERROR_AES_FAILED;
 import static org.junit.jupiter.api.Assertions.*;
 
 class PureTestJava {
-
     static class RamStorage implements PureStorage {
 
         private HashMap<String, UserRecord> users;
         private HashMap<String, HashMap<String, CellKey>> keys;
 
-        public RamStorage() {
+        RamStorage() {
             this.users = new HashMap<>();
             this.keys = new HashMap<>();
         }
@@ -78,7 +77,7 @@ class PureTestJava {
         }
 
         @Override
-        public void insertKey(String userId, String dataId, byte[] cpk, byte[] encryptedCskCms, byte[] encryptedCskBody) {
+        public void insertKey(String userId, String dataId, byte[] cpk, byte[] encryptedCskCms, byte[] encryptedCskBody) throws PureStorageKeyAlreadyExistsException {
             HashMap<String, CellKey> map = this.keys.getOrDefault(userId, new HashMap<>());
 
             CellKey cellKey = new CellKey(cpk, encryptedCskCms, encryptedCskBody);
@@ -145,8 +144,6 @@ class PureTestJava {
                                       String secretKey,
                                       String updateToken,
                                       PureStorage storage) throws CryptoException {
-        PureContext context = new PureContext();
-
         VirgilCrypto crypto = new VirgilCrypto();
 
         VirgilKeyPair bupkp = crypto.generateKeyPair(KeyType.ED25519);
@@ -154,14 +151,12 @@ class PureTestJava {
 
         byte[] ak = crypto.generateRandomData(32);
 
+        PureContext context = new PureContext(appToken,
+                Base64.getEncoder().encodeToString(ak), Base64.getEncoder().encodeToString(crypto.exportPublicKey(bupkp.getPublicKey())),
+                Base64.getEncoder().encodeToString(crypto.exportPublicKey(hkp.getPublicKey())), secretKey, publicKey);
+
         context.setUpdateToken(updateToken);
         context.setServiceAddress(serverAddress);
-        context.setAk(ak);
-        context.setAppSecretKey(secretKey);
-        context.setServicePublicKey(publicKey);
-        context.setAuthToken(appToken);
-        context.setBuppk(crypto.exportPublicKey(bupkp.getPublicKey()));
-        context.setHpk(crypto.exportPublicKey(hkp.getPublicKey()));
 
         if (storage == null) {
             RamStorage ramStorage = new RamStorage();
@@ -325,7 +320,7 @@ class PureTestJava {
             byte[] cipherText = pure.encrypt(userId1, dataId, text);
 
             pure.share(authResult1.getGrant(), dataId, userId2);
-            pure.unshare(authResult1.getGrant(), dataId, userId2);
+            pure.unshare(userId1, dataId, userId2);
 
             FoundationException e = assertThrows(FoundationException.class, () -> {
                 pure.decrypt(authResult2.getGrant(), userId1, dataId, cipherText);
@@ -398,7 +393,7 @@ class PureTestJava {
 
             byte[] cipherText = pure.encrypt(userId, dataId, text);
 
-            PureGrant adminGrant = pure.createAdminGrant(userId, pureResult.getBupkp().getPrivateKey());
+            PureGrant adminGrant = pure.createUserGrantAsAdmin(userId, pureResult.getBupkp().getPrivateKey());
 
             assertNotNull(adminGrant);
 
@@ -470,9 +465,9 @@ class PureTestJava {
 
             byte[] cipherText = pure.encrypt(userId, dataId, text);
 
-            PureGrant adminGrant = pure.createAdminGrant(userId, pureResult.getBupkp().getPrivateKey());
+            PureGrant adminGrant = pure.createUserGrantAsAdmin(userId, pureResult.getBupkp().getPrivateKey());
 
-            pure.restoreUserPassword(adminGrant, password2);
+            pure.changeUserPassword(adminGrant, password2);
 
             AuthResult authResult = pure.authenticateUser(userId, password2);
 
