@@ -19,8 +19,8 @@ public class VirgilCloudPureStorage implements PureStorage {
     private HttpPureClient client;
 
     /**
-     *
-     * @param signingKey
+     * Constructor
+     * @param signingKey key used to sign data before sending to Virgil
      */
     public VirgilCloudPureStorage(HttpPureClient client, byte[] signingKey) throws CryptoException {
         this.crypto = new VirgilCrypto();
@@ -67,16 +67,32 @@ public class VirgilCloudPureStorage implements PureStorage {
         }
     }
 
+    /**
+     * Inserts new User
+     * @param userRecord User record
+     * @throws Exception FIXME
+     */
     @Override
     public void insertUser(UserRecord userRecord) throws Exception {
         this.sendUser(userRecord, true);
     }
 
+    /**
+     * Updates user
+     * @param userRecord User record
+     * @throws Exception FIXME
+     */
     @Override
     public void updateUser(UserRecord userRecord) throws Exception {
         this.sendUser(userRecord, false);
     }
 
+    /**
+     * Obtains user
+     * @param userId userId
+     * @return UserRecord
+     * @throws Exception FIXME
+     */
     @Override
     public UserRecord selectUser(String userId) throws Exception {
         PurekitProtosV3Storage.UserRecord protobufRecord;
@@ -114,11 +130,25 @@ public class VirgilCloudPureStorage implements PureStorage {
                 r.getEncryptedPwdHash().toByteArray());
     }
 
+    /**
+     * This method throws NotImplementedException, as in case of using Virgil Cloud storage, rotation happens on Virgil side
+     * @param pheRecordVersion PheRecordVersion
+     * @return throws NotImplementedException
+     * @throws NotImplementedException always
+     */
     @Override
-    public Iterable<UserRecord> selectUsers(int pheRecordVersion) throws Exception {
+    public Iterable<UserRecord> selectUsers(int pheRecordVersion) throws NotImplementedException {
+        // FIXME: Can we add message here?
         throw new NotImplementedException();
     }
 
+    /**
+     * Obtains key
+     * @param userId userId
+     * @param dataId dataId
+     * @return CellKey
+     * @throws Exception FIXME
+     */
     @Override
     public CellKey selectKey(String userId, String dataId) throws Exception {
 
@@ -179,11 +209,25 @@ public class VirgilCloudPureStorage implements PureStorage {
         }
     }
 
+    /**
+     * Inserts new key
+     * @param userId userId
+     * @param dataId dataId
+     * @param cellKey cell key record
+     * @throws Exception FIXME
+     */
     @Override
     public void insertKey(String userId, String dataId, CellKey cellKey) throws Exception {
         this.insertKey(userId, dataId, cellKey, true);
     }
 
+    /**
+     * Updates key
+     * @param userId userId
+     * @param dataId dataId
+     * @param cellKey cell key record
+     * @throws Exception FIXME
+     */
     @Override
     public void updateKey(String userId, String dataId, CellKey cellKey) throws Exception {
         this.insertKey(userId, dataId, cellKey, false);
