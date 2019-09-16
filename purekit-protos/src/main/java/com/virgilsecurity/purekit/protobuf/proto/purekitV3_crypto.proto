@@ -36,16 +36,11 @@ syntax = "proto3";
 package build;
 
 option java_package = "com.virgilsecurity.purekit.protobuf.build";
-option java_outer_classname = "PurekitProtosV3";
+option java_outer_classname = "PurekitProtosV3Crypto";
 
-message EncryptedGrantHeader {
-    uint32 creation_date = 1;
-    string user_id = 2;
-    string session_id = 3;
-}
-
-message EncryptedGrant {
-    uint32 version = 1;
-    bytes encrypted_phek = 2;
-    bytes header = 3;
+message EnrollmentRecord {
+    bytes ns = 1;
+    bytes nc = 2;
+    bytes t0 = 3;
+    bytes t1 = 4;
 }

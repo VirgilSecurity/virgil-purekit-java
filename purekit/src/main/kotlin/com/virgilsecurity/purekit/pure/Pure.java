@@ -41,7 +41,7 @@ import com.virgilsecurity.crypto.phe.PheClientEnrollAccountResult;
 import com.virgilsecurity.purekit.data.ProtocolException;
 import com.virgilsecurity.purekit.data.ProtocolHttpException;
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtos;
-import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3;
+import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Grant;
 import com.virgilsecurity.sdk.crypto.*;
 import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
 import com.virgilsecurity.sdk.crypto.exceptions.EncryptionException;
@@ -65,7 +65,7 @@ public class Pure {
     private byte[] ak;
     private VirgilPublicKey buppk;
     private VirgilPublicKey hpk;
-    private HttpPheClient client;
+    private HttpPureClient client;
 
     /**
      * Constructor
@@ -112,7 +112,7 @@ public class Pure {
         this.ak = context.getAk();
         this.buppk = this.crypto.importPublicKey(context.getBuppk());
         this.hpk = this.crypto.importPublicKey(context.getHpk());
-        this.client = new HttpPheClient(context.getAppToken(), context.getServiceAddress());
+        this.client = context.getClient();
     }
 
     private static class ParseResult {
@@ -260,7 +260,7 @@ public class Pure {
         PureGrant grant = new PureGrant(ukp, userId, sessionId, new Date());
 
         int timestamp = (int) (grant.getCreationDate().getTime() / 1000);
-        PurekitProtosV3.EncryptedGrantHeader.Builder headerBuilder = PurekitProtosV3.EncryptedGrantHeader.newBuilder()
+        PurekitProtosV3Grant.EncryptedGrantHeader.Builder headerBuilder = PurekitProtosV3Grant.EncryptedGrantHeader.newBuilder()
                 .setCreationDate(timestamp)
                 .setUserId(grant.getUserId());
 
@@ -268,13 +268,13 @@ public class Pure {
             headerBuilder.setSessionId(sessionId);
         }
 
-        PurekitProtosV3.EncryptedGrantHeader header = headerBuilder.build();
+        PurekitProtosV3Grant.EncryptedGrantHeader header = headerBuilder.build();
 
         byte[] headerBytes = header.toByteArray();
 
         byte[] encryptedPhek = this.cipher.authEncrypt(phek, headerBytes, this.ak);
 
-        PurekitProtosV3.EncryptedGrant encryptedGrantData = PurekitProtosV3.EncryptedGrant.newBuilder()
+        PurekitProtosV3Grant.EncryptedGrant encryptedGrantData = PurekitProtosV3Grant.EncryptedGrant.newBuilder()
                 .setVersion(1) /* FIXME */
                 .setHeader(ByteString.copyFrom(headerBytes))
                 .setEncryptedPhek(ByteString.copyFrom(encryptedPhek))
@@ -329,13 +329,13 @@ public class Pure {
 
         byte[] encryptedGrantData = Base64.getDecoder().decode(encryptedGrantString);
 
-        PurekitProtosV3.EncryptedGrant encryptedGrant = PurekitProtosV3.EncryptedGrant.parseFrom(encryptedGrantData);
+        PurekitProtosV3Grant.EncryptedGrant encryptedGrant = PurekitProtosV3Grant.EncryptedGrant.parseFrom(encryptedGrantData);
 
         ByteString encryptedData = encryptedGrant.getEncryptedPhek();
 
         byte[] phek = this.cipher.authDecrypt(encryptedData.toByteArray(), encryptedGrant.getHeader().toByteArray(), this.ak);
 
-        PurekitProtosV3.EncryptedGrantHeader header = PurekitProtosV3.EncryptedGrantHeader.parseFrom(encryptedGrant.getHeader());
+        PurekitProtosV3Grant.EncryptedGrantHeader header = PurekitProtosV3Grant.EncryptedGrantHeader.parseFrom(encryptedGrant.getHeader());
 
         UserRecord userRecord = this.storage.selectUser(header.getUserId());
 
@@ -536,7 +536,8 @@ public class Pure {
                 byte[] cskData = this.crypto.exportPrivateKey(ckp.getPrivateKey());
 
                 PureCryptoData encryptedCskData = this.pureCrypto.encrypt(cskData, Arrays.asList(upk));
-                this.storage.insertKey(userId, dataId, cpkData, encryptedCskData.getCms(), encryptedCskData.getBody());
+
+                this.storage.insertKey(userId, dataId, new CellKey(cpkData, encryptedCskData.getCms(), encryptedCskData.getBody()));
                 cpk = ckp.getPublicKey();
             }
             catch (PureStorageKeyAlreadyExistsException e) {
@@ -610,7 +611,7 @@ public class Pure {
 
         byte[] encryptedCskCms = this.pureCrypto.addRecipient(cellKey.getEncryptedCskCms(), grant.getUkp().getPrivateKey(), otherUpk);
 
-        this.storage.updateKey(grant.getUserId(), dataId, encryptedCskCms);
+        this.storage.updateKey(grant.getUserId(), dataId, new CellKey(cellKey.getCpk(), encryptedCskCms, cellKey.getEncryptedCskBody()));
     }
 
     /**
@@ -638,6 +639,6 @@ public class Pure {
 
         byte[] encryptedCskCms = this.pureCrypto.deleteRecipient(cellKey.getEncryptedCskCms(), otherUpk);
 
-        this.storage.updateKey(ownerUserId, dataId, encryptedCskCms);
+        this.storage.updateKey(ownerUserId, dataId, new CellKey(cellKey.getCpk(), encryptedCskCms, cellKey.getEncryptedCskBody()));
     }
 }

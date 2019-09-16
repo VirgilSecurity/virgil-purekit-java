@@ -256,6 +256,7 @@ class HttpClientProtobuf {
         }
     }
 
+    // FIXME: This should be moved to HttpPureClient
     companion object {
         private const val SERVICE_VERSION = "v1"
         private const val PURE_SERVICE_BASE_URL = "https://api.passw0rd.io/phe/$SERVICE_VERSION"
@@ -279,7 +280,14 @@ class HttpClientProtobuf {
      */
     enum class AvailableRequests(val type: String) {
         ENROLL("/enroll"),
-        VERIFY_PASSWORD("/verify-password")
+        VERIFY_PASSWORD("/verify-password"),
+
+        INSERT_USER("/user"),
+        UPDATE_USER("/user"),
+        GET_USER("/user"),
+        INSERT_CELL_KEY("/cell-key"),
+        UPDATE_CELL_KEY("/cell-key"),
+        GET_CELL_KEY("/cell-key")
     }
 
     enum class DefaultBaseUrls(val url: String) {

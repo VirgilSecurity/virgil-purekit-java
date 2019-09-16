@@ -77,10 +77,8 @@ class PureTestJava {
         }
 
         @Override
-        public void insertKey(String userId, String dataId, byte[] cpk, byte[] encryptedCskCms, byte[] encryptedCskBody) throws PureStorageKeyAlreadyExistsException {
+        public void insertKey(String userId, String dataId, CellKey cellKey) throws PureStorageKeyAlreadyExistsException {
             HashMap<String, CellKey> map = this.keys.getOrDefault(userId, new HashMap<>());
-
-            CellKey cellKey = new CellKey(cpk, encryptedCskCms, encryptedCskBody);
 
             if (map.putIfAbsent(dataId, cellKey) != null) {
                 throw new PureStorageKeyAlreadyExistsException();
@@ -90,14 +88,14 @@ class PureTestJava {
         }
 
         @Override
-        public void updateKey(String userId, String dataId, byte[] encryptedCskCms) {
+        public void updateKey(String userId, String dataId, CellKey cellKey) throws Exception {
             HashMap<String, CellKey> map = this.keys.get(userId);
 
-            CellKey cellKey = map.get(dataId);
+            if (!map.containsKey(dataId)) {
+                throw new Exception();
+            }
 
-            CellKey newCellKey = new CellKey(cellKey.getCpk(), encryptedCskCms, cellKey.getEncryptedCskBody());
-
-            map.put(dataId, newCellKey);
+            map.put(dataId, cellKey);
         }
     }
 
@@ -151,20 +149,17 @@ class PureTestJava {
 
         byte[] ak = crypto.generateRandomData(32);
 
+        PureStorage strg = storage;
+
+        if (strg == null) {
+            strg = new RamStorage();
+        }
+
         PureContext context = new PureContext(appToken,
                 Base64.getEncoder().encodeToString(ak), Base64.getEncoder().encodeToString(crypto.exportPublicKey(bupkp.getPublicKey())),
-                Base64.getEncoder().encodeToString(crypto.exportPublicKey(hkp.getPublicKey())), secretKey, publicKey);
+                Base64.getEncoder().encodeToString(crypto.exportPublicKey(hkp.getPublicKey())), strg, secretKey, publicKey, serverAddress);
 
         context.setUpdateToken(updateToken);
-        context.setServiceAddress(serverAddress);
-
-        if (storage == null) {
-            RamStorage ramStorage = new RamStorage();
-            context.setStorage(ramStorage);
-        }
-        else {
-            context.setStorage(storage);
-        }
 
         return new PureSetupResult(new Pure(context), bupkp, hkp, ak);
     }

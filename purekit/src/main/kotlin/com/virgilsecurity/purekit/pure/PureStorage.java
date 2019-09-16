@@ -85,19 +85,17 @@ public interface PureStorage {
      * @implSpec this method MUST throw PureStorageKeyAlreadyExistsException if key with given userId and dataId already exists
      * @param userId userId
      * @param dataId dataId
-     * @param cpk cell public key
-     * @param encryptedCskCms encrypted cell secret key CMS
-     * @param encryptedCskBody encrypted cell secret key body
+     * @param cellKey cell key record
      * @throws Exception FIXME
      */
-    void insertKey(String userId, String dataId, byte[] cpk, byte[] encryptedCskCms, byte[] encryptedCskBody) throws Exception;
+    void insertKey(String userId, String dataId, CellKey cellKey) throws Exception;
 
     /**
      * Updates CellKey
      * @param userId userId
      * @param dataId dataId
-     * @param encryptedCskCms encrypted cell secret key CMS
+     * @param cellKey cell key record
      * @throws Exception FIXME
      */
-    void updateKey(String userId, String dataId, byte[] encryptedCskCms) throws Exception;
+    void updateKey(String userId, String dataId, CellKey cellKey) throws Exception;
 }
