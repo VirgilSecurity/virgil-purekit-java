@@ -34,9 +34,12 @@
 package com.virgilsecurity.purekit.pure;
 
 import com.virgilsecurity.purekit.client.HttpClientProtobuf;
+import com.virgilsecurity.sdk.crypto.VirgilPublicKey;
 import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
 
 import java.util.Base64;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Dependencies needed to initialize Pure
@@ -50,6 +53,7 @@ public class PureContext {
     private String servicePublicKey;
     private String updateToken;
     private HttpPureClient client;
+    private Map<String, List<String>> externalPublicKeys;
 
     /**
      * Constructor. Designed for usage with Virgil Cloud storage
@@ -60,6 +64,7 @@ public class PureContext {
      * @param cloudSigningKeyBase64 Private key used to sign records before sending to Virgil cloud, if null, setStorage should be called
      * @param appSecretKey App secret key
      * @param servicePublicKey Service public key
+     * @param externalPublicKeys external public keys that will be added during encryption by default. Map key is dataId, value is list of base64 public keys
      */
     public PureContext(String appToken,
                        String akBase64,
@@ -67,8 +72,9 @@ public class PureContext {
                        String hpkBase64,
                        String cloudSigningKeyBase64,
                        String appSecretKey,
-                       String servicePublicKey) throws CryptoException {
-        this(appToken, akBase64, buppkBase64, hpkBase64, cloudSigningKeyBase64, appSecretKey, servicePublicKey, "https://api.virgilsecurity.com/phe/v1" /* FIXME */);
+                       String servicePublicKey,
+                       Map<String, List<String>> externalPublicKeys) throws CryptoException {
+        this(appToken, akBase64, buppkBase64, hpkBase64, cloudSigningKeyBase64, appSecretKey, servicePublicKey, externalPublicKeys, "https://api.virgilsecurity.com/phe/v1" /* FIXME */);
     }
 
     /**
@@ -80,6 +86,7 @@ public class PureContext {
      * @param cloudSigningKeyBase64 Private key used to sign records before sending to Virgil cloud, if null, setStorage should be called
      * @param appSecretKey App secret key
      * @param servicePublicKey Service public key
+     * @param externalPublicKeys external public keys that will be added during encryption by default. Map key is dataId, value is list of base64 public keys
      * @param serviceAddress Service address
      */
     public PureContext(String appToken,
@@ -89,7 +96,16 @@ public class PureContext {
                        String cloudSigningKeyBase64,
                        String appSecretKey,
                        String servicePublicKey,
+                       Map<String, List<String>> externalPublicKeys,
                        String serviceAddress) throws CryptoException {
+        if (appSecretKey == null || appSecretKey.isEmpty()) {
+            throw new NullPointerException();
+        }
+        if (servicePublicKey == null || servicePublicKey.isEmpty()) {
+            throw new NullPointerException();
+        }
+
+        this.externalPublicKeys = externalPublicKeys;
         this.ak = Base64.getDecoder().decode(akBase64);
         this.buppk = Base64.getDecoder().decode(buppkBase64);
         this.hpk = Base64.getDecoder().decode(hpkBase64);
@@ -108,6 +124,7 @@ public class PureContext {
      * @param storage PureStorage
      * @param appSecretKey App secret key
      * @param servicePublicKey Service public key
+     * @param externalPublicKeys external public keys that will be added during encryption by default. Map key is dataId, value is list of base64 public keys
      */
     public PureContext(String appToken,
                        String akBase64,
@@ -115,8 +132,9 @@ public class PureContext {
                        String hpkBase64,
                        PureStorage storage,
                        String appSecretKey,
-                       String servicePublicKey) {
-        this(appToken, akBase64,buppkBase64, hpkBase64, storage, appSecretKey, servicePublicKey,  "https://api.virgilsecurity.com/phe/v1" /* FIXME */);
+                       String servicePublicKey,
+                       Map<String, List<String>> externalPublicKeys) {
+        this(appToken, akBase64,buppkBase64, hpkBase64, storage, appSecretKey, servicePublicKey,  externalPublicKeys, "https://api.virgilsecurity.com/phe/v1" /* FIXME */);
     }
 
     /**
@@ -128,6 +146,7 @@ public class PureContext {
      * @param storage PureStorage
      * @param appSecretKey App secret key
      * @param servicePublicKey Service public key
+     * @param externalPublicKeys external public keys that will be added during encryption by default. Map key is dataId, value is list of base64 public keys
      * @param serviceAddress Service address
      */
     public PureContext(String appToken,
@@ -137,7 +156,19 @@ public class PureContext {
                        PureStorage storage,
                        String appSecretKey,
                        String servicePublicKey,
+                       Map<String, List<String>> externalPublicKeys,
                        String serviceAddress) {
+        if (appSecretKey == null || appSecretKey.isEmpty()) {
+            throw new NullPointerException();
+        }
+        if (servicePublicKey == null || servicePublicKey.isEmpty()) {
+            throw new NullPointerException();
+        }
+        if (storage == null) {
+            throw new NullPointerException();
+        }
+
+        this.externalPublicKeys = externalPublicKeys;
         this.ak = Base64.getDecoder().decode(akBase64);
         this.buppk = Base64.getDecoder().decode(buppkBase64);
         this.hpk = Base64.getDecoder().decode(hpkBase64);
@@ -208,5 +239,12 @@ public class PureContext {
      */
     public HttpPureClient getClient() {
         return client;
+    }
+    /**
+     * Returns external public keys
+     * @return external public keys
+     */
+    public Map<String, List<String>> getExternalPublicKeys() {
+        return externalPublicKeys;
     }
 }

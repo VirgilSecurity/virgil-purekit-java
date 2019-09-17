@@ -40,8 +40,6 @@ import com.virgilsecurity.sdk.crypto.VirgilCrypto;
 import com.virgilsecurity.sdk.crypto.VirgilPrivateKey;
 import com.virgilsecurity.sdk.crypto.VirgilPublicKey;
 
-import java.util.List;
-
 class PureCrypto {
     private VirgilCrypto crypto;
 
@@ -57,7 +55,7 @@ class PureCrypto {
         return body;
     }
 
-    PureCryptoData encrypt(byte[] plainText, List<VirgilPublicKey> recipients) {
+    PureCryptoData encrypt(byte[] plainText, Iterable<VirgilPublicKey> recipients) {
         Aes256Gcm aesGcm = new Aes256Gcm();
         RecipientCipher cipher = new RecipientCipher();
 
@@ -93,24 +91,29 @@ class PureCrypto {
         return concat(body1, body2);
     }
 
-    byte[] addRecipient(byte[] cms, VirgilPrivateKey privateKey, VirgilPublicKey publicKey) {
+    byte[] addRecipients(byte[] cms, VirgilPrivateKey privateKey, Iterable<VirgilPublicKey> publicKeys) {
         MessageInfoEditor infoEditor = new MessageInfoEditor();
         infoEditor.setRandom(this.crypto.getRng());
 
         infoEditor.unpack(cms);
         infoEditor.unlock(privateKey.getIdentifier(), privateKey.getPrivateKey());
 
-        infoEditor.addKeyRecipient(publicKey.getIdentifier(), publicKey.getPublicKey());
+        for (VirgilPublicKey publicKey: publicKeys) {
+            infoEditor.addKeyRecipient(publicKey.getIdentifier(), publicKey.getPublicKey());
+        }
 
         return infoEditor.pack();
     }
 
-    byte[] deleteRecipient(byte[] cms, VirgilPublicKey publicKey) {
+    byte[] deleteRecipients(byte[] cms, Iterable<VirgilPublicKey> publicKeys) {
         MessageInfoEditor infoEditor = new MessageInfoEditor();
         infoEditor.setRandom(this.crypto.getRng());
 
         infoEditor.unpack(cms);
-        infoEditor.removeKeyRecipient(publicKey.getIdentifier());
+
+        for (VirgilPublicKey publicKey: publicKeys) {
+            infoEditor.removeKeyRecipient(publicKey.getIdentifier());
+        }
 
         return infoEditor.pack();
     }

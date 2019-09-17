@@ -23,6 +23,13 @@ public class VirgilCloudPureStorage implements PureStorage {
      * @param signingKey key used to sign data before sending to Virgil
      */
     public VirgilCloudPureStorage(HttpPureClient client, byte[] signingKey) throws CryptoException {
+        if (client == null) {
+            throw new NullPointerException();
+        }
+        if (signingKey == null) {
+            throw new NullPointerException();
+        }
+
         this.crypto = new VirgilCrypto();
         this.signingKey = this.crypto.importPrivateKey(signingKey);
         this.client = client;

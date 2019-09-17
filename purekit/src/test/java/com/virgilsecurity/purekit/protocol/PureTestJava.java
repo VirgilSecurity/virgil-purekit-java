@@ -157,7 +157,7 @@ class PureTestJava {
 
         PureContext context = new PureContext(appToken,
                 Base64.getEncoder().encodeToString(ak), Base64.getEncoder().encodeToString(crypto.exportPublicKey(bupkp.getPublicKey())),
-                Base64.getEncoder().encodeToString(crypto.exportPublicKey(hkp.getPublicKey())), strg, secretKey, publicKey, serverAddress);
+                Base64.getEncoder().encodeToString(crypto.exportPublicKey(hkp.getPublicKey())), strg, secretKey, publicKey, null, serverAddress);
 
         context.setUpdateToken(updateToken);
 

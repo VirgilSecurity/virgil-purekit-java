@@ -56,6 +56,13 @@ public class HttpPureClient {
      * @param serviceAddress service url
      */
     public HttpPureClient(String appToken, String serviceAddress) {
+        if (appToken == null || appToken.isEmpty()) {
+            throw new NullPointerException();
+        }
+        if (serviceAddress == null || serviceAddress.isEmpty()) {
+            throw new NullPointerException();
+        }
+
         this.appToken = appToken;
         this.client = new HttpClientProtobuf(serviceAddress);
     }

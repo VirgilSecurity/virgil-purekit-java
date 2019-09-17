@@ -46,9 +46,7 @@ import com.virgilsecurity.sdk.crypto.*;
 import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
 import com.virgilsecurity.sdk.crypto.exceptions.EncryptionException;
 
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.Date;
+import java.util.*;
 
 /**
  * Main class for interactions with PureKit
@@ -66,6 +64,7 @@ public class Pure {
     private VirgilPublicKey buppk;
     private VirgilPublicKey hpk;
     private HttpPureClient client;
+    private HashMap<String, ArrayList<VirgilPublicKey>> externalPublicKeys;
 
     /**
      * Constructor
@@ -113,6 +112,25 @@ public class Pure {
         this.buppk = this.crypto.importPublicKey(context.getBuppk());
         this.hpk = this.crypto.importPublicKey(context.getHpk());
         this.client = context.getClient();
+
+        if (context.getExternalPublicKeys() != null) {
+            // FIXME: I hate java
+            this.externalPublicKeys = new HashMap<>(context.getExternalPublicKeys().size());
+            for (String key : context.getExternalPublicKeys().keySet()) {
+                List<String> publicKeysBase64 = context.getExternalPublicKeys().get(key);
+                ArrayList<VirgilPublicKey> publicKeys = new ArrayList<>(publicKeysBase64.size());
+
+                for (String publicKeyBase64 : publicKeysBase64) {
+                    VirgilPublicKey publicKey = this.crypto.importPublicKey(Base64.getDecoder().decode(publicKeyBase64));
+                    publicKeys.add(publicKey);
+                }
+
+                this.externalPublicKeys.put(key, publicKeys);
+            }
+        }
+        else {
+            this.externalPublicKeys = new HashMap<>();
+        }
     }
 
     private static class ParseResult {
@@ -170,7 +188,7 @@ public class Pure {
 
         byte[] passwordHash = this.crypto.computeHash(password.getBytes(), HashAlgorithm.SHA512);
 
-        byte[] encryptedPwdHash = this.crypto.encrypt(passwordHash, Arrays.asList(this.hpk));
+        byte[] encryptedPwdHash = this.crypto.encrypt(passwordHash, Collections.singletonList(this.hpk));
 
         PheClientEnrollAccountResult result = this.currentClient.enrollAccount(response.getResponse().toByteArray(), passwordHash);
 
@@ -180,7 +198,7 @@ public class Pure {
 
         byte[] encryptedUsk = this.cipher.encrypt(uskData, result.getAccountKey());
 
-        byte[] encryptedUskBackup = this.crypto.encrypt(uskData, Arrays.asList(this.buppk));
+        byte[] encryptedUskBackup = this.crypto.encrypt(uskData, Collections.singletonList(this.buppk));
 
         UserRecord userRecord = new UserRecord(userId,
                 result.getEnrollmentRecord(), this.currentVersion,
@@ -366,7 +384,7 @@ public class Pure {
 
         byte[] newEncryptedUsk = this.cipher.encrypt(privateKeyData, enrollResult.getAccountKey());
 
-        byte[] encryptedPwdHash = this.crypto.encrypt(newPasswordHash, Arrays.asList(this.hpk));
+        byte[] encryptedPwdHash = this.crypto.encrypt(newPasswordHash, Collections.singletonList(this.hpk));
 
         UserRecord newUserRecord = new UserRecord(userRecord.getUserId(), enrollResult.getEnrollmentRecord(), this.currentVersion,
                 userRecord.getUpk(), newEncryptedUsk, userRecord.getEncryptedUskBackup(), encryptedPwdHash);
@@ -503,7 +521,7 @@ public class Pure {
      * Encrypts data
      * @implSpec this method generates keypair that is unique for given userId and dataId,
      * encrypts plainText using this keypair and stores public key and encrypted private key.
-     * Multiple encryptions for the same userId and dataId are allowed, in this case existing keypair will be obtained.
+     * Multiple encryptions for the same userId and dataId are allowed, in this case existing keypair will be used.
      * @param userId userId of data owner
      * @param dataId dataId
      * @param plainText plain text
@@ -511,10 +529,38 @@ public class Pure {
      * @throws CryptoException FIXME
      */
     public byte[] encrypt(String userId, String dataId, byte[] plainText) throws Exception {
+        return this.encrypt(userId, dataId, Collections.emptyList(), Collections.emptyList(), plainText);
+    }
+
+    /**
+     * Encrypts data
+     * @implSpec this method generates keypair that is unique for given userId and dataId,
+     * encrypts plainText using this keypair and stores public key and encrypted private key.
+     * Multiple encryptions for the same userId and dataId are allowed, in this case existing keypair will be used.
+     * @param userId userId of data owner
+     * @param dataId dataId
+     * @param otherUserIds other user ids, to whom access to this data will be given
+     * @param publicKeys other public keys, to which access to this data will be given
+     * @param plainText plain text
+     * @return cipher text
+     * @throws CryptoException FIXME
+     */
+    public byte[] encrypt(String userId, String dataId,
+                          Collection<String> otherUserIds, Collection<VirgilPublicKey> publicKeys,
+                          byte[] plainText) throws Exception {
         if (userId == null || userId.isEmpty()) {
             throw new NullPointerException();
         }
         if (dataId == null || dataId.isEmpty()) {
+            throw new NullPointerException();
+        }
+        if (otherUserIds == null) {
+            throw new NullPointerException();
+        }
+        if (publicKeys == null) {
+            throw new NullPointerException();
+        }
+        if (plainText == null) {
             throw new NullPointerException();
         }
 
@@ -526,16 +572,33 @@ public class Pure {
         if (cellKey1 == null) {
             // Try to generate and save new key
             try {
-                UserRecord userRecord = this.storage.selectUser(userId);
+                ArrayList<VirgilPublicKey> recipientList = new ArrayList<>(externalPublicKeys.size()
+                        + publicKeys.size() + otherUserIds.size() + 1);
 
+                // TODO: Add batch select
+                UserRecord userRecord = this.storage.selectUser(userId);
                 VirgilPublicKey upk = this.crypto.importPublicKey(userRecord.getUpk());
+                recipientList.add(upk);
+
+                for (String otherUserId: otherUserIds) {
+                    UserRecord otherUserRecord = this.storage.selectUser(otherUserId);
+                    VirgilPublicKey otherUpk = this.crypto.importPublicKey(otherUserRecord.getUpk());
+
+                    recipientList.add(otherUpk);
+                }
+
+                ArrayList<VirgilPublicKey> externalPublicKeys = this.externalPublicKeys.get(dataId);
+
+                if (externalPublicKeys != null) {
+                    recipientList.addAll(externalPublicKeys);
+                }
 
                 VirgilKeyPair ckp = this.crypto.generateKeyPair();
 
                 byte[] cpkData = this.crypto.exportPublicKey(ckp.getPublicKey());
                 byte[] cskData = this.crypto.exportPrivateKey(ckp.getPrivateKey());
 
-                PureCryptoData encryptedCskData = this.pureCrypto.encrypt(cskData, Arrays.asList(upk));
+                PureCryptoData encryptedCskData = this.pureCrypto.encrypt(cskData, recipientList);
 
                 this.storage.insertKey(userId, dataId, new CellKey(cpkData, encryptedCskData.getCms(), encryptedCskData.getBody()));
                 cpk = ckp.getPublicKey();
@@ -550,7 +613,7 @@ public class Pure {
             cpk = this.crypto.importPublicKey(cellKey1.getCpk());
         }
 
-        return this.crypto.encrypt(plainText, Arrays.asList(cpk));
+        return this.crypto.encrypt(plainText, Collections.singletonList(cpk));
     }
 
     /**
@@ -569,6 +632,9 @@ public class Pure {
         if (dataId == null || dataId.isEmpty()) {
             throw new NullPointerException();
         }
+        if (cipherText == null) {
+            throw new NullPointerException();
+        }
 
         String userId = ownerUserId;
 
@@ -576,9 +642,32 @@ public class Pure {
             userId = grant.getUserId();
         }
 
-        CellKey cellKey = this.storage.selectKey(userId, dataId);
+        return this.decrypt(grant.getUkp().getPrivateKey(), userId, dataId, cipherText);
+    }
 
-        byte[] csk = this.pureCrypto.decrypt(new PureCryptoData(cellKey.getEncryptedCskCms(), cellKey.getEncryptedCskBody()), grant.getUkp().getPrivateKey());
+    /**
+     * Decrypts data
+     * @param privateKey private key from corresponding public key that was used during encrypt(), share() on present in externalPublicKeys
+     * @param ownerUserId owner userId, pass null if PureGrant belongs to
+     * @param dataId dataId that was used during encryption
+     * @param cipherText cipher text
+     * @return plain text
+     * @throws CryptoException FIXME
+     */
+    public byte[] decrypt(VirgilPrivateKey privateKey, String ownerUserId, String dataId, byte[] cipherText) throws Exception {
+        if (privateKey == null) {
+            throw new NullPointerException();
+        }
+        if (dataId == null || dataId.isEmpty()) {
+            throw new NullPointerException();
+        }
+        if (ownerUserId == null || ownerUserId.isEmpty()) {
+            throw new NullPointerException();
+        }
+
+        CellKey cellKey = this.storage.selectKey(ownerUserId, dataId);
+
+        byte[] csk = this.pureCrypto.decrypt(new PureCryptoData(cellKey.getEncryptedCskCms(), cellKey.getEncryptedCskBody()), privateKey);
 
         VirgilKeyPair ckp = this.crypto.importPrivateKey(csk);
 
@@ -604,12 +693,45 @@ public class Pure {
             throw new NullPointerException();
         }
 
+        this.share(grant, dataId, Collections.singletonList(otherUserId), Collections.emptyList());
+    }
+
+    /**
+     * Gives possibility to decrypt data to other user that is not data owner.
+     * Shared data can then be decrypted using other user's PureGrant
+     * @param grant PureGrant of data owner
+     * @param dataId dataId
+     * @param otherUserIds other user ids
+     * @param publicKeys public keys to share data with
+     * @throws CryptoException FIXME
+     */
+    public void share(PureGrant grant, String dataId, Collection<String> otherUserIds, Collection<VirgilPublicKey> publicKeys) throws Exception {
+        if (grant == null) {
+            throw new NullPointerException();
+        }
+        if (dataId == null || dataId.isEmpty()) {
+            throw new NullPointerException();
+        }
+        if (otherUserIds == null) {
+            throw new NullPointerException();
+        }
+        if (publicKeys == null) {
+            throw new NullPointerException();
+        }
+
+        ArrayList<VirgilPublicKey> keys = new ArrayList<>(publicKeys);
+
+        // TODO: Add batch select
+        for (String otherUserId: otherUserIds) {
+            UserRecord otherUserRecord = this.storage.selectUser(otherUserId);
+            VirgilPublicKey otherUpk = this.crypto.importPublicKey(otherUserRecord.getUpk());
+
+            keys.add(otherUpk);
+        }
+
         CellKey cellKey = this.storage.selectKey(grant.getUserId(), dataId);
 
-        UserRecord otherUserRecord = this.storage.selectUser(otherUserId);
-        VirgilPublicKey otherUpk = this.crypto.importPublicKey(otherUserRecord.getUpk());
-
-        byte[] encryptedCskCms = this.pureCrypto.addRecipient(cellKey.getEncryptedCskCms(), grant.getUkp().getPrivateKey(), otherUpk);
+        byte[] encryptedCskCms = this.pureCrypto.addRecipients(cellKey.getEncryptedCskCms(), grant.getUkp().getPrivateKey(), keys);
 
         this.storage.updateKey(grant.getUserId(), dataId, new CellKey(cellKey.getCpk(), encryptedCskCms, cellKey.getEncryptedCskBody()));
     }
@@ -632,12 +754,43 @@ public class Pure {
             throw new NullPointerException();
         }
 
+        this.unshare(ownerUserId, dataId, Collections.singletonList(otherUserId), Collections.emptyList());
+    }
+
+    /**
+     * Revoke possibility to decrypt data from other user that is not data owner.
+     * It won't be possible to decrypt such data other user's PureGrant.
+     * Note, that even if further decrypt calls will not succeed for other user,
+     * he could have made a copy of decrypted data before that call.
+     * @param ownerUserId data owner userId
+     * @param dataId dataId
+     * @param otherUserIds other user ids that are being removed from share list
+     * @param publicKeys public keys that are being removed from share list
+     * @throws CryptoException FIXME
+     */
+    public void unshare(String ownerUserId, String dataId, Collection<String> otherUserIds, Collection<VirgilPublicKey> publicKeys) throws Exception {
+        if (dataId == null || dataId.isEmpty()) {
+            throw new NullPointerException();
+        }
+        if (otherUserIds == null) {
+            throw new NullPointerException();
+        }
+        if (publicKeys == null) {
+            throw new NullPointerException();
+        }
+
+        ArrayList<VirgilPublicKey> keys = new ArrayList<>(publicKeys);
+
+        for (String otherUserId: otherUserIds) {
+            UserRecord otherUserRecord = this.storage.selectUser(otherUserId);
+            VirgilPublicKey otherUpk = this.crypto.importPublicKey(otherUserRecord.getUpk());
+
+            keys.add(otherUpk);
+        }
+
         CellKey cellKey = this.storage.selectKey(ownerUserId, dataId);
 
-        UserRecord otherUserRecord = this.storage.selectUser(otherUserId);
-        VirgilPublicKey otherUpk = this.crypto.importPublicKey(otherUserRecord.getUpk());
-
-        byte[] encryptedCskCms = this.pureCrypto.deleteRecipient(cellKey.getEncryptedCskCms(), otherUpk);
+        byte[] encryptedCskCms = this.pureCrypto.deleteRecipients(cellKey.getEncryptedCskCms(), keys);
 
         this.storage.updateKey(ownerUserId, dataId, new CellKey(cellKey.getCpk(), encryptedCskCms, cellKey.getEncryptedCskBody()));
     }
