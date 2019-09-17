@@ -35,6 +35,8 @@ package com.virgilsecurity.purekit.pure;
 
 // FIXME: Add typed exceptions?
 
+import java.util.Collection;
+
 /**
  * Interface for Pure storage
  */
@@ -62,6 +64,14 @@ public interface PureStorage {
     UserRecord selectUser(String userId) throws Exception;
 
     /**
+     * Obtains users record with given userId from storage
+     * @param userIds userIds
+     * @return UserRecords
+     * @throws Exception FIXME
+     */
+    Iterable<UserRecord> selectUsers(Collection<String> userIds) throws Exception;
+
+    /**
      * Obtains users with given pheRecordVersion from storage
      * @implNote this method should have limit on number of returned values (e.g. 50, 100).
      * Calling method will request records until empty value is returned
@@ -70,6 +80,14 @@ public interface PureStorage {
      * @throws Exception FIXME
      */
     Iterable<UserRecord> selectUsers(int pheRecordVersion) throws Exception;
+
+    /**
+     * Deletes user with given id
+     * @param userId userId
+     * @param cascade deletes all user cell keys if true
+     * @throws Exception FIXME
+     */
+    void deleteUser(String userId, boolean cascade) throws Exception;
 
     /**
      * Obtains CellKey for given userId and dataId from storage
@@ -98,4 +116,12 @@ public interface PureStorage {
      * @throws Exception FIXME
      */
     void updateKey(String userId, String dataId, CellKey cellKey) throws Exception;
+
+    /**
+     * Deletes cell key with given userId and dataId
+     * @param userId userId
+     * @param dataId dataId
+     * @throws Exception FIXME
+     */
+    void deleteKey(String userId, String dataId) throws Exception;
 }

@@ -10,6 +10,9 @@ import com.virgilsecurity.sdk.crypto.VirgilKeyPair;
 import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 /**
  * PureStorage on Virgil cloud side
  */
@@ -94,23 +97,7 @@ public class VirgilCloudPureStorage implements PureStorage {
         this.sendUser(userRecord, false);
     }
 
-    /**
-     * Obtains user
-     * @param userId userId
-     * @return UserRecord
-     * @throws Exception FIXME
-     */
-    @Override
-    public UserRecord selectUser(String userId) throws Exception {
-        PurekitProtosV3Storage.UserRecord protobufRecord;
-
-        try {
-            protobufRecord = this.client.getUser(userId);
-        }
-        catch (ProtocolException | ProtocolHttpException e) {
-            throw new Exception();
-        }
-
+    private UserRecord parse(PurekitProtosV3Storage.UserRecord protobufRecord) throws Exception {
         // TODO: Check version
         boolean verified = this.crypto.verifySignature(protobufRecord.getSignature().toByteArray(),
                 protobufRecord.getUserRecordSigned().toByteArray(),
@@ -138,6 +125,54 @@ public class VirgilCloudPureStorage implements PureStorage {
     }
 
     /**
+     * Obtains user
+     * @param userId userId
+     * @return UserRecord
+     * @throws Exception FIXME
+     */
+    @Override
+    public UserRecord selectUser(String userId) throws Exception {
+        PurekitProtosV3Storage.UserRecord protobufRecord;
+
+        try {
+            protobufRecord = this.client.getUser(userId);
+        }
+        catch (ProtocolException | ProtocolHttpException e) {
+            throw new Exception();
+        }
+
+        return this.parse(protobufRecord);
+    }
+
+    /**
+     * Obtains users record with given userId from storage
+     * @param userIds userIds
+     * @return UserRecords
+     * @throws Exception FIXME
+     */
+    @Override
+    public Iterable<UserRecord> selectUsers(Collection<String> userIds) throws Exception {
+        PurekitProtosV3Storage.UserRecords protobufRecords;
+
+        try {
+            protobufRecords = this.client.getUsers(userIds);
+        }
+        catch (ProtocolException | ProtocolHttpException e) {
+            throw new Exception();
+        }
+
+        ArrayList<UserRecord> userRecords = new ArrayList<>(protobufRecords.getUserRecordsCount());
+
+        for (int i = 0; i < protobufRecords.getUserRecordsCount(); i++) {
+            PurekitProtosV3Storage.UserRecord protobufRecord = protobufRecords.getUserRecords(i);
+
+            userRecords.add(this.parse(protobufRecord));
+        }
+
+        return userRecords;
+    }
+
+    /**
      * This method throws NotImplementedException, as in case of using Virgil Cloud storage, rotation happens on Virgil side
      * @param pheRecordVersion PheRecordVersion
      * @return throws NotImplementedException
@@ -147,6 +182,22 @@ public class VirgilCloudPureStorage implements PureStorage {
     public Iterable<UserRecord> selectUsers(int pheRecordVersion) throws NotImplementedException {
         // FIXME: Can we add message here?
         throw new NotImplementedException();
+    }
+
+    /**
+     * Deletes user with given id
+     * @param userId userId
+     * @param cascade deletes all user cell keys if true
+     * @throws Exception FIXME
+     */
+    @Override
+    public void deleteUser(String userId, boolean cascade) throws Exception {
+        try {
+            this.client.deleteUser(userId, cascade);
+        }
+        catch (ProtocolException | ProtocolHttpException e) {
+            throw new Exception();
+        }
     }
 
     /**
@@ -238,5 +289,21 @@ public class VirgilCloudPureStorage implements PureStorage {
     @Override
     public void updateKey(String userId, String dataId, CellKey cellKey) throws Exception {
         this.insertKey(userId, dataId, cellKey, false);
+    }
+
+    /**
+     * Deletes cell key with given userId and dataId
+     * @param userId userId
+     * @param dataId dataId
+     * @throws Exception FIXME
+     */
+    @Override
+    public void deleteKey(String userId, String dataId) throws Exception {
+        try {
+            this.client.deleteCellKey(userId, dataId);
+        }
+        catch (ProtocolException | ProtocolHttpException e) {
+            throw new Exception();
+        }
     }
 }

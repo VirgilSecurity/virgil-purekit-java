@@ -1833,6 +1833,794 @@ public final class PurekitProtosV3Storage {
 
   }
 
+  public interface UserRecordsOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:build.UserRecords)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>repeated .build.UserRecord user_records = 1;</code>
+     */
+    java.util.List<com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecord> 
+        getUserRecordsList();
+    /**
+     * <code>repeated .build.UserRecord user_records = 1;</code>
+     */
+    com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecord getUserRecords(int index);
+    /**
+     * <code>repeated .build.UserRecord user_records = 1;</code>
+     */
+    int getUserRecordsCount();
+    /**
+     * <code>repeated .build.UserRecord user_records = 1;</code>
+     */
+    java.util.List<? extends com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecordOrBuilder> 
+        getUserRecordsOrBuilderList();
+    /**
+     * <code>repeated .build.UserRecord user_records = 1;</code>
+     */
+    com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecordOrBuilder getUserRecordsOrBuilder(
+        int index);
+  }
+  /**
+   * Protobuf type {@code build.UserRecords}
+   */
+  public  static final class UserRecords extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:build.UserRecords)
+      UserRecordsOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use UserRecords.newBuilder() to construct.
+    private UserRecords(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private UserRecords() {
+      userRecords_ = java.util.Collections.emptyList();
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new UserRecords();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private UserRecords(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 10: {
+              if (!((mutable_bitField0_ & 0x00000001) != 0)) {
+                userRecords_ = new java.util.ArrayList<com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecord>();
+                mutable_bitField0_ |= 0x00000001;
+              }
+              userRecords_.add(
+                  input.readMessage(com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecord.parser(), extensionRegistry));
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000001) != 0)) {
+          userRecords_ = java.util.Collections.unmodifiableList(userRecords_);
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.internal_static_build_UserRecords_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.internal_static_build_UserRecords_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecords.class, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecords.Builder.class);
+    }
+
+    public static final int USER_RECORDS_FIELD_NUMBER = 1;
+    private java.util.List<com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecord> userRecords_;
+    /**
+     * <code>repeated .build.UserRecord user_records = 1;</code>
+     */
+    public java.util.List<com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecord> getUserRecordsList() {
+      return userRecords_;
+    }
+    /**
+     * <code>repeated .build.UserRecord user_records = 1;</code>
+     */
+    public java.util.List<? extends com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecordOrBuilder> 
+        getUserRecordsOrBuilderList() {
+      return userRecords_;
+    }
+    /**
+     * <code>repeated .build.UserRecord user_records = 1;</code>
+     */
+    public int getUserRecordsCount() {
+      return userRecords_.size();
+    }
+    /**
+     * <code>repeated .build.UserRecord user_records = 1;</code>
+     */
+    public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecord getUserRecords(int index) {
+      return userRecords_.get(index);
+    }
+    /**
+     * <code>repeated .build.UserRecord user_records = 1;</code>
+     */
+    public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecordOrBuilder getUserRecordsOrBuilder(
+        int index) {
+      return userRecords_.get(index);
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      for (int i = 0; i < userRecords_.size(); i++) {
+        output.writeMessage(1, userRecords_.get(i));
+      }
+      unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      for (int i = 0; i < userRecords_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(1, userRecords_.get(i));
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecords)) {
+        return super.equals(obj);
+      }
+      com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecords other = (com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecords) obj;
+
+      if (!getUserRecordsList()
+          .equals(other.getUserRecordsList())) return false;
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      if (getUserRecordsCount() > 0) {
+        hash = (37 * hash) + USER_RECORDS_FIELD_NUMBER;
+        hash = (53 * hash) + getUserRecordsList().hashCode();
+      }
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecords parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecords parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecords parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecords parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecords parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecords parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecords parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecords parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecords parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecords parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecords parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecords parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecords prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code build.UserRecords}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:build.UserRecords)
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecordsOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.internal_static_build_UserRecords_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.internal_static_build_UserRecords_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecords.class, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecords.Builder.class);
+      }
+
+      // Construct using com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecords.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+          getUserRecordsFieldBuilder();
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        if (userRecordsBuilder_ == null) {
+          userRecords_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+        } else {
+          userRecordsBuilder_.clear();
+        }
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.internal_static_build_UserRecords_descriptor;
+      }
+
+      @java.lang.Override
+      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecords getDefaultInstanceForType() {
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecords.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecords build() {
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecords result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecords buildPartial() {
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecords result = new com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecords(this);
+        int from_bitField0_ = bitField0_;
+        if (userRecordsBuilder_ == null) {
+          if (((bitField0_ & 0x00000001) != 0)) {
+            userRecords_ = java.util.Collections.unmodifiableList(userRecords_);
+            bitField0_ = (bitField0_ & ~0x00000001);
+          }
+          result.userRecords_ = userRecords_;
+        } else {
+          result.userRecords_ = userRecordsBuilder_.build();
+        }
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecords) {
+          return mergeFrom((com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecords)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecords other) {
+        if (other == com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecords.getDefaultInstance()) return this;
+        if (userRecordsBuilder_ == null) {
+          if (!other.userRecords_.isEmpty()) {
+            if (userRecords_.isEmpty()) {
+              userRecords_ = other.userRecords_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+            } else {
+              ensureUserRecordsIsMutable();
+              userRecords_.addAll(other.userRecords_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.userRecords_.isEmpty()) {
+            if (userRecordsBuilder_.isEmpty()) {
+              userRecordsBuilder_.dispose();
+              userRecordsBuilder_ = null;
+              userRecords_ = other.userRecords_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+              userRecordsBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getUserRecordsFieldBuilder() : null;
+            } else {
+              userRecordsBuilder_.addAllMessages(other.userRecords_);
+            }
+          }
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecords parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecords) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private java.util.List<com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecord> userRecords_ =
+        java.util.Collections.emptyList();
+      private void ensureUserRecordsIsMutable() {
+        if (!((bitField0_ & 0x00000001) != 0)) {
+          userRecords_ = new java.util.ArrayList<com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecord>(userRecords_);
+          bitField0_ |= 0x00000001;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecord, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecord.Builder, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecordOrBuilder> userRecordsBuilder_;
+
+      /**
+       * <code>repeated .build.UserRecord user_records = 1;</code>
+       */
+      public java.util.List<com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecord> getUserRecordsList() {
+        if (userRecordsBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(userRecords_);
+        } else {
+          return userRecordsBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .build.UserRecord user_records = 1;</code>
+       */
+      public int getUserRecordsCount() {
+        if (userRecordsBuilder_ == null) {
+          return userRecords_.size();
+        } else {
+          return userRecordsBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .build.UserRecord user_records = 1;</code>
+       */
+      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecord getUserRecords(int index) {
+        if (userRecordsBuilder_ == null) {
+          return userRecords_.get(index);
+        } else {
+          return userRecordsBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .build.UserRecord user_records = 1;</code>
+       */
+      public Builder setUserRecords(
+          int index, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecord value) {
+        if (userRecordsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureUserRecordsIsMutable();
+          userRecords_.set(index, value);
+          onChanged();
+        } else {
+          userRecordsBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .build.UserRecord user_records = 1;</code>
+       */
+      public Builder setUserRecords(
+          int index, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecord.Builder builderForValue) {
+        if (userRecordsBuilder_ == null) {
+          ensureUserRecordsIsMutable();
+          userRecords_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          userRecordsBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .build.UserRecord user_records = 1;</code>
+       */
+      public Builder addUserRecords(com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecord value) {
+        if (userRecordsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureUserRecordsIsMutable();
+          userRecords_.add(value);
+          onChanged();
+        } else {
+          userRecordsBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .build.UserRecord user_records = 1;</code>
+       */
+      public Builder addUserRecords(
+          int index, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecord value) {
+        if (userRecordsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureUserRecordsIsMutable();
+          userRecords_.add(index, value);
+          onChanged();
+        } else {
+          userRecordsBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .build.UserRecord user_records = 1;</code>
+       */
+      public Builder addUserRecords(
+          com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecord.Builder builderForValue) {
+        if (userRecordsBuilder_ == null) {
+          ensureUserRecordsIsMutable();
+          userRecords_.add(builderForValue.build());
+          onChanged();
+        } else {
+          userRecordsBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .build.UserRecord user_records = 1;</code>
+       */
+      public Builder addUserRecords(
+          int index, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecord.Builder builderForValue) {
+        if (userRecordsBuilder_ == null) {
+          ensureUserRecordsIsMutable();
+          userRecords_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          userRecordsBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .build.UserRecord user_records = 1;</code>
+       */
+      public Builder addAllUserRecords(
+          java.lang.Iterable<? extends com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecord> values) {
+        if (userRecordsBuilder_ == null) {
+          ensureUserRecordsIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, userRecords_);
+          onChanged();
+        } else {
+          userRecordsBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .build.UserRecord user_records = 1;</code>
+       */
+      public Builder clearUserRecords() {
+        if (userRecordsBuilder_ == null) {
+          userRecords_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+          onChanged();
+        } else {
+          userRecordsBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .build.UserRecord user_records = 1;</code>
+       */
+      public Builder removeUserRecords(int index) {
+        if (userRecordsBuilder_ == null) {
+          ensureUserRecordsIsMutable();
+          userRecords_.remove(index);
+          onChanged();
+        } else {
+          userRecordsBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .build.UserRecord user_records = 1;</code>
+       */
+      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecord.Builder getUserRecordsBuilder(
+          int index) {
+        return getUserRecordsFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .build.UserRecord user_records = 1;</code>
+       */
+      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecordOrBuilder getUserRecordsOrBuilder(
+          int index) {
+        if (userRecordsBuilder_ == null) {
+          return userRecords_.get(index);  } else {
+          return userRecordsBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .build.UserRecord user_records = 1;</code>
+       */
+      public java.util.List<? extends com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecordOrBuilder> 
+           getUserRecordsOrBuilderList() {
+        if (userRecordsBuilder_ != null) {
+          return userRecordsBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(userRecords_);
+        }
+      }
+      /**
+       * <code>repeated .build.UserRecord user_records = 1;</code>
+       */
+      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecord.Builder addUserRecordsBuilder() {
+        return getUserRecordsFieldBuilder().addBuilder(
+            com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecord.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .build.UserRecord user_records = 1;</code>
+       */
+      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecord.Builder addUserRecordsBuilder(
+          int index) {
+        return getUserRecordsFieldBuilder().addBuilder(
+            index, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecord.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .build.UserRecord user_records = 1;</code>
+       */
+      public java.util.List<com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecord.Builder> 
+           getUserRecordsBuilderList() {
+        return getUserRecordsFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecord, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecord.Builder, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecordOrBuilder> 
+          getUserRecordsFieldBuilder() {
+        if (userRecordsBuilder_ == null) {
+          userRecordsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecord, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecord.Builder, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecordOrBuilder>(
+                  userRecords_,
+                  ((bitField0_ & 0x00000001) != 0),
+                  getParentForChildren(),
+                  isClean());
+          userRecords_ = null;
+        }
+        return userRecordsBuilder_;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:build.UserRecords)
+    }
+
+    // @@protoc_insertion_point(class_scope:build.UserRecords)
+    private static final com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecords DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecords();
+    }
+
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecords getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<UserRecords>
+        PARSER = new com.google.protobuf.AbstractParser<UserRecords>() {
+      @java.lang.Override
+      public UserRecords parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new UserRecords(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<UserRecords> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<UserRecords> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecords getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
   public interface CellKeySignedOrBuilder extends
       // @@protoc_insertion_point(interface_extends:build.CellKeySigned)
       com.google.protobuf.MessageOrBuilder {
@@ -3408,6 +4196,11 @@ public final class PurekitProtosV3Storage {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_build_UserRecord_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_build_UserRecords_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_build_UserRecords_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_build_CellKeySigned_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
@@ -3437,14 +4230,15 @@ public final class PurekitProtosV3Storage {
       "sion\030\001 \001(\r\022\032\n\022user_record_signed\030\002 \001(\014\022\021" +
       "\n\tsignature\030\003 \001(\014\022\025\n\rphe_record_t0\030\004 \001(\014" +
       "\022\025\n\rphe_record_t1\030\005 \001(\014\022\032\n\022phe_record_ve" +
-      "rsion\030\006 \001(\r\"\204\001\n\rCellKeySigned\022\017\n\007version" +
-      "\030\001 \001(\r\022\016\n\006userId\030\002 \001(\t\022\016\n\006dataId\030\003 \001(\t\022\013" +
-      "\n\003cpk\030\004 \001(\014\022\031\n\021encrypted_csk_cms\030\005 \001(\014\022\032" +
-      "\n\022encrypted_csk_body\030\006 \001(\014\"F\n\007CellKey\022\017\n" +
-      "\007version\030\001 \001(\r\022\027\n\017cell_key_signed\030\002 \001(\014\022" +
-      "\021\n\tsignature\030\003 \001(\014BC\n)com.virgilsecurity" +
-      ".purekit.protobuf.buildB\026PurekitProtosV3" +
-      "Storageb\006proto3"
+      "rsion\030\006 \001(\r\"6\n\013UserRecords\022\'\n\014user_recor" +
+      "ds\030\001 \003(\0132\021.build.UserRecord\"\204\001\n\rCellKeyS" +
+      "igned\022\017\n\007version\030\001 \001(\r\022\016\n\006userId\030\002 \001(\t\022\016" +
+      "\n\006dataId\030\003 \001(\t\022\013\n\003cpk\030\004 \001(\014\022\031\n\021encrypted" +
+      "_csk_cms\030\005 \001(\014\022\032\n\022encrypted_csk_body\030\006 \001" +
+      "(\014\"F\n\007CellKey\022\017\n\007version\030\001 \001(\r\022\027\n\017cell_k" +
+      "ey_signed\030\002 \001(\014\022\021\n\tsignature\030\003 \001(\014BC\n)co" +
+      "m.virgilsecurity.purekit.protobuf.buildB" +
+      "\026PurekitProtosV3Storageb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -3462,14 +4256,20 @@ public final class PurekitProtosV3Storage {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_build_UserRecord_descriptor,
         new java.lang.String[] { "Version", "UserRecordSigned", "Signature", "PheRecordT0", "PheRecordT1", "PheRecordVersion", });
-    internal_static_build_CellKeySigned_descriptor =
+    internal_static_build_UserRecords_descriptor =
       getDescriptor().getMessageTypes().get(2);
+    internal_static_build_UserRecords_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_build_UserRecords_descriptor,
+        new java.lang.String[] { "UserRecords", });
+    internal_static_build_CellKeySigned_descriptor =
+      getDescriptor().getMessageTypes().get(3);
     internal_static_build_CellKeySigned_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_build_CellKeySigned_descriptor,
         new java.lang.String[] { "Version", "UserId", "DataId", "Cpk", "EncryptedCskCms", "EncryptedCskBody", });
     internal_static_build_CellKey_descriptor =
-      getDescriptor().getMessageTypes().get(3);
+      getDescriptor().getMessageTypes().get(4);
     internal_static_build_CellKey_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_build_CellKey_descriptor,

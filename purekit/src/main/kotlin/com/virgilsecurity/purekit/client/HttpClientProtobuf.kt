@@ -285,9 +285,12 @@ class HttpClientProtobuf {
         INSERT_USER("/user"),
         UPDATE_USER("/user"),
         GET_USER("/user"),
+        GET_USERS("/user"),
+        DELETE_USER("/user"),
         INSERT_CELL_KEY("/cell-key"),
         UPDATE_CELL_KEY("/cell-key"),
-        GET_CELL_KEY("/cell-key")
+        GET_CELL_KEY("/cell-key"),
+        DELETE_CELL_KEY("/cell-key")
     }
 
     enum class DefaultBaseUrls(val url: String) {

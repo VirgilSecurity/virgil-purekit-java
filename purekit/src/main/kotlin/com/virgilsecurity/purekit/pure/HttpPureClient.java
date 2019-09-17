@@ -41,6 +41,7 @@ import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage;
 import com.virgilsecurity.purekit.protocol.Protocol;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
+import java.util.Collection;
 import java.util.LinkedHashMap;
 
 /**
@@ -65,40 +66,6 @@ public class HttpPureClient {
 
         this.appToken = appToken;
         this.client = new HttpClientProtobuf(serviceAddress);
-    }
-
-    /**
-     * Enrolls new account
-     * @param request enrollment request
-     * @return enrollment response
-     * @throws ProtocolException FIXME
-     * @throws ProtocolHttpException FIXME
-     */
-    public PurekitProtos.EnrollmentResponse enrollAccount(PurekitProtos.EnrollmentRequest request) throws ProtocolException, ProtocolHttpException {
-        return this.client.firePost(
-                request,
-                HttpClientProtobuf.AvailableRequests.ENROLL,
-                new LinkedHashMap<>(),
-                this.appToken,
-                PurekitProtos.EnrollmentResponse.parser()
-        );
-    }
-
-    /**
-     * Verifies password
-     * @param request verify password request
-     * @return verify password response
-     * @throws ProtocolException FIXME
-     * @throws ProtocolHttpException FIXME
-     */
-    public PurekitProtos.VerifyPasswordResponse verifyPassword(PurekitProtos.VerifyPasswordRequest request) throws ProtocolException, ProtocolHttpException {
-        return this.client.firePost(
-                request,
-                HttpClientProtobuf.AvailableRequests.VERIFY_PASSWORD,
-                new LinkedHashMap<>(),
-                this.appToken,
-                PurekitProtos.VerifyPasswordResponse.parser()
-        );
     }
 
     /**
@@ -152,6 +119,42 @@ public class HttpPureClient {
     }
 
     /**
+     * Obtains user
+     * @param userIds userIds
+     * @return UserRecords
+     * @throws ProtocolHttpException FIXME
+     * @throws ProtocolException FIXME
+     */
+    public PurekitProtosV3Storage.UserRecords getUsers(Collection<String> userIds) throws ProtocolHttpException, ProtocolException {
+        // FIXME: Put userIds in get parameters
+
+        return this.client.fireGet(
+                HttpClientProtobuf.AvailableRequests.GET_USERS,
+                new LinkedHashMap<>(),
+                this.appToken,
+                PurekitProtosV3Storage.UserRecords.parser()
+        );
+    }
+
+    /**
+     * Deletes user
+     * @param userId userIds
+     * @param cascade deletes all user cell keys if true
+     * @throws ProtocolHttpException FIXME
+     * @throws ProtocolException FIXME
+     */
+    public void deleteUser(String userId, boolean cascade) throws ProtocolHttpException, ProtocolException {
+        // FIXME: Put userId and cascade in parameters
+
+        this.client.fireDelete(
+                HttpClientProtobuf.AvailableRequests.DELETE_USER,
+                new LinkedHashMap<>(),
+                this.appToken,
+                null
+        );
+    }
+
+    /**
      * Inserts new cell key
      * @param cellKey CellKey
      * @throws ProtocolHttpException FIXME
@@ -199,6 +202,24 @@ public class HttpPureClient {
                 new LinkedHashMap<>(),
                 this.appToken,
                 PurekitProtosV3Storage.CellKey.parser()
+        );
+    }
+
+    /**
+     * Deletes cell key
+     * @param userId userIds
+     * @param dataId dataId
+     * @throws ProtocolHttpException FIXME
+     * @throws ProtocolException FIXME
+     */
+    public void deleteCellKey(String userId, String dataId) throws ProtocolHttpException, ProtocolException {
+        // FIXME: Put userId and dataId in parameters
+
+        this.client.fireDelete(
+                HttpClientProtobuf.AvailableRequests.DELETE_CELL_KEY,
+                new LinkedHashMap<>(),
+                this.appToken,
+                null
         );
     }
 }

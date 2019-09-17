@@ -52,7 +52,7 @@ public class PureContext {
     private String appSecretKey;
     private String servicePublicKey;
     private String updateToken;
-    private HttpPureClient client;
+    private HttpPheClient pheClient;
     private Map<String, List<String>> externalPublicKeys;
 
     /**
@@ -111,8 +111,9 @@ public class PureContext {
         this.hpk = Base64.getDecoder().decode(hpkBase64);
         this.appSecretKey = appSecretKey;
         this.servicePublicKey = servicePublicKey;
-        this.client = new HttpPureClient(appToken, serviceAddress);
-        this.storage = new VirgilCloudPureStorage(this.client, Base64.getDecoder().decode(cloudSigningKeyBase64));
+        this.pheClient = new HttpPheClient(appToken, serviceAddress);
+        HttpPureClient pureClient = new HttpPureClient(appToken, serviceAddress);
+        this.storage = new VirgilCloudPureStorage(pureClient, Base64.getDecoder().decode(cloudSigningKeyBase64));
     }
 
     /**
@@ -174,7 +175,7 @@ public class PureContext {
         this.hpk = Base64.getDecoder().decode(hpkBase64);
         this.appSecretKey = appSecretKey;
         this.servicePublicKey = servicePublicKey;
-        this.client = new HttpPureClient(appToken, serviceAddress);
+        this.pheClient = new HttpPheClient(appToken, serviceAddress);
         this.storage = storage;
     }
 
@@ -234,11 +235,11 @@ public class PureContext {
         return servicePublicKey;
     }
     /**
-     * Returns http client
-     * @return http client
+     * Returns phe client
+     * @return PHE client
      */
-    public HttpPureClient getClient() {
-        return client;
+    public HttpPheClient getPheClient() {
+        return pheClient;
     }
     /**
      * Returns external public keys

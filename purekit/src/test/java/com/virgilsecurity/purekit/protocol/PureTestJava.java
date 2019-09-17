@@ -49,6 +49,23 @@ class PureTestJava {
             return this.users.get(userId);
         }
 
+        @Override
+        public Iterable<UserRecord> selectUsers(Collection<String> userIds) throws Exception {
+            ArrayList<UserRecord> userRecords = new ArrayList<>(userIds.size());
+
+            for (String userId: userIds) {
+                UserRecord userRecord = this.users.get(userId);
+
+                if (userRecord == null) {
+                    throw new NullPointerException();
+                }
+
+                userRecords.add(userRecord);
+            }
+
+            return userRecords;
+        }
+
         public static Predicate<UserRecord> isNotVersion(Integer version) {
             return p -> p.getPheRecordVersion() != version;
         }
@@ -63,6 +80,17 @@ class PureTestJava {
             int limit = 10;
 
             return list.subList(0, Math.min(limit, list.size()));
+        }
+
+        @Override
+        public void deleteUser(String userId, boolean cascade) throws Exception {
+            if (this.users.remove(userId) == null) {
+                throw new NullPointerException();
+            }
+
+            if (cascade) {
+                this.keys.remove(userId);
+            }
         }
 
         @Override
@@ -96,6 +124,19 @@ class PureTestJava {
             }
 
             map.put(dataId, cellKey);
+        }
+
+        @Override
+        public void deleteKey(String userId, String dataId) throws Exception {
+            HashMap<String, CellKey> keys = this.keys.get(userId);
+
+            if (keys == null) {
+                throw new NullPointerException();
+            }
+
+            if (keys.remove(dataId) == null) {
+                throw new NullPointerException();
+            }
         }
     }
 

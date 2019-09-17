@@ -63,7 +63,7 @@ public class Pure {
     private byte[] ak;
     private VirgilPublicKey buppk;
     private VirgilPublicKey hpk;
-    private HttpPureClient client;
+    private HttpPheClient pheClient;
     private HashMap<String, ArrayList<VirgilPublicKey>> externalPublicKeys;
 
     /**
@@ -111,7 +111,7 @@ public class Pure {
         this.ak = context.getAk();
         this.buppk = this.crypto.importPublicKey(context.getBuppk());
         this.hpk = this.crypto.importPublicKey(context.getHpk());
-        this.client = context.getClient();
+        this.pheClient = context.getPheClient();
 
         if (context.getExternalPublicKeys() != null) {
             // FIXME: I hate java
@@ -184,7 +184,7 @@ public class Pure {
         }
 
         PurekitProtos.EnrollmentRequest request = PurekitProtos.EnrollmentRequest.newBuilder().setVersion(this.currentVersion).build();
-        PurekitProtos.EnrollmentResponse response = this.client.enrollAccount(request);
+        PurekitProtos.EnrollmentResponse response = this.pheClient.enrollAccount(request);
 
         byte[] passwordHash = this.crypto.computeHash(password.getBytes(), HashAlgorithm.SHA512);
 
@@ -267,7 +267,7 @@ public class Pure {
                 .setRequest(ByteString.copyFrom(pheVerifyRequest))
                 .build();
 
-        PurekitProtos.VerifyPasswordResponse response = this.client.verifyPassword(request);
+        PurekitProtos.VerifyPasswordResponse response = this.pheClient.verifyPassword(request);
 
         byte[] phek = client.checkResponseAndDecrypt(passwordHash, userRecord.getPheRecord(), response.getResponse().toByteArray());
 
@@ -378,7 +378,7 @@ public class Pure {
         byte[] newPasswordHash = this.crypto.computeHash(newPassword.getBytes(), HashAlgorithm.SHA512);
 
         PurekitProtos.EnrollmentRequest enrollRequest = PurekitProtos.EnrollmentRequest.newBuilder().setVersion(this.currentVersion).build();
-        PurekitProtos.EnrollmentResponse enrollResponse = this.client.enrollAccount(enrollRequest);
+        PurekitProtos.EnrollmentResponse enrollResponse = this.pheClient.enrollAccount(enrollRequest);
 
         PheClientEnrollAccountResult enrollResult = this.currentClient.enrollAccount(enrollResponse.getResponse().toByteArray(), newPasswordHash);
 
@@ -425,7 +425,7 @@ public class Pure {
                 .setRequest(ByteString.copyFrom(pheVerifyRequest))
                 .build();
 
-        PurekitProtos.VerifyPasswordResponse verifyResponse = this.client.verifyPassword(verifyRequest);
+        PurekitProtos.VerifyPasswordResponse verifyResponse = this.pheClient.verifyPassword(verifyRequest);
 
         byte[] oldPhek = client.checkResponseAndDecrypt(oldPasswordHash, userRecord.getPheRecord(), verifyResponse.getResponse().toByteArray());
 
@@ -468,6 +468,16 @@ public class Pure {
     public void resetUserPassword(String userId, String newPassword) throws ProtocolException, ProtocolHttpException, Exception {
         // TODO: Should we delete all keys?
         this.registerUser(userId, newPassword, false);
+    }
+
+    /**
+     * Deletes user with given id
+     * @param userId userId
+     * @param cascade deletes all user cell keys if true
+     * @throws Exception FIXME
+     */
+    public void deleteUser(String userId, boolean cascade) throws Exception {
+        this.storage.deleteUser(userId, cascade);
     }
 
     /**
@@ -575,15 +585,15 @@ public class Pure {
                 ArrayList<VirgilPublicKey> recipientList = new ArrayList<>(externalPublicKeys.size()
                         + publicKeys.size() + otherUserIds.size() + 1);
 
-                // TODO: Add batch select
-                UserRecord userRecord = this.storage.selectUser(userId);
-                VirgilPublicKey upk = this.crypto.importPublicKey(userRecord.getUpk());
-                recipientList.add(upk);
+                ArrayList<String> userIds = new ArrayList<>(1 + otherUserIds.size());
+                userIds.add(userId);
+                userIds.addAll(otherUserIds);
 
-                for (String otherUserId: otherUserIds) {
-                    UserRecord otherUserRecord = this.storage.selectUser(otherUserId);
-                    VirgilPublicKey otherUpk = this.crypto.importPublicKey(otherUserRecord.getUpk());
+                Iterable<UserRecord> userRecords = this.storage.selectUsers(userIds);
 
+                // FIXME
+                for (UserRecord record: userRecords) {
+                    VirgilPublicKey otherUpk = this.crypto.importPublicKey(record.getUpk());
                     recipientList.add(otherUpk);
                 }
 
@@ -721,11 +731,11 @@ public class Pure {
 
         ArrayList<VirgilPublicKey> keys = new ArrayList<>(publicKeys);
 
-        // TODO: Add batch select
-        for (String otherUserId: otherUserIds) {
-            UserRecord otherUserRecord = this.storage.selectUser(otherUserId);
-            VirgilPublicKey otherUpk = this.crypto.importPublicKey(otherUserRecord.getUpk());
+        Iterable<UserRecord> otherUserRecords = this.storage.selectUsers(otherUserIds);
 
+        // FIXME
+        for (UserRecord record: otherUserRecords) {
+            VirgilPublicKey otherUpk = this.crypto.importPublicKey(record.getUpk());
             keys.add(otherUpk);
         }
 
@@ -781,10 +791,11 @@ public class Pure {
 
         ArrayList<VirgilPublicKey> keys = new ArrayList<>(publicKeys);
 
-        for (String otherUserId: otherUserIds) {
-            UserRecord otherUserRecord = this.storage.selectUser(otherUserId);
-            VirgilPublicKey otherUpk = this.crypto.importPublicKey(otherUserRecord.getUpk());
+        Iterable<UserRecord> otherUserRecords = this.storage.selectUsers(otherUserIds);
 
+        // FIXME
+        for (UserRecord record: otherUserRecords) {
+            VirgilPublicKey otherUpk = this.crypto.importPublicKey(record.getUpk());
             keys.add(otherUpk);
         }
 
@@ -793,5 +804,15 @@ public class Pure {
         byte[] encryptedCskCms = this.pureCrypto.deleteRecipients(cellKey.getEncryptedCskCms(), keys);
 
         this.storage.updateKey(ownerUserId, dataId, new CellKey(cellKey.getCpk(), encryptedCskCms, cellKey.getEncryptedCskBody()));
+    }
+
+    /**
+     * Deletes cell key with given userId and dataId
+     * @param userId userId
+     * @param dataId dataId
+     * @throws Exception FIXME
+     */
+    public void deleteKey(String userId, String dataId) throws Exception {
+        this.storage.deleteKey(userId, dataId);
     }
 }
