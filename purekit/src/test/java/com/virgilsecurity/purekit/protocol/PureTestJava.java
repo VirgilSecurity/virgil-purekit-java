@@ -10,6 +10,7 @@ import com.virgilsecurity.purekit.utils.ThreadUtils;
 import com.virgilsecurity.sdk.crypto.KeyType;
 import com.virgilsecurity.sdk.crypto.VirgilCrypto;
 import com.virgilsecurity.sdk.crypto.VirgilKeyPair;
+import com.virgilsecurity.sdk.crypto.VirgilPublicKey;
 import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -142,12 +143,14 @@ class PureTestJava {
 
     private static class PureSetupResult {
         private Pure pure;
+        private VirgilCrypto crypto;
         private VirgilKeyPair bupkp;
         private VirgilKeyPair hkp;
         private byte[] ak;
 
-        public PureSetupResult(Pure pure, VirgilKeyPair bupkp, VirgilKeyPair hkp, byte[] ak) {
+        public PureSetupResult(Pure pure, VirgilCrypto crypto, VirgilKeyPair bupkp, VirgilKeyPair hkp, byte[] ak) {
             this.pure = pure;
+            this.crypto = crypto;
             this.bupkp = bupkp;
             this.hkp = hkp;
             this.ak = ak;
@@ -168,13 +171,17 @@ class PureTestJava {
         public byte[] getAk() {
             return ak;
         }
+
+        public VirgilCrypto getCrypto() {
+            return crypto;
+        }
     }
 
     private PureSetupResult setupPure(String serverAddress,
                                       String appToken,
                                       String publicKey,
                                       String secretKey) throws CryptoException {
-        return this.setupPure(serverAddress, appToken, publicKey, secretKey, null, null);
+        return this.setupPure(serverAddress, appToken, publicKey, secretKey, null, null, null);
     }
 
     private PureSetupResult setupPure(String serverAddress,
@@ -182,6 +189,7 @@ class PureTestJava {
                                       String publicKey,
                                       String secretKey,
                                       String updateToken,
+                                      Map<String, List<String>> externalPublicKeys,
                                       PureStorage storage) throws CryptoException {
         VirgilCrypto crypto = new VirgilCrypto();
 
@@ -198,11 +206,11 @@ class PureTestJava {
 
         PureContext context = new PureContext(appToken,
                 Base64.getEncoder().encodeToString(ak), Base64.getEncoder().encodeToString(crypto.exportPublicKey(bupkp.getPublicKey())),
-                Base64.getEncoder().encodeToString(crypto.exportPublicKey(hkp.getPublicKey())), strg, secretKey, publicKey, null, serverAddress);
+                Base64.getEncoder().encodeToString(crypto.exportPublicKey(hkp.getPublicKey())), strg, secretKey, publicKey, externalPublicKeys, serverAddress);
 
         context.setUpdateToken(updateToken);
 
-        return new PureSetupResult(new Pure(context), bupkp, hkp, ak);
+        return new PureSetupResult(new Pure(context), crypto, bupkp, hkp, ak);
     }
 
     @ParameterizedTest @MethodSource("testArgumentsNoToken")
@@ -532,7 +540,7 @@ class PureTestJava {
             long total = 30;
 
             for (long i = 0; i < total;  i++) {
-                PureSetupResult pureResult = this.setupPure(serverAddress, appToken, publicKey, secretKey, null, ramStorage);
+                PureSetupResult pureResult = this.setupPure(serverAddress, appToken, publicKey, secretKey, null, null, ramStorage);
                 Pure pure = pureResult.getPure();
 
                 String userId = UUID.randomUUID().toString();
@@ -541,12 +549,93 @@ class PureTestJava {
                 pure.registerUser(userId, password);
             }
 
-            PureSetupResult pureResult = this.setupPure(serverAddress, appToken, publicKey, secretKey, updateToken, ramStorage);
+            PureSetupResult pureResult = this.setupPure(serverAddress, appToken, publicKey, secretKey, updateToken, null, ramStorage);
             Pure pure = pureResult.getPure();
 
             long rotated = pure.performRotation();
 
             assertEquals(total, rotated);
+        }
+        catch (Exception | ProtocolHttpException e) {
+            fail(e);
+        }
+    }
+
+    @ParameterizedTest @MethodSource("testArgumentsNoToken")
+    void encrypt_decrypt_extended(String serverAddress,
+                                  String appToken,
+                                  String publicKey,
+                                  String secretKey) throws InterruptedException, ProtocolException {
+        ThreadUtils.pause();
+
+        try {
+            PureSetupResult pureResult = this.setupPure(serverAddress, appToken, publicKey, secretKey);
+            Pure pure = pureResult.getPure();
+
+            String userId1 = UUID.randomUUID().toString();
+            String userId2 = UUID.randomUUID().toString();
+            String password1 = UUID.randomUUID().toString();
+            String password2 = UUID.randomUUID().toString();
+            String dataId = UUID.randomUUID().toString();
+            byte[] text = UUID.randomUUID().toString().getBytes();
+
+            pure.registerUser(userId1, password1);
+            pure.registerUser(userId2, password2);
+
+            AuthResult authResult1 = pure.authenticateUser(userId1, password1);
+            AuthResult authResult2 = pure.authenticateUser(userId2, password2);
+
+            VirgilKeyPair keyPair = pureResult.getCrypto().generateKeyPair();
+
+            byte[] cipherText = pure.encrypt(userId1, dataId, Collections.singletonList(userId2), Collections.singletonList(keyPair.getPublicKey()), text);
+
+            byte[] plainText = pure.decrypt(authResult1.getGrant(), null, dataId, cipherText);
+
+            assertArrayEquals(text, plainText);
+
+            plainText = pure.decrypt(authResult2.getGrant(), userId1, dataId, cipherText);
+
+            assertArrayEquals(text, plainText);
+
+            plainText = pure.decrypt(keyPair.getPrivateKey(), userId1, dataId, cipherText);
+
+            assertArrayEquals(text, plainText);
+        }
+        catch (Exception | ProtocolHttpException e) {
+            fail(e);
+        }
+    }
+
+    @ParameterizedTest @MethodSource("testArgumentsNoToken")
+    void encrypt_decrypt_external(String serverAddress,
+                                  String appToken,
+                                  String publicKey,
+                                  String secretKey) throws InterruptedException, ProtocolException {
+        ThreadUtils.pause();
+
+        try {
+            VirgilCrypto crypto = new VirgilCrypto();
+            VirgilKeyPair keyPair = crypto.generateKeyPair();
+            String dataId = UUID.randomUUID().toString();
+            String publicKeyBase64 = Base64.getEncoder().encodeToString(crypto.exportPublicKey(keyPair.getPublicKey()));
+
+            Map<String, List<String>> externalPublicKeys = Collections.singletonMap(dataId, Collections.singletonList(publicKeyBase64));
+
+            PureSetupResult pureResult = this.setupPure(serverAddress, appToken, publicKey, secretKey, null, externalPublicKeys, null);
+            Pure pure = pureResult.getPure();
+
+            String userId = UUID.randomUUID().toString();
+            String password = UUID.randomUUID().toString();
+
+            byte[] text = UUID.randomUUID().toString().getBytes();
+
+            pure.registerUser(userId, password);
+
+            byte[] cipherText = pure.encrypt(userId, dataId, text);
+
+            byte[] plainText = pure.decrypt(keyPair.getPrivateKey(), userId, dataId, cipherText);
+
+            assertArrayEquals(text, plainText);
         }
         catch (Exception | ProtocolHttpException e) {
             fail(e);

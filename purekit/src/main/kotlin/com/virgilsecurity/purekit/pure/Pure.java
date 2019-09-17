@@ -585,6 +585,8 @@ public class Pure {
                 ArrayList<VirgilPublicKey> recipientList = new ArrayList<>(externalPublicKeys.size()
                         + publicKeys.size() + otherUserIds.size() + 1);
 
+                recipientList.addAll(publicKeys);
+
                 ArrayList<String> userIds = new ArrayList<>(1 + otherUserIds.size());
                 userIds.add(userId);
                 userIds.addAll(otherUserIds);
