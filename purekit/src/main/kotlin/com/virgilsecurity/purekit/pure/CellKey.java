@@ -53,7 +53,7 @@ public class CellKey {
      * Cell public key
      * @return cell public key
      */
-    public byte[] getCpk() {
+    public final byte[] getCpk() {
         return cpk;
     }
 
@@ -61,7 +61,7 @@ public class CellKey {
      * Encrypted cell secret key CMS
      * @return encrypted cell secret key CMS
      */
-    public byte[] getEncryptedCskCms() {
+    public final byte[] getEncryptedCskCms() {
         return encryptedCskCms;
     }
 
@@ -69,7 +69,7 @@ public class CellKey {
      * Encrypted cell secret key body
      * @return encrypted cell secret key body
      */
-    public byte[] getEncryptedCskBody() {
+    public final byte[] getEncryptedCskBody() {
         return encryptedCskBody;
     }
 

@@ -12,20 +12,29 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 
 /**
  * PureStorage on Virgil cloud side
  */
 public class VirgilCloudPureStorage implements PureStorage {
-    private VirgilCrypto crypto;
-    private VirgilKeyPair signingKey;
-    private HttpPureClient client;
+    private final VirgilCrypto crypto;
+    private final VirgilKeyPair signingKey;
+    private final HttpPureClient client;
+
+    private static int currentUserVersion = 1;
+    private static int currentUserSignedVersion = 1;
+    private static int currentCellKeyVersion = 1;
+    private static int currentCellKeySignedVersion = 1;
 
     /**
      * Constructor
      * @param signingKey key used to sign data before sending to Virgil
      */
-    public VirgilCloudPureStorage(HttpPureClient client, byte[] signingKey) throws CryptoException {
+    public VirgilCloudPureStorage(VirgilCrypto crypto, HttpPureClient client, VirgilKeyPair signingKey) throws CryptoException {
+        if (crypto == null) {
+            throw new NullPointerException();
+        }
         if (client == null) {
             throw new NullPointerException();
         }
@@ -33,8 +42,8 @@ public class VirgilCloudPureStorage implements PureStorage {
             throw new NullPointerException();
         }
 
-        this.crypto = new VirgilCrypto();
-        this.signingKey = this.crypto.importPrivateKey(signingKey);
+        this.crypto = crypto;
+        this.signingKey = signingKey;
         this.client = client;
     }
 
@@ -42,10 +51,10 @@ public class VirgilCloudPureStorage implements PureStorage {
         PurekitProtosV3Crypto.EnrollmentRecord enrollmentRecord = PurekitProtosV3Crypto.EnrollmentRecord.parseFrom(userRecord.getPheRecord());
 
         byte[] userRecordSigned = PurekitProtosV3Storage.UserRecordSigned.newBuilder()
-                .setVersion(1) // FIXME
+                .setVersion(VirgilCloudPureStorage.currentUserSignedVersion)
                 .setUserId(userRecord.getUserId())
+                .setPheRecordNc(enrollmentRecord.getNc())
                 .setPheRecordNs(enrollmentRecord.getNs())
-                .setPheRecordNs(enrollmentRecord.getNc())
                 .setUpk(ByteString.copyFrom(userRecord.getUpk()))
                 .setEncryptedUsk(ByteString.copyFrom(userRecord.getEncryptedUsk()))
                 .setEncryptedUskBackup(ByteString.copyFrom(userRecord.getEncryptedUskBackup()))
@@ -56,7 +65,7 @@ public class VirgilCloudPureStorage implements PureStorage {
         byte[] signature = this.crypto.generateSignature(userRecordSigned, this.signingKey.getPrivateKey());
 
         PurekitProtosV3Storage.UserRecord protobufRecord = PurekitProtosV3Storage.UserRecord.newBuilder()
-                .setVersion(1) /* FIXME */
+                .setVersion(VirgilCloudPureStorage.currentUserVersion)
                 .setUserRecordSigned(ByteString.copyFrom(userRecordSigned))
                 .setSignature(ByteString.copyFrom(signature))
                 .setPheRecordT0(enrollmentRecord.getT0())
@@ -69,7 +78,7 @@ public class VirgilCloudPureStorage implements PureStorage {
                 this.client.insertUser(protobufRecord);
             }
             else {
-                this.client.updateUser(protobufRecord);
+                this.client.updateUser(userRecord.getUserId(), protobufRecord);
             }
         }
         catch (ProtocolException | ProtocolHttpException e) {
@@ -98,14 +107,12 @@ public class VirgilCloudPureStorage implements PureStorage {
     }
 
     private UserRecord parse(PurekitProtosV3Storage.UserRecord protobufRecord) throws Exception {
-        // TODO: Check version
         boolean verified = this.crypto.verifySignature(protobufRecord.getSignature().toByteArray(),
                 protobufRecord.getUserRecordSigned().toByteArray(),
                 this.signingKey.getPublicKey());
 
         if (!verified) {
-            // FIXME
-            throw new Exception();
+            throw new PureException(PureException.ErrorCode.STORAGE_SIGNATURE_VERIFICATION_FAILED);
         }
 
         PurekitProtosV3Storage.UserRecordSigned r = PurekitProtosV3Storage.UserRecordSigned.parseFrom(protobufRecord.getUserRecordSigned());
@@ -137,11 +144,24 @@ public class VirgilCloudPureStorage implements PureStorage {
         try {
             protobufRecord = this.client.getUser(userId);
         }
-        catch (ProtocolException | ProtocolHttpException e) {
+        catch (ProtocolException e) {
+            if (e.getErrorCode() == HttpPureClient.ErrorCode.USER_NOT_FOUND.getErrorNumber()) {
+                throw new PureException(PureException.ErrorCode.USER_NOT_FOUND_IN_STORAGE);
+            }
+
+            throw new Exception();
+        }
+        catch (ProtocolHttpException e) {
             throw new Exception();
         }
 
-        return this.parse(protobufRecord);
+        UserRecord userRecord = this.parse(protobufRecord);
+
+        if (!userRecord.getUserId().equals(userId)) {
+            throw new PureException(PureException.ErrorCode.USER_ID_MISMATCH);
+        }
+
+        return userRecord;
     }
 
     /**
@@ -152,6 +172,12 @@ public class VirgilCloudPureStorage implements PureStorage {
      */
     @Override
     public Iterable<UserRecord> selectUsers(Collection<String> userIds) throws Exception {
+        HashSet<String> idsSet = new HashSet<>(userIds);
+
+        if (idsSet.size() != userIds.size()) {
+            throw new PureException(PureException.ErrorCode.DUPLICATE_USER_ID);
+        }
+
         PurekitProtosV3Storage.UserRecords protobufRecords;
 
         try {
@@ -161,12 +187,24 @@ public class VirgilCloudPureStorage implements PureStorage {
             throw new Exception();
         }
 
+        if (protobufRecords.getUserRecordsCount() != userIds.size()) {
+            throw new PureException(PureException.ErrorCode.DUPLICATE_USER_ID);
+        }
+
         ArrayList<UserRecord> userRecords = new ArrayList<>(protobufRecords.getUserRecordsCount());
 
         for (int i = 0; i < protobufRecords.getUserRecordsCount(); i++) {
             PurekitProtosV3Storage.UserRecord protobufRecord = protobufRecords.getUserRecords(i);
 
-            userRecords.add(this.parse(protobufRecord));
+            UserRecord userRecord = this.parse(protobufRecord);
+
+            if (!idsSet.contains(userRecord.getUserId())) {
+                throw new PureException(PureException.ErrorCode.USER_ID_MISMATCH);
+            }
+
+            idsSet.remove(userRecord.getUserId());
+
+            userRecords.add(userRecord);
         }
 
         return userRecords;
@@ -209,34 +247,44 @@ public class VirgilCloudPureStorage implements PureStorage {
      */
     @Override
     public CellKey selectKey(String userId, String dataId) throws Exception {
-
         PurekitProtosV3Storage.CellKey protobufRecord;
 
         try {
             protobufRecord = this.client.getCellKey(userId, dataId);
         }
-        catch (ProtocolException | ProtocolHttpException e) {
+        catch (ProtocolException e) {
+            if (e.getErrorCode() == HttpPureClient.ErrorCode.CELL_KEY_NOT_FOUND.getErrorNumber()) {
+               return null;
+            }
+
+            throw new Exception();
+        }
+        catch (ProtocolHttpException e) {
             throw new Exception();
         }
 
-        // TODO: Check version
         boolean verified = this.crypto.verifySignature(protobufRecord.getSignature().toByteArray(),
                 protobufRecord.getCellKeySigned().toByteArray(),
                 this.signingKey.getPublicKey());
 
         if (!verified) {
-            // FIXME
-            throw new Exception();
+            throw new PureException(PureException.ErrorCode.STORAGE_SIGNATURE_VERIFICATION_FAILED);
         }
 
         PurekitProtosV3Storage.CellKeySigned r = PurekitProtosV3Storage.CellKeySigned.parseFrom(protobufRecord.getCellKeySigned());
 
-        return new CellKey(r.getCpk().toByteArray(), r.getEncryptedCskCms().toByteArray(), r.getEncryptedCskBody().toByteArray());
+        CellKey cellKey = new CellKey(r.getCpk().toByteArray(), r.getEncryptedCskCms().toByteArray(), r.getEncryptedCskBody().toByteArray());
+
+        if (!userId.equals(r.getUserId()) || !dataId.equals(r.getDataId())) {
+            throw new PureException(PureException.ErrorCode.USER_ID_MISMATCH);
+        }
+
+        return cellKey;
     }
 
     private void insertKey(String userId, String dataId, CellKey cellKey, boolean isInsert) throws Exception {
         byte[] cellKeySigned = PurekitProtosV3Storage.CellKeySigned.newBuilder()
-                .setVersion(1) // FIXME
+                .setVersion(VirgilCloudPureStorage.currentCellKeySignedVersion)
                 .setUserId(userId)
                 .setDataId(dataId)
                 .setCpk(ByteString.copyFrom(cellKey.getCpk()))
@@ -248,21 +296,29 @@ public class VirgilCloudPureStorage implements PureStorage {
         byte[] signature = this.crypto.generateSignature(cellKeySigned, this.signingKey.getPrivateKey());
 
         PurekitProtosV3Storage.CellKey protobufRecord = PurekitProtosV3Storage.CellKey.newBuilder()
-                .setVersion(1) // FIXME
+                .setVersion(VirgilCloudPureStorage.currentCellKeyVersion)
                 .setCellKeySigned(ByteString.copyFrom(cellKeySigned))
                 .setSignature(ByteString.copyFrom(signature))
                 .build();
 
         try {
             if (isInsert) {
-                this.client.insertCellKey(protobufRecord);
+                try {
+                    this.client.insertCellKey(protobufRecord);
+                }
+                catch (ProtocolException e) {
+                    if (e.getErrorCode() == HttpPureClient.ErrorCode.CELL_KEY_ALREADY_EXISTS.getErrorNumber()) {
+                        throw new PureException(PureException.ErrorCode.CELL_KEY_ALREADY_EXISTS_IN_STORAGE);
+                    }
+
+                    throw new Exception();
+                }
             }
             else {
-                this.client.updateCellKey(protobufRecord);
+                this.client.updateCellKey(userId, dataId, protobufRecord);
             }
         }
         catch (ProtocolException | ProtocolHttpException e) {
-            // FIXME: Check if it's already exists error and throw PureStorageKeyAlreadyExistsException
             throw new Exception();
         }
     }

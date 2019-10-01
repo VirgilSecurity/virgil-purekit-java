@@ -60,7 +60,7 @@ class ProtocolContextNegativeTest {
     }
 
     @Test fun context_app_token_wrong_prefix() {
-        if (PropertyManager.virgilServerAddress == null) { // If virgilServerAddress is not null - we use default http client
+        if (PropertyManager.virgilPheServerAddress == null) { // If virgilServerAddress is not null - we use default http client
             val protocol = ProtocolUtils.initProtocol(appToken = WRONG_CRED, updateToken = "")
 
             runBlocking {

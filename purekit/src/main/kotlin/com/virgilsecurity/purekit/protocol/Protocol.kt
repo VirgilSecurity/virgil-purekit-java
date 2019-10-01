@@ -85,7 +85,7 @@ class Protocol @JvmOverloads constructor(
         with(PurekitProtos.EnrollmentRequest.newBuilder().setVersion(currentVersion).build()) {
             with(httpClient.firePost(
                     this,
-                    HttpClientProtobuf.AvailableRequests.ENROLL,
+                    HttpClientProtobuf.AvailableRequests.ENROLL.type,
                     authToken = appToken,
                     responseParser = PurekitProtos.EnrollmentResponse.parser()
 
@@ -153,7 +153,7 @@ class Protocol @JvmOverloads constructor(
 
         with(httpClient.firePost(
                 verifyPasswordRequest,
-                HttpClientProtobuf.AvailableRequests.VERIFY_PASSWORD,
+                HttpClientProtobuf.AvailableRequests.VERIFY_PASSWORD.type,
                 authToken = appToken,
                 responseParser = PurekitProtos.VerifyPasswordResponse.parser()
         )) {

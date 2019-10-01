@@ -100,7 +100,7 @@ public interface PureStorage {
 
     /**
      * Insert CellKey key into storage
-     * @implSpec this method MUST throw PureStorageKeyAlreadyExistsException if key with given userId and dataId already exists
+     * @implSpec this method MUST throw PureException(CELL_KEY_ALREADY_EXISTS) if key with given userId and dataId already exists
      * @param userId userId
      * @param dataId dataId
      * @param cellKey cell key record

@@ -47,6 +47,6 @@ class PureCryptoData {
         return body;
     }
 
-    private byte[] cms;
-    private byte[] body;
+    private final byte[] cms;
+    private final byte[] body;
 }

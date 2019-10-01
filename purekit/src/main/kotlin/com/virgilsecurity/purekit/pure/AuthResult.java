@@ -53,8 +53,8 @@ public class AuthResult {
         return encryptedGrant;
     }
 
-    private PureGrant grant;
-    private String encryptedGrant;
+    private final PureGrant grant;
+    private final String encryptedGrant;
 
     AuthResult(PureGrant grant, String encryptedGrant) {
         this.grant = grant;

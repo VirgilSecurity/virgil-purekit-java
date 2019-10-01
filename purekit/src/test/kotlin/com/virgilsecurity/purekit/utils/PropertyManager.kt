@@ -94,11 +94,18 @@ object PropertyManager {
             System.getenv(VIRGIL_UPDATE_TOKEN_NEW)
     }
     @JvmStatic
-    val virgilServerAddress: String? by lazy {
-        if (System.getProperty(VIRGIL_SERVER_ADDRESS) != null)
-            System.getProperty(VIRGIL_SERVER_ADDRESS)
+    val virgilPheServerAddress: String? by lazy {
+        if (System.getProperty(VIRGIL_PHE_SERVER_ADDRESS) != null)
+            System.getProperty(VIRGIL_PHE_SERVER_ADDRESS)
         else
-            System.getenv(VIRGIL_SERVER_ADDRESS)
+            System.getenv(VIRGIL_PHE_SERVER_ADDRESS)
+    }
+    @JvmStatic
+    val virgilPureServerAddress: String? by lazy {
+        if (System.getProperty(VIRGIL_PURE_SERVER_ADDRESS) != null)
+            System.getProperty(VIRGIL_PURE_SERVER_ADDRESS)
+        else
+            System.getenv(VIRGIL_PURE_SERVER_ADDRESS)
     }
 
     // Passw0rd parameters
@@ -175,7 +182,8 @@ object PropertyManager {
     private const val VIRGIL_PUBLIC_KEY_WRONG = "VIRGIL_PUBLIC_KEY_WRONG"
     private const val VIRGIL_UPDATE_TOKEN_OLD = "VIRGIL_UPDATE_TOKEN_OLD"
     private const val VIRGIL_UPDATE_TOKEN_NEW = "VIRGIL_UPDATE_TOKEN_NEW"
-    private const val VIRGIL_SERVER_ADDRESS = "VIRGIL_SERVER_ADDRESS"
+    private const val VIRGIL_PHE_SERVER_ADDRESS = "VIRGIL_PHE_SERVER_ADDRESS"
+    private const val VIRGIL_PURE_SERVER_ADDRESS = "VIRGIL_PURE_SERVER_ADDRESS"
 
     private const val PURE_APP_TOKEN = "PURE_APP_TOKEN"
     private const val PURE_PUBLIC_KEY_OLD = "PURE_PUBLIC_KEY_OLD"

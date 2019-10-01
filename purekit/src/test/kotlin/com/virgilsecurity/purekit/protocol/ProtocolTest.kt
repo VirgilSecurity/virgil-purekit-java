@@ -372,14 +372,14 @@ class ProtocolTest {
         const val TEXT = "The best text ever."
 
         @JvmStatic fun testArgumentsNoToken() = listOf(
-                Arguments.of(PropertyManager.virgilServerAddress,
+                Arguments.of(PropertyManager.virgilPheServerAddress,
                              PropertyManager.virgilAppToken,
                              PropertyManager.virgilPublicKeyNew,
                              PropertyManager.virgilSecretKeyNew)
         )
 
         @JvmStatic fun testArguments() = listOf(
-                Arguments.of(PropertyManager.virgilServerAddress,
+                Arguments.of(PropertyManager.virgilPheServerAddress,
                              PropertyManager.virgilAppToken,
                              PropertyManager.virgilPublicKeyNew,
                              PropertyManager.virgilSecretKeyNew,
@@ -387,7 +387,7 @@ class ProtocolTest {
         )
 
         @JvmStatic fun testArgumentsWithWrongKey() = listOf(
-                Arguments.of(PropertyManager.virgilServerAddress,
+                Arguments.of(PropertyManager.virgilPheServerAddress,
                              PropertyManager.virgilAppToken,
                              PropertyManager.virgilPublicKeyNew,
                              PropertyManager.virgilPublicKeyWrong,

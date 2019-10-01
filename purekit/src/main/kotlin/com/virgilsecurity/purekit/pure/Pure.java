@@ -52,27 +52,29 @@ import java.util.*;
  * Main class for interactions with PureKit
  */
 public class Pure {
-    private VirgilCrypto crypto;
-    private PureCrypto pureCrypto;
-    private PheCipher cipher;
-    private PureStorage storage;
-    private int currentVersion;
-    private PheClient currentClient;
-    private byte[] updateToken;
-    private PheClient previousClient;
-    private byte[] ak;
-    private VirgilPublicKey buppk;
-    private VirgilPublicKey hpk;
-    private HttpPheClient pheClient;
-    private HashMap<String, ArrayList<VirgilPublicKey>> externalPublicKeys;
+    private final VirgilCrypto crypto;
+    private final PureCrypto pureCrypto;
+    private final PheCipher cipher;
+    private final PureStorage storage;
+    private final int currentVersion;
+    private final PheClient currentClient;
+    private final byte[] updateToken;
+    private final PheClient previousClient;
+    private final byte[] ak;
+    private final VirgilPublicKey buppk;
+    private final VirgilPublicKey hpk;
+    private final HttpPheClient pheClient;
+    private final Map<String, List<VirgilPublicKey>> externalPublicKeys;
+
+    private final static int currentGrantVersion = 1;
 
     /**
      * Constructor
      * @param context PureContext
      * @throws CryptoException FIXME
      */
-    public Pure(PureContext context) throws CryptoException {
-        this.crypto = new VirgilCrypto();
+    public Pure(PureContext context) throws CryptoException, PureException {
+        this.crypto = context.getCrypto();
         this.pureCrypto = new PureCrypto(this.crypto);
         this.cipher = new PheCipher();
         this.cipher.setRandom(this.crypto.getRng());
@@ -80,99 +82,28 @@ public class Pure {
         this.currentClient = new PheClient();
         this.currentClient.setOperationRandom(this.crypto.getRng());
         this.currentClient.setRandom(this.crypto.getRng());
-
-        ParseResult skResult = Pure.parseCredentials("SK", context.getAppSecretKey());
-        ParseResult pkResult = Pure.parseCredentials("PK", context.getServicePublicKey());
-
-        if (skResult.getVersion() != pkResult.getVersion()) {
-            throw new NullPointerException();
-        }
-
-        this.currentVersion = skResult.getVersion();
-        this.currentClient.setKeys(skResult.getPayload(), pkResult.getPayload());
+        this.currentClient.setKeys(context.getAppSecretKey().getPayload(), context.getServicePublicKey().getPayload());
 
         if (context.getUpdateToken() != null) {
-            ParseResult utResult = Pure.parseCredentials("UT", context.getUpdateToken());
-
-            if (utResult.getVersion() != this.currentVersion + 1) {
-                throw new NullPointerException();
-            }
-
-            this.currentVersion += 1;
-            this.updateToken = utResult.getPayload();
+            this.currentVersion = context.getServicePublicKey().getVersion() + 1;
+            this.updateToken = context.getUpdateToken().getPayload();
             this.previousClient = new PheClient();
             this.previousClient.setOperationRandom(this.crypto.getRng());
             this.previousClient.setRandom(this.crypto.getRng());
-            this.previousClient.setKeys(skResult.getPayload(), pkResult.getPayload());
-            this.currentClient.rotateKeys(utResult.getPayload());
-        }
-
-        // TODO: Check size
-        this.ak = context.getAk();
-        this.buppk = this.crypto.importPublicKey(context.getBuppk());
-        this.hpk = this.crypto.importPublicKey(context.getHpk());
-        this.pheClient = context.getPheClient();
-
-        if (context.getExternalPublicKeys() != null) {
-            // FIXME: I hate java
-            this.externalPublicKeys = new HashMap<>(context.getExternalPublicKeys().size());
-            for (String key : context.getExternalPublicKeys().keySet()) {
-                List<String> publicKeysBase64 = context.getExternalPublicKeys().get(key);
-                ArrayList<VirgilPublicKey> publicKeys = new ArrayList<>(publicKeysBase64.size());
-
-                for (String publicKeyBase64 : publicKeysBase64) {
-                    VirgilPublicKey publicKey = this.crypto.importPublicKey(Base64.getDecoder().decode(publicKeyBase64));
-                    publicKeys.add(publicKey);
-                }
-
-                this.externalPublicKeys.put(key, publicKeys);
-            }
+            this.previousClient.setKeys(context.getAppSecretKey().getPayload(), context.getServicePublicKey().getPayload());
+            this.currentClient.rotateKeys(context.getUpdateToken().getPayload());
         }
         else {
-            this.externalPublicKeys = new HashMap<>();
-        }
-    }
-
-    private static class ParseResult {
-        private byte[] payload;
-        private int version;
-
-        private byte[] getPayload() {
-            return payload;
+            this.currentVersion = context.getServicePublicKey().getVersion();
+            this.updateToken = null;
+            this.previousClient = null;
         }
 
-        private int getVersion() {
-            return version;
-        }
-
-        private ParseResult(byte[] payload, int version) {
-            this.payload = payload;
-            this.version = version;
-        }
-    }
-
-    private static ParseResult parseCredentials(String prefix, String credentials) {
-        if (prefix == null || prefix.isEmpty()) {
-            throw new NullPointerException();
-        }
-        if (credentials == null || credentials.isEmpty()) {
-            throw new NullPointerException();
-        }
-
-        String[] parts = credentials.split("\\.");
-
-        if (parts.length != 3) {
-            throw new NullPointerException();
-        }
-
-        if (!parts[0].equals(prefix)) {
-            throw new NullPointerException();
-        }
-
-        int version = Integer.parseInt(parts[1]);
-        byte[] payload = Base64.getDecoder().decode(parts[2]);;
-
-        return new ParseResult(payload, version);
+        this.ak = context.getAk().getPayload();
+        this.buppk = context.getBuppk();
+        this.hpk = context.getHpk();
+        this.pheClient = context.getPheClient();
+        this.externalPublicKeys = context.getExternalPublicKeys();
     }
 
     private void registerUser(String userId, String password, boolean isUserNew) throws ProtocolException, ProtocolHttpException, Exception {
@@ -271,6 +202,10 @@ public class Pure {
 
         byte[] phek = client.checkResponseAndDecrypt(passwordHash, userRecord.getPheRecord(), response.getResponse().toByteArray());
 
+        if (phek.length == 0) {
+            throw new PureException(PureException.ErrorCode.INVALID_PASSWORD);
+        }
+
         byte[] uskData = this.cipher.decrypt(userRecord.getEncryptedUsk(), phek);
 
         VirgilKeyPair ukp = this.crypto.importPrivateKey(uskData);
@@ -293,7 +228,7 @@ public class Pure {
         byte[] encryptedPhek = this.cipher.authEncrypt(phek, headerBytes, this.ak);
 
         PurekitProtosV3Grant.EncryptedGrant encryptedGrantData = PurekitProtosV3Grant.EncryptedGrant.newBuilder()
-                .setVersion(1) /* FIXME */
+                .setVersion(Pure.currentGrantVersion)
                 .setHeader(ByteString.copyFrom(headerBytes))
                 .setEncryptedPhek(ByteString.copyFrom(encryptedPhek))
                 .build();
@@ -429,6 +364,10 @@ public class Pure {
 
         byte[] oldPhek = client.checkResponseAndDecrypt(oldPasswordHash, userRecord.getPheRecord(), verifyResponse.getResponse().toByteArray());
 
+        if (oldPhek.length == 0) {
+            throw new PureException(PureException.ErrorCode.INVALID_PASSWORD);
+        }
+
         byte[] privateKeyData = this.cipher.decrypt(userRecord.getEncryptedUsk(), oldPhek);
 
         this.changeUserPassword(userRecord, privateKeyData, newPassword);
@@ -466,7 +405,7 @@ public class Pure {
      * @throws CryptoException FIXME
      */
     public void resetUserPassword(String userId, String newPassword) throws ProtocolException, ProtocolHttpException, Exception {
-        // TODO: Should we delete all keys?
+        // TODO: Add possibility to delete cell keys?
         this.registerUser(userId, newPassword, false);
     }
 
@@ -593,13 +532,13 @@ public class Pure {
 
                 Iterable<UserRecord> userRecords = this.storage.selectUsers(userIds);
 
-                // FIXME
+                // TODO: Optimize
                 for (UserRecord record: userRecords) {
                     VirgilPublicKey otherUpk = this.crypto.importPublicKey(record.getUpk());
                     recipientList.add(otherUpk);
                 }
 
-                ArrayList<VirgilPublicKey> externalPublicKeys = this.externalPublicKeys.get(dataId);
+                List<VirgilPublicKey> externalPublicKeys = this.externalPublicKeys.get(dataId);
 
                 if (externalPublicKeys != null) {
                     recipientList.addAll(externalPublicKeys);
@@ -615,9 +554,12 @@ public class Pure {
                 this.storage.insertKey(userId, dataId, new CellKey(cpkData, encryptedCskData.getCms(), encryptedCskData.getBody()));
                 cpk = ckp.getPublicKey();
             }
-            catch (PureStorageKeyAlreadyExistsException e) {
-                CellKey cellKey2 = this.storage.selectKey(userId, dataId);
+            catch (PureException e) {
+                if (e.getErrorCode() != PureException.ErrorCode.CELL_KEY_ALREADY_EXISTS_IN_STORAGE) {
+                    throw e;
+                }
 
+                CellKey cellKey2 = this.storage.selectKey(userId, dataId);
                 cpk = this.crypto.importPublicKey(cellKey2.getCpk());
             }
         }
@@ -679,6 +621,10 @@ public class Pure {
 
         CellKey cellKey = this.storage.selectKey(ownerUserId, dataId);
 
+        if (cellKey == null) {
+            throw new PureException(PureException.ErrorCode.CELL_KEY_NOT_FOUND_IN_STORAGE);
+        }
+
         byte[] csk = this.pureCrypto.decrypt(new PureCryptoData(cellKey.getEncryptedCskCms(), cellKey.getEncryptedCskBody()), privateKey);
 
         VirgilKeyPair ckp = this.crypto.importPrivateKey(csk);
@@ -735,7 +681,7 @@ public class Pure {
 
         Iterable<UserRecord> otherUserRecords = this.storage.selectUsers(otherUserIds);
 
-        // FIXME
+        // TODO: Optimize
         for (UserRecord record: otherUserRecords) {
             VirgilPublicKey otherUpk = this.crypto.importPublicKey(record.getUpk());
             keys.add(otherUpk);
@@ -795,7 +741,7 @@ public class Pure {
 
         Iterable<UserRecord> otherUserRecords = this.storage.selectUsers(otherUserIds);
 
-        // FIXME
+        // TODO: Optimize
         for (UserRecord record: otherUserRecords) {
             VirgilPublicKey otherUpk = this.crypto.importPublicKey(record.getUpk());
             keys.add(otherUpk);

@@ -10,7 +10,6 @@ import com.virgilsecurity.purekit.utils.ThreadUtils;
 import com.virgilsecurity.sdk.crypto.KeyType;
 import com.virgilsecurity.sdk.crypto.VirgilCrypto;
 import com.virgilsecurity.sdk.crypto.VirgilKeyPair;
-import com.virgilsecurity.sdk.crypto.VirgilPublicKey;
 import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -46,8 +45,14 @@ class PureTestJava {
         }
 
         @Override
-        public UserRecord selectUser(String userId) {
-            return this.users.get(userId);
+        public UserRecord selectUser(String userId) throws PureException {
+            UserRecord userRecord = this.users.get(userId);
+
+            if (userRecord == null) {
+                throw new PureException(PureException.ErrorCode.USER_NOT_FOUND_IN_STORAGE);
+            }
+
+            return userRecord;
         }
 
         @Override
@@ -95,7 +100,7 @@ class PureTestJava {
         }
 
         @Override
-        public CellKey selectKey(String userId, String dataId) {
+        public CellKey selectKey(String userId, String dataId) throws PureException {
             HashMap<String, CellKey> map = this.keys.get(userId);
 
             if (map == null) {
@@ -106,11 +111,11 @@ class PureTestJava {
         }
 
         @Override
-        public void insertKey(String userId, String dataId, CellKey cellKey) throws PureStorageKeyAlreadyExistsException {
+        public void insertKey(String userId, String dataId, CellKey cellKey) throws PureException {
             HashMap<String, CellKey> map = this.keys.getOrDefault(userId, new HashMap<>());
 
             if (map.putIfAbsent(dataId, cellKey) != null) {
-                throw new PureStorageKeyAlreadyExistsException();
+                throw new PureException(PureException.ErrorCode.CELL_KEY_ALREADY_EXISTS_IN_STORAGE);
             }
 
             this.keys.put(userId, map);
@@ -146,14 +151,12 @@ class PureTestJava {
         private VirgilCrypto crypto;
         private VirgilKeyPair bupkp;
         private VirgilKeyPair hkp;
-        private byte[] ak;
 
-        public PureSetupResult(Pure pure, VirgilCrypto crypto, VirgilKeyPair bupkp, VirgilKeyPair hkp, byte[] ak) {
+        public PureSetupResult(Pure pure, VirgilCrypto crypto, VirgilKeyPair bupkp, VirgilKeyPair hkp) {
             this.pure = pure;
             this.crypto = crypto;
             this.bupkp = bupkp;
             this.hkp = hkp;
-            this.ak = ak;
         }
 
         public Pure getPure() {
@@ -168,66 +171,83 @@ class PureTestJava {
             return hkp;
         }
 
-        public byte[] getAk() {
-            return ak;
-        }
-
         public VirgilCrypto getCrypto() {
             return crypto;
         }
     }
 
-    private PureSetupResult setupPure(String serverAddress,
-                                      String appToken,
-                                      String publicKey,
-                                      String secretKey) throws CryptoException {
-        return this.setupPure(serverAddress, appToken, publicKey, secretKey, null, null, null);
+    private VirgilCrypto crypto;
+
+    public PureTestJava() {
+        this.crypto = new VirgilCrypto();
     }
 
-    private PureSetupResult setupPure(String serverAddress,
+    private PureSetupResult setupPure(String pheServerAddress,
+                                      String pureServerAddress,
+                                      String appToken,
+                                      String publicKey,
+                                      String secretKey,
+                                      Map<String, List<String>> externalPublicKeys,
+                                      PureStorage storage) throws CryptoException, PureException {
+        return this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, externalPublicKeys, storage);
+    }
+
+    private PureSetupResult setupPure(String pheServerAddress,
+                                      String pureServerAddress,
                                       String appToken,
                                       String publicKey,
                                       String secretKey,
                                       String updateToken,
                                       Map<String, List<String>> externalPublicKeys,
-                                      PureStorage storage) throws CryptoException {
-        VirgilCrypto crypto = new VirgilCrypto();
+                                      PureStorage storage) throws CryptoException, PureException {
+        VirgilKeyPair bupkp = this.crypto.generateKeyPair(KeyType.ED25519);
+        VirgilKeyPair hkp = this.crypto.generateKeyPair(KeyType.ED25519);
 
-        VirgilKeyPair bupkp = crypto.generateKeyPair(KeyType.ED25519);
-        VirgilKeyPair hkp = crypto.generateKeyPair(KeyType.ED25519);
+        byte[] akData = this.crypto.generateRandomData(32);
+        String akString = String.format("AK.%s", Base64.getEncoder().encodeToString(akData));
 
-        byte[] ak = crypto.generateRandomData(32);
+        String bupkpString = String.format("BU.%s", Base64.getEncoder().encodeToString(this.crypto.exportPublicKey(bupkp.getPublicKey())));
+        String hkpString = String.format("HB.%s", Base64.getEncoder().encodeToString(this.crypto.exportPublicKey(hkp.getPublicKey())));
 
-        PureStorage strg = storage;
+        PureContext context;
+        if (storage != null) {
+            context = PureContext.createContext(appToken, akString, bupkpString, hkpString,
+                    storage, secretKey, publicKey, externalPublicKeys, pheServerAddress);
+        }
+        else {
+            VirgilKeyPair signingKeyPair = this.crypto.generateKeyPair();
+            String vkString = String.format("VK.%s", Base64.getEncoder().encodeToString(this.crypto.exportPrivateKey(signingKeyPair.getPrivateKey())));
 
-        if (strg == null) {
-            strg = new RamStorage();
+            context = PureContext.createContext(appToken, akString, bupkpString, hkpString, vkString,
+                    secretKey, publicKey, externalPublicKeys, pheServerAddress, pureServerAddress);
         }
 
-        PureContext context = new PureContext(appToken,
-                Base64.getEncoder().encodeToString(ak), Base64.getEncoder().encodeToString(crypto.exportPublicKey(bupkp.getPublicKey())),
-                Base64.getEncoder().encodeToString(crypto.exportPublicKey(hkp.getPublicKey())), strg, secretKey, publicKey, externalPublicKeys, serverAddress);
+        if (updateToken != null) {
+            context.setUpdateToken(updateToken);
+        }
 
-        context.setUpdateToken(updateToken);
-
-        return new PureSetupResult(new Pure(context), crypto, bupkp, hkp, ak);
+        return new PureSetupResult(new Pure(context), crypto, bupkp, hkp);
     }
 
     @ParameterizedTest @MethodSource("testArgumentsNoToken")
-    void register(String serverAddress,
-                  String appToken,
-                  String publicKey,
-                  String secretKey) throws InterruptedException, ProtocolException {
+    void registration__new_user__should_succeed(String pheServerAddress,
+                                                String pureServerAddress,
+                                                String appToken,
+                                                String publicKey,
+                                                String secretKey) throws InterruptedException, ProtocolException {
         ThreadUtils.pause();
 
         try {
-            PureSetupResult pureResult = this.setupPure(serverAddress, appToken, publicKey, secretKey);
-            Pure pure = pureResult.getPure();
+            PureSetupResult pureResult;
+            for (int i = 0; i < 2; i++) {
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, i == 0 ? new RamStorage() : null);
+                Pure pure = pureResult.getPure();
 
-            String userId = UUID.randomUUID().toString();
-            String password = UUID.randomUUID().toString();
+                String userId = UUID.randomUUID().toString();
+                String password = UUID.randomUUID().toString();
 
-            pure.registerUser(userId, password);
+                pure.registerUser(userId, password);
+            }
         }
         catch (Exception | ProtocolHttpException e) {
             fail(e);
@@ -235,32 +255,36 @@ class PureTestJava {
     }
 
     @ParameterizedTest @MethodSource("testArgumentsNoToken")
-    void authenticate(String serverAddress,
-                      String appToken,
-                      String publicKey,
-                      String secretKey) throws InterruptedException, ProtocolException {
+    void authentication__new_user__should_succeed(String pheServerAddress,
+                                                  String pureServerAddress,
+                                                  String appToken,
+                                                  String publicKey,
+                                                  String secretKey) throws InterruptedException, ProtocolException {
         ThreadUtils.pause();
 
         try {
-            PureSetupResult pureResult = this.setupPure(serverAddress, appToken, publicKey, secretKey);
-            Pure pure = pureResult.getPure();
+            PureSetupResult pureResult;
+            for (int i = 0; i < 2; i++) {
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, i == 0 ? new RamStorage() : null);
+                Pure pure = pureResult.getPure();
 
-            String userId = UUID.randomUUID().toString();
-            String password = UUID.randomUUID().toString();
+                String userId = UUID.randomUUID().toString();
+                String password = UUID.randomUUID().toString();
 
-            pure.registerUser(userId, password);
+                pure.registerUser(userId, password);
 
-            AuthResult authResult = pure.authenticateUser(userId, password);
+                AuthResult authResult = pure.authenticateUser(userId, password);
 
-            assertNotNull(authResult.getEncryptedGrant());
+                assertNotNull(authResult.getEncryptedGrant());
 
-            PureGrant grant = authResult.getGrant();
-            assertNotNull(grant);
+                PureGrant grant = authResult.getGrant();
+                assertNotNull(grant);
 
-            assertEquals(userId, grant.getUserId());
-            assertNull(grant.getSessionId());
-            assertNotNull(grant.getUkp());
-            assertNotNull(grant.getCreationDate());
+                assertEquals(userId, grant.getUserId());
+                assertNull(grant.getSessionId());
+                assertNotNull(grant.getUkp());
+                assertNotNull(grant.getCreationDate());
+            }
         }
         catch (Exception | ProtocolHttpException e) {
             fail(e);
@@ -268,220 +292,34 @@ class PureTestJava {
     }
 
     @ParameterizedTest @MethodSource("testArgumentsNoToken")
-    void encrypt_decrypt(String serverAddress,
-                         String appToken,
-                         String publicKey,
-                         String secretKey) throws InterruptedException, ProtocolException {
+    void encryption__random_data__should_match(String pheServerAddress,
+                                               String pureServerAddress,
+                                               String appToken,
+                                               String publicKey,
+                                               String secretKey) throws InterruptedException, ProtocolException {
         ThreadUtils.pause();
 
         try {
-            PureSetupResult pureResult = this.setupPure(serverAddress, appToken, publicKey, secretKey);
-            Pure pure = pureResult.getPure();
+            PureSetupResult pureResult;
+            for (int i = 0; i < 2; i++) {
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, i == 0 ? new RamStorage() : null);
+                Pure pure = pureResult.getPure();
 
-            String userId = UUID.randomUUID().toString();
-            String password = UUID.randomUUID().toString();
-            String dataId = UUID.randomUUID().toString();
-            byte[] text = UUID.randomUUID().toString().getBytes();
+                String userId = UUID.randomUUID().toString();
+                String password = UUID.randomUUID().toString();
+                String dataId = UUID.randomUUID().toString();
+                byte[] text = UUID.randomUUID().toString().getBytes();
 
-            pure.registerUser(userId, password);
+                pure.registerUser(userId, password);
 
-            AuthResult authResult = pure.authenticateUser(userId, password);
+                AuthResult authResult = pure.authenticateUser(userId, password);
 
-            byte[] cipherText = pure.encrypt(userId, dataId, text);
+                byte[] cipherText = pure.encrypt(userId, dataId, text);
 
-            byte[] plainText = pure.decrypt(authResult.getGrant(), null, dataId, cipherText);
-
-            assertArrayEquals(text, plainText);
-        }
-        catch (Exception | ProtocolHttpException e) {
-            fail(e);
-        }
-    }
-
-    @ParameterizedTest @MethodSource("testArgumentsNoToken")
-    void share(String serverAddress,
-               String appToken,
-               String publicKey,
-               String secretKey) throws InterruptedException, ProtocolException {
-        ThreadUtils.pause();
-
-        try {
-            PureSetupResult pureResult = this.setupPure(serverAddress, appToken, publicKey, secretKey);
-            Pure pure = pureResult.getPure();
-
-            String userId1 = UUID.randomUUID().toString();
-            String userId2 = UUID.randomUUID().toString();
-            String password1 = UUID.randomUUID().toString();
-            String password2 = UUID.randomUUID().toString();
-            String dataId = UUID.randomUUID().toString();
-            byte[] text = UUID.randomUUID().toString().getBytes();
-
-            pure.registerUser(userId1, password1);
-            pure.registerUser(userId2, password2);
-
-            AuthResult authResult1 = pure.authenticateUser(userId1, password1);
-            AuthResult authResult2 = pure.authenticateUser(userId2, password2);
-
-            byte[] cipherText = pure.encrypt(userId1, dataId, text);
-
-            pure.share(authResult1.getGrant(), dataId, userId2);
-
-            byte[] plainText1 = pure.decrypt(authResult1.getGrant(), null, dataId, cipherText);
-            byte[] plainText2 = pure.decrypt(authResult2.getGrant(), userId1, dataId, cipherText);
-
-            assertArrayEquals(text, plainText1);
-            assertArrayEquals(text, plainText2);
-        }
-        catch (Exception | ProtocolHttpException e) {
-            fail(e);
-        }
-    }
-
-    @ParameterizedTest @MethodSource("testArgumentsNoToken")
-    void unshare(String serverAddress,
-                 String appToken,
-                 String publicKey,
-                 String secretKey) throws InterruptedException, ProtocolException {
-        ThreadUtils.pause();
-
-        try {
-            PureSetupResult pureResult = this.setupPure(serverAddress, appToken, publicKey, secretKey);
-            Pure pure = pureResult.getPure();
-
-            String userId1 = UUID.randomUUID().toString();
-            String userId2 = UUID.randomUUID().toString();
-            String password1 = UUID.randomUUID().toString();
-            String password2 = UUID.randomUUID().toString();
-            String dataId = UUID.randomUUID().toString();
-            byte[] text = UUID.randomUUID().toString().getBytes();
-
-            pure.registerUser(userId1, password1);
-            pure.registerUser(userId2, password2);
-
-            AuthResult authResult1 = pure.authenticateUser(userId1, password1);
-            AuthResult authResult2 = pure.authenticateUser(userId2, password2);
-
-            byte[] cipherText = pure.encrypt(userId1, dataId, text);
-
-            pure.share(authResult1.getGrant(), dataId, userId2);
-            pure.unshare(userId1, dataId, userId2);
-
-            FoundationException e = assertThrows(FoundationException.class, () -> {
-                pure.decrypt(authResult2.getGrant(), userId1, dataId, cipherText);
-            });
-
-            assertEquals(e.getStatusCode(), ERROR_KEY_RECIPIENT_IS_NOT_FOUND);
-        }
-        catch (Exception | ProtocolHttpException e) {
-            fail(e);
-        }
-    }
-
-    @ParameterizedTest @MethodSource("testArgumentsNoToken")
-    void encrypt_grant(String serverAddress,
-                    String appToken,
-                    String publicKey,
-                    String secretKey) throws InterruptedException, ProtocolException {
-        ThreadUtils.pause();
-
-        try {
-            PureSetupResult pureResult = this.setupPure(serverAddress, appToken, publicKey, secretKey);
-            Pure pure = pureResult.getPure();
-
-            String userId = UUID.randomUUID().toString();
-            String password1 = UUID.randomUUID().toString();
-            String password2 = UUID.randomUUID().toString();
-
-            pure.registerUser(userId, password1);
-
-            AuthResult authResult1 = pure.authenticateUser(userId, password1);
-
-            PureGrant grant = pure.decryptGrantFromUser(authResult1.getEncryptedGrant());
-
-            assertNotNull(grant);
-
-            assertEquals(grant.getSessionId(), authResult1.getGrant().getSessionId());
-            assertEquals(grant.getUserId(), authResult1.getGrant().getUserId());
-            assertArrayEquals(grant.getUkp().getPrivateKey().getIdentifier(), authResult1.getGrant().getUkp().getPrivateKey().getIdentifier());
-
-            pure.changeUserPassword(userId, password1, password2);
-
-            PheException e = assertThrows(PheException.class, () -> {
-                PureGrant grant1 = pure.decryptGrantFromUser(authResult1.getEncryptedGrant());
-            });
-
-            assertEquals(e.getStatusCode(), ERROR_AES_FAILED);
-        }
-        catch (Exception | ProtocolHttpException e) {
-            fail(e);
-        }
-    }
-
-    @ParameterizedTest @MethodSource("testArgumentsNoToken")
-    void admin_access(String serverAddress,
-                      String appToken,
-                      String publicKey,
-                      String secretKey) throws InterruptedException, ProtocolException {
-        ThreadUtils.pause();
-
-        try {
-            PureSetupResult pureResult = this.setupPure(serverAddress, appToken, publicKey, secretKey);
-            Pure pure = pureResult.getPure();
-
-            String userId = UUID.randomUUID().toString();
-            String password = UUID.randomUUID().toString();
-            String dataId = UUID.randomUUID().toString();
-            byte[] text = UUID.randomUUID().toString().getBytes();
-
-            pure.registerUser(userId, password);
-
-            byte[] cipherText = pure.encrypt(userId, dataId, text);
-
-            PureGrant adminGrant = pure.createUserGrantAsAdmin(userId, pureResult.getBupkp().getPrivateKey());
-
-            assertNotNull(adminGrant);
-
-            byte[] plainText = pure.decrypt(adminGrant, null, dataId, cipherText);
-
-            assertArrayEquals(text, plainText);
-        }
-        catch (Exception | ProtocolHttpException e) {
-            fail(e);
-        }
-    }
-
-    @ParameterizedTest @MethodSource("testArgumentsNoToken")
-    void reset_pwd(String serverAddress,
-                   String appToken,
-                   String publicKey,
-                   String secretKey) throws InterruptedException, ProtocolException {
-        ThreadUtils.pause();
-
-        try {
-            PureSetupResult pureResult = this.setupPure(serverAddress, appToken, publicKey, secretKey);
-            Pure pure = pureResult.getPure();
-
-            String userId = UUID.randomUUID().toString();
-            String password1 = UUID.randomUUID().toString();
-            String password2 = UUID.randomUUID().toString();
-            String dataId = UUID.randomUUID().toString();
-            byte[] text = UUID.randomUUID().toString().getBytes();
-
-            pure.registerUser(userId, password1);
-
-            byte[] cipherText = pure.encrypt(userId, dataId, text);
-
-            pure.resetUserPassword(userId, password2);
-
-            AuthResult authResult = pure.authenticateUser(userId, password2);
-
-            assertNotNull(authResult);
-
-            FoundationException e = assertThrows(FoundationException.class, () -> {
                 byte[] plainText = pure.decrypt(authResult.getGrant(), null, dataId, cipherText);
-            });
 
-            assertEquals(e.getStatusCode(), ERROR_KEY_RECIPIENT_IS_NOT_FOUND);
+                assertArrayEquals(text, plainText);
+            }
         }
         catch (Exception | ProtocolHttpException e) {
             fail(e);
@@ -489,37 +327,251 @@ class PureTestJava {
     }
 
     @ParameterizedTest @MethodSource("testArgumentsNoToken")
-    void restore_pwd(String serverAddress,
-                     String appToken,
-                     String publicKey,
-                     String secretKey) throws InterruptedException, ProtocolException {
+    void sharing__2_users__should_decrypt(String pheServerAddress,
+                                          String pureServerAddress,
+                                          String appToken,
+                                          String publicKey,
+                                          String secretKey) throws InterruptedException, ProtocolException {
         ThreadUtils.pause();
 
         try {
-            PureSetupResult pureResult = this.setupPure(serverAddress, appToken, publicKey, secretKey);
-            Pure pure = pureResult.getPure();
+            PureSetupResult pureResult;
+            for (int i = 0; i < 2; i++) {
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, i == 0 ? new RamStorage() : null);
+                Pure pure = pureResult.getPure();
 
-            String userId = UUID.randomUUID().toString();
-            String password1 = UUID.randomUUID().toString();
-            String password2 = UUID.randomUUID().toString();
-            String dataId = UUID.randomUUID().toString();
-            byte[] text = UUID.randomUUID().toString().getBytes();
+                String userId1 = UUID.randomUUID().toString();
+                String userId2 = UUID.randomUUID().toString();
+                String password1 = UUID.randomUUID().toString();
+                String password2 = UUID.randomUUID().toString();
+                String dataId = UUID.randomUUID().toString();
+                byte[] text = UUID.randomUUID().toString().getBytes();
 
-            pure.registerUser(userId, password1);
+                pure.registerUser(userId1, password1);
+                pure.registerUser(userId2, password2);
 
-            byte[] cipherText = pure.encrypt(userId, dataId, text);
+                AuthResult authResult1 = pure.authenticateUser(userId1, password1);
+                AuthResult authResult2 = pure.authenticateUser(userId2, password2);
 
-            PureGrant adminGrant = pure.createUserGrantAsAdmin(userId, pureResult.getBupkp().getPrivateKey());
+                byte[] cipherText = pure.encrypt(userId1, dataId, text);
 
-            pure.changeUserPassword(adminGrant, password2);
+                pure.share(authResult1.getGrant(), dataId, userId2);
 
-            AuthResult authResult = pure.authenticateUser(userId, password2);
+                byte[] plainText1 = pure.decrypt(authResult1.getGrant(), null, dataId, cipherText);
+                byte[] plainText2 = pure.decrypt(authResult2.getGrant(), userId1, dataId, cipherText);
 
-            assertNotNull(authResult);
+                assertArrayEquals(text, plainText1);
+                assertArrayEquals(text, plainText2);
+            }
+        }
+        catch (Exception | ProtocolHttpException e) {
+            fail(e);
+        }
+    }
 
-            byte[] plainText = pure.decrypt(authResult.getGrant(), null, dataId, cipherText);
+    @ParameterizedTest @MethodSource("testArgumentsNoToken")
+    void sharing__revoke_access__should_not_decrypt(String pheServerAddress,
+                                                    String pureServerAddress,
+                                                    String appToken,
+                                                    String publicKey,
+                                                    String secretKey) throws InterruptedException, ProtocolException {
+        ThreadUtils.pause();
 
-            assertArrayEquals(text, plainText);
+        try {
+            PureSetupResult pureResult;
+            for (int i = 0; i < 2; i++) {
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, i == 0 ? new RamStorage() : null);
+                Pure pure = pureResult.getPure();
+
+                String userId1 = UUID.randomUUID().toString();
+                String userId2 = UUID.randomUUID().toString();
+                String password1 = UUID.randomUUID().toString();
+                String password2 = UUID.randomUUID().toString();
+                String dataId = UUID.randomUUID().toString();
+                byte[] text = UUID.randomUUID().toString().getBytes();
+
+                pure.registerUser(userId1, password1);
+                pure.registerUser(userId2, password2);
+
+                AuthResult authResult1 = pure.authenticateUser(userId1, password1);
+                AuthResult authResult2 = pure.authenticateUser(userId2, password2);
+
+                byte[] cipherText = pure.encrypt(userId1, dataId, text);
+
+                pure.share(authResult1.getGrant(), dataId, userId2);
+                pure.unshare(userId1, dataId, userId2);
+
+                FoundationException e = assertThrows(FoundationException.class, () -> {
+                    pure.decrypt(authResult2.getGrant(), userId1, dataId, cipherText);
+                });
+
+                assertEquals(e.getStatusCode(), ERROR_KEY_RECIPIENT_IS_NOT_FOUND);
+            }
+        }
+        catch (Exception | ProtocolHttpException e) {
+            fail(e);
+        }
+    }
+
+    @ParameterizedTest @MethodSource("testArgumentsNoToken")
+    void grant__change_password__should_not_decrypt(String pheServerAddress,
+                                                    String pureServerAddress,
+                                                    String appToken,
+                                                    String publicKey,
+                                                    String secretKey) throws InterruptedException, ProtocolException {
+        ThreadUtils.pause();
+
+        try {
+            PureSetupResult pureResult;
+            for (int i = 0; i < 2; i++) {
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, i == 0 ? new RamStorage() : null);
+                Pure pure = pureResult.getPure();
+
+                String userId = UUID.randomUUID().toString();
+                String password1 = UUID.randomUUID().toString();
+                String password2 = UUID.randomUUID().toString();
+
+                pure.registerUser(userId, password1);
+
+                AuthResult authResult1 = pure.authenticateUser(userId, password1);
+
+                PureGrant grant = pure.decryptGrantFromUser(authResult1.getEncryptedGrant());
+
+                assertNotNull(grant);
+
+                assertEquals(grant.getSessionId(), authResult1.getGrant().getSessionId());
+                assertEquals(grant.getUserId(), authResult1.getGrant().getUserId());
+                assertArrayEquals(grant.getUkp().getPrivateKey().getIdentifier(), authResult1.getGrant().getUkp().getPrivateKey().getIdentifier());
+
+                pure.changeUserPassword(userId, password1, password2);
+
+                PheException e = assertThrows(PheException.class, () -> {
+                    PureGrant grant1 = pure.decryptGrantFromUser(authResult1.getEncryptedGrant());
+                });
+
+                assertEquals(e.getStatusCode(), ERROR_AES_FAILED);
+            }
+        }
+        catch (Exception | ProtocolHttpException e) {
+            fail(e);
+        }
+    }
+
+    @ParameterizedTest @MethodSource("testArgumentsNoToken")
+    void grant__admin_access__should_decrypt(String pheServerAddress,
+                                             String pureServerAddress,
+                                             String appToken,
+                                             String publicKey,
+                                             String secretKey) throws InterruptedException, ProtocolException {
+        ThreadUtils.pause();
+
+        try {
+            PureSetupResult pureResult;
+            for (int i = 0; i < 2; i++) {
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, i == 0 ? new RamStorage() : null);
+                Pure pure = pureResult.getPure();
+
+                String userId = UUID.randomUUID().toString();
+                String password = UUID.randomUUID().toString();
+                String dataId = UUID.randomUUID().toString();
+                byte[] text = UUID.randomUUID().toString().getBytes();
+
+                pure.registerUser(userId, password);
+
+                byte[] cipherText = pure.encrypt(userId, dataId, text);
+
+                PureGrant adminGrant = pure.createUserGrantAsAdmin(userId, pureResult.getBupkp().getPrivateKey());
+
+                assertNotNull(adminGrant);
+
+                byte[] plainText = pure.decrypt(adminGrant, null, dataId, cipherText);
+
+                assertArrayEquals(text, plainText);
+            }
+        }
+        catch (Exception | ProtocolHttpException e) {
+            fail(e);
+        }
+    }
+
+    @ParameterizedTest @MethodSource("testArgumentsNoToken")
+    void reset_pwd__new_user__should_not_decrypt(String pheServerAddress,
+                                                 String pureServerAddress,
+                                                 String appToken,
+                                                 String publicKey,
+                                                 String secretKey) throws InterruptedException, ProtocolException {
+        ThreadUtils.pause();
+
+        try {
+            PureSetupResult pureResult;
+            for (int i = 0; i < 2; i++) {
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, i == 0 ? new RamStorage() : null);
+                Pure pure = pureResult.getPure();
+
+                String userId = UUID.randomUUID().toString();
+                String password1 = UUID.randomUUID().toString();
+                String password2 = UUID.randomUUID().toString();
+                String dataId = UUID.randomUUID().toString();
+                byte[] text = UUID.randomUUID().toString().getBytes();
+
+                pure.registerUser(userId, password1);
+
+                byte[] cipherText = pure.encrypt(userId, dataId, text);
+
+                pure.resetUserPassword(userId, password2);
+
+                AuthResult authResult = pure.authenticateUser(userId, password2);
+
+                assertNotNull(authResult);
+
+                FoundationException e = assertThrows(FoundationException.class, () -> {
+                    byte[] plainText = pure.decrypt(authResult.getGrant(), null, dataId, cipherText);
+                });
+
+                assertEquals(e.getStatusCode(), ERROR_KEY_RECIPIENT_IS_NOT_FOUND);
+            }
+        }
+        catch (Exception | ProtocolHttpException e) {
+            fail(e);
+        }
+    }
+
+    @ParameterizedTest @MethodSource("testArgumentsNoToken")
+    void restore_pwd__new_user__should_decrypt(String pheServerAddress,
+                                               String pureServerAddress,
+                                               String appToken,
+                                               String publicKey,
+                                               String secretKey) throws InterruptedException, ProtocolException {
+        ThreadUtils.pause();
+
+        try {
+            PureSetupResult pureResult;
+            for (int i = 0; i < 2; i++) {
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, i == 0 ? new RamStorage() : null);
+                Pure pure = pureResult.getPure();
+
+                String userId = UUID.randomUUID().toString();
+                String password1 = UUID.randomUUID().toString();
+                String password2 = UUID.randomUUID().toString();
+                String dataId = UUID.randomUUID().toString();
+                byte[] text = UUID.randomUUID().toString().getBytes();
+
+                pure.registerUser(userId, password1);
+
+                byte[] cipherText = pure.encrypt(userId, dataId, text);
+
+                PureGrant adminGrant = pure.createUserGrantAsAdmin(userId, pureResult.getBupkp().getPrivateKey());
+
+                pure.changeUserPassword(adminGrant, password2);
+
+                AuthResult authResult = pure.authenticateUser(userId, password2);
+
+                assertNotNull(authResult);
+
+                byte[] plainText = pure.decrypt(authResult.getGrant(), null, dataId, cipherText);
+
+                assertArrayEquals(text, plainText);
+            }
         }
         catch (Exception | ProtocolHttpException e) {
             fail(e);
@@ -527,11 +579,12 @@ class PureTestJava {
     }
 
     @ParameterizedTest @MethodSource("testArguments")
-    void rotation(String serverAddress,
-                  String appToken,
-                  String publicKey,
-                  String secretKey,
-                  String updateToken) throws InterruptedException, ProtocolException {
+    void rotation__local_storage__should_rotate(String pheServerAddress,
+                                                String pureServerAddress,
+                                                String appToken,
+                                                String publicKey,
+                                                String secretKey,
+                                                String updateToken) throws InterruptedException, ProtocolException {
         ThreadUtils.pause();
 
         try {
@@ -540,7 +593,7 @@ class PureTestJava {
             long total = 30;
 
             for (long i = 0; i < total;  i++) {
-                PureSetupResult pureResult = this.setupPure(serverAddress, appToken, publicKey, secretKey, null, null, ramStorage);
+                PureSetupResult pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, null, ramStorage);
                 Pure pure = pureResult.getPure();
 
                 String userId = UUID.randomUUID().toString();
@@ -549,7 +602,7 @@ class PureTestJava {
                 pure.registerUser(userId, password);
             }
 
-            PureSetupResult pureResult = this.setupPure(serverAddress, appToken, publicKey, secretKey, updateToken, null, ramStorage);
+            PureSetupResult pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, updateToken, null, ramStorage);
             Pure pure = pureResult.getPure();
 
             long rotated = pure.performRotation();
@@ -562,44 +615,48 @@ class PureTestJava {
     }
 
     @ParameterizedTest @MethodSource("testArgumentsNoToken")
-    void encrypt_decrypt_extended(String serverAddress,
-                                  String appToken,
-                                  String publicKey,
-                                  String secretKey) throws InterruptedException, ProtocolException {
+    void encryption__additional_keys__should_decrypt(String pheServerAddress,
+                                                     String pureServerAddress,
+                                                     String appToken,
+                                                     String publicKey,
+                                                     String secretKey) throws InterruptedException, ProtocolException {
         ThreadUtils.pause();
 
         try {
-            PureSetupResult pureResult = this.setupPure(serverAddress, appToken, publicKey, secretKey);
-            Pure pure = pureResult.getPure();
+            PureSetupResult pureResult;
+            for (int i = 0; i < 2; i++) {
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, i == 0 ? new RamStorage() : null);
+                Pure pure = pureResult.getPure();
 
-            String userId1 = UUID.randomUUID().toString();
-            String userId2 = UUID.randomUUID().toString();
-            String password1 = UUID.randomUUID().toString();
-            String password2 = UUID.randomUUID().toString();
-            String dataId = UUID.randomUUID().toString();
-            byte[] text = UUID.randomUUID().toString().getBytes();
+                String userId1 = UUID.randomUUID().toString();
+                String userId2 = UUID.randomUUID().toString();
+                String password1 = UUID.randomUUID().toString();
+                String password2 = UUID.randomUUID().toString();
+                String dataId = UUID.randomUUID().toString();
+                byte[] text = UUID.randomUUID().toString().getBytes();
 
-            pure.registerUser(userId1, password1);
-            pure.registerUser(userId2, password2);
+                pure.registerUser(userId1, password1);
+                pure.registerUser(userId2, password2);
 
-            AuthResult authResult1 = pure.authenticateUser(userId1, password1);
-            AuthResult authResult2 = pure.authenticateUser(userId2, password2);
+                AuthResult authResult1 = pure.authenticateUser(userId1, password1);
+                AuthResult authResult2 = pure.authenticateUser(userId2, password2);
 
-            VirgilKeyPair keyPair = pureResult.getCrypto().generateKeyPair();
+                VirgilKeyPair keyPair = pureResult.getCrypto().generateKeyPair();
 
-            byte[] cipherText = pure.encrypt(userId1, dataId, Collections.singletonList(userId2), Collections.singletonList(keyPair.getPublicKey()), text);
+                byte[] cipherText = pure.encrypt(userId1, dataId, Collections.singletonList(userId2), Collections.singletonList(keyPair.getPublicKey()), text);
 
-            byte[] plainText = pure.decrypt(authResult1.getGrant(), null, dataId, cipherText);
+                byte[] plainText = pure.decrypt(authResult1.getGrant(), null, dataId, cipherText);
 
-            assertArrayEquals(text, plainText);
+                assertArrayEquals(text, plainText);
 
-            plainText = pure.decrypt(authResult2.getGrant(), userId1, dataId, cipherText);
+                plainText = pure.decrypt(authResult2.getGrant(), userId1, dataId, cipherText);
 
-            assertArrayEquals(text, plainText);
+                assertArrayEquals(text, plainText);
 
-            plainText = pure.decrypt(keyPair.getPrivateKey(), userId1, dataId, cipherText);
+                plainText = pure.decrypt(keyPair.getPrivateKey(), userId1, dataId, cipherText);
 
-            assertArrayEquals(text, plainText);
+                assertArrayEquals(text, plainText);
+            }
         }
         catch (Exception | ProtocolHttpException e) {
             fail(e);
@@ -607,44 +664,180 @@ class PureTestJava {
     }
 
     @ParameterizedTest @MethodSource("testArgumentsNoToken")
-    void encrypt_decrypt_external(String serverAddress,
-                                  String appToken,
-                                  String publicKey,
-                                  String secretKey) throws InterruptedException, ProtocolException {
+    void encryption__external_keys__should_decrypt(String pheServerAddress,
+                                                   String pureServerAddress,
+                                                   String appToken,
+                                                   String publicKey,
+                                                   String secretKey) throws InterruptedException, ProtocolException {
         ThreadUtils.pause();
 
         try {
-            VirgilCrypto crypto = new VirgilCrypto();
-            VirgilKeyPair keyPair = crypto.generateKeyPair();
-            String dataId = UUID.randomUUID().toString();
-            String publicKeyBase64 = Base64.getEncoder().encodeToString(crypto.exportPublicKey(keyPair.getPublicKey()));
+            PureSetupResult pureResult;
+            for (int i = 0; i < 2; i++) {
+                VirgilKeyPair keyPair = this.crypto.generateKeyPair();
+                String dataId = UUID.randomUUID().toString();
+                String publicKeyBase64 = Base64.getEncoder().encodeToString(crypto.exportPublicKey(keyPair.getPublicKey()));
+                Map<String, List<String>> externalPublicKeys = Collections.singletonMap(dataId, Collections.singletonList(publicKeyBase64));
 
-            Map<String, List<String>> externalPublicKeys = Collections.singletonMap(dataId, Collections.singletonList(publicKeyBase64));
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, externalPublicKeys, i == 0 ? new RamStorage() : null);
 
-            PureSetupResult pureResult = this.setupPure(serverAddress, appToken, publicKey, secretKey, null, externalPublicKeys, null);
-            Pure pure = pureResult.getPure();
+                Pure pure = pureResult.getPure();
 
-            String userId = UUID.randomUUID().toString();
-            String password = UUID.randomUUID().toString();
+                String userId = UUID.randomUUID().toString();
+                String password = UUID.randomUUID().toString();
 
-            byte[] text = UUID.randomUUID().toString().getBytes();
+                byte[] text = UUID.randomUUID().toString().getBytes();
 
-            pure.registerUser(userId, password);
+                pure.registerUser(userId, password);
 
-            byte[] cipherText = pure.encrypt(userId, dataId, text);
+                byte[] cipherText = pure.encrypt(userId, dataId, text);
 
-            byte[] plainText = pure.decrypt(keyPair.getPrivateKey(), userId, dataId, cipherText);
+                byte[] plainText = pure.decrypt(keyPair.getPrivateKey(), userId, dataId, cipherText);
 
-            assertArrayEquals(text, plainText);
+                assertArrayEquals(text, plainText);
+            }
         }
         catch (Exception | ProtocolHttpException e) {
             fail(e);
         }
     }
 
+    @ParameterizedTest @MethodSource("testArgumentsNoToken")
+    void delete_user__cascade__should_delete_user_and_keys(String pheServerAddress,
+                                                           String pureServerAddress,
+                                                           String appToken,
+                                                           String publicKey,
+                                                           String secretKey) throws InterruptedException, ProtocolException {
+        ThreadUtils.pause();
+
+        try {
+            PureSetupResult pureResult;
+            for (int i = 0; i < 2; i++) {
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, i == 0 ? new RamStorage() : null);
+                Pure pure = pureResult.getPure();
+
+                String userId = UUID.randomUUID().toString();
+                String password = UUID.randomUUID().toString();
+                String dataId = UUID.randomUUID().toString();
+
+                byte[] text = UUID.randomUUID().toString().getBytes();
+
+                pure.registerUser(userId, password);
+
+                byte[] cipherText = pure.encrypt(userId, dataId, text);
+
+                AuthResult authResult1 = pure.authenticateUser(userId, password);
+
+                pure.deleteUser(userId, true);
+
+                PureException e1 = assertThrows(PureException.class, () -> {
+                    AuthResult authResult2 = pure.authenticateUser(userId, password);
+                });
+
+                assertEquals(PureException.ErrorCode.USER_NOT_FOUND_IN_STORAGE, e1.getErrorCode());
+
+                PureException e2 = assertThrows(PureException.class, () -> {
+                    byte[] plainText = pure.decrypt(authResult1.getGrant(), null, dataId, cipherText);
+                });
+
+                assertEquals(PureException.ErrorCode.CELL_KEY_NOT_FOUND_IN_STORAGE, e2.getErrorCode());
+            }
+        }
+        catch (Exception | ProtocolHttpException e) {
+            fail(e);
+        }
+    }
+
+    @ParameterizedTest @MethodSource("testArgumentsNoToken")
+    void delete_user__no_cascade__should_delete_user(String pheServerAddress,
+                                                     String pureServerAddress,
+                                                     String appToken,
+                                                     String publicKey,
+                                                     String secretKey) throws InterruptedException, ProtocolException {
+        ThreadUtils.pause();
+
+        try {
+            PureSetupResult pureResult;
+            for (int i = 0; i < 2; i++) {
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, i == 0 ? new RamStorage() : null);
+                Pure pure = pureResult.getPure();
+
+                String userId = UUID.randomUUID().toString();
+                String password = UUID.randomUUID().toString();
+                String dataId = UUID.randomUUID().toString();
+
+                byte[] text = UUID.randomUUID().toString().getBytes();
+
+                pure.registerUser(userId, password);
+
+                byte[] cipherText = pure.encrypt(userId, dataId, text);
+
+                AuthResult authResult1 = pure.authenticateUser(userId, password);
+
+                pure.deleteUser(userId, false);
+
+                PureException e = assertThrows(PureException.class, () -> {
+                    AuthResult authResult2 = pure.authenticateUser(userId, password);
+                });
+
+                assertEquals(PureException.ErrorCode.USER_NOT_FOUND_IN_STORAGE, e.getErrorCode());
+
+                byte[] plainText = pure.decrypt(authResult1.getGrant(), null, dataId, cipherText);
+
+                assertArrayEquals(text, plainText);
+            }
+        }
+        catch (Exception | ProtocolHttpException e) {
+            fail(e);
+        }
+    }
+
+    @ParameterizedTest @MethodSource("testArgumentsNoToken")
+    void delete_key__new_key__should_delete(String pheServerAddress,
+                                            String pureServerAddress,
+                                            String appToken,
+                                            String publicKey,
+                                            String secretKey) throws InterruptedException, ProtocolException {
+        ThreadUtils.pause();
+
+        try {
+            PureSetupResult pureResult;
+            for (int i = 0; i < 2; i++) {
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, i == 0 ? new RamStorage() : null);
+                Pure pure = pureResult.getPure();
+
+                String userId = UUID.randomUUID().toString();
+                String password = UUID.randomUUID().toString();
+                String dataId = UUID.randomUUID().toString();
+
+                byte[] text = UUID.randomUUID().toString().getBytes();
+
+                pure.registerUser(userId, password);
+
+                byte[] cipherText = pure.encrypt(userId, dataId, text);
+
+                AuthResult authResult1 = pure.authenticateUser(userId, password);
+
+                pure.deleteKey(userId, dataId);
+
+                PureException e = assertThrows(PureException.class, () -> {
+                    byte[] plainText = pure.decrypt(authResult1.getGrant(), null, dataId, cipherText);
+                });
+
+                assertEquals(PureException.ErrorCode.CELL_KEY_NOT_FOUND_IN_STORAGE, e.getErrorCode());
+            }
+        }
+        catch (Exception | ProtocolHttpException e) {
+            fail(e);
+        }
+    }
+
+    // TODO: Test hashes encryption
+
     private static Stream<Arguments> testArgumentsNoToken() {
         return Stream.of(
-                Arguments.of(PropertyManager.getVirgilServerAddress(),
+                Arguments.of(PropertyManager.getVirgilPheServerAddress(),
+                        PropertyManager.getVirgilPureServerAddress(),
                         PropertyManager.getVirgilAppToken(),
                         PropertyManager.getVirgilPublicKeyNew(),
                         PropertyManager.getVirgilSecretKeyNew())
@@ -653,10 +846,11 @@ class PureTestJava {
 
     private static Stream<Arguments> testArguments() {
         return Stream.of(
-                Arguments.of(PropertyManager.getVirgilServerAddress(),
+                Arguments.of(PropertyManager.getVirgilPheServerAddress(),
+                        PropertyManager.getVirgilPureServerAddress(),
                         PropertyManager.getVirgilAppToken(),
-                        PropertyManager.getVirgilPublicKeyNew(),
-                        PropertyManager.getVirgilSecretKeyNew(),
+                        PropertyManager.getVirgilPublicKeyOld(),
+                        PropertyManager.getVirgilSecretKeyOld(),
                         PropertyManager.getVirgilUpdateTokenNew())
         );
     }

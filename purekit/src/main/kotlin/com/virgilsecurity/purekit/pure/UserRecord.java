@@ -37,13 +37,13 @@ package com.virgilsecurity.purekit.pure;
  * User record
  */
 public class UserRecord {
-    private String userId;
-    private byte[] pheRecord;
-    private int pheRecordVersion;
-    private byte[] upk;
-    private byte[] encryptedUsk;
-    private byte[] encryptedUskBackup;
-    private byte[] encryptedPwdHash;
+    private final String userId;
+    private final byte[] pheRecord;
+    private final int pheRecordVersion;
+    private final byte[] upk;
+    private final byte[] encryptedUsk;
+    private final byte[] encryptedUskBackup;
+    private final byte[] encryptedPwdHash;
 
     /**
      * Constructor

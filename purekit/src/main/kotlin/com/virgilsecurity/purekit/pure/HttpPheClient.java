@@ -47,8 +47,13 @@ import java.util.LinkedHashMap;
  * Class for http interactions with PHE service
  */
 public class HttpPheClient {
-    private String appToken;
-    private HttpClientProtobuf client;
+    private final String appToken;
+    private final HttpClientProtobuf client;
+
+    /**
+     * Service address
+     */
+    static public String serviceAddress = "https://api.virgilsecurity.com/phe/v1";
 
     /**
      * Constructor
@@ -77,7 +82,7 @@ public class HttpPheClient {
     public PurekitProtos.EnrollmentResponse enrollAccount(PurekitProtos.EnrollmentRequest request) throws ProtocolException, ProtocolHttpException {
         return this.client.firePost(
                 request,
-                HttpClientProtobuf.AvailableRequests.ENROLL,
+                HttpClientProtobuf.AvailableRequests.ENROLL.getType(),
                 new LinkedHashMap<>(),
                 this.appToken,
                 PurekitProtos.EnrollmentResponse.parser()
@@ -94,7 +99,7 @@ public class HttpPheClient {
     public PurekitProtos.VerifyPasswordResponse verifyPassword(PurekitProtos.VerifyPasswordRequest request) throws ProtocolException, ProtocolHttpException {
         return this.client.firePost(
                 request,
-                HttpClientProtobuf.AvailableRequests.VERIFY_PASSWORD,
+                HttpClientProtobuf.AvailableRequests.VERIFY_PASSWORD.getType(),
                 new LinkedHashMap<>(),
                 this.appToken,
                 PurekitProtos.VerifyPasswordResponse.parser()

@@ -85,7 +85,7 @@ class HttpClientProtobuf {
      */
     @Throws(ProtocolException::class, ProtocolHttpException::class)
     fun <O : Message> fireGet(
-            endpoint: AvailableRequests,
+            endpoint: String,
             headers: MutableMap<String, String> = mutableMapOf(),
             authToken: String,
             responseParser: Parser<O>
@@ -99,7 +99,7 @@ class HttpClientProtobuf {
                 )
         )
 
-        val (_, response, _) = "$serviceBaseUrl${endpoint.type}".httpGet()
+        val (_, response, _) = "$serviceBaseUrl${endpoint}".httpGet()
                 .header(headers)
                 .response()
 
@@ -129,7 +129,7 @@ class HttpClientProtobuf {
     @Throws(ProtocolException::class, ProtocolHttpException::class)
     fun <O : Message> firePost(
             data: Message,
-            endpoint: AvailableRequests,
+            endpoint: String,
             headers: MutableMap<String, String> = mutableMapOf(),
             authToken: String,
             responseParser: Parser<O>
@@ -143,13 +143,38 @@ class HttpClientProtobuf {
                 )
         )
 
-        val (_, response, _) = "$serviceBaseUrl${endpoint.type}".httpPost()
+        val (_, response, _) = "$serviceBaseUrl${endpoint}".httpPost()
                 .body(data.toByteArray())
                 .header(headers)
                 .response()
 
         checkIfResponseSuccessful(response)
         return responseParser.parseFrom(response.data)
+    }
+
+    // FIXME
+    @Throws(ProtocolException::class, ProtocolHttpException::class)
+    fun firePost(
+            data: Message,
+            endpoint: String,
+            headers: MutableMap<String, String> = mutableMapOf(),
+            authToken: String
+    ) {
+        headers.putAll(
+                mapOf(
+                        APP_TOKEN_KEY to authToken,
+                        PROTO_REQUEST_TYPE_KEY to PROTO_REQUEST_TYPE,
+                        USER_AGENT_KEY to USER_AGENT,
+                        VIRGIL_AGENT_HEADER_KEY to virgilAgentHeader
+                )
+        )
+
+        val (_, response, _) = "$serviceBaseUrl${endpoint}".httpPost()
+                .body(data.toByteArray())
+                .header(headers)
+                .response()
+
+        checkIfResponseSuccessful(response)
     }
 
     /**
@@ -171,14 +196,16 @@ class HttpClientProtobuf {
      * @throws ProtocolException
      * @throws ProtocolHttpException
      */
+    // FIXME: What's the point of making I Generic?
     @Throws(ProtocolException::class, ProtocolHttpException::class)
     fun <I : Message, O : Message> firePut(
             data: I,
-            endpoint: AvailableRequests,
+            endpoint: String,
             headers: MutableMap<String, String> = mutableMapOf(),
             authToken: String,
             responseParser: Parser<O>
     ): O {
+        // FIXME: copypaste is evil
         headers.putAll(
                 mapOf(
                         APP_TOKEN_KEY to authToken,
@@ -188,13 +215,38 @@ class HttpClientProtobuf {
                 )
         )
 
-        val (_, response, _) = "$serviceBaseUrl${endpoint.type}".httpPut()
+        val (_, response, _) = "$serviceBaseUrl${endpoint}".httpPut()
                 .body(data.toByteArray())
                 .header(headers)
                 .response()
 
         checkIfResponseSuccessful(response)
         return responseParser.parseFrom(response.data)
+    }
+
+    // FIXME
+    @Throws(ProtocolException::class, ProtocolHttpException::class)
+    fun firePut(
+            data: Message,
+            endpoint: String,
+            headers: MutableMap<String, String> = mutableMapOf(),
+            authToken: String
+    ) {
+        headers.putAll(
+                mapOf(
+                        APP_TOKEN_KEY to authToken,
+                        PROTO_REQUEST_TYPE_KEY to PROTO_REQUEST_TYPE,
+                        USER_AGENT_KEY to USER_AGENT,
+                        VIRGIL_AGENT_HEADER_KEY to virgilAgentHeader
+                )
+        )
+
+        val (_, response, _) = "$serviceBaseUrl${endpoint}".httpPut()
+                .body(data.toByteArray())
+                .header(headers)
+                .response()
+
+        checkIfResponseSuccessful(response)
     }
 
     /**
@@ -215,7 +267,7 @@ class HttpClientProtobuf {
      */
     @Throws(ProtocolException::class, ProtocolHttpException::class)
     fun <O : Message> fireDelete(
-            endpoint: AvailableRequests,
+            endpoint: String,
             headers: MutableMap<String, String> = mutableMapOf(),
             authToken: String,
             responseParser: Parser<O>
@@ -229,12 +281,35 @@ class HttpClientProtobuf {
                 )
         )
 
-        val (_, response, _) = "$serviceBaseUrl${endpoint.type}".httpDelete()
+        val (_, response, _) = "$serviceBaseUrl${endpoint}".httpDelete()
                 .header(headers)
                 .response()
 
         checkIfResponseSuccessful(response)
         return responseParser.parseFrom(response.data)
+    }
+
+    // FIXME
+    @Throws(ProtocolException::class, ProtocolHttpException::class)
+    fun fireDelete(
+            endpoint: String,
+            headers: MutableMap<String, String> = mutableMapOf(),
+            authToken: String
+    ) {
+        headers.putAll(
+                mapOf(
+                        APP_TOKEN_KEY to authToken,
+                        PROTO_REQUEST_TYPE_KEY to PROTO_REQUEST_TYPE,
+                        USER_AGENT_KEY to USER_AGENT,
+                        VIRGIL_AGENT_HEADER_KEY to virgilAgentHeader
+                )
+        )
+
+        val (_, response, _) = "$serviceBaseUrl${endpoint}".httpDelete()
+                .header(headers)
+                .response()
+
+        checkIfResponseSuccessful(response)
     }
 
     /**
@@ -278,19 +353,20 @@ class HttpClientProtobuf {
     /**
      * Enum of available requests
      */
+    // FIXME: Move this out
     enum class AvailableRequests(val type: String) {
         ENROLL("/enroll"),
         VERIFY_PASSWORD("/verify-password"),
 
         INSERT_USER("/user"),
-        UPDATE_USER("/user"),
-        GET_USER("/user"),
-        GET_USERS("/user"),
-        DELETE_USER("/user"),
+        UPDATE_USER("/user/%s"),
+        GET_USER("/user/%s"),
+        GET_USERS("/get-users"),
+        DELETE_USER("/user/%s?cascade=%s"),
         INSERT_CELL_KEY("/cell-key"),
-        UPDATE_CELL_KEY("/cell-key"),
-        GET_CELL_KEY("/cell-key"),
-        DELETE_CELL_KEY("/cell-key")
+        UPDATE_CELL_KEY("/cell-key/%s/%s"),
+        GET_CELL_KEY("/cell-key/%s/%s"),
+        DELETE_CELL_KEY("/cell-key/%s/%s")
     }
 
     enum class DefaultBaseUrls(val url: String) {

@@ -74,7 +74,7 @@ class HttpClientTest {
             PurekitProtos.EnrollmentRequest.newBuilder().setVersion(version).build().run {
                 httpClient.firePost(
                         this,
-                        HttpClientProtobuf.AvailableRequests.ENROLL,
+                        HttpClientProtobuf.AvailableRequests.ENROLL.type,
                         authToken = WRONG_TOKEN,
                         responseParser = PurekitProtos.EnrollmentResponse.parser()
                 )
@@ -127,7 +127,7 @@ class HttpClientTest {
         private const val WRONG_TOKEN = "WRONG_TOKEN"
 
         @JvmStatic fun testArguments() = listOf(
-                Arguments.of(PropertyManager.virgilServerAddress,
+                Arguments.of(PropertyManager.virgilPheServerAddress,
                              PropertyManager.virgilAppToken,
                              PropertyManager.virgilPublicKeyNew)
         )

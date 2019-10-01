@@ -41,10 +41,10 @@ import java.util.Date;
  *
  */
 public class PureGrant {
-    private VirgilKeyPair ukp;
-    private String userId;
-    private String sessionId;
-    private Date creationDate;
+    private final VirgilKeyPair ukp;
+    private final String userId;
+    private final String sessionId;
+    private final Date creationDate;
 
     /**
      * Constructor

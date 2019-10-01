@@ -76,3 +76,7 @@ message CellKey {
     bytes cell_key_signed = 2;
     bytes signature = 3;
 }
+
+message GetUserRecords {
+    repeated string user_ids = 1;
+}
