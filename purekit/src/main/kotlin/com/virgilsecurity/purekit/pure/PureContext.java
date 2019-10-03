@@ -139,7 +139,7 @@ public class PureContext {
         this.pheClient = new HttpPheClient(appToken, pheServiceAddress);
 
         if (externalPublicKeys != null) {
-            // FIXME: I hate java
+            // FIXME: I hate java <3 <3 <3
             this.externalPublicKeys = new HashMap<>(externalPublicKeys.size());
             for (String key : externalPublicKeys.keySet()) {
                 List<String> publicKeysBase64 = externalPublicKeys.get(key);

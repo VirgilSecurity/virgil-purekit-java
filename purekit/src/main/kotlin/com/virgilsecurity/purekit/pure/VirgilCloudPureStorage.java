@@ -218,7 +218,7 @@ public class VirgilCloudPureStorage implements PureStorage {
      */
     @Override
     public Iterable<UserRecord> selectUsers(int pheRecordVersion) throws NotImplementedException {
-        // FIXME: Can we add message here?
+        // FIXME: Can we add message here? -> Specifically in this exception - no, but we can make similar custom one with message
         throw new NotImplementedException();
     }
 

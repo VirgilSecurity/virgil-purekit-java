@@ -1,7 +1,7 @@
 package com.virgilsecurity.purekit.pure;
 
 public class PureException extends Exception {
-    public enum ErrorCode {
+    public enum ErrorCode { // FIXME move to java usual style
         USER_NOT_FOUND_IN_STORAGE,
         CELL_KEY_NOT_FOUND_IN_STORAGE,
         CELL_KEY_ALREADY_EXISTS_IN_STORAGE,
