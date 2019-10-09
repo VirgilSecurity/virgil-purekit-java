@@ -31,71 +31,44 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.purekit.pure;
+package com.virgilsecurity.purekit.pure.model;
 
-import com.virgilsecurity.sdk.crypto.VirgilKeyPair;
-
-import java.util.Date;
+import com.virgilsecurity.purekit.pure.Pure;
 
 /**
- *
+ * AuthResult class is a Result of {@link Pure#authenticateUser(String, String)}.
  */
-public class PureGrant {
-    private final VirgilKeyPair ukp;
-    private final String userId;
-    private final String sessionId;
-    private final Date creationDate;
+public class AuthResult {
+
+    private final PureGrant grant;
+    private final String encryptedGrant;
 
     /**
-     * Constructor
-     * @param ukp user key pair
-     * @param userId userId
-     * @param sessionId sessionId (optional)
-     * @param creationDate creation date
+     * Instantiates AuthResult.
+     *
+     * @param grant PureGrant.
+     * @param encryptedGrant Encrypted grant.
      */
-    public PureGrant(VirgilKeyPair ukp,
-                     String userId,
-                     String sessionId,
-                     Date creationDate) {
-        if (ukp == null || userId == null || creationDate == null) {
-            throw new NullPointerException();
-        }
-
-        this.ukp = ukp;
-        this.userId = userId;
-        this.sessionId = sessionId;
-        this.creationDate = creationDate;
+    AuthResult(PureGrant grant, String encryptedGrant) {
+        this.grant = grant;
+        this.encryptedGrant = encryptedGrant;
     }
 
     /**
-     * Returns user key pair
-     * @return User key pair
+     * Returns grant.
+     *
+     * @return PureGrant.
      */
-    public VirgilKeyPair getUkp() {
-        return ukp;
+    public PureGrant getGrant() {
+        return grant;
     }
 
     /**
-     * Returns session id
-     * @return Session id
+     * Returns encrypted PureGrant.
+     *
+     * @return Encrypted PureGrant.
      */
-    public String getSessionId() {
-        return sessionId;
-    }
-
-    /**
-     * Returns creation date
-     * @return Creation date
-     */
-    public Date getCreationDate() {
-        return creationDate;
-    }
-
-    /**
-     * Returns user id
-     * @return User id
-     */
-    public String getUserId() {
-        return userId;
+    public String getEncryptedGrant() {
+        return encryptedGrant;
     }
 }

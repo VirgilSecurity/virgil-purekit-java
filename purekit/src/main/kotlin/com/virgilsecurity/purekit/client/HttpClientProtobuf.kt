@@ -46,8 +46,6 @@ import com.virgilsecurity.purekit.build.VersionVirgilAgent
 import com.virgilsecurity.purekit.data.ProtocolException
 import com.virgilsecurity.purekit.data.ProtocolHttpException
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtos
-import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage
-import com.virgilsecurity.purekit.pure.UserRecord
 import com.virgilsecurity.purekit.utils.OsUtils
 
 /**

@@ -31,33 +31,54 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.purekit.pure;
+package com.virgilsecurity.purekit.pure.model;
 
 /**
- * Result of Pure.authenticateUser()
+ * CellKey class represents encrypted asymmetric key used to encrypt data.
  */
-public class AuthResult {
+public class CellKey {
+
+    private byte[] cpk;
+    private byte[] encryptedCskCms;
+    private byte[] encryptedCskBody;
+
     /**
-     * Returns grant
-     * @return PureGrant
+     * Instantiates CellKey.
+     *
+     * @param cpk Cell public key.
+     * @param encryptedCskCms Encrypted cell secret key CMS.
+     * @param encryptedCskBody Encrypted cell secret key body.
      */
-    public PureGrant getGrant() {
-        return grant;
+    public CellKey(byte[] cpk, byte[] encryptedCskCms, byte[] encryptedCskBody) {
+        this.cpk = cpk;
+        this.encryptedCskCms = encryptedCskCms;
+        this.encryptedCskBody = encryptedCskBody;
     }
 
     /**
-     * Returns encrypted PureGrant
-     * @return Encrypted PureGrant
+     * Cell public key.
+     *
+     * @return Cell public key.
      */
-    public String getEncryptedGrant() {
-        return encryptedGrant;
+    public final byte[] getCpk() {
+        return cpk;
     }
 
-    private final PureGrant grant;
-    private final String encryptedGrant;
+    /**
+     * Encrypted cell secret key CMS.
+     *
+     * @return Encrypted cell secret key CMS.
+     */
+    public final byte[] getEncryptedCskCms() {
+        return encryptedCskCms;
+    }
 
-    AuthResult(PureGrant grant, String encryptedGrant) {
-        this.grant = grant;
-        this.encryptedGrant = encryptedGrant;
+    /**
+     * Encrypted cell secret key body.
+     *
+     * @return Encrypted cell secret key body.
+     */
+    public final byte[] getEncryptedCskBody() {
+        return encryptedCskBody;
     }
 }

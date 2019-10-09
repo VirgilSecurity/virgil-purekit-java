@@ -5,6 +5,11 @@ import com.virgilsecurity.crypto.phe.PheException;
 import com.virgilsecurity.purekit.data.ProtocolException;
 import com.virgilsecurity.purekit.data.ProtocolHttpException;
 import com.virgilsecurity.purekit.pure.*;
+import com.virgilsecurity.purekit.pure.exception.PureException;
+import com.virgilsecurity.purekit.pure.model.AuthResult;
+import com.virgilsecurity.purekit.pure.model.CellKey;
+import com.virgilsecurity.purekit.pure.model.PureGrant;
+import com.virgilsecurity.purekit.pure.model.UserRecord;
 import com.virgilsecurity.purekit.utils.PropertyManager;
 import com.virgilsecurity.purekit.utils.ThreadUtils;
 import com.virgilsecurity.sdk.crypto.KeyType;
@@ -49,7 +54,7 @@ class PureTestJava {
             UserRecord userRecord = this.users.get(userId);
 
             if (userRecord == null) {
-                throw new PureException(PureException.ErrorCode.USER_NOT_FOUND_IN_STORAGE);
+                throw new PureException(PureException.ErrorStatus.USER_NOT_FOUND_IN_STORAGE);
             }
 
             return userRecord;
@@ -115,7 +120,7 @@ class PureTestJava {
             HashMap<String, CellKey> map = this.keys.getOrDefault(userId, new HashMap<>());
 
             if (map.putIfAbsent(dataId, cellKey) != null) {
-                throw new PureException(PureException.ErrorCode.CELL_KEY_ALREADY_EXISTS_IN_STORAGE);
+                throw new PureException(PureException.ErrorStatus.CELL_KEY_ALREADY_EXISTS_IN_STORAGE);
             }
 
             this.keys.put(userId, map);
@@ -734,13 +739,13 @@ class PureTestJava {
                     AuthResult authResult2 = pure.authenticateUser(userId, password);
                 });
 
-                assertEquals(PureException.ErrorCode.USER_NOT_FOUND_IN_STORAGE, e1.getErrorCode());
+                assertEquals(PureException.ErrorStatus.USER_NOT_FOUND_IN_STORAGE, e1.getErrorStatus());
 
                 PureException e2 = assertThrows(PureException.class, () -> {
                     byte[] plainText = pure.decrypt(authResult1.getGrant(), null, dataId, cipherText);
                 });
 
-                assertEquals(PureException.ErrorCode.CELL_KEY_NOT_FOUND_IN_STORAGE, e2.getErrorCode());
+                assertEquals(PureException.ErrorStatus.CELL_KEY_NOT_FOUND_IN_STORAGE, e2.getErrorStatus());
             }
         }
         catch (Exception | ProtocolHttpException e) {
@@ -780,7 +785,7 @@ class PureTestJava {
                     AuthResult authResult2 = pure.authenticateUser(userId, password);
                 });
 
-                assertEquals(PureException.ErrorCode.USER_NOT_FOUND_IN_STORAGE, e.getErrorCode());
+                assertEquals(PureException.ErrorStatus.USER_NOT_FOUND_IN_STORAGE, e.getErrorStatus());
 
                 byte[] plainText = pure.decrypt(authResult1.getGrant(), null, dataId, cipherText);
 
@@ -824,13 +829,34 @@ class PureTestJava {
                     byte[] plainText = pure.decrypt(authResult1.getGrant(), null, dataId, cipherText);
                 });
 
-                assertEquals(PureException.ErrorCode.CELL_KEY_NOT_FOUND_IN_STORAGE, e.getErrorCode());
+                assertEquals(PureException.ErrorStatus.CELL_KEY_NOT_FOUND_IN_STORAGE, e.getErrorStatus());
             }
         }
         catch (Exception | ProtocolHttpException e) {
             fail(e);
         }
     }
+
+  void dsada() {
+    PureSetupResult pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, i == 0 ? new RamStorage() : null);
+    Pure pure = pureResult.getPure();
+
+    String userId = UUID.randomUUID().toString();
+    String password = UUID.randomUUID().toString();
+    String dataId = UUID.randomUUID().toString();
+
+    byte[] text = UUID.randomUUID().toString().getBytes();
+
+    pure.registerUser(userId, password);
+
+    byte[] cipherText = pure.encrypt(userId, dataId, text);
+
+    AuthResult authResult1 = pure.authenticateUser(userId, password);
+
+    pure.deleteKey(userId, dataId);
+
+    pure.decrypt(authResult1.getGrant(), null, dataId, cipherText);
+  }
 
     // TODO: Test hashes encryption
 

@@ -40,9 +40,8 @@ import com.virgilsecurity.sdk.crypto.VirgilCrypto;
 import com.virgilsecurity.sdk.crypto.VirgilPrivateKey;
 import com.virgilsecurity.sdk.crypto.VirgilPublicKey;
 
-import java.util.Base64;
-
 class PureCrypto {
+
     private final VirgilCrypto crypto;
 
     PureCrypto(VirgilCrypto crypto) {

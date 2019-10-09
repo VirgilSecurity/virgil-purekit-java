@@ -37,6 +37,9 @@ package com.virgilsecurity.purekit.pure;
 
 import java.util.Collection;
 
+import com.virgilsecurity.purekit.pure.model.CellKey;
+import com.virgilsecurity.purekit.pure.model.UserRecord;
+
 /**
  * Interface for Pure storage
  */

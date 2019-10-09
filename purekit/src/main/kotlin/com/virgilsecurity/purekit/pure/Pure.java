@@ -42,6 +42,11 @@ import com.virgilsecurity.purekit.data.ProtocolException;
 import com.virgilsecurity.purekit.data.ProtocolHttpException;
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtos;
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Grant;
+import com.virgilsecurity.purekit.pure.exception.PureException;
+import com.virgilsecurity.purekit.pure.model.AuthResult;
+import com.virgilsecurity.purekit.pure.model.CellKey;
+import com.virgilsecurity.purekit.pure.model.PureGrant;
+import com.virgilsecurity.purekit.pure.model.UserRecord;
 import com.virgilsecurity.sdk.crypto.*;
 import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
 import com.virgilsecurity.sdk.crypto.exceptions.EncryptionException;
@@ -52,6 +57,7 @@ import java.util.*;
  * Main class for interactions with PureKit
  */
 public class Pure {
+
     private final VirgilCrypto crypto;
     private final PureCrypto pureCrypto;
     private final PheCipher cipher;
@@ -132,8 +138,8 @@ public class Pure {
         byte[] encryptedUskBackup = this.crypto.encrypt(uskData, Collections.singletonList(this.buppk));
 
         UserRecord userRecord = new UserRecord(userId,
-                result.getEnrollmentRecord(), this.currentVersion,
-                this.crypto.exportPublicKey(ukp.getPublicKey()), encryptedUsk, encryptedUskBackup, encryptedPwdHash);
+                                               result.getEnrollmentRecord(), this.currentVersion,
+                                               this.crypto.exportPublicKey(ukp.getPublicKey()), encryptedUsk, encryptedUskBackup, encryptedPwdHash);
 
         if (isUserNew) {
             this.storage.insertUser(userRecord);
@@ -203,7 +209,7 @@ public class Pure {
         byte[] phek = client.checkResponseAndDecrypt(passwordHash, userRecord.getPheRecord(), response.getResponse().toByteArray());
 
         if (phek.length == 0) {
-            throw new PureException(PureException.ErrorCode.INVALID_PASSWORD);
+            throw new PureException(PureException.ErrorStatus.INVALID_PASSWORD);
         }
 
         byte[] uskData = this.cipher.decrypt(userRecord.getEncryptedUsk(), phek);
@@ -365,7 +371,7 @@ public class Pure {
         byte[] oldPhek = client.checkResponseAndDecrypt(oldPasswordHash, userRecord.getPheRecord(), verifyResponse.getResponse().toByteArray());
 
         if (oldPhek.length == 0) {
-            throw new PureException(PureException.ErrorCode.INVALID_PASSWORD);
+            throw new PureException(PureException.ErrorStatus.INVALID_PASSWORD);
         }
 
         byte[] privateKeyData = this.cipher.decrypt(userRecord.getEncryptedUsk(), oldPhek);
@@ -555,7 +561,7 @@ public class Pure {
                 cpk = ckp.getPublicKey();
             }
             catch (PureException e) {
-                if (e.getErrorCode() != PureException.ErrorCode.CELL_KEY_ALREADY_EXISTS_IN_STORAGE) {
+                if (e.getErrorStatus() != PureException.ErrorStatus.CELL_KEY_ALREADY_EXISTS_IN_STORAGE) {
                     throw e;
                 }
 
@@ -581,7 +587,7 @@ public class Pure {
      */
     public byte[] decrypt(PureGrant grant, String ownerUserId, String dataId, byte[] cipherText) throws Exception {
         if (grant == null) {
-            throw new NullPointerException();
+            throw new NullPointerException(); // TODO add description of null argument
         }
         if (dataId == null || dataId.isEmpty()) {
             throw new NullPointerException();
@@ -622,7 +628,7 @@ public class Pure {
         CellKey cellKey = this.storage.selectKey(ownerUserId, dataId);
 
         if (cellKey == null) {
-            throw new PureException(PureException.ErrorCode.CELL_KEY_NOT_FOUND_IN_STORAGE);
+            throw new PureException(PureException.ErrorStatus.CELL_KEY_NOT_FOUND_IN_STORAGE);
         }
 
         byte[] csk = this.pureCrypto.decrypt(new PureCryptoData(cellKey.getEncryptedCskCms(), cellKey.getEncryptedCskBody()), privateKey);

@@ -31,49 +31,86 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.purekit.pure;
+package com.virgilsecurity.purekit.pure.model;
+
+import com.virgilsecurity.sdk.crypto.VirgilKeyPair;
+import com.virgilsecurity.sdk.exception.NullArgumentException;
+
+import java.util.Date;
+
+import org.jetbrains.annotations.NotNull;
 
 /**
- * Class represents encrypted asymmetric key used to encrypt data
+ * PureGrant class.
  */
-public class CellKey {
+public class PureGrant {
+
+    private final VirgilKeyPair ukp;
+    private final String userId;
+    private final String sessionId;
+    private final Date creationDate;
+
     /**
-     * Constructor
-     * @param cpk cell public key
-     * @param encryptedCskCms encrypted cell secret key CMS
-     * @param encryptedCskBody encrypted cell secret key body
+     * Instantiates PureGrant.
+     *
+     * @param ukp User key pair.
+     * @param userId User Id.
+     * @param sessionId Session Id (optional).
+     * @param creationDate Creation date.
      */
-    public CellKey(byte[] cpk, byte[] encryptedCskCms, byte[] encryptedCskBody) {
-        this.cpk = cpk;
-        this.encryptedCskCms = encryptedCskCms;
-        this.encryptedCskBody = encryptedCskBody;
+    public PureGrant(VirgilKeyPair ukp,
+                     String userId,
+                     String sessionId,
+                     Date creationDate) {
+        if (ukp == null) {
+            throw new NullArgumentException("ukp");
+        }
+        if (userId == null) {
+            throw new NullArgumentException("userId");
+        }
+        if (creationDate == null) {
+            throw new NullArgumentException("creationDate");
+        }
+
+        this.ukp = ukp;
+        this.userId = userId;
+        this.sessionId = sessionId;
+        this.creationDate = creationDate;
     }
 
     /**
-     * Cell public key
-     * @return cell public key
+     * Returns user key pair.
+     *
+     * @return User key pair.
      */
-    public final byte[] getCpk() {
-        return cpk;
+    public VirgilKeyPair getUkp() {
+        return ukp;
     }
 
     /**
-     * Encrypted cell secret key CMS
-     * @return encrypted cell secret key CMS
+     * Returns session id.
+     *
+     * @return Session id.
      */
-    public final byte[] getEncryptedCskCms() {
-        return encryptedCskCms;
+    public String getSessionId() {
+        return sessionId;
     }
 
     /**
-     * Encrypted cell secret key body
-     * @return encrypted cell secret key body
+     * Returns creation date.
+     *
+     * @return Creation date.
      */
-    public final byte[] getEncryptedCskBody() {
-        return encryptedCskBody;
+    public Date getCreationDate() {
+        return creationDate;
     }
 
-    private byte[] cpk;
-    private byte[] encryptedCskCms;
-    private byte[] encryptedCskBody;
+    /**
+     * Returns user id.
+     *
+     * @return User id.
+     */
+    public String getUserId() {
+        return userId;
+    }
 }

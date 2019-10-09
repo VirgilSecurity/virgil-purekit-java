@@ -33,7 +33,7 @@
 
 package com.virgilsecurity.purekit.pure;
 
-import com.virgilsecurity.purekit.client.HttpClientProtobuf;
+import com.virgilsecurity.purekit.pure.exception.PureException;
 import com.virgilsecurity.sdk.crypto.VirgilCrypto;
 import com.virgilsecurity.sdk.crypto.VirgilPublicKey;
 import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
@@ -44,6 +44,7 @@ import java.util.*;
  * Dependencies needed to initialize Pure
  */
 public class PureContext {
+
     static class Credentials {
         private byte[] payload;
         private int version;
@@ -73,13 +74,13 @@ public class PureContext {
         String[] parts = credentials.split("\\.");
 
         if (parts.length != (isVersioned ? 3 : 2)) {
-            throw new PureException(PureException.ErrorCode.CREDENTIALS_PARSING_ERROR);
+            throw new PureException(PureException.ErrorStatus.CREDENTIALS_PARSING_ERROR);
         }
 
         int index = 0;
 
         if (!parts[index].equals(prefix)) {
-            throw new PureException(PureException.ErrorCode.CREDENTIALS_PARSING_ERROR);
+            throw new PureException(PureException.ErrorStatus.CREDENTIALS_PARSING_ERROR);
         }
         index++;
 
@@ -158,11 +159,11 @@ public class PureContext {
         }
 
         if (this.appSecretKey.getVersion() != this.servicePublicKey.getVersion()) {
-            throw new PureException(PureException.ErrorCode.KEYS_VERSION_MISMATCH);
+            throw new PureException(PureException.ErrorStatus.KEYS_VERSION_MISMATCH);
         }
 
         if (this.ak.getPayload().length != PureContext.akLength) {
-            throw new PureException(PureException.ErrorCode.AK_INVALID_LENGTH);
+            throw new PureException(PureException.ErrorStatus.AK_INVALID_LENGTH);
         }
     }
 
@@ -186,8 +187,8 @@ public class PureContext {
                                             String servicePublicKey,
                                             Map<String, List<String>> externalPublicKeys) throws CryptoException, PureException {
         return PureContext.createContext(appToken, akBase64, buppkBase64, hpkBase64,
-                cloudSigningKeyBase64, appSecretKey, servicePublicKey, externalPublicKeys,
-                HttpPheClient.serviceAddress, HttpPureClient.serviceAddress);
+                                         cloudSigningKeyBase64, appSecretKey, servicePublicKey, externalPublicKeys,
+                                         HttpPheClient.SERVICE_ADDRESS, HttpPureClient.SERVICE_ADDRESS);
     }
 
     /**
@@ -243,7 +244,7 @@ public class PureContext {
                                             Map<String, List<String>> externalPublicKeys) throws CryptoException, PureException {
         return PureContext.createContext(appToken, akBase64,buppkBase64, hpkBase64, storage, appSecretKey,
                 servicePublicKey,  externalPublicKeys,
-                HttpPheClient.serviceAddress);
+                HttpPheClient.SERVICE_ADDRESS);
     }
 
     /**
@@ -292,7 +293,7 @@ public class PureContext {
         this.updateToken = PureContext.parseCredentials("UT", updateToken, true);
 
         if (this.updateToken.getVersion() != this.appSecretKey.getVersion() + 1) {
-            throw new PureException(PureException.ErrorCode.UPDATE_TOKEN_VERSION_MISMATCH);
+            throw new PureException(PureException.ErrorStatus.UPDATE_TOKEN_VERSION_MISMATCH);
         }
     }
     /**

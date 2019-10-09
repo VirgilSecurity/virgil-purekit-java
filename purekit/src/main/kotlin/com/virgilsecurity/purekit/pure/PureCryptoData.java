@@ -34,6 +34,10 @@
 package com.virgilsecurity.purekit.pure;
 
 class PureCryptoData {
+
+    private final byte[] cms;
+    private final byte[] body;
+
     PureCryptoData(byte[] cms, byte[] body) {
         this.cms = cms;
         this.body = body;
@@ -46,7 +50,4 @@ class PureCryptoData {
     byte[] getBody() {
         return body;
     }
-
-    private final byte[] cms;
-    private final byte[] body;
 }
