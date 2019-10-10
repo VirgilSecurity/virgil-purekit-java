@@ -41,7 +41,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.virgilsecurity.purekit.data.InvalidPasswordException;
 import com.virgilsecurity.purekit.data.InvalidProtobufTypeException;
 import com.virgilsecurity.purekit.data.ProtocolException;
-import com.virgilsecurity.purekit.utils.EnrollResult;
+import com.virgilsecurity.purekit.data.EnrollResult;
 import com.virgilsecurity.purekit.utils.PropertyManager;
 import com.virgilsecurity.purekit.utils.ProtocolUtils;
 import com.virgilsecurity.purekit.utils.ThreadUtils;

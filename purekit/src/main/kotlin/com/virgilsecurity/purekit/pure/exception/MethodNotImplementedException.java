@@ -34,25 +34,29 @@
 package com.virgilsecurity.purekit.pure.exception;
 
 /**
- * PHE service error codes.
+ * MethodNotImplementedException class.
  */
-public enum ServiceErrorCode {
-    USER_NOT_FOUND(50003),
-    CELL_KEY_NOT_FOUND(50004),
-    CELL_KEY_ALREADY_EXISTS(50006); // FIXME do we need error code 0 ?
+public class MethodNotImplementedException extends RuntimeException {
 
-    private final int code;
+  public MethodNotImplementedException() {
+  }
 
-    ServiceErrorCode(int code) {
-        this.code = code;
-    }
+  public MethodNotImplementedException(String message) {
+    super(message);
+  }
 
-    /**
-     * Error code number.
-     *
-     * @return Error code number.
-     */
-    public int getCode() {
-        return code;
-    }
+  public MethodNotImplementedException(String message, Throwable cause) {
+    super(message, cause);
+  }
+
+  public MethodNotImplementedException(Throwable cause) {
+    super(cause);
+  }
+
+  public MethodNotImplementedException(String message,
+                                       Throwable cause,
+                                       boolean enableSuppression,
+                                       boolean writableStackTrace) {
+    super(message, cause, enableSuppression, writableStackTrace);
+  }
 }
