@@ -35,7 +35,6 @@ package com.virgilsecurity.purekit.pure;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashMap;
 
 import com.virgilsecurity.purekit.client.HttpClientProtobuf;
 import com.virgilsecurity.purekit.data.ProtocolException;

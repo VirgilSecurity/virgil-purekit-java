@@ -31,9 +31,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.purekit.pure.model;
+package com.virgilsecurity.purekit.pure;
 
 import com.virgilsecurity.purekit.pure.Pure;
+import com.virgilsecurity.purekit.pure.model.PureGrant;
 
 /**
  * AuthResult class is a Result of {@link Pure#authenticateUser(String, String)}.

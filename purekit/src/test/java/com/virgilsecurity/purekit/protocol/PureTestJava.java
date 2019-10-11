@@ -6,7 +6,7 @@ import com.virgilsecurity.purekit.data.ProtocolException;
 import com.virgilsecurity.purekit.data.ProtocolHttpException;
 import com.virgilsecurity.purekit.pure.*;
 import com.virgilsecurity.purekit.pure.exception.PureException;
-import com.virgilsecurity.purekit.pure.model.AuthResult;
+import com.virgilsecurity.purekit.pure.AuthResult;
 import com.virgilsecurity.purekit.pure.model.CellKey;
 import com.virgilsecurity.purekit.pure.model.PureGrant;
 import com.virgilsecurity.purekit.pure.model.UserRecord;

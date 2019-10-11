@@ -33,6 +33,15 @@
 
 package com.virgilsecurity.purekit.pure;
 
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.virgilsecurity.crypto.phe.PheCipher;
@@ -43,15 +52,18 @@ import com.virgilsecurity.purekit.data.ProtocolHttpException;
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtos;
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Grant;
 import com.virgilsecurity.purekit.pure.exception.PureException;
-import com.virgilsecurity.purekit.pure.model.AuthResult;
 import com.virgilsecurity.purekit.pure.model.CellKey;
 import com.virgilsecurity.purekit.pure.model.PureGrant;
 import com.virgilsecurity.purekit.pure.model.UserRecord;
-import com.virgilsecurity.sdk.crypto.*;
+import com.virgilsecurity.purekit.utils.ValidateUtils;
+import com.virgilsecurity.sdk.crypto.HashAlgorithm;
+import com.virgilsecurity.sdk.crypto.VirgilCrypto;
+import com.virgilsecurity.sdk.crypto.VirgilKeyPair;
+import com.virgilsecurity.sdk.crypto.VirgilPrivateKey;
+import com.virgilsecurity.sdk.crypto.VirgilPublicKey;
 import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
 import com.virgilsecurity.sdk.crypto.exceptions.EncryptionException;
-
-import java.util.*;
+import com.virgilsecurity.sdk.crypto.exceptions.SigningException;
 
 /**
  * Main class for interactions with PureKit
@@ -75,11 +87,11 @@ public class Pure {
     private final static int currentGrantVersion = 1;
 
     /**
-     * Constructor
-     * @param context PureContext
-     * @throws CryptoException FIXME
+     * Instantiates Pure.
+     *
+     * @param context PureContext.
      */
-    public Pure(PureContext context) throws CryptoException, PureException {
+    public Pure(PureContext context) {
         this.crypto = context.getCrypto();
         this.pureCrypto = new PureCrypto(this.crypto);
         this.cipher = new PheCipher();
@@ -88,7 +100,8 @@ public class Pure {
         this.currentClient = new PheClient();
         this.currentClient.setOperationRandom(this.crypto.getRng());
         this.currentClient.setRandom(this.crypto.getRng());
-        this.currentClient.setKeys(context.getAppSecretKey().getPayload(), context.getServicePublicKey().getPayload());
+        this.currentClient.setKeys(context.getAppSecretKey().getPayload(),
+                                   context.getServicePublicKey().getPayload());
 
         if (context.getUpdateToken() != null) {
             this.currentVersion = context.getServicePublicKey().getVersion() + 1;
@@ -96,7 +109,8 @@ public class Pure {
             this.previousClient = new PheClient();
             this.previousClient.setOperationRandom(this.crypto.getRng());
             this.previousClient.setRandom(this.crypto.getRng());
-            this.previousClient.setKeys(context.getAppSecretKey().getPayload(), context.getServicePublicKey().getPayload());
+            this.previousClient.setKeys(context.getAppSecretKey().getPayload(),
+                                        context.getServicePublicKey().getPayload());
             this.currentClient.rotateKeys(context.getUpdateToken().getPayload());
         }
         else {
@@ -112,84 +126,45 @@ public class Pure {
         this.externalPublicKeys = context.getExternalPublicKeys();
     }
 
-    private void registerUser(String userId, String password, boolean isUserNew) throws ProtocolException, ProtocolHttpException, Exception {
-        if (userId == null || userId.isEmpty()) {
-            throw new NullPointerException();
-        }
-        if (password == null || password.isEmpty()) {
-            throw new NullPointerException();
-        }
-
-        PurekitProtos.EnrollmentRequest request = PurekitProtos.EnrollmentRequest.newBuilder().setVersion(this.currentVersion).build();
-        PurekitProtos.EnrollmentResponse response = this.pheClient.enrollAccount(request);
-
-        byte[] passwordHash = this.crypto.computeHash(password.getBytes(), HashAlgorithm.SHA512);
-
-        byte[] encryptedPwdHash = this.crypto.encrypt(passwordHash, Collections.singletonList(this.hpk));
-
-        PheClientEnrollAccountResult result = this.currentClient.enrollAccount(response.getResponse().toByteArray(), passwordHash);
-
-        VirgilKeyPair ukp = this.crypto.generateKeyPair();
-
-        byte[] uskData = this.crypto.exportPrivateKey(ukp.getPrivateKey());
-
-        byte[] encryptedUsk = this.cipher.encrypt(uskData, result.getAccountKey());
-
-        byte[] encryptedUskBackup = this.crypto.encrypt(uskData, Collections.singletonList(this.buppk));
-
-        UserRecord userRecord = new UserRecord(userId,
-                                               result.getEnrollmentRecord(), this.currentVersion,
-                                               this.crypto.exportPublicKey(ukp.getPublicKey()), encryptedUsk, encryptedUskBackup, encryptedPwdHash);
-
-        if (isUserNew) {
-            this.storage.insertUser(userRecord);
-        }
-        else {
-            this.storage.updateUser(userRecord);
-        }
-    }
-
     /**
-     * Register new user
-     * @param userId userId
-     * @param password password
-     * @throws ProtocolException FIXME
-     * @throws ProtocolHttpException FIXME
-     * @throws CryptoException FIXME
+     * Register new user.
+     *
+     * @param userId User Id.
+     * @param password Password.
+     *
+     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
+     * successfully.
+     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
+     * successfully. Represents a regular HTTP exception with code and message.
+     * @throws EncryptionException If encryption failed.
+     * @throws SigningException If a crypto sign operation failed.
      */
-    public void registerUser(String userId, String password) throws ProtocolException, ProtocolHttpException, Exception {
-        this.registerUser(userId, password, true);
-    }
+    public void registerUser(String userId, String password)
+        throws ProtocolException, ProtocolHttpException, EncryptionException, SigningException {
 
-    private PheClient getClient(int pheVersion) throws NullPointerException {
-        if (this.currentVersion == pheVersion) {
-            return this.currentClient;
-        }
-        else if (this.currentVersion == pheVersion + 1) {
-            return this.previousClient;
-        }
-        else {
-            throw new NullPointerException();
-        }
+        registerUser(userId, password, true);
     }
 
     /**
-     * Authenticates user
-     * @param userId userId
-     * @param password password
-     * @param sessionId optional sessionId which will be present in PureGrant
-     * @return AuthResult with PureGrant and encrypted PureGrant
+     * Authenticates user.
+     *
+     * @param userId User Id.
+     * @param password Password.
+     * @param sessionId Optional sessionId which will be present in PureGrant.
+     *
+     * @return AuthResult with PureGrant and encrypted PureGrant.
+     *
      * @throws ProtocolHttpException FIXME
      * @throws ProtocolException FIXME
      * @throws CryptoException FIXME
      */
-    public AuthResult authenticateUser(String userId, String password, String sessionId) throws ProtocolHttpException, ProtocolException, Exception {
-        if (userId == null || userId.isEmpty()) {
-            throw new NullPointerException();
-        }
-        if (password == null || password.isEmpty()) {
-            throw new NullPointerException();
-        }
+    public AuthResult authenticateUser(String userId, String password, String sessionId)
+        throws ProtocolHttpException, ProtocolException, Exception {
+
+        ValidateUtils.checkNullOrEmpty(new HashMap<String, String>() {{
+            put(userId, "userId");
+            put(password, "password");
+        }});
 
         byte[] passwordHash = this.crypto.computeHash(password.getBytes(), HashAlgorithm.SHA512);
 
@@ -245,10 +220,13 @@ public class Pure {
     }
 
     /**
-     * Authenticates user
-     * @param userId userId
-     * @param password password
-     * @return AuthResult with PureGrant and encrypted PureGrant
+     * Authenticates user.
+     *
+     * @param userId User Id.
+     * @param password Password.
+     *
+     * @return AuthResult with PureGrant and encrypted PureGrant.
+     *
      * @throws Exception FIXME
      * @throws ProtocolHttpException FIXME
      * @throws ProtocolException FIXME
@@ -258,14 +236,17 @@ public class Pure {
     }
 
     /**
-     * Creates PureGrant for some user using admin backup private key
-     * @param userId userId
-     * @param bupsk admin backup private key
-     * @return PureGrant
+     * Creates PureGrant for some user using admin backup private key.
+     *
+     * @param userId User Id.
+     * @param bupsk Admin backup private key.
+     *
+     * @return PureGrant.
+     *
      * @throws CryptoException FIXME
      */
     public PureGrant createUserGrantAsAdmin(String userId, VirgilPrivateKey bupsk) throws Exception {
-        UserRecord userRecord = this.storage.selectUser(userId);
+        UserRecord userRecord = this.storage.selectUser(userId); // FIXME is userId null/empty ok here?
 
         byte[] usk = this.crypto.decrypt(userRecord.getEncryptedUskBackup(), bupsk);
 
@@ -275,16 +256,19 @@ public class Pure {
     }
 
     /**
-     * Decrypt encrypted PureGrant that was stored on client-side
-     * @param encryptedGrantString encrypted PureGrant obtained from authenticateUser method
-     * @return PureGrant
+     * Decrypt encrypted PureGrant that was stored on client-side.
+     *
+     * @param encryptedGrantString Encrypted PureGrant obtained from authenticateUser method.
+     *
+     * @return PureGrant.
+     *
      * @throws InvalidProtocolBufferException FIXME
      * @throws CryptoException FIXME
      */
     public PureGrant decryptGrantFromUser(String encryptedGrantString) throws Exception {
-        if (encryptedGrantString == null || encryptedGrantString.isEmpty()) {
-            throw new NullPointerException();
-        }
+        ValidateUtils.checkNullOrEmpty(new HashMap<String, String>() {{
+            put(encryptedGrantString, "encryptedGrantString");
+        }});
 
         byte[] encryptedGrantData = Base64.getDecoder().decode(encryptedGrantString);
 
@@ -311,47 +295,26 @@ public class Pure {
         return new PureGrant(ukp, header.getUserId(), sessionId, new Date((long)header.getCreationDate() * 1000));
     }
 
-    private void changeUserPassword(UserRecord userRecord, byte[] privateKeyData, String newPassword) throws ProtocolException, ProtocolHttpException, Exception {
-        if (newPassword == null || newPassword.isEmpty()) {
-            throw new NullPointerException();
-        }
 
-        byte[] newPasswordHash = this.crypto.computeHash(newPassword.getBytes(), HashAlgorithm.SHA512);
-
-        PurekitProtos.EnrollmentRequest enrollRequest = PurekitProtos.EnrollmentRequest.newBuilder().setVersion(this.currentVersion).build();
-        PurekitProtos.EnrollmentResponse enrollResponse = this.pheClient.enrollAccount(enrollRequest);
-
-        PheClientEnrollAccountResult enrollResult = this.currentClient.enrollAccount(enrollResponse.getResponse().toByteArray(), newPasswordHash);
-
-        byte[] newEncryptedUsk = this.cipher.encrypt(privateKeyData, enrollResult.getAccountKey());
-
-        byte[] encryptedPwdHash = this.crypto.encrypt(newPasswordHash, Collections.singletonList(this.hpk));
-
-        UserRecord newUserRecord = new UserRecord(userRecord.getUserId(), enrollResult.getEnrollmentRecord(), this.currentVersion,
-                userRecord.getUpk(), newEncryptedUsk, userRecord.getEncryptedUskBackup(), encryptedPwdHash);
-
-        this.storage.updateUser(newUserRecord);
-    }
 
     /**
-     * Changes user password. All encrypted data remains accessible after this method call
-     * @param userId userId
-     * @param oldPassword old password
-     * @param newPassword new password
+     * Changes user password. All encrypted data remains accessible after this method call.
+     *
+     * @param userId UserId.
+     *
+     * @param oldPassword Old password.
+     * @param newPassword New password.
+     *
      * @throws ProtocolException FIXME
      * @throws ProtocolHttpException FIXME
      * @throws EncryptionException FIXME
      */
     public void changeUserPassword(String userId, String oldPassword, String newPassword) throws ProtocolException, ProtocolHttpException, Exception {
-        if (userId == null || userId.isEmpty()) {
-            throw new NullPointerException();
-        }
-        if (oldPassword == null || oldPassword.isEmpty()) {
-            throw new NullPointerException();
-        }
-        if (newPassword == null || newPassword.isEmpty()) {
-            throw new NullPointerException();
-        }
+        ValidateUtils.checkNullOrEmpty(new HashMap<String, String>() {{
+            put(userId, "userId");
+            put(oldPassword, "oldPassword");
+            put(newPassword, "newPassword");
+        }});
 
         byte[] oldPasswordHash = this.crypto.computeHash(oldPassword.getBytes(), HashAlgorithm.SHA512);
 
@@ -380,20 +343,23 @@ public class Pure {
     }
 
     /**
-     * Changes user password. All encrypted data remains accessible after this method call
-     * @param grant PureGrant obtained either using .authenticateUser() or .createUserGrantAsAdmin()
-     * @param newPassword new password
+     * Changes user password. All encrypted data remains accessible after this method call.
+     *
+     * @param grant PureGrant obtained either using {@link Pure#authenticateUser} or
+     *              {@link Pure#createUserGrantAsAdmin}.
+     * @param newPassword New password.
+     *
      * @throws CryptoException FIXME
      * @throws ProtocolHttpException  FIXME
      * @throws ProtocolException FIXME
      */
     public void changeUserPassword(PureGrant grant, String newPassword) throws Exception, ProtocolHttpException, ProtocolException {
-        if (grant == null) {
-            throw new NullPointerException();
-        }
-        if (newPassword == null || newPassword.isEmpty()) {
-            throw new NullPointerException();
-        }
+        ValidateUtils.checkNull(new HashMap<Object, String>() {{
+            put(grant, "grant");
+        }});
+        ValidateUtils.checkNullOrEmpty(new HashMap<String, String>() {{
+            put(newPassword, "newPassword");
+        }});
 
         UserRecord userRecord = this.storage.selectUser(grant.getUserId());
 
@@ -404,8 +370,10 @@ public class Pure {
 
     /**
      * Resets user password, all encrypted user data becomes inaccessible.
-     * @param userId user id
-     * @param newPassword new password
+     *
+     * @param userId User id.
+     * @param newPassword New password.
+     *
      * @throws ProtocolException FIXME
      * @throws ProtocolHttpException FIXME
      * @throws CryptoException FIXME
@@ -416,9 +384,11 @@ public class Pure {
     }
 
     /**
-     * Deletes user with given id
-     * @param userId userId
-     * @param cascade deletes all user cell keys if true
+     * Deletes user with given id.
+     *
+     * @param userId User Id.
+     * @param cascade Deletes all user cell keys if true.
+     *
      * @throws Exception FIXME
      */
     public void deleteUser(String userId, boolean cascade) throws Exception {
@@ -427,13 +397,14 @@ public class Pure {
 
     /**
      * Performs PHE records rotation for all users with old phe version.
-     * Pure should be initialized with UpdateToken for this operation
-     * @return number of rotated records
+     * Pure should be initialized with UpdateToken for this operation.
+     *
+     * @return Number of rotated records.
      */
     public long performRotation() throws Exception {
-        if (this.updateToken == null) {
-            throw new NullPointerException();
-        }
+        ValidateUtils.checkNull(new HashMap<Object, String>() {{
+            put(Pure.this.updateToken, "updateToken");
+        }});
 
         if (this.currentVersion <= 1) {
             return 0;
@@ -473,14 +444,18 @@ public class Pure {
     }
 
     /**
-     * Encrypts data
-     * @implSpec this method generates keypair that is unique for given userId and dataId,
-     * encrypts plainText using this keypair and stores public key and encrypted private key.
-     * Multiple encryptions for the same userId and dataId are allowed, in this case existing keypair will be used.
-     * @param userId userId of data owner
-     * @param dataId dataId
-     * @param plainText plain text
-     * @return cipher text
+     * Encrypts data.
+     *
+     * This method generates keypair that is unique for given userId and dataId, encrypts plainText
+     * using this keypair and stores public key and encrypted private key. Multiple encryptions for
+     * the same userId and dataId are allowed, in this case existing keypair will be used.
+     *
+     * @param userId User Id of data owner.
+     * @param dataId DataId.
+     * @param plainText Plain text.
+     *
+     * @return Cipher text.
+     *
      * @throws CryptoException FIXME
      */
     public byte[] encrypt(String userId, String dataId, byte[] plainText) throws Exception {
@@ -488,36 +463,35 @@ public class Pure {
     }
 
     /**
-     * Encrypts data
-     * @implSpec this method generates keypair that is unique for given userId and dataId,
-     * encrypts plainText using this keypair and stores public key and encrypted private key.
-     * Multiple encryptions for the same userId and dataId are allowed, in this case existing keypair will be used.
-     * @param userId userId of data owner
-     * @param dataId dataId
-     * @param otherUserIds other user ids, to whom access to this data will be given
-     * @param publicKeys other public keys, to which access to this data will be given
-     * @param plainText plain text
-     * @return cipher text
+     * Encrypts data.
+     *
+     * This method generates keypair that is unique for given userId and dataId, encrypts plainText
+     * using this keypair and stores public key and encrypted private key. Multiple encryptions for
+     * the same userId and dataId are allowed, in this case existing keypair will be used.
+     *
+     * @param userId User Id of data owner.
+     * @param dataId Data Id.
+     * @param otherUserIds Other user ids, to whom access to this data will be given.
+     * @param publicKeys Other public keys, to which access to this data will be given.
+     * @param plainText Plain text.
+     *
+     * @return Cipher text.
+     *
      * @throws CryptoException FIXME
      */
-    public byte[] encrypt(String userId, String dataId,
-                          Collection<String> otherUserIds, Collection<VirgilPublicKey> publicKeys,
-                          byte[] plainText) throws Exception {
-        if (userId == null || userId.isEmpty()) {
-            throw new NullPointerException();
-        }
-        if (dataId == null || dataId.isEmpty()) {
-            throw new NullPointerException();
-        }
-        if (otherUserIds == null) {
-            throw new NullPointerException();
-        }
-        if (publicKeys == null) {
-            throw new NullPointerException();
-        }
-        if (plainText == null) {
-            throw new NullPointerException();
-        }
+    public byte[] encrypt(String userId, String dataId, Collection<String> otherUserIds,
+                          Collection<VirgilPublicKey> publicKeys, byte[] plainText)
+        throws Exception {
+
+        ValidateUtils.checkNullOrEmpty(new HashMap<String, String>() {{
+            put(userId, "userId");
+            put(dataId, "dataId");
+        }});
+        ValidateUtils.checkNull(new HashMap<Object, String>() {{
+            put(otherUserIds, "otherUserIds");
+            put(publicKeys, "publicKeys");
+            put(plainText, "plainText");
+        }});
 
         VirgilPublicKey cpk;
 
@@ -577,24 +551,26 @@ public class Pure {
     }
 
     /**
-     * Decrypts data
-     * @param grant user PureGrant obtained using .authenticate() or createUserGrantAsAdmin() methods
-     * @param ownerUserId owner userId, pass null if PureGrant belongs to
-     * @param dataId dataId that was used during encryption
-     * @param cipherText cipher text
-     * @return plain text
+     * Decrypts data.
+     *
+     * @param grant User PureGrant obtained using {@link Pure#authenticateUser} or
+     *             {@link Pure#createUserGrantAsAdmin} methods.
+     * @param ownerUserId Owner userId, pass null if PureGrant belongs to.
+     * @param dataId Data Id that was used during encryption.
+     * @param cipherText Cipher text.
+     *
+     * @return Plain text.
+     *
      * @throws CryptoException FIXME
      */
     public byte[] decrypt(PureGrant grant, String ownerUserId, String dataId, byte[] cipherText) throws Exception {
-        if (grant == null) {
-            throw new NullPointerException(); // TODO add description of null argument
-        }
-        if (dataId == null || dataId.isEmpty()) {
-            throw new NullPointerException();
-        }
-        if (cipherText == null) {
-            throw new NullPointerException();
-        }
+        ValidateUtils.checkNull(new HashMap<Object, String>() {{
+            put(grant, "grant");
+            put(cipherText, "cipherText");
+        }});
+        ValidateUtils.checkNullOrEmpty(new HashMap<String, String>() {{
+            put(dataId, "dataId");
+        }});
 
         String userId = ownerUserId;
 
@@ -606,24 +582,26 @@ public class Pure {
     }
 
     /**
-     * Decrypts data
-     * @param privateKey private key from corresponding public key that was used during encrypt(), share() on present in externalPublicKeys
-     * @param ownerUserId owner userId, pass null if PureGrant belongs to
-     * @param dataId dataId that was used during encryption
-     * @param cipherText cipher text
-     * @return plain text
+     * Decrypts data.
+     *
+     * @param privateKey Private key from corresponding public key that was used during
+     * {@link Pure#encrypt}, {@link Pure#share} on present in externalPublicKeys.
+     * @param ownerUserId Owner userId, pass null if PureGrant belongs to.
+     * @param dataId Data Id that was used during encryption.
+     * @param cipherText Cipher text.
+     *
+     * @return Plain text.
+     *
      * @throws CryptoException FIXME
      */
     public byte[] decrypt(VirgilPrivateKey privateKey, String ownerUserId, String dataId, byte[] cipherText) throws Exception {
-        if (privateKey == null) {
-            throw new NullPointerException();
-        }
-        if (dataId == null || dataId.isEmpty()) {
-            throw new NullPointerException();
-        }
-        if (ownerUserId == null || ownerUserId.isEmpty()) {
-            throw new NullPointerException();
-        }
+        ValidateUtils.checkNull(new HashMap<Object, String>() {{
+            put(privateKey, "privateKey");
+        }});
+        ValidateUtils.checkNullOrEmpty(new HashMap<String, String>() {{
+            put(dataId, "dataId");
+            put(ownerUserId, "ownerUserId");
+        }});
 
         CellKey cellKey = this.storage.selectKey(ownerUserId, dataId);
 
@@ -635,53 +613,51 @@ public class Pure {
 
         VirgilKeyPair ckp = this.crypto.importPrivateKey(csk);
 
-        return this.crypto.decrypt(cipherText, ckp.getPrivateKey());
+        return crypto.decrypt(cipherText, ckp.getPrivateKey());
     }
 
     /**
-     * Gives possibility to decrypt data to other user that is not data owner.
-     * Shared data can then be decrypted using other user's PureGrant
-     * @param grant PureGrant of data owner
-     * @param dataId dataId
-     * @param otherUserId userId of user to whom access is given
+     * Gives possibility to decrypt data to other user that is not data owner. Shared data can then
+     * be decrypted using other user's PureGrant.
+     *
+     * @param grant PureGrant of data owner.
+     * @param dataId Data Id.
+     * @param otherUserId User Id of user to whom access is given.
+     *
      * @throws CryptoException FIXME
      */
     public void share(PureGrant grant, String dataId, String otherUserId) throws Exception {
-        if (grant == null) {
-            throw new NullPointerException();
-        }
-        if (dataId == null || dataId.isEmpty()) {
-            throw new NullPointerException();
-        }
-        if (otherUserId == null || otherUserId.isEmpty()) {
-            throw new NullPointerException();
-        }
+        ValidateUtils.checkNull(new HashMap<Object, String>() {{
+            put(grant, "grant");
+        }});
+        ValidateUtils.checkNullOrEmpty(new HashMap<String, String>() {{
+            put(dataId, "dataId");
+            put(otherUserId, "otherUserId");
+        }});
 
-        this.share(grant, dataId, Collections.singletonList(otherUserId), Collections.emptyList());
+        share(grant, dataId, Collections.singletonList(otherUserId), Collections.emptyList());
     }
 
     /**
      * Gives possibility to decrypt data to other user that is not data owner.
-     * Shared data can then be decrypted using other user's PureGrant
-     * @param grant PureGrant of data owner
-     * @param dataId dataId
-     * @param otherUserIds other user ids
-     * @param publicKeys public keys to share data with
+     * Shared data can then be decrypted using other user's PureGrant.
+     *
+     * @param grant PureGrant of data owner.
+     * @param dataId Data Id.
+     * @param otherUserIds Other user Ids.
+     * @param publicKeys Public keys to share data with.
+     *
      * @throws CryptoException FIXME
      */
     public void share(PureGrant grant, String dataId, Collection<String> otherUserIds, Collection<VirgilPublicKey> publicKeys) throws Exception {
-        if (grant == null) {
-            throw new NullPointerException();
-        }
-        if (dataId == null || dataId.isEmpty()) {
-            throw new NullPointerException();
-        }
-        if (otherUserIds == null) {
-            throw new NullPointerException();
-        }
-        if (publicKeys == null) {
-            throw new NullPointerException();
-        }
+        ValidateUtils.checkNull(new HashMap<Object, String>() {{
+            put(grant, "grant");
+            put(otherUserIds, "otherUserIds");
+            put(publicKeys, "publicKeys");
+        }});
+        ValidateUtils.checkNullOrEmpty(new HashMap<String, String>() {{
+            put(dataId, "dataId");
+        }});
 
         ArrayList<VirgilPublicKey> keys = new ArrayList<>(publicKeys);
 
@@ -697,7 +673,11 @@ public class Pure {
 
         byte[] encryptedCskCms = this.pureCrypto.addRecipients(cellKey.getEncryptedCskCms(), grant.getUkp().getPrivateKey(), keys);
 
-        this.storage.updateKey(grant.getUserId(), dataId, new CellKey(cellKey.getCpk(), encryptedCskCms, cellKey.getEncryptedCskBody()));
+        storage.updateKey(grant.getUserId(),
+                          dataId,
+                          new CellKey(cellKey.getCpk(),
+                                      encryptedCskCms,
+                                      cellKey.getEncryptedCskBody()));
     }
 
     /**
@@ -705,20 +685,23 @@ public class Pure {
      * It won't be possible to decrypt such data other user's PureGrant.
      * Note, that even if further decrypt calls will not succeed for other user,
      * he could have made a copy of decrypted data before that call.
-     * @param ownerUserId data owner userId
-     * @param dataId dataId
-     * @param otherUserId userId of user to whom access is taken away
+     *
+     * @param ownerUserId Data owner user Id.
+     * @param dataId DataId.
+     * @param otherUserId User Id of user to whom access is taken away.
+     *
      * @throws CryptoException FIXME
      */
     public void unshare(String ownerUserId, String dataId, String otherUserId) throws Exception {
-        if (dataId == null || dataId.isEmpty()) {
-            throw new NullPointerException();
-        }
-        if (otherUserId == null || otherUserId.isEmpty()) {
-            throw new NullPointerException();
-        }
+        ValidateUtils.checkNullOrEmpty(new HashMap<String, String>() {{
+            put(dataId, "dataId");
+            put(otherUserId, "otherUserId");
+        }});
 
-        this.unshare(ownerUserId, dataId, Collections.singletonList(otherUserId), Collections.emptyList());
+        unshare(ownerUserId,
+                dataId,
+                Collections.singletonList(otherUserId),
+                Collections.emptyList());
     }
 
     /**
@@ -726,22 +709,23 @@ public class Pure {
      * It won't be possible to decrypt such data other user's PureGrant.
      * Note, that even if further decrypt calls will not succeed for other user,
      * he could have made a copy of decrypted data before that call.
-     * @param ownerUserId data owner userId
-     * @param dataId dataId
-     * @param otherUserIds other user ids that are being removed from share list
-     * @param publicKeys public keys that are being removed from share list
+     *
+     * @param ownerUserId Data owner user Id.
+     * @param dataId DataId.
+     * @param otherUserIds Other user ids that are being removed from share list.
+     * @param publicKeys Public keys that are being removed from share list.
+     *
      * @throws CryptoException FIXME
      */
     public void unshare(String ownerUserId, String dataId, Collection<String> otherUserIds, Collection<VirgilPublicKey> publicKeys) throws Exception {
-        if (dataId == null || dataId.isEmpty()) {
-            throw new NullPointerException();
-        }
-        if (otherUserIds == null) {
-            throw new NullPointerException();
-        }
-        if (publicKeys == null) {
-            throw new NullPointerException();
-        }
+        ValidateUtils.checkNull(new HashMap<Object, String>() {{ // FIXME are we ok with ownerUserId null/empty?
+            put(otherUserIds, "otherUserIds");
+            put(publicKeys, "publicKeys");
+        }});
+        ValidateUtils.checkNullOrEmpty(new HashMap<String, String>() {{
+            put(dataId, "dataId");
+        }});
+
 
         ArrayList<VirgilPublicKey> keys = new ArrayList<>(publicKeys);
 
@@ -761,12 +745,130 @@ public class Pure {
     }
 
     /**
-     * Deletes cell key with given userId and dataId
-     * @param userId userId
-     * @param dataId dataId
+     * Deletes cell key with given user Id and data Id.
+     *
+     * @param userId User Id.
+     * @param dataId Data Id.
+     *
      * @throws Exception FIXME
      */
     public void deleteKey(String userId, String dataId) throws Exception {
         this.storage.deleteKey(userId, dataId);
+    }
+
+    private void registerUser(String userId, String password, boolean isUserNew)
+        throws ProtocolException, ProtocolHttpException, EncryptionException, SigningException {
+
+        ValidateUtils.checkNullOrEmpty(new HashMap<String, String>() {{
+            put(userId, "userId");
+            put(password, "password");
+        }});
+
+        PurekitProtos.EnrollmentRequest request = PurekitProtos.EnrollmentRequest
+            .newBuilder()
+            .setVersion(this.currentVersion)
+            .build();
+        PurekitProtos.EnrollmentResponse response = pheClient.enrollAccount(request);
+
+        byte[] passwordHash = crypto.computeHash(password.getBytes(), HashAlgorithm.SHA512);
+
+        byte[] encryptedPwdHash = crypto.encrypt(passwordHash, Collections.singletonList(this.hpk));
+
+        PheClientEnrollAccountResult result = currentClient.enrollAccount(
+            response.getResponse().toByteArray(),
+            passwordHash
+        );
+
+        VirgilKeyPair ukp;
+        try {
+            ukp = crypto.generateKeyPair();
+        } catch (CryptoException exception) {
+            throw new IllegalStateException("Exception while generating key pair. This should not"
+                                                + " happen. Please, contact developer. ",
+                                            exception);
+        }
+
+        byte[] uskData;
+        try {
+            uskData = crypto.exportPrivateKey(ukp.getPrivateKey());
+        } catch (CryptoException exception) {
+            throw new IllegalStateException("Exception while exporting key . This should not"
+                                                + " happen. Please, contact developer. ",
+                                            exception);
+        }
+
+        byte[] encryptedUsk = cipher.encrypt(uskData, result.getAccountKey());
+
+        byte[] encryptedUskBackup = crypto.encrypt(uskData, Collections.singletonList(this.buppk));
+
+        byte[] publicKey;
+        try {
+            publicKey = crypto.exportPublicKey(ukp.getPublicKey());
+        } catch (CryptoException exception) {
+            throw new IllegalStateException("Exception while exporting key . This should not"
+                                                + " happen. Please, contact developer. ",
+                                            exception);
+        }
+
+        UserRecord userRecord = new UserRecord(userId,
+                                               result.getEnrollmentRecord(),
+                                               this.currentVersion,
+                                               publicKey,
+                                               encryptedUsk,
+                                               encryptedUskBackup,
+                                               encryptedPwdHash);
+
+        if (isUserNew) {
+            storage.insertUser(userRecord);
+        } else {
+            storage.updateUser(userRecord);
+        }
+    }
+
+    private PheClient getClient(int pheVersion) throws NullPointerException {
+        if (this.currentVersion == pheVersion) {
+            return this.currentClient;
+        } else if (this.currentVersion == pheVersion + 1) {
+            return this.previousClient;
+        } else {
+            throw new NullPointerException();
+        }
+    }
+
+    private void changeUserPassword(UserRecord userRecord,
+                                    byte[] privateKeyData,
+                                    String newPassword) throws ProtocolException, ProtocolHttpException, Exception {
+
+        ValidateUtils.checkNullOrEmpty(new HashMap<String, String>() {{
+            put(newPassword, "newPassword");
+        }});
+
+        byte[] newPasswordHash = crypto.computeHash(newPassword.getBytes(),
+                                                    HashAlgorithm.SHA512);
+
+        PurekitProtos.EnrollmentRequest enrollRequest = PurekitProtos.EnrollmentRequest
+            .newBuilder()
+            .setVersion(this.currentVersion)
+            .build();
+        PurekitProtos.EnrollmentResponse enrollResponse = pheClient.enrollAccount(enrollRequest);
+
+        PheClientEnrollAccountResult enrollResult =
+            currentClient.enrollAccount(enrollResponse.getResponse().toByteArray(),
+                                        newPasswordHash);
+
+        byte[] newEncryptedUsk = cipher.encrypt(privateKeyData, enrollResult.getAccountKey());
+
+        byte[] encryptedPwdHash = crypto.encrypt(newPasswordHash,
+                                                 Collections.singletonList(this.hpk));
+
+        UserRecord newUserRecord = new UserRecord(userRecord.getUserId(),
+                                                  enrollResult.getEnrollmentRecord(),
+                                                  this.currentVersion,
+                                                  userRecord.getUpk(),
+                                                  newEncryptedUsk,
+                                                  userRecord.getEncryptedUskBackup(),
+                                                  encryptedPwdHash);
+
+        storage.updateUser(newUserRecord);
     }
 }
