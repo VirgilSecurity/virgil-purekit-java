@@ -316,7 +316,7 @@ class HttpClientProtobuf {
     private fun MutableMap<String, String>.addTokenHeader(authToken: String): MutableMap<String, String> =
             this.put(APP_TOKEN_KEY, authToken).let { this }
 
-    // FIXME: This should be moved to HttpPureClient
+    // FIXME: This should be moved to HttpPureClient -> Why?
     companion object {
         private const val SERVICE_VERSION = "v1"
         private const val PURE_SERVICE_BASE_URL = "https://api.passw0rd.io/phe/$SERVICE_VERSION"

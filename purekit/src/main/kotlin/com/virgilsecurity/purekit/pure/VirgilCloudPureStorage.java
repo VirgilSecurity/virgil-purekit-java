@@ -93,21 +93,21 @@ public class VirgilCloudPureStorage implements PureStorage {
 
     @Override
     public void insertUser(UserRecord userRecord)
-        throws ProtocolException, ProtocolHttpException, SigningException {
+        throws ProtocolException, ProtocolHttpException {
 
         sendUser(userRecord, true);
     }
 
     @Override
     public void updateUser(UserRecord userRecord)
-        throws ProtocolException, ProtocolHttpException, SigningException {
+        throws ProtocolException, ProtocolHttpException {
 
         sendUser(userRecord, false);
     }
 
     @Override
     public UserRecord selectUser(String userId)
-        throws PureException, ProtocolException, ProtocolHttpException, VerificationException {
+        throws PureException, ProtocolException, ProtocolHttpException {
 
         PurekitProtosV3Storage.UserRecord protobufRecord;
 
@@ -133,8 +133,8 @@ public class VirgilCloudPureStorage implements PureStorage {
     }
 
     @Override
-    public Collection<UserRecord> selectUsers(Collection<String> userIds) // FIXME maybe just use Set instead of Collection?
-        throws PureException, ProtocolException, ProtocolHttpException, VerificationException {
+    public Collection<UserRecord> selectUsers(Collection<String> userIds) // FIXME maybe just use Set instead of Collection? so we can avoid DUPLICATE_USER_ID
+        throws PureException, ProtocolException, ProtocolHttpException {
 
         HashSet<String> idsSet = new HashSet<>(userIds);
 
@@ -183,7 +183,7 @@ public class VirgilCloudPureStorage implements PureStorage {
 
     @Override
     public CellKey selectKey(String userId, String dataId)
-        throws PureException, ProtocolException, ProtocolHttpException, VerificationException {
+        throws PureException, ProtocolException, ProtocolHttpException {
 
         PurekitProtosV3Storage.CellKey protobufRecord;
         try {
@@ -198,10 +198,17 @@ public class VirgilCloudPureStorage implements PureStorage {
             throw exception;
         }
 
-        boolean verified = crypto.verifySignature(protobufRecord.getSignature().toByteArray(),
-                                                  protobufRecord.getCellKeySigned()
-                                                                .toByteArray(),
-                                                  this.signingKey.getPublicKey());
+        boolean verified;
+        try {
+            verified = crypto.verifySignature(
+                protobufRecord.getSignature().toByteArray(),
+                protobufRecord.getCellKeySigned().toByteArray(),
+                this.signingKey.getPublicKey()
+            );
+        } catch (VerificationException exception) {
+            throw new IllegalStateException("This should not happen. Please, contact developer.",
+                                            exception);
+        }
 
         if (!verified) {
             throw new PureException(
@@ -231,14 +238,14 @@ public class VirgilCloudPureStorage implements PureStorage {
 
     @Override
     public void insertKey(String userId, String dataId, CellKey cellKey)
-        throws PureException, ProtocolException, ProtocolHttpException, SigningException {
+        throws PureException, ProtocolException, ProtocolHttpException {
 
         insertKey(userId, dataId, cellKey, true);
     }
 
     @Override
     public void updateKey(String userId, String dataId, CellKey cellKey)
-        throws PureException, ProtocolException, ProtocolHttpException, SigningException {
+        throws PureException, ProtocolException, ProtocolHttpException {
 
         insertKey(userId, dataId, cellKey, false);
     }
@@ -251,7 +258,7 @@ public class VirgilCloudPureStorage implements PureStorage {
     }
 
     private void sendUser(UserRecord userRecord, boolean isInsert)
-        throws ProtocolException, ProtocolHttpException, SigningException {
+        throws ProtocolException, ProtocolHttpException {
 
         PurekitProtosV3Crypto.EnrollmentRecord enrollmentRecord;
         try {
@@ -275,8 +282,14 @@ public class VirgilCloudPureStorage implements PureStorage {
             .build()
             .toByteArray();
 
-        byte[] signature = crypto.generateSignature(userRecordSigned,
-                                                    this.signingKey.getPrivateKey());
+        byte[] signature;
+        try {
+            signature = crypto.generateSignature(userRecordSigned,
+                                                 this.signingKey.getPrivateKey());
+        } catch (SigningException exception) {
+            throw new IllegalStateException("This should not happen. Please, contact developer.",
+                                            exception);
+        }
 
         PurekitProtosV3Storage.UserRecord protobufRecord = PurekitProtosV3Storage.UserRecord
             .newBuilder()
@@ -296,7 +309,7 @@ public class VirgilCloudPureStorage implements PureStorage {
     }
 
     private void insertKey(String userId, String dataId, CellKey cellKey, boolean isInsert)
-        throws PureException, ProtocolException, ProtocolHttpException, SigningException {
+        throws PureException, ProtocolException, ProtocolHttpException {
 
         byte[] cellKeySigned = PurekitProtosV3Storage.CellKeySigned
             .newBuilder()
@@ -309,7 +322,13 @@ public class VirgilCloudPureStorage implements PureStorage {
             .build()
             .toByteArray();
 
-        byte[] signature = crypto.generateSignature(cellKeySigned, this.signingKey.getPrivateKey());
+        byte[] signature;
+        try {
+            signature = crypto.generateSignature(cellKeySigned, this.signingKey.getPrivateKey());
+        } catch (SigningException exception) {
+            throw new IllegalStateException("This should not happen. Please, contact developer.",
+                                            exception);
+        }
 
         PurekitProtosV3Storage.CellKey protobufRecord = PurekitProtosV3Storage.CellKey
             .newBuilder()
@@ -342,12 +361,18 @@ public class VirgilCloudPureStorage implements PureStorage {
     }
 
     private UserRecord parse(PurekitProtosV3Storage.UserRecord protobufRecord)
-        throws PureException, VerificationException {
+        throws PureException {
 
-        boolean verified = crypto.verifySignature(protobufRecord.getSignature().toByteArray(),
-                                                  protobufRecord.getUserRecordSigned()
-                                                                .toByteArray(),
-                                                  this.signingKey.getPublicKey());
+        boolean verified;
+        try {
+            verified = crypto.verifySignature(protobufRecord.getSignature().toByteArray(),
+                                              protobufRecord.getUserRecordSigned()
+                                                            .toByteArray(),
+                                              this.signingKey.getPublicKey());
+        } catch (VerificationException exception) {
+            throw new IllegalStateException("This should not happen. Please, contact developer.",
+                                            exception);
+        }
 
         if (!verified) {
             throw new PureException(

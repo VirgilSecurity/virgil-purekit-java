@@ -61,7 +61,7 @@ class PureTestJava {
         }
 
         @Override
-        public Iterable<UserRecord> selectUsers(Collection<String> userIds) throws Exception {
+        public Collection<UserRecord> selectUsers(Collection<String> userIds) {
             ArrayList<UserRecord> userRecords = new ArrayList<>(userIds.size());
 
             for (String userId: userIds) {
@@ -82,7 +82,7 @@ class PureTestJava {
         }
 
         @Override
-        public Iterable<UserRecord> selectUsers(int pheRecordVersion) {
+        public Collection<UserRecord> selectUsers(int pheRecordVersion) {
             Collection<UserRecord> records = this.users.values();
             records.removeIf(isNotVersion(pheRecordVersion));
 
@@ -94,7 +94,7 @@ class PureTestJava {
         }
 
         @Override
-        public void deleteUser(String userId, boolean cascade) throws Exception {
+        public void deleteUser(String userId, boolean cascade) {
             if (this.users.remove(userId) == null) {
                 throw new NullPointerException();
             }
@@ -105,7 +105,7 @@ class PureTestJava {
         }
 
         @Override
-        public CellKey selectKey(String userId, String dataId) throws PureException {
+        public CellKey selectKey(String userId, String dataId) {
             HashMap<String, CellKey> map = this.keys.get(userId);
 
             if (map == null) {
@@ -127,18 +127,18 @@ class PureTestJava {
         }
 
         @Override
-        public void updateKey(String userId, String dataId, CellKey cellKey) throws Exception {
+        public void updateKey(String userId, String dataId, CellKey cellKey) throws PureException {
             HashMap<String, CellKey> map = this.keys.get(userId);
 
             if (!map.containsKey(dataId)) {
-                throw new Exception();
+                throw new PureException(PureException.ErrorStatus.CELL_KEY_ALREADY_EXISTS_IN_STORAGE);
             }
 
             map.put(dataId, cellKey);
         }
 
         @Override
-        public void deleteKey(String userId, String dataId) throws Exception {
+        public void deleteKey(String userId, String dataId) {
             HashMap<String, CellKey> keys = this.keys.get(userId);
 
             if (keys == null) {
@@ -837,28 +837,7 @@ class PureTestJava {
         }
     }
 
-  void dsada() {
-    PureSetupResult pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, i == 0 ? new RamStorage() : null);
-    Pure pure = pureResult.getPure();
-
-    String userId = UUID.randomUUID().toString();
-    String password = UUID.randomUUID().toString();
-    String dataId = UUID.randomUUID().toString();
-
-    byte[] text = UUID.randomUUID().toString().getBytes();
-
-    pure.registerUser(userId, password);
-
-    byte[] cipherText = pure.encrypt(userId, dataId, text);
-
-    AuthResult authResult1 = pure.authenticateUser(userId, password);
-
-    pure.deleteKey(userId, dataId);
-
-    pure.decrypt(authResult1.getGrant(), null, dataId, cipherText);
-  }
-
-    // TODO: Test hashes encryption
+    // TODO: Test hashes encryption -> ????
 
     private static Stream<Arguments> testArgumentsNoToken() {
         return Stream.of(

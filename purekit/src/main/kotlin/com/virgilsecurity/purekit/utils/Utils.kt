@@ -51,7 +51,7 @@ fun requires(value: Boolean, argumentName: String) {
  * @throws IllegalArgumentException
  */
 @Throws(IllegalArgumentException::class)
-fun String.parseVersionAndContent(prefix: String, name: String): Pair<Int, ByteArray> {
+fun String.parseVersionAndContent(prefix: String, name: String): kotlin.Pair<Int, ByteArray> {
     val parsedParts = split('.')
     require(parsedParts.size == 3) {
         "Provided '$name' has wrong parts count. Should be '3'. Actual is '{${parsedParts.size}}'."
@@ -75,7 +75,7 @@ fun String.parseVersionAndContent(prefix: String, name: String): Pair<Int, ByteA
         throw IllegalArgumentException("$name content can not be parsed.")
     }
 
-    return Pair(version, content)
+    return kotlin.Pair(version, content)
 }
 
 /**

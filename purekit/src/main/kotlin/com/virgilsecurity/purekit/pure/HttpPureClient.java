@@ -204,7 +204,7 @@ public class HttpPureClient {
      */
     public void deleteUser(String userId, boolean cascade) 
         throws ProtocolHttpException, ProtocolException {
-        // TODO: parameters ideally should not be added directly to url string
+        // TODO: parameters ideally should not be added directly to url string -> explain please
 
         if (userId == null) {
             throw new NullArgumentException("userId");
