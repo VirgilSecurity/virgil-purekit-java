@@ -264,7 +264,7 @@ class PureTestJava {
                                                 String pureServerAddress,
                                                 String appToken,
                                                 String publicKey,
-                                                String secretKey) throws InterruptedException, ProtocolException {
+                                                String secretKey) throws InterruptedException {
         ThreadUtils.pause();
 
         try {
@@ -279,7 +279,7 @@ class PureTestJava {
                 pure.registerUser(userId, password);
             }
         }
-        catch (Exception | ProtocolHttpException e) {
+        catch (Exception | ProtocolException | ProtocolHttpException e) {
             fail(e);
         }
     }
@@ -289,7 +289,7 @@ class PureTestJava {
                                                   String pureServerAddress,
                                                   String appToken,
                                                   String publicKey,
-                                                  String secretKey) throws InterruptedException, ProtocolException {
+                                                  String secretKey) throws InterruptedException {
         ThreadUtils.pause();
 
         try {
@@ -316,7 +316,7 @@ class PureTestJava {
                 assertNotNull(grant.getCreationDate());
             }
         }
-        catch (Exception | ProtocolHttpException e) {
+        catch (Exception | ProtocolException | ProtocolHttpException e) {
             fail(e);
         }
     }
@@ -326,7 +326,7 @@ class PureTestJava {
                                                String pureServerAddress,
                                                String appToken,
                                                String publicKey,
-                                               String secretKey) throws InterruptedException, ProtocolException {
+                                               String secretKey) throws InterruptedException {
         ThreadUtils.pause();
 
         try {
@@ -351,7 +351,7 @@ class PureTestJava {
                 assertArrayEquals(text, plainText);
             }
         }
-        catch (Exception | ProtocolHttpException e) {
+        catch (Exception | ProtocolException | ProtocolHttpException e) {
             fail(e);
         }
     }
@@ -361,7 +361,7 @@ class PureTestJava {
                                           String pureServerAddress,
                                           String appToken,
                                           String publicKey,
-                                          String secretKey) throws InterruptedException, ProtocolException {
+                                          String secretKey) throws InterruptedException {
         ThreadUtils.pause();
 
         try {
@@ -394,7 +394,7 @@ class PureTestJava {
                 assertArrayEquals(text, plainText2);
             }
         }
-        catch (Exception | ProtocolHttpException e) {
+        catch (Exception | ProtocolException | ProtocolHttpException e) {
             fail(e);
         }
     }
@@ -404,7 +404,7 @@ class PureTestJava {
                                                     String pureServerAddress,
                                                     String appToken,
                                                     String publicKey,
-                                                    String secretKey) throws InterruptedException, ProtocolException {
+                                                    String secretKey) throws InterruptedException {
         ThreadUtils.pause();
 
         try {
@@ -438,7 +438,7 @@ class PureTestJava {
                 assertEquals(e.getStatusCode(), ERROR_KEY_RECIPIENT_IS_NOT_FOUND);
             }
         }
-        catch (Exception | ProtocolHttpException e) {
+        catch (Exception | ProtocolException | ProtocolHttpException e) {
             fail(e);
         }
     }
@@ -448,7 +448,7 @@ class PureTestJava {
                                                     String pureServerAddress,
                                                     String appToken,
                                                     String publicKey,
-                                                    String secretKey) throws InterruptedException, ProtocolException {
+                                                    String secretKey) throws InterruptedException {
         ThreadUtils.pause();
 
         try {
@@ -482,7 +482,7 @@ class PureTestJava {
                 assertEquals(e.getStatusCode(), ERROR_AES_FAILED);
             }
         }
-        catch (Exception | ProtocolHttpException e) {
+        catch (Exception | ProtocolException | ProtocolHttpException e) {
             fail(e);
         }
     }
@@ -492,7 +492,7 @@ class PureTestJava {
                                              String pureServerAddress,
                                              String appToken,
                                              String publicKey,
-                                             String secretKey) throws InterruptedException, ProtocolException {
+                                             String secretKey) throws InterruptedException {
         ThreadUtils.pause();
 
         try {
@@ -519,7 +519,7 @@ class PureTestJava {
                 assertArrayEquals(text, plainText);
             }
         }
-        catch (Exception | ProtocolHttpException e) {
+        catch (Exception | ProtocolException | ProtocolHttpException e) {
             fail(e);
         }
     }
@@ -529,7 +529,7 @@ class PureTestJava {
                                                  String pureServerAddress,
                                                  String appToken,
                                                  String publicKey,
-                                                 String secretKey) throws InterruptedException, ProtocolException {
+                                                 String secretKey) throws InterruptedException {
         ThreadUtils.pause();
 
         try {
@@ -561,7 +561,7 @@ class PureTestJava {
                 assertEquals(e.getStatusCode(), ERROR_KEY_RECIPIENT_IS_NOT_FOUND);
             }
         }
-        catch (Exception | ProtocolHttpException e) {
+        catch (Exception | ProtocolException | ProtocolHttpException e) {
             fail(e);
         }
     }
@@ -571,7 +571,7 @@ class PureTestJava {
                                                String pureServerAddress,
                                                String appToken,
                                                String publicKey,
-                                               String secretKey) throws InterruptedException, ProtocolException {
+                                               String secretKey) throws InterruptedException {
         ThreadUtils.pause();
 
         try {
@@ -603,7 +603,7 @@ class PureTestJava {
                 assertArrayEquals(text, plainText);
             }
         }
-        catch (Exception | ProtocolHttpException e) {
+        catch (Exception | ProtocolException | ProtocolHttpException e) {
             fail(e);
         }
     }
@@ -614,7 +614,7 @@ class PureTestJava {
                                                 String appToken,
                                                 String publicKey,
                                                 String secretKey,
-                                                String updateToken) throws InterruptedException, ProtocolException {
+                                                String updateToken) throws InterruptedException {
         ThreadUtils.pause();
 
         try {
@@ -639,7 +639,7 @@ class PureTestJava {
 
             assertEquals(total, rotated);
         }
-        catch (Exception | ProtocolHttpException e) {
+        catch (Exception | ProtocolException | ProtocolHttpException e) {
             fail(e);
         }
     }
@@ -649,7 +649,7 @@ class PureTestJava {
                                                      String pureServerAddress,
                                                      String appToken,
                                                      String publicKey,
-                                                     String secretKey) throws InterruptedException, ProtocolException {
+                                                     String secretKey) throws InterruptedException {
         ThreadUtils.pause();
 
         try {
@@ -688,7 +688,7 @@ class PureTestJava {
                 assertArrayEquals(text, plainText);
             }
         }
-        catch (Exception | ProtocolHttpException e) {
+        catch (Exception | ProtocolException | ProtocolHttpException e) {
             fail(e);
         }
     }
@@ -698,7 +698,7 @@ class PureTestJava {
                                                    String pureServerAddress,
                                                    String appToken,
                                                    String publicKey,
-                                                   String secretKey) throws InterruptedException, ProtocolException {
+                                                   String secretKey) throws InterruptedException {
         ThreadUtils.pause();
 
         try {
@@ -727,7 +727,7 @@ class PureTestJava {
                 assertArrayEquals(text, plainText);
             }
         }
-        catch (Exception | ProtocolHttpException e) {
+        catch (Exception | ProtocolException | ProtocolHttpException e) {
             fail(e);
         }
     }
@@ -737,7 +737,7 @@ class PureTestJava {
                                                            String pureServerAddress,
                                                            String appToken,
                                                            String publicKey,
-                                                           String secretKey) throws InterruptedException, ProtocolException {
+                                                           String secretKey) throws InterruptedException {
         ThreadUtils.pause();
 
         try {
@@ -773,7 +773,7 @@ class PureTestJava {
                 assertEquals(PureException.ErrorStatus.CELL_KEY_NOT_FOUND_IN_STORAGE, e2.getErrorStatus());
             }
         }
-        catch (Exception | ProtocolHttpException e) {
+        catch (Exception | ProtocolException | ProtocolHttpException e) {
             fail(e);
         }
     }
@@ -783,7 +783,7 @@ class PureTestJava {
                                                      String pureServerAddress,
                                                      String appToken,
                                                      String publicKey,
-                                                     String secretKey) throws InterruptedException, ProtocolException {
+                                                     String secretKey) throws InterruptedException {
         ThreadUtils.pause();
 
         try {
@@ -817,7 +817,7 @@ class PureTestJava {
                 assertArrayEquals(text, plainText);
             }
         }
-        catch (Exception | ProtocolHttpException e) {
+        catch (Exception | ProtocolException | ProtocolHttpException e) {
             fail(e);
         }
     }
@@ -827,7 +827,7 @@ class PureTestJava {
                                             String pureServerAddress,
                                             String appToken,
                                             String publicKey,
-                                            String secretKey) throws InterruptedException, ProtocolException {
+                                            String secretKey) throws InterruptedException {
         ThreadUtils.pause();
 
         try {
@@ -857,7 +857,7 @@ class PureTestJava {
                 assertEquals(PureException.ErrorStatus.CELL_KEY_NOT_FOUND_IN_STORAGE, e.getErrorStatus());
             }
         }
-        catch (Exception | ProtocolHttpException e) {
+        catch (Exception | ProtocolException | ProtocolHttpException e) {
             fail(e);
         }
     }
