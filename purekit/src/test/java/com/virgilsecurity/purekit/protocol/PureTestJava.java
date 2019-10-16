@@ -862,117 +862,34 @@ class PureTestJava {
         }
     }
 
-    @Test
-    void retrieve_and_decrypt_hash() throws ProtocolHttpException, ProtocolException, CryptoException, PureException {
-        int currentVersion =
-            Integer.parseInt(PropertyManager.getVirgilPublicKeyNew().split(".")[1]);
-        String password = UUID.randomUUID().toString();
-        String userId = UUID.randomUUID().toString();
+    @ParameterizedTest @MethodSource("testArgumentsNoToken")
+    void registration__new_user__backups_pwd_hash(String pheServerAddress,
+                                                  String pureServerAddress,
+                                                  String appToken,
+                                                  String publicKey,
+                                                  String secretKey) throws InterruptedException {
+        ThreadUtils.pause();
 
-        byte[] secretKeyData =
-            PropertyManager.getVirgilSecretKeyNew().split(".")[2].getBytes();
+        try {
+            RamStorage storage = new RamStorage();
+            PureSetupResult pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, storage);
+            Pure pure = pureResult.getPure();
 
-        byte[] publicKeyData =
-            PropertyManager.getVirgilPublicKeyNew().split(".")[2].getBytes();
+            String userId = UUID.randomUUID().toString();
+            String password = UUID.randomUUID().toString();
 
-        HttpPheClient pheClient = new HttpPheClient(PropertyManager.getVirgilAppToken(),
-                                                    PropertyManager.getVirgilPureServerAddress());
+            pure.registerUser(userId, password);
 
-        PheCipher cipher = new PheCipher();
-        cipher.setRandom(this.crypto.getRng());
+            UserRecord record = storage.selectUser(userId);
 
-        PheClient currentClient = new PheClient();
-        currentClient.setOperationRandom(crypto.getRng());
-        currentClient.setRandom(crypto.getRng());
-        currentClient.setKeys(secretKeyData, publicKeyData);
+            byte[] pwdHashDecrypted = pureResult.getCrypto().decrypt(record.getEncryptedPwdHash(), pureResult.getHkp().getPrivateKey());
+            byte[] pwdHash = pureResult.getCrypto().computeHash(password.getBytes());
 
-        VirgilKeyPair signingkp = crypto.generateKeyPair();
-        VirgilKeyPair bupkp = this.crypto.generateKeyPair(KeyType.ED25519);
-        VirgilKeyPair hkp = this.crypto.generateKeyPair(KeyType.ED25519);
-
-        HttpPureClient pureClient =
-            new HttpPureClient(PropertyManager.getVirgilAppToken(),
-                               PropertyManager.getVirgilPureServerAddress());
-        PureStorage storage = new VirgilCloudPureStorage(
-            crypto,
-            pureClient,
-            signingkp
-        );
-
-        PurekitProtos.EnrollmentRequest request = PurekitProtos.EnrollmentRequest
-            .newBuilder()
-            .setVersion(currentVersion)
-            .build();
-        PurekitProtos.EnrollmentResponse response = pheClient.enrollAccount(request);
-
-        byte[] passwordHash = crypto.computeHash(password.getBytes(), HashAlgorithm.SHA512);
-
-        byte[] encryptedPwdHash = crypto.encrypt(passwordHash,
-                                                 Collections.singletonList(hkp.getPublicKey()));
-
-        PheClientEnrollAccountResult result = currentClient.enrollAccount(
-            response.getResponse().toByteArray(),
-            passwordHash
-        );
-
-        VirgilKeyPair ukp = crypto.generateKeyPair();
-
-        byte[] uskData = crypto.exportPrivateKey(ukp.getPrivateKey());
-
-        byte[] encryptedUsk = cipher.encrypt(uskData, result.getAccountKey());
-
-        byte[] encryptedUskBackup;
-        encryptedUskBackup = crypto.encrypt(uskData,
-                                            Collections.singletonList(bupkp.getPublicKey()));
-
-        byte[] publicKey = crypto.exportPublicKey(ukp.getPublicKey());
-
-        UserRecord userRecord = new UserRecord(userId,
-                                               result.getEnrollmentRecord(),
-                                               currentVersion,
-                                               publicKey,
-                                               encryptedUsk,
-                                               encryptedUskBackup,
-                                               encryptedPwdHash);
-
-        storage.insertUser(userRecord);
-
-        UserRecord userRecordSelected = storage.selectUser(userId);
-
-        byte[] phek = computePheKey(userId, password, storage, currentClient, pheClient);
-        byte[] uskDataDecrypted = cipher.decrypt(userRecordSelected.getEncryptedUsk(), phek);
-
-        assertArrayEquals(uskData, uskDataDecrypted);
-    }
-
-    private byte[] computePheKey(String userId, String password, PureStorage storage,
-                                 PheClient client, HttpPheClient httpPheClient)
-        throws ProtocolException, ProtocolHttpException, PureException {
-
-        byte[] passwordHash = this.crypto.computeHash(password.getBytes(), HashAlgorithm.SHA512);
-
-        UserRecord userRecord = storage.selectUser(userId);
-
-        byte[] pheVerifyRequest = client.createVerifyPasswordRequest(passwordHash,
-                                                                     userRecord.getPheRecord());
-
-        PurekitProtos.VerifyPasswordRequest request = PurekitProtos.VerifyPasswordRequest
-            .newBuilder()
-            .setVersion(userRecord.getPheRecordVersion())
-            .setRequest(ByteString.copyFrom(pheVerifyRequest))
-            .build();
-
-        PurekitProtos.VerifyPasswordResponse response = httpPheClient.verifyPassword(request);
-
-        byte[] phek = client.checkResponseAndDecrypt(passwordHash,
-                                                     userRecord.getPheRecord(),
-                                                     response.getResponse().toByteArray());
-
-        if (phek.length == 0) {
-            throw new PureException(PureException.ErrorStatus.INVALID_PASSWORD);
+            assertArrayEquals(pwdHash, pwdHashDecrypted);
         }
-
-        return phek;
+        catch (Exception | ProtocolException | ProtocolHttpException e) {
+            fail(e);
+        }
     }
 
     private static Stream<Arguments> testArgumentsNoToken() {
