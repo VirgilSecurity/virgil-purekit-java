@@ -37,7 +37,7 @@ import java.util.Collection;
 
 import com.virgilsecurity.purekit.data.ProtocolException;
 import com.virgilsecurity.purekit.data.ProtocolHttpException;
-import com.virgilsecurity.purekit.pure.exception.MethodNotImplementedException;
+import com.virgilsecurity.purekit.pure.exception.UnsupportedOperationException;
 import com.virgilsecurity.purekit.pure.exception.PureException;
 import com.virgilsecurity.purekit.pure.model.CellKey;
 import com.virgilsecurity.purekit.pure.model.UserRecord;
@@ -104,20 +104,20 @@ public interface PureStorage {
      * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
      * successfully. Represents a regular HTTP exception with code and message.
      */
-    Collection<UserRecord> selectUsers(Collection<String> userIds)
+    Iterable<UserRecord> selectUsers(Collection<String> userIds)
         throws PureException, ProtocolException, ProtocolHttpException;
 
     /**
-     * This method throws MethodNotImplementedException, as in case of using Virgil Cloud storage,
+     * This method throws UnsupportedOperationException, as in case of using Virgil Cloud storage,
      * rotation happens on Virgil side.
      *
      * @param pheRecordVersion PHE record version.
      *
      * @return always throws NotImplementedException.
      *
-     * @throws MethodNotImplementedException always.
+     * @throws UnsupportedOperationException always.
      */
-    Collection<UserRecord> selectUsers(int pheRecordVersion) throws MethodNotImplementedException;
+    Iterable<UserRecord> selectUsers(int pheRecordVersion) throws UnsupportedOperationException;
 
     /**
      * Deletes user with the given id.

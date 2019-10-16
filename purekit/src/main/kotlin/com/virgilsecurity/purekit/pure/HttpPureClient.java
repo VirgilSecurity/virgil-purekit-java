@@ -35,13 +35,15 @@ package com.virgilsecurity.purekit.pure;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map;
 
+import com.virgilsecurity.purekit.client.AvailableRequests;
 import com.virgilsecurity.purekit.client.HttpClientProtobuf;
 import com.virgilsecurity.purekit.data.ProtocolException;
 import com.virgilsecurity.purekit.data.ProtocolHttpException;
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage;
+import com.virgilsecurity.purekit.utils.ValidateUtils;
 import com.virgilsecurity.sdk.exception.EmptyArgumentException;
-import com.virgilsecurity.sdk.exception.NullArgumentException;
 
 /**
  * Class for http interactions with Pure service
@@ -52,6 +54,7 @@ public class HttpPureClient {
     private final HttpClientProtobuf client;
 
     public static final String SERVICE_ADDRESS = "https://api.virgilsecurity.com/pure/v1";
+    public static final String KEY_CASCADE = "cascade";
 
     /**
      * Instantiates HttpPureClient.
@@ -60,18 +63,8 @@ public class HttpPureClient {
      * @param serviceAddress Service url.
      */
     public HttpPureClient(String appToken, String serviceAddress) {
-        if (appToken == null) {
-            throw new NullArgumentException("appToken");
-        }
-        if (appToken.isEmpty()) {
-            throw new EmptyArgumentException("appToken");
-        }
-        if (serviceAddress == null) {
-            throw new NullArgumentException("SERVICE_ADDRESS");
-        }
-        if (serviceAddress.isEmpty()) {
-            throw new EmptyArgumentException("SERVICE_ADDRESS");
-        }
+        ValidateUtils.checkNullOrEmpty(appToken, "appToken");
+        ValidateUtils.checkNullOrEmpty(serviceAddress, "appToken");
 
         this.appToken = appToken;
         this.client = new HttpClientProtobuf(serviceAddress);
@@ -91,10 +84,9 @@ public class HttpPureClient {
         throws ProtocolHttpException, ProtocolException {
         
         client.firePost(
-                userRecord,
-                HttpClientProtobuf.AvailableRequests.INSERT_USER.getType(),
-                new HashMap<>(),
-                this.appToken
+            userRecord,
+            AvailableRequests.INSERT_USER.getType(),
+            this.appToken
         );
     }
 
@@ -112,18 +104,12 @@ public class HttpPureClient {
     public void updateUser(String userId, PurekitProtosV3Storage.UserRecord userRecord) 
         throws ProtocolHttpException, ProtocolException {
         
-        if (userId == null) {
-            throw new NullArgumentException("userId");
-        }
-        if (userId.isEmpty()) {
-            throw new EmptyArgumentException("userId");
-        }
+        ValidateUtils.checkNullOrEmpty(userId, "userId");
 
         client.firePut(
-                userRecord,
-                String.format(HttpClientProtobuf.AvailableRequests.UPDATE_USER.getType(), userId),
-                new HashMap<>(),
-                this.appToken
+            userRecord,
+            String.format(AvailableRequests.UPDATE_USER.getType(), userId),
+            this.appToken
         );
     }
 
@@ -142,16 +128,10 @@ public class HttpPureClient {
     public PurekitProtosV3Storage.UserRecord getUser(String userId) 
         throws ProtocolHttpException, ProtocolException {
 
-        if (userId == null) {
-            throw new NullArgumentException("userId");
-        }
-        if (userId.isEmpty()) {
-            throw new EmptyArgumentException("userId");
-        }
-        
+        ValidateUtils.checkNullOrEmpty(userId, "userId");
+
         return client.fireGet(
-                String.format(HttpClientProtobuf.AvailableRequests.GET_USER.getType(), userId),
-                new HashMap<>(),
+                String.format(AvailableRequests.GET_USER.getType(), userId),
                 this.appToken,
                 PurekitProtosV3Storage.UserRecord.parser()
         );
@@ -172,22 +152,19 @@ public class HttpPureClient {
     public PurekitProtosV3Storage.UserRecords getUsers(Collection<String> userIds) 
         throws ProtocolHttpException, ProtocolException {
 
-        if (userIds == null) {
-            throw new NullArgumentException("userIds");
+        ValidateUtils.checkNull(userIds, "userIds");
+        if (userIds.isEmpty()) {
+            throw new EmptyArgumentException("userIds");
         }
-//        if (userIds.isEmpty()) { // FIXME can we pass empty userIds?
-//            throw new EmptyArgumentException("userIds");
-//        }
-        
+
         PurekitProtosV3Storage.GetUserRecords getUserRecords = 
             PurekitProtosV3Storage.GetUserRecords.newBuilder().addAllUserIds(userIds).build();
 
         return client.firePost(
-                getUserRecords,
-                HttpClientProtobuf.AvailableRequests.GET_USERS.getType(),
-                new HashMap<>(),
-                this.appToken,
-                PurekitProtosV3Storage.UserRecords.parser()
+            getUserRecords,
+            AvailableRequests.GET_USERS.getType(),
+            this.appToken,
+            PurekitProtosV3Storage.UserRecords.parser()
         );
     }
 
@@ -204,21 +181,16 @@ public class HttpPureClient {
      */
     public void deleteUser(String userId, boolean cascade) 
         throws ProtocolHttpException, ProtocolException {
-        // TODO: parameters ideally should not be added directly to url string -> explain please
 
-        if (userId == null) {
-            throw new NullArgumentException("userId");
-        }
-        if (userId.isEmpty()) {
-            throw new EmptyArgumentException("userId");
-        }
+        ValidateUtils.checkNullOrEmpty(userId, "userId");
+
+        Map<String, String> params = new HashMap<>();
+        params.put(KEY_CASCADE, String.valueOf(cascade));
 
         client.fireDelete(
-                String.format(HttpClientProtobuf.AvailableRequests.DELETE_USER.getType(), 
-                              userId, 
-                              String.valueOf(cascade)),
-                new HashMap<>(),
-                this.appToken
+            params,
+            String.format(AvailableRequests.DELETE_USER.getType(), userId),
+            this.appToken
         );
     }
 
@@ -236,10 +208,9 @@ public class HttpPureClient {
         throws ProtocolHttpException, ProtocolException {
         
         client.firePost(
-                cellKey,
-                HttpClientProtobuf.AvailableRequests.INSERT_CELL_KEY.getType(),
-                new HashMap<>(),
-                this.appToken
+            cellKey,
+            AvailableRequests.INSERT_CELL_KEY.getType(),
+            this.appToken
         );
     }
 
@@ -258,15 +229,13 @@ public class HttpPureClient {
     public void updateCellKey(String userId, String dataId, PurekitProtosV3Storage.CellKey cellKey) 
         throws ProtocolHttpException, ProtocolException {
 
-        validateUserAndData(userId, dataId);
+        ValidateUtils.checkNullOrEmpty(userId, "userId");
+        ValidateUtils.checkNullOrEmpty(dataId, "dataId");
 
         client.firePut(
-                cellKey,
-                String.format(HttpClientProtobuf.AvailableRequests.UPDATE_CELL_KEY.getType(), 
-                              userId, 
-                              dataId),
-                new HashMap<>(),
-                this.appToken
+            cellKey,
+            String.format(AvailableRequests.UPDATE_CELL_KEY.getType(), userId, dataId),
+            this.appToken
         );
     }
 
@@ -286,13 +255,13 @@ public class HttpPureClient {
     public PurekitProtosV3Storage.CellKey getCellKey(String userId, String dataId)
         throws ProtocolHttpException, ProtocolException {
 
-        validateUserAndData(userId, dataId);
+        ValidateUtils.checkNullOrEmpty(userId, "userId");
+        ValidateUtils.checkNullOrEmpty(dataId, "dataId");
 
         return client.fireGet(
-                String.format(HttpClientProtobuf.AvailableRequests.GET_CELL_KEY.getType(), userId, dataId),
-                new HashMap<>(),
-                this.appToken,
-                PurekitProtosV3Storage.CellKey.parser()
+            String.format(AvailableRequests.GET_CELL_KEY.getType(), userId, dataId),
+            this.appToken,
+            PurekitProtosV3Storage.CellKey.parser()
         );
     }
 
@@ -310,35 +279,12 @@ public class HttpPureClient {
     public void deleteCellKey(String userId, String dataId)
         throws ProtocolHttpException, ProtocolException {
 
-        validateUserAndData(userId, dataId);
+        ValidateUtils.checkNullOrEmpty(userId, "userId");
+        ValidateUtils.checkNullOrEmpty(dataId, "dataId");
 
         client.fireDelete(
-                String.format(HttpClientProtobuf.AvailableRequests.DELETE_CELL_KEY.getType(),
-                              userId,
-                              dataId),
-                new HashMap<>(),
-                this.appToken
+            String.format(AvailableRequests.DELETE_CELL_KEY.getType(), userId, dataId),
+            this.appToken
         );
-    }
-
-    /**
-     * Checks whether userId and dataId is null or empty.
-     *
-     * @param userId User Ids.
-     * @param dataId Data Id.
-     */
-    private void validateUserAndData(String userId, String dataId) {
-        if (userId == null) {
-            throw new NullArgumentException("userId");
-        }
-        if (userId.isEmpty()) {
-            throw new EmptyArgumentException("userId");
-        }
-        if (dataId == null) {
-            throw new NullArgumentException("dataId");
-        }
-        if (dataId.isEmpty()) {
-            throw new EmptyArgumentException("dataId");
-        }
     }
 }

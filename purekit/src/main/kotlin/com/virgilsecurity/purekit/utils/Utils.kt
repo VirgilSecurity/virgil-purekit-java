@@ -51,7 +51,7 @@ fun requires(value: Boolean, argumentName: String) {
  * @throws IllegalArgumentException
  */
 @Throws(IllegalArgumentException::class)
-fun String.parseVersionAndContent(prefix: String, name: String): kotlin.Pair<Int, ByteArray> {
+fun String.parseVersionAndContent(prefix: String, name: String): Pair<Int, ByteArray> {
     val parsedParts = split('.')
     require(parsedParts.size == 3) {
         "Provided '$name' has wrong parts count. Should be '3'. Actual is '{${parsedParts.size}}'."
@@ -75,19 +75,12 @@ fun String.parseVersionAndContent(prefix: String, name: String): kotlin.Pair<Int
         throw IllegalArgumentException("$name content can not be parsed.")
     }
 
-    return kotlin.Pair(version, content)
+    return Pair(version, content)
 }
-
-/**
- * This function splits string into 3 parts and returns firs one - prefix.
- */
-fun String.prefix(): String = with(split('.')) { return this[0] }
 
 const val PREFIX_UPDATE_TOKEN = "UT"
 const val PREFIX_SECRET_KEY = "SK"
 const val PREFIX_PUBLIC_KEY = "PK"
-const val PREFIX_VIRGIL_APP_TOKEN = "AT"
-const val PREFIX_PURE_APP_TOKEN = "PT"
 
 const val KEY_UPDATE_TOKEN = "Update Token"
 const val KEY_SECRET_KEY = "Secret Key"

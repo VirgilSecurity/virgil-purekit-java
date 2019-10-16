@@ -31,79 +31,22 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.purekit.pure.model;
-
-import java.util.Date;
-
-import com.virgilsecurity.purekit.utils.ValidateUtils;
-import com.virgilsecurity.sdk.crypto.VirgilKeyPair;
+package com.virgilsecurity.purekit.client
 
 /**
- * PureGrant class.
+ * Enum of available requests
  */
-public class PureGrant {
+enum class AvailableRequests(val type: String) {
+    ENROLL("/enroll"),
+    VERIFY_PASSWORD("/verify-password"),
 
-    private final VirgilKeyPair ukp;
-    private final String userId;
-    private final String sessionId;
-    private final Date creationDate;
-
-    /**
-     * Instantiates PureGrant.
-     *
-     * @param ukp User key pair.
-     * @param userId User Id.
-     * @param sessionId Session Id (optional).
-     * @param creationDate Creation date.
-     */
-    public PureGrant(VirgilKeyPair ukp,
-                     String userId,
-                     String sessionId,
-                     Date creationDate) {
-        ValidateUtils.checkNull(ukp, "ukp");
-        ValidateUtils.checkNull(creationDate, "creationDate");
-
-        ValidateUtils.checkNullOrEmpty(userId, "userId");
-
-        this.ukp = ukp;
-        this.userId = userId;
-        this.sessionId = sessionId;
-        this.creationDate = creationDate;
-    }
-
-    /**
-     * Returns user key pair.
-     *
-     * @return User key pair.
-     */
-    public VirgilKeyPair getUkp() {
-        return ukp;
-    }
-
-    /**
-     * Returns session id.
-     *
-     * @return Session id.
-     */
-    public String getSessionId() {
-        return sessionId;
-    }
-
-    /**
-     * Returns creation date.
-     *
-     * @return Creation date.
-     */
-    public Date getCreationDate() {
-        return creationDate;
-    }
-
-    /**
-     * Returns user id.
-     *
-     * @return User id.
-     */
-    public String getUserId() {
-        return userId;
-    }
+    INSERT_USER("/user"),
+    UPDATE_USER("/user/%s"),
+    GET_USER("/user/%s"),
+    GET_USERS("/get-users"),
+    DELETE_USER("/user/%s"),
+    INSERT_CELL_KEY("/cell-key"),
+    UPDATE_CELL_KEY("/cell-key/%s/%s"),
+    GET_CELL_KEY("/cell-key/%s/%s"),
+    DELETE_CELL_KEY("/cell-key/%s/%s")
 }

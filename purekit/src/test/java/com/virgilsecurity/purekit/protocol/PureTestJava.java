@@ -1,32 +1,57 @@
 package com.virgilsecurity.purekit.protocol;
 
+import static com.virgilsecurity.crypto.foundation.FoundationException.ERROR_KEY_RECIPIENT_IS_NOT_FOUND;
+import static com.virgilsecurity.crypto.phe.PheException.ERROR_AES_FAILED;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
+
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
+
+import com.google.protobuf.ByteString;
 import com.virgilsecurity.crypto.foundation.FoundationException;
+import com.virgilsecurity.crypto.phe.PheCipher;
+import com.virgilsecurity.crypto.phe.PheClient;
+import com.virgilsecurity.crypto.phe.PheClientEnrollAccountResult;
 import com.virgilsecurity.crypto.phe.PheException;
 import com.virgilsecurity.purekit.data.ProtocolException;
 import com.virgilsecurity.purekit.data.ProtocolHttpException;
-import com.virgilsecurity.purekit.pure.*;
-import com.virgilsecurity.purekit.pure.exception.PureException;
+import com.virgilsecurity.purekit.protobuf.build.PurekitProtos;
 import com.virgilsecurity.purekit.pure.AuthResult;
+import com.virgilsecurity.purekit.pure.HttpPheClient;
+import com.virgilsecurity.purekit.pure.HttpPureClient;
+import com.virgilsecurity.purekit.pure.Pure;
+import com.virgilsecurity.purekit.pure.PureContext;
+import com.virgilsecurity.purekit.pure.PureStorage;
+import com.virgilsecurity.purekit.pure.VirgilCloudPureStorage;
+import com.virgilsecurity.purekit.pure.exception.PureException;
 import com.virgilsecurity.purekit.pure.model.CellKey;
 import com.virgilsecurity.purekit.pure.model.PureGrant;
 import com.virgilsecurity.purekit.pure.model.UserRecord;
 import com.virgilsecurity.purekit.utils.PropertyManager;
 import com.virgilsecurity.purekit.utils.ThreadUtils;
+import com.virgilsecurity.sdk.crypto.HashAlgorithm;
 import com.virgilsecurity.sdk.crypto.KeyType;
 import com.virgilsecurity.sdk.crypto.VirgilCrypto;
 import com.virgilsecurity.sdk.crypto.VirgilKeyPair;
 import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
+
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-
-import java.util.*;
-import java.util.function.Predicate;
-import java.util.stream.Stream;
-
-import static com.virgilsecurity.crypto.foundation.FoundationException.ERROR_KEY_RECIPIENT_IS_NOT_FOUND;
-import static com.virgilsecurity.crypto.phe.PheException.ERROR_AES_FAILED;
-import static org.junit.jupiter.api.Assertions.*;
 
 class PureTestJava {
     static class RamStorage implements PureStorage {
@@ -837,26 +862,137 @@ class PureTestJava {
         }
     }
 
-    // TODO: Test hashes encryption -> ????
+    @Test
+    void retrieve_and_decrypt_hash() throws ProtocolHttpException, ProtocolException, CryptoException, PureException {
+        int currentVersion =
+            Integer.parseInt(PropertyManager.getVirgilPublicKeyNew().split(".")[1]);
+        String password = UUID.randomUUID().toString();
+        String userId = UUID.randomUUID().toString();
+
+        byte[] secretKeyData =
+            PropertyManager.getVirgilSecretKeyNew().split(".")[2].getBytes();
+
+        byte[] publicKeyData =
+            PropertyManager.getVirgilPublicKeyNew().split(".")[2].getBytes();
+
+        HttpPheClient pheClient = new HttpPheClient(PropertyManager.getVirgilAppToken(),
+                                                    PropertyManager.getVirgilPureServerAddress());
+
+        PheCipher cipher = new PheCipher();
+        cipher.setRandom(this.crypto.getRng());
+
+        PheClient currentClient = new PheClient();
+        currentClient.setOperationRandom(crypto.getRng());
+        currentClient.setRandom(crypto.getRng());
+        currentClient.setKeys(secretKeyData, publicKeyData);
+
+        VirgilKeyPair signingkp = crypto.generateKeyPair();
+        VirgilKeyPair bupkp = this.crypto.generateKeyPair(KeyType.ED25519);
+        VirgilKeyPair hkp = this.crypto.generateKeyPair(KeyType.ED25519);
+
+        HttpPureClient pureClient =
+            new HttpPureClient(PropertyManager.getVirgilAppToken(),
+                               PropertyManager.getVirgilPureServerAddress());
+        PureStorage storage = new VirgilCloudPureStorage(
+            crypto,
+            pureClient,
+            signingkp
+        );
+
+        PurekitProtos.EnrollmentRequest request = PurekitProtos.EnrollmentRequest
+            .newBuilder()
+            .setVersion(currentVersion)
+            .build();
+        PurekitProtos.EnrollmentResponse response = pheClient.enrollAccount(request);
+
+        byte[] passwordHash = crypto.computeHash(password.getBytes(), HashAlgorithm.SHA512);
+
+        byte[] encryptedPwdHash = crypto.encrypt(passwordHash,
+                                                 Collections.singletonList(hkp.getPublicKey()));
+
+        PheClientEnrollAccountResult result = currentClient.enrollAccount(
+            response.getResponse().toByteArray(),
+            passwordHash
+        );
+
+        VirgilKeyPair ukp = crypto.generateKeyPair();
+
+        byte[] uskData = crypto.exportPrivateKey(ukp.getPrivateKey());
+
+        byte[] encryptedUsk = cipher.encrypt(uskData, result.getAccountKey());
+
+        byte[] encryptedUskBackup;
+        encryptedUskBackup = crypto.encrypt(uskData,
+                                            Collections.singletonList(bupkp.getPublicKey()));
+
+        byte[] publicKey = crypto.exportPublicKey(ukp.getPublicKey());
+
+        UserRecord userRecord = new UserRecord(userId,
+                                               result.getEnrollmentRecord(),
+                                               currentVersion,
+                                               publicKey,
+                                               encryptedUsk,
+                                               encryptedUskBackup,
+                                               encryptedPwdHash);
+
+        storage.insertUser(userRecord);
+
+        UserRecord userRecordSelected = storage.selectUser(userId);
+
+        byte[] phek = computePheKey(userId, password, storage, currentClient, pheClient);
+        byte[] uskDataDecrypted = cipher.decrypt(userRecordSelected.getEncryptedUsk(), phek);
+
+        assertArrayEquals(uskData, uskDataDecrypted);
+    }
+
+    private byte[] computePheKey(String userId, String password, PureStorage storage,
+                                 PheClient client, HttpPheClient httpPheClient)
+        throws ProtocolException, ProtocolHttpException, PureException {
+
+        byte[] passwordHash = this.crypto.computeHash(password.getBytes(), HashAlgorithm.SHA512);
+
+        UserRecord userRecord = storage.selectUser(userId);
+
+        byte[] pheVerifyRequest = client.createVerifyPasswordRequest(passwordHash,
+                                                                     userRecord.getPheRecord());
+
+        PurekitProtos.VerifyPasswordRequest request = PurekitProtos.VerifyPasswordRequest
+            .newBuilder()
+            .setVersion(userRecord.getPheRecordVersion())
+            .setRequest(ByteString.copyFrom(pheVerifyRequest))
+            .build();
+
+        PurekitProtos.VerifyPasswordResponse response = httpPheClient.verifyPassword(request);
+
+        byte[] phek = client.checkResponseAndDecrypt(passwordHash,
+                                                     userRecord.getPheRecord(),
+                                                     response.getResponse().toByteArray());
+
+        if (phek.length == 0) {
+            throw new PureException(PureException.ErrorStatus.INVALID_PASSWORD);
+        }
+
+        return phek;
+    }
 
     private static Stream<Arguments> testArgumentsNoToken() {
         return Stream.of(
-                Arguments.of(PropertyManager.getVirgilPheServerAddress(),
-                        PropertyManager.getVirgilPureServerAddress(),
-                        PropertyManager.getVirgilAppToken(),
-                        PropertyManager.getVirgilPublicKeyNew(),
-                        PropertyManager.getVirgilSecretKeyNew())
+            Arguments.of(PropertyManager.getServiceAddress(),
+                         PropertyManager.getVirgilPureServerAddress(),
+                         PropertyManager.getVirgilAppToken(),
+                         PropertyManager.getVirgilPublicKeyNew(),
+                         PropertyManager.getVirgilSecretKeyNew())
         );
     }
 
     private static Stream<Arguments> testArguments() {
         return Stream.of(
-                Arguments.of(PropertyManager.getVirgilPheServerAddress(),
-                        PropertyManager.getVirgilPureServerAddress(),
-                        PropertyManager.getVirgilAppToken(),
-                        PropertyManager.getVirgilPublicKeyOld(),
-                        PropertyManager.getVirgilSecretKeyOld(),
-                        PropertyManager.getVirgilUpdateTokenNew())
+            Arguments.of(PropertyManager.getServiceAddress(),
+                         PropertyManager.getVirgilPureServerAddress(),
+                         PropertyManager.getVirgilAppToken(),
+                         PropertyManager.getVirgilPublicKeyOld(),
+                         PropertyManager.getVirgilSecretKeyOld(),
+                         PropertyManager.getVirgilUpdateTokenNew())
         );
     }
 }

@@ -35,12 +35,12 @@ package com.virgilsecurity.purekit.pure;
 
 import java.util.LinkedHashMap;
 
+import com.virgilsecurity.purekit.client.AvailableRequests;
 import com.virgilsecurity.purekit.client.HttpClientProtobuf;
 import com.virgilsecurity.purekit.data.ProtocolException;
 import com.virgilsecurity.purekit.data.ProtocolHttpException;
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtos;
-import com.virgilsecurity.sdk.exception.EmptyArgumentException;
-import com.virgilsecurity.sdk.exception.NullArgumentException;
+import com.virgilsecurity.purekit.utils.ValidateUtils;
 
 /**
  * HttpPheClient class is for http interactions with PHE service.
@@ -59,18 +59,8 @@ public class HttpPheClient {
      * @param serviceAddress Service url.
      */
     public HttpPheClient(String appToken, String serviceAddress) {
-        if (appToken == null) {
-            throw new NullArgumentException("appToken");
-        }
-        if (appToken.isEmpty()) {
-            throw new EmptyArgumentException("appToken");
-        }
-        if (serviceAddress == null) {
-            throw new NullArgumentException("SERVICE_ADDRESS");
-        }
-        if (serviceAddress.isEmpty()) {
-            throw new EmptyArgumentException("SERVICE_ADDRESS");
-        }
+        ValidateUtils.checkNullOrEmpty(appToken, "appToken");
+        ValidateUtils.checkNullOrEmpty(serviceAddress, "serviceAddress");
 
         this.appToken = appToken;
         this.client = new HttpClientProtobuf(serviceAddress);
@@ -92,11 +82,11 @@ public class HttpPheClient {
         throws ProtocolException, ProtocolHttpException {
 
         return client.firePost(
-                request,
-                HttpClientProtobuf.AvailableRequests.ENROLL.getType(),
-                new LinkedHashMap<>(),
-                this.appToken,
-                PurekitProtos.EnrollmentResponse.parser()
+            request,
+            AvailableRequests.ENROLL.getType(),
+            new LinkedHashMap<>(),
+            this.appToken,
+            PurekitProtos.EnrollmentResponse.parser()
         );
     }
 
@@ -117,11 +107,11 @@ public class HttpPheClient {
     ) throws ProtocolException, ProtocolHttpException {
 
         return client.firePost(
-                request,
-                HttpClientProtobuf.AvailableRequests.VERIFY_PASSWORD.getType(),
-                new LinkedHashMap<>(),
-                this.appToken,
-                PurekitProtos.VerifyPasswordResponse.parser()
+            request,
+            AvailableRequests.VERIFY_PASSWORD.getType(),
+            new LinkedHashMap<>(),
+            this.appToken,
+            PurekitProtos.VerifyPasswordResponse.parser()
         );
     }
 }

@@ -38,9 +38,11 @@ import com.google.protobuf.InvalidProtocolBufferException
 import com.virgilsecurity.crypto.phe.PheCipher
 import com.virgilsecurity.crypto.phe.PheClient
 import com.virgilsecurity.crypto.phe.PheException
+import com.virgilsecurity.purekit.client.AvailableRequests
 import com.virgilsecurity.purekit.client.HttpClientProtobuf
 import com.virgilsecurity.purekit.data.*
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtos
+import com.virgilsecurity.purekit.pure.HttpPureClient
 import com.virgilsecurity.purekit.utils.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
@@ -52,18 +54,8 @@ import java.util.concurrent.CompletableFuture
  */
 class Protocol @JvmOverloads constructor(
         protocolContext: ProtocolContext,
-        defaultHttpClient: HttpClientProtobuf? = null
+        private val httpClient: HttpClientProtobuf = HttpClientProtobuf(HttpPureClient.SERVICE_ADDRESS)
 ) {
-
-    private val httpClient: HttpClientProtobuf by lazy {
-        defaultHttpClient ?: when (protocolContext.appToken.prefix()) {
-            PREFIX_PURE_APP_TOKEN -> HttpClientProtobuf(HttpClientProtobuf.DefaultBaseUrls.PASSW0RD.url)
-            PREFIX_VIRGIL_APP_TOKEN -> HttpClientProtobuf(HttpClientProtobuf.DefaultBaseUrls.VIRGIL.url)
-            else -> throw IllegalArgumentException("App token is wrong. Should be $PREFIX_PURE_APP_TOKEN" +
-                                                           "or $PREFIX_VIRGIL_APP_TOKEN." +
-                                                           "Current is ${protocolContext.appToken.prefix()}.")
-        }
-    }
 
     private val appToken: String = protocolContext.appToken
     private val pheClients: Map<Int, PheClient> = protocolContext.pheClients
@@ -85,7 +77,7 @@ class Protocol @JvmOverloads constructor(
         with(PurekitProtos.EnrollmentRequest.newBuilder().setVersion(currentVersion).build()) {
             with(httpClient.firePost(
                     this,
-                    HttpClientProtobuf.AvailableRequests.ENROLL.type,
+                    AvailableRequests.ENROLL.type,
                     authToken = appToken,
                     responseParser = PurekitProtos.EnrollmentResponse.parser()
 
@@ -153,7 +145,7 @@ class Protocol @JvmOverloads constructor(
 
         with(httpClient.firePost(
                 verifyPasswordRequest,
-                HttpClientProtobuf.AvailableRequests.VERIFY_PASSWORD.type,
+                AvailableRequests.VERIFY_PASSWORD.type,
                 authToken = appToken,
                 responseParser = PurekitProtos.VerifyPasswordResponse.parser()
         )) {

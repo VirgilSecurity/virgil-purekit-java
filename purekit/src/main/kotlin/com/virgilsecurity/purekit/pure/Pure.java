@@ -37,7 +37,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -81,7 +80,7 @@ public class Pure {
     private final byte[] ak;
     private final VirgilPublicKey buppk;
     private final VirgilPublicKey hpk;
-    private final HttpPheClient pheClient;
+    private final HttpPheClient httpPheClient;
     private final Map<String, List<VirgilPublicKey>> externalPublicKeys;
 
     private final static int currentGrantVersion = 1;
@@ -122,7 +121,7 @@ public class Pure {
         this.ak = context.getAk().getPayload();
         this.buppk = context.getBuppk();
         this.hpk = context.getHpk();
-        this.pheClient = context.getPheClient();
+        this.httpPheClient = context.getPheClient();
         this.externalPublicKeys = context.getExternalPublicKeys();
     }
 
@@ -158,27 +157,19 @@ public class Pure {
      * successfully. Represents a regular HTTP exception with code and message.
      * @throws PureException If provided password is invalid or - please, see
      * {@link PureStorage#selectUser(String)} PureException doc.
+     * @throws CryptoException Thrown if key importing has been failed.
      */
     public AuthResult authenticateUser(String userId, String password, String sessionId)
-        throws ProtocolException, ProtocolHttpException, PureException {
+        throws ProtocolException, ProtocolHttpException, PureException, CryptoException {
 
-        ValidateUtils.checkNullOrEmpty(new HashMap<String, String>() {{
-            put(userId, "userId");
-            put(password, "password");
-        }});
+        ValidateUtils.checkNullOrEmpty(userId, "userId");
+        ValidateUtils.checkNullOrEmpty(password, "password");
 
         byte[] phek = computePheKey(userId, password);
 
         byte[] uskData = cipher.decrypt(storage.selectUser(userId).getEncryptedUsk(), phek);
 
-        VirgilKeyPair ukp;
-        try {
-            ukp = this.crypto.importPrivateKey(uskData);
-        } catch (CryptoException exception) {
-            throw new IllegalStateException("Exception while importing key. This should not"
-                                                + " happen. Please, contact developer.",
-                                            exception);
-        }
+        VirgilKeyPair ukp = this.crypto.importPrivateKey(uskData);
 
         PureGrant grant = new PureGrant(ukp, userId, sessionId, new Date());
 
@@ -224,9 +215,11 @@ public class Pure {
      * successfully. Represents a regular HTTP exception with code and message.
      * @throws PureException If provided password is invalid or - please, see
      * {@link PureStorage#selectUser(String)} PureException doc.
+     * @throws CryptoException Thrown if key importing has been failed.
      */
     public AuthResult authenticateUser(String userId, String password)
-        throws ProtocolException, ProtocolHttpException, PureException {
+        throws ProtocolException, ProtocolHttpException, PureException, CryptoException {
+
 
         return authenticateUser(userId, password, null);
     }
@@ -245,22 +238,18 @@ public class Pure {
      * successfully. Represents a regular HTTP exception with code and message.
      * @throws PureException Please, see {@link PureStorage#selectUser(String)} PureException doc.
      * @throws DecryptionException If decryption failed.
+     * @throws CryptoException Thrown if key importing has been failed.
      */
     public PureGrant createUserGrantAsAdmin(String userId, VirgilPrivateKey bupsk)
-        throws ProtocolException, ProtocolHttpException, PureException, DecryptionException {
+        throws ProtocolException, ProtocolHttpException, PureException, CryptoException {
 
-        UserRecord userRecord = storage.selectUser(userId); // FIXME is userId null/empty ok here?
+        ValidateUtils.checkNullOrEmpty(userId, "userId");
+
+        UserRecord userRecord = storage.selectUser(userId);
 
         byte[] usk = crypto.decrypt(userRecord.getEncryptedUskBackup(), bupsk);
 
-        VirgilKeyPair upk;
-        try {
-            upk = crypto.importPrivateKey(usk);
-        } catch (CryptoException exception) {
-            throw new IllegalStateException("Exception while importing key. This should not"
-                                                + " happen. Please, contact developer.",
-                                            exception);
-        }
+        VirgilKeyPair upk = crypto.importPrivateKey(usk);
 
         return new PureGrant(upk, userId, null, new Date());
     }
@@ -279,14 +268,13 @@ public class Pure {
      * @throws PureException Please, see {@link PureStorage#selectUser(String)} PureException doc.
      * @throws InvalidProtocolBufferException If provided encryptedGrantString cannot be parsed as
      * protobuf message.
+     * @throws CryptoException Thrown if key importing has been failed.
      */
     public PureGrant decryptGrantFromUser(String encryptedGrantString)
         throws ProtocolException, ProtocolHttpException, PureException,
-        InvalidProtocolBufferException {
+        InvalidProtocolBufferException, CryptoException {
 
-        ValidateUtils.checkNullOrEmpty(new HashMap<String, String>() {{
-            put(encryptedGrantString, "encryptedGrantString");
-        }});
+        ValidateUtils.checkNullOrEmpty(encryptedGrantString, "encryptedGrantString");
 
         byte[] encryptedGrantData = Base64.decode(encryptedGrantString.getBytes());
 
@@ -306,14 +294,8 @@ public class Pure {
 
         byte[] usk = cipher.decrypt(userRecord.getEncryptedUsk(), phek);
 
-        VirgilKeyPair ukp;
-        try {
-            ukp = crypto.importPrivateKey(usk);
-        } catch (CryptoException exception) {
-            throw new IllegalStateException("Exception while importing key. This should not"
-                                                + " happen. Please, contact developer.",
-                                            exception);
-        }
+        VirgilKeyPair ukp = crypto.importPrivateKey(usk);
+
 
         String sessionId = header.getSessionId();
 
@@ -346,11 +328,9 @@ public class Pure {
     public void changeUserPassword(String userId, String oldPassword, String newPassword)
         throws ProtocolException, ProtocolHttpException, PureException {
 
-        ValidateUtils.checkNullOrEmpty(new HashMap<String, String>() {{
-            put(userId, "userId");
-            put(oldPassword, "oldPassword");
-            put(newPassword, "newPassword");
-        }});
+        ValidateUtils.checkNullOrEmpty(userId, "userId");
+        ValidateUtils.checkNullOrEmpty(oldPassword, "oldPassword");
+        ValidateUtils.checkNullOrEmpty(newPassword, "newPassword");
 
         byte[] oldPhek = computePheKey(userId, oldPassword);
         UserRecord userRecord = this.storage.selectUser(userId);
@@ -376,12 +356,9 @@ public class Pure {
     public void changeUserPassword(PureGrant grant, String newPassword)
         throws ProtocolException, ProtocolHttpException, PureException, CryptoException {
 
-        ValidateUtils.checkNull(new HashMap<Object, String>() {{
-            put(grant, "grant");
-        }});
-        ValidateUtils.checkNullOrEmpty(new HashMap<String, String>() {{
-            put(newPassword, "newPassword");
-        }});
+        ValidateUtils.checkNull(grant, "grant");
+
+        ValidateUtils.checkNullOrEmpty(newPassword, "newPassword");
 
         UserRecord userRecord = storage.selectUser(grant.getUserId());
 
@@ -437,9 +414,7 @@ public class Pure {
      */
     public long performRotation() throws ProtocolException, ProtocolHttpException {
 
-        ValidateUtils.checkNull(new HashMap<Object, String>() {{
-            put(Pure.this.updateToken, "updateToken");
-        }});
+        ValidateUtils.checkNull(this.updateToken, "updateToken");
 
         if (this.currentVersion <= 1) {
             return 0;
@@ -497,9 +472,10 @@ public class Pure {
      * successfully. Represents a regular HTTP exception with code and message.
      * @throws PureException Please, see {@link PureStorage#selectKey},
      * {@link PureStorage#selectUsers}, {@link PureStorage#insertKey} methods PureException doc.
+     * @throws CryptoException Thrown if key importing has been failed.
      */
     public byte[] encrypt(String userId, String dataId, byte[] plainText)
-        throws ProtocolException, ProtocolHttpException, PureException {
+        throws ProtocolException, ProtocolHttpException, PureException, CryptoException {
 
         return encrypt(userId,
                        dataId,
@@ -529,20 +505,19 @@ public class Pure {
      * successfully. Represents a regular HTTP exception with code and message.
      * @throws PureException Please, see {@link PureStorage#selectKey},
      * {@link PureStorage#selectUsers}, {@link PureStorage#insertKey} methods PureException doc.
+     * @throws CryptoException Thrown if key importing has been failed.
      */
     public byte[] encrypt(String userId, String dataId, Collection<String> otherUserIds,
                           Collection<VirgilPublicKey> publicKeys, byte[] plainText)
-        throws ProtocolException, ProtocolHttpException, PureException {
+        throws ProtocolException, ProtocolHttpException, PureException, CryptoException {
 
-        ValidateUtils.checkNullOrEmpty(new HashMap<String, String>() {{
-            put(userId, "userId");
-            put(dataId, "dataId");
-        }});
-        ValidateUtils.checkNull(new HashMap<Object, String>() {{
-            put(otherUserIds, "otherUserIds");
-            put(publicKeys, "publicKeys");
-            put(plainText, "plainText");
-        }});
+        ValidateUtils.checkNull(otherUserIds, "otherUserIds");
+        ValidateUtils.checkNull(publicKeys, "publicKeys");
+        ValidateUtils.checkNull(plainText, "plainText");
+
+        ValidateUtils.checkNullOrEmpty(userId, "userId");
+        ValidateUtils.checkNullOrEmpty(dataId, "dataId");
+
 
         VirgilPublicKey cpk;
 
@@ -562,7 +537,7 @@ public class Pure {
                 userIds.add(userId);
                 userIds.addAll(otherUserIds);
 
-                Collection<UserRecord> userRecords = storage.selectUsers(userIds);
+                Iterable<UserRecord> userRecords = storage.selectUsers(userIds);
 
                 // TODO: Optimize -> Optimize what?
                 for (UserRecord record : userRecords) {
@@ -576,10 +551,18 @@ public class Pure {
                     recipientList.addAll(externalPublicKeys);
                 }
 
-                VirgilKeyPair ckp = crypto.generateKeyPair();
-
-                byte[] cpkData = crypto.exportPublicKey(ckp.getPublicKey());
-                byte[] cskData = crypto.exportPrivateKey(ckp.getPrivateKey());
+                VirgilKeyPair ckp;
+                byte[] cpkData;
+                byte[] cskData;
+                try {
+                    ckp = crypto.generateKeyPair();
+                    cpkData = crypto.exportPublicKey(ckp.getPublicKey());
+                    cskData = crypto.exportPrivateKey(ckp.getPrivateKey());
+                } catch (CryptoException exception) {
+                    throw new IllegalStateException("This should not happen. "
+                                                        + "Please, contact developer.",
+                                                    exception);
+                }
 
                 PureCryptoData encryptedCskData = pureCrypto.encrypt(cskData, recipientList);
 
@@ -597,33 +580,18 @@ public class Pure {
                 }
 
                 CellKey cellKey2 = storage.selectKey(userId, dataId);
-                try {
-                    cpk = crypto.importPublicKey(cellKey2.getCpk());
-                } catch (CryptoException cryptoException) {
-                    throw new IllegalStateException("This should not happen. "
-                                                        + "Please, contact developer.",
-                                                    cryptoException);
-                }
-            } catch (CryptoException cryptoException) {
-                throw new IllegalStateException("This should not happen. "
-                                                    + "Please, contact developer.",
-                                                cryptoException);
+
+                cpk = crypto.importPublicKey(cellKey2.getCpk());
             }
         } else {
-            try {
-                cpk = crypto.importPublicKey(cellKey1.getCpk());
-            } catch (CryptoException cryptoException) {
-                throw new IllegalStateException("This should not happen. "
-                                                    + "Please, contact developer.",
-                                                cryptoException);
-            }
+            cpk = crypto.importPublicKey(cellKey1.getCpk());
         }
 
         try {
             return crypto.encrypt(plainText, Collections.singletonList(cpk));
-        } catch (EncryptionException cryptoException) {
+        } catch (EncryptionException exception) {
             throw new IllegalStateException("This should not happen. Please, contact developer.",
-                                            cryptoException);
+                                            exception);
         }
     }
 
@@ -650,13 +618,10 @@ public class Pure {
     public byte[] decrypt(PureGrant grant, String ownerUserId, String dataId, byte[] cipherText)
         throws ProtocolException, ProtocolHttpException, PureException, CryptoException {
 
-        ValidateUtils.checkNull(new HashMap<Object, String>() {{
-            put(grant, "grant");
-            put(cipherText, "cipherText");
-        }});
-        ValidateUtils.checkNullOrEmpty(new HashMap<String, String>() {{
-            put(dataId, "dataId");
-        }});
+        ValidateUtils.checkNull(grant, "grant");
+        ValidateUtils.checkNull(cipherText, "cipherText");
+
+        ValidateUtils.checkNullOrEmpty(dataId, "dataId");
 
         String userId = ownerUserId;
 
@@ -693,13 +658,10 @@ public class Pure {
                           byte[] cipherText)
         throws ProtocolException, ProtocolHttpException, PureException, CryptoException {
 
-        ValidateUtils.checkNull(new HashMap<Object, String>() {{
-            put(privateKey, "privateKey");
-        }});
-        ValidateUtils.checkNullOrEmpty(new HashMap<String, String>() {{
-            put(dataId, "dataId");
-            put(ownerUserId, "ownerUserId");
-        }});
+        ValidateUtils.checkNull(privateKey, "privateKey");
+
+        ValidateUtils.checkNullOrEmpty(dataId, "dataId");
+        ValidateUtils.checkNullOrEmpty(ownerUserId, "ownerUserId");
 
         CellKey cellKey = storage.selectKey(ownerUserId, dataId);
 
@@ -730,17 +692,15 @@ public class Pure {
      * successfully. Represents a regular HTTP exception with code and message.
      * @throws PureException Please, see {@link PureStorage#selectKey},
      * {@link PureStorage#updateKey}, {@link PureStorage#selectUsers} methods' PureException doc.
+     * @throws CryptoException Thrown if key importing has been failed.
      */
     public void share(PureGrant grant, String dataId, String otherUserId)
-        throws ProtocolException, ProtocolHttpException, PureException {
+        throws ProtocolException, ProtocolHttpException, PureException, CryptoException {
 
-        ValidateUtils.checkNull(new HashMap<Object, String>() {{
-            put(grant, "grant");
-        }});
-        ValidateUtils.checkNullOrEmpty(new HashMap<String, String>() {{
-            put(dataId, "dataId");
-            put(otherUserId, "otherUserId");
-        }});
+        ValidateUtils.checkNull(grant, "grant");
+
+        ValidateUtils.checkNullOrEmpty(dataId, "dataId");
+        ValidateUtils.checkNullOrEmpty(otherUserId, "otherUserId");
 
         share(grant, dataId, Collections.singletonList(otherUserId), Collections.emptyList());
     }
@@ -760,19 +720,17 @@ public class Pure {
      * successfully. Represents a regular HTTP exception with code and message.
      * @throws PureException Please, see {@link PureStorage#selectKey},
      * {@link PureStorage#updateKey}, {@link PureStorage#selectUsers} methods' PureException doc.
+     * @throws CryptoException Thrown if key importing has been failed.
      */
     public void share(PureGrant grant, String dataId, Collection<String> otherUserIds,
                       Collection<VirgilPublicKey> publicKeys)
-        throws ProtocolException, ProtocolHttpException, PureException {
+        throws ProtocolException, ProtocolHttpException, PureException, CryptoException {
 
-        ValidateUtils.checkNull(new HashMap<Object, String>() {{
-            put(grant, "grant");
-            put(otherUserIds, "otherUserIds");
-            put(publicKeys, "publicKeys");
-        }});
-        ValidateUtils.checkNullOrEmpty(new HashMap<String, String>() {{
-            put(dataId, "dataId");
-        }});
+        ValidateUtils.checkNull(grant, "grant");
+        ValidateUtils.checkNull(otherUserIds, "otherUserIds");
+        ValidateUtils.checkNull(publicKeys, "publicKeys");
+
+        ValidateUtils.checkNullOrEmpty(dataId, "dataId");
 
         ArrayList<VirgilPublicKey> keys = keysWithOthers(publicKeys, otherUserIds);
         CellKey cellKey = storage.selectKey(grant.getUserId(), dataId);
@@ -804,14 +762,10 @@ public class Pure {
      * successfully. Represents a regular HTTP exception with code and message.
      * @throws PureException Please, see {@link PureStorage#selectKey},
      * {@link PureStorage#updateKey}, {@link PureStorage#selectUsers} methods' PureException doc.
+     * @throws CryptoException Thrown if key importing has been failed.
      */
     public void unshare(String ownerUserId, String dataId, String otherUserId)
-        throws ProtocolException, ProtocolHttpException, PureException {
-
-        ValidateUtils.checkNullOrEmpty(new HashMap<String, String>() {{
-            put(dataId, "dataId");
-            put(otherUserId, "otherUserId");
-        }});
+        throws ProtocolException, ProtocolHttpException, PureException, CryptoException {
 
         unshare(ownerUserId,
                 dataId,
@@ -836,20 +790,19 @@ public class Pure {
      * successfully. Represents a regular HTTP exception with code and message.
      * @throws PureException Please, see {@link PureStorage#selectKey},
      * {@link PureStorage#updateKey}, {@link PureStorage#selectUsers} methods' PureException doc.
+     * @throws CryptoException Thrown if key importing has been failed.
      */
-    public void unshare(String ownerUserId, String dataId,
+    public void unshare(String ownerUserId,
+                        String dataId,
                         Collection<String> otherUserIds,
                         Collection<VirgilPublicKey> publicKeys)
-        throws ProtocolException, ProtocolHttpException, PureException {
+        throws ProtocolException, ProtocolHttpException, PureException, CryptoException {
 
-        ValidateUtils.checkNull(new HashMap<Object, String>() {{ // FIXME are we ok with ownerUserId null/empty?
-            put(otherUserIds, "otherUserIds");
-            put(publicKeys, "publicKeys");
-        }});
-        ValidateUtils.checkNullOrEmpty(new HashMap<String, String>() {{
-            put(dataId, "dataId");
-        }});
+        ValidateUtils.checkNull(otherUserIds, "otherUserIds");
+        ValidateUtils.checkNull(publicKeys, "publicKeys");
 
+        ValidateUtils.checkNullOrEmpty(ownerUserId, "ownerUserId");
+        ValidateUtils.checkNullOrEmpty(dataId, "dataId");
 
         ArrayList<VirgilPublicKey> keys = keysWithOthers(publicKeys, otherUserIds);
 
@@ -884,16 +837,14 @@ public class Pure {
     private void registerUser(String userId, String password, boolean isUserNew)
         throws ProtocolException, ProtocolHttpException {
 
-        ValidateUtils.checkNullOrEmpty(new HashMap<String, String>() {{
-            put(userId, "userId");
-            put(password, "password");
-        }});
+        ValidateUtils.checkNullOrEmpty(userId, "userId");
+        ValidateUtils.checkNullOrEmpty(password, "password");
 
         PurekitProtos.EnrollmentRequest request = PurekitProtos.EnrollmentRequest
             .newBuilder()
             .setVersion(this.currentVersion)
             .build();
-        PurekitProtos.EnrollmentResponse response = pheClient.enrollAccount(request);
+        PurekitProtos.EnrollmentResponse response = httpPheClient.enrollAccount(request);
 
         byte[] passwordHash = crypto.computeHash(password.getBytes(), HashAlgorithm.SHA512);
 
@@ -979,9 +930,7 @@ public class Pure {
                                     String newPassword)
         throws ProtocolException, ProtocolHttpException {
 
-        ValidateUtils.checkNullOrEmpty(new HashMap<String, String>() {{
-            put(newPassword, "newPassword");
-        }});
+        ValidateUtils.checkNullOrEmpty(newPassword, "newPassword");
 
         byte[] newPasswordHash = crypto.computeHash(newPassword.getBytes(),
                                                     HashAlgorithm.SHA512);
@@ -990,7 +939,7 @@ public class Pure {
             .newBuilder()
             .setVersion(this.currentVersion)
             .build();
-        PurekitProtos.EnrollmentResponse enrollResponse = pheClient.enrollAccount(enrollRequest);
+        PurekitProtos.EnrollmentResponse enrollResponse = httpPheClient.enrollAccount(enrollRequest);
 
         PheClientEnrollAccountResult enrollResult =
             currentClient.enrollAccount(enrollResponse.getResponse().toByteArray(),
@@ -1020,7 +969,7 @@ public class Pure {
 
     private ArrayList<VirgilPublicKey> keysWithOthers(Collection<VirgilPublicKey> publicKeys,
                                                       Collection<String> otherUserIds)
-        throws ProtocolException, ProtocolHttpException, PureException {
+        throws ProtocolException, ProtocolHttpException, PureException, CryptoException {
 
         ArrayList<VirgilPublicKey> keys = new ArrayList<>(publicKeys);
 
@@ -1029,13 +978,8 @@ public class Pure {
         // TODO: Optimize -> Optimize what?
         for (UserRecord record : otherUserRecords) {
             VirgilPublicKey otherUpk;
-            try {
-                otherUpk = crypto.importPublicKey(record.getUpk());
-            } catch (CryptoException exception) {
-                throw new IllegalStateException("Exception while importing key. This should not"
-                                                    + " happen. Please, contact developer.",
-                                                exception);
-            }
+            otherUpk = crypto.importPublicKey(record.getUpk());
+
             keys.add(otherUpk);
         }
 
@@ -1060,7 +1004,7 @@ public class Pure {
             .setRequest(ByteString.copyFrom(pheVerifyRequest))
             .build();
 
-        PurekitProtos.VerifyPasswordResponse response = this.pheClient.verifyPassword(request);
+        PurekitProtos.VerifyPasswordResponse response = this.httpPheClient.verifyPassword(request);
 
         byte[] phek = client.checkResponseAndDecrypt(passwordHash,
                                                      userRecord.getPheRecord(),

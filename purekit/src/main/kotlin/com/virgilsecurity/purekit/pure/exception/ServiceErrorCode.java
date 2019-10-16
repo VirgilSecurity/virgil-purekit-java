@@ -39,7 +39,8 @@ package com.virgilsecurity.purekit.pure.exception;
 public enum ServiceErrorCode {
     USER_NOT_FOUND(50003),
     CELL_KEY_NOT_FOUND(50004),
-    CELL_KEY_ALREADY_EXISTS(50006); // FIXME do we need error code 0 ?
+    CELL_KEY_ALREADY_EXISTS(50006),
+    UNDEFINED(0);
 
     private final int code;
 

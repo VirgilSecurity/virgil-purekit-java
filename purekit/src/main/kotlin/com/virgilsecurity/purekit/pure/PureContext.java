@@ -40,11 +40,10 @@ import java.util.Map;
 
 import com.virgilsecurity.crypto.foundation.Base64;
 import com.virgilsecurity.purekit.pure.exception.PureException;
+import com.virgilsecurity.purekit.utils.ValidateUtils;
 import com.virgilsecurity.sdk.crypto.VirgilCrypto;
 import com.virgilsecurity.sdk.crypto.VirgilPublicKey;
 import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
-import com.virgilsecurity.sdk.exception.EmptyArgumentException;
-import com.virgilsecurity.sdk.exception.NullArgumentException;
 
 /**
  * PureContext class represents dependencies needed to initialize Pure.
@@ -98,9 +97,7 @@ public class PureContext {
                         PureStorage storage,
                         Map<String, List<String>> externalPublicKeys,
                         String pheServiceAddress) throws PureException, CryptoException {
-        if (storage == null) {
-            throw new NullArgumentException("storage");
-        }
+        ValidateUtils.checkNull(storage, "storage");
 
         this.crypto = crypto;
         this.ak = PureContext.parseCredentials(AK_PREFIX, ak, false);
@@ -277,18 +274,8 @@ public class PureContext {
     private static Credentials parseCredentials(String prefix,
                                                 String credentials,
                                                 boolean isVersioned) throws PureException {
-        if (prefix == null) {
-            throw new NullArgumentException("prefix");
-        }
-        if (prefix.isEmpty()) {
-            throw new EmptyArgumentException("prefix");
-        }
-        if (credentials == null) {
-            throw new NullArgumentException("credentials");
-        }
-        if (credentials.isEmpty()) {
-            throw new EmptyArgumentException("credentials");
-        }
+        ValidateUtils.checkNullOrEmpty(prefix, "prefix");
+        ValidateUtils.checkNullOrEmpty(credentials, "credentials");
 
         String[] parts = credentials.split("\\.");
 

@@ -34,26 +34,26 @@
 package com.virgilsecurity.purekit.pure.exception;
 
 /**
- * MethodNotImplementedException class.
+ * UnsupportedOperationException class.
  */
-public class MethodNotImplementedException extends RuntimeException {
+public class UnsupportedOperationException extends RuntimeException {
 
-  public MethodNotImplementedException() {
+  public UnsupportedOperationException() {
   }
 
-  public MethodNotImplementedException(String message) {
+  public UnsupportedOperationException(String message) {
     super(message);
   }
 
-  public MethodNotImplementedException(String message, Throwable cause) {
+  public UnsupportedOperationException(String message, Throwable cause) {
     super(message, cause);
   }
 
-  public MethodNotImplementedException(Throwable cause) {
+  public UnsupportedOperationException(Throwable cause) {
     super(cause);
   }
 
-  public MethodNotImplementedException(String message,
+  public UnsupportedOperationException(String message,
                                        Throwable cause,
                                        boolean enableSuppression,
                                        boolean writableStackTrace) {

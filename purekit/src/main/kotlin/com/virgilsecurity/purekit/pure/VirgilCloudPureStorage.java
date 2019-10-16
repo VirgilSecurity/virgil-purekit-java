@@ -43,16 +43,16 @@ import com.virgilsecurity.purekit.data.ProtocolException;
 import com.virgilsecurity.purekit.data.ProtocolHttpException;
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Crypto;
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage;
-import com.virgilsecurity.purekit.pure.exception.MethodNotImplementedException;
 import com.virgilsecurity.purekit.pure.exception.PureException;
 import com.virgilsecurity.purekit.pure.exception.ServiceErrorCode;
+import com.virgilsecurity.purekit.pure.exception.UnsupportedOperationException;
 import com.virgilsecurity.purekit.pure.model.CellKey;
 import com.virgilsecurity.purekit.pure.model.UserRecord;
+import com.virgilsecurity.purekit.utils.ValidateUtils;
 import com.virgilsecurity.sdk.crypto.VirgilCrypto;
 import com.virgilsecurity.sdk.crypto.VirgilKeyPair;
 import com.virgilsecurity.sdk.crypto.exceptions.SigningException;
 import com.virgilsecurity.sdk.crypto.exceptions.VerificationException;
-import com.virgilsecurity.sdk.exception.NullArgumentException;
 
 /**
  * PureStorage on Virgil cloud side
@@ -76,15 +76,9 @@ public class VirgilCloudPureStorage implements PureStorage {
     public VirgilCloudPureStorage(VirgilCrypto crypto,
                                   HttpPureClient client,
                                   VirgilKeyPair signingKey) {
-        if (crypto == null) {
-            throw new NullArgumentException("crypto");
-        }
-        if (client == null) {
-            throw new NullArgumentException("client");
-        }
-        if (signingKey == null) {
-            throw new NullArgumentException("signingKey");
-        }
+        ValidateUtils.checkNull(crypto, "crypto");
+        ValidateUtils.checkNull(client, "client");
+        ValidateUtils.checkNull(signingKey, "signingKey");
 
         this.crypto = crypto;
         this.client = client;
@@ -133,7 +127,7 @@ public class VirgilCloudPureStorage implements PureStorage {
     }
 
     @Override
-    public Collection<UserRecord> selectUsers(Collection<String> userIds) // FIXME maybe just use Set instead of Collection? so we can avoid DUPLICATE_USER_ID
+    public Iterable<UserRecord> selectUsers(Collection<String> userIds) // FIXME maybe just use Set instead of Iterable? so we can avoid DUPLICATE_USER_ID
         throws PureException, ProtocolException, ProtocolHttpException {
 
         HashSet<String> idsSet = new HashSet<>(userIds);
@@ -168,10 +162,10 @@ public class VirgilCloudPureStorage implements PureStorage {
     }
 
     @Override
-    public Collection<UserRecord> selectUsers(int pheRecordVersion) {
-        throw new MethodNotImplementedException(
-            "This method always throws MethodNotImplementedException, as in case of using "
-                + "Virgil Cloud storage, rotation happens on Virgil side."
+    public Iterable<UserRecord> selectUsers(int pheRecordVersion) {
+        throw new UnsupportedOperationException(
+            "This method always throws UnsupportedOperationException, as in case of using "
+                + "Virgil Cloud storage, rotation happens on the Virgil side."
         );
     }
 

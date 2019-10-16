@@ -90,7 +90,7 @@ class PureCrypto {
         }
     }
 
-    byte[] addRecipients(byte[] cms, // TODO add Data everywhere
+    byte[] addRecipients(byte[] cms,
                          VirgilPrivateKey privateKey,
                          Collection<VirgilPublicKey> publicKeys) {
 

@@ -56,13 +56,13 @@ class HttpClientProtobuf {
     private val virgilAgentHeader: String
     private val serviceBaseUrl: String
 
-    constructor(serviceBaseUrl: String = VIRGIL_SERVICE_BASE_URL) {
+    constructor(serviceBaseUrl: String) {
         virgilAgentHeader =
                 "$VIRGIL_AGENT_PRODUCT;$VIRGIL_AGENT_FAMILY;${OsUtils.osAgentName};${VersionVirgilAgent.VERSION}"
         this.serviceBaseUrl = serviceBaseUrl
     }
 
-    constructor(product: String, version: String, serviceBaseUrl: String = VIRGIL_SERVICE_BASE_URL) {
+    constructor(product: String, version: String, serviceBaseUrl: String) {
         virgilAgentHeader = "$product;$VIRGIL_AGENT_FAMILY;${OsUtils.osAgentName};$version"
         this.serviceBaseUrl = serviceBaseUrl
     }
@@ -84,7 +84,9 @@ class HttpClientProtobuf {
      * @throws ProtocolHttpException
      */
     @Throws(ProtocolException::class, ProtocolHttpException::class)
+    @JvmOverloads
     fun <O : Message> fireGet(
+            params: Map<String, String>? = null,
             endpoint: String,
             headers: MutableMap<String, String> = mutableMapOf(),
             authToken: String,
@@ -92,7 +94,9 @@ class HttpClientProtobuf {
     ): O? {
         headers.addConstHeaders().addTokenHeader(authToken)
 
-        val (_, response, _) = "$serviceBaseUrl${endpoint}".httpGet()
+        val stringParams = params?.map { "${it.key}=${it.value}" }?.joinToString(separator = "&", prefix = "?") ?: ""
+
+        val (_, response, _) = "$serviceBaseUrl$endpoint$stringParams".httpGet()
                 .header(headers)
                 .response()
 
@@ -112,12 +116,19 @@ class HttpClientProtobuf {
      * @throws ProtocolException
      * @throws ProtocolHttpException
      */
-    // FIXME What should be fixed? it's just another method - without return type and last parameter
     @Throws(ProtocolException::class, ProtocolHttpException::class)
-    fun fireGet(endpoint: String, headers: MutableMap<String, String> = mutableMapOf(), authToken: String) {
+    @JvmOverloads
+    fun fireGet(
+            params: Map<String, String> = mapOf(),
+            endpoint: String,
+            headers: MutableMap<String, String> = mutableMapOf(),
+            authToken: String
+    ) {
         headers.addConstHeaders().addTokenHeader(authToken)
 
-        val (_, response, _) = "$serviceBaseUrl${endpoint}".httpGet()
+        val stringParams = params.map { "${it.key}=${it.value}" }.joinToString(separator = "&", prefix = "?")
+
+        val (_, response, _) = "$serviceBaseUrl$endpoint$stringParams".httpGet()
                 .header(headers)
                 .response()
 
@@ -144,7 +155,7 @@ class HttpClientProtobuf {
      * @throws ProtocolHttpException
      */
     @Throws(ProtocolException::class, ProtocolHttpException::class)
-    fun <O : Message> firePost(
+    @JvmOverloads fun <O : Message> firePost(
             data: Message,
             endpoint: String,
             headers: MutableMap<String, String> = mutableMapOf(),
@@ -162,9 +173,8 @@ class HttpClientProtobuf {
         return responseParser.parseFrom(response.data)
     }
 
-    // FIXME What should be fixed? it's just another method - without return type and last parameter
     @Throws(ProtocolException::class, ProtocolHttpException::class)
-    fun firePost(
+    @JvmOverloads fun firePost(
             data: Message,
             endpoint: String,
             headers: MutableMap<String, String> = mutableMapOf(),
@@ -200,7 +210,7 @@ class HttpClientProtobuf {
      * @throws ProtocolHttpException
      */
     @Throws(ProtocolException::class, ProtocolHttpException::class)
-    fun <O : Message> firePut(
+    @JvmOverloads fun <O : Message> firePut(
             data: Message,
             endpoint: String,
             headers: MutableMap<String, String> = mutableMapOf(),
@@ -218,9 +228,8 @@ class HttpClientProtobuf {
         return responseParser.parseFrom(response.data)
     }
 
-    // FIXME What should be fixed? it's just another method - without return type and last parameter
     @Throws(ProtocolException::class, ProtocolHttpException::class)
-    fun firePut(
+    @JvmOverloads fun firePut(
             data: Message,
             endpoint: String,
             headers: MutableMap<String, String> = mutableMapOf(),
@@ -253,7 +262,8 @@ class HttpClientProtobuf {
      * @throws ProtocolHttpException
      */
     @Throws(ProtocolException::class, ProtocolHttpException::class)
-    fun <O : Message> fireDelete(
+    @JvmOverloads fun <O : Message> fireDelete(
+            params: Map<String, String> = mapOf(),
             endpoint: String,
             headers: MutableMap<String, String> = mutableMapOf(),
             authToken: String,
@@ -261,7 +271,9 @@ class HttpClientProtobuf {
     ): O {
         headers.addConstHeaders().addTokenHeader(authToken)
 
-        val (_, response, _) = "$serviceBaseUrl${endpoint}".httpDelete()
+        val stringParams = params.map { "${it.key}=${it.value}" }.joinToString(separator = "&", prefix = "?")
+
+        val (_, response, _) = "$serviceBaseUrl$endpoint$stringParams".httpDelete()
                 .header(headers)
                 .response()
 
@@ -269,16 +281,18 @@ class HttpClientProtobuf {
         return responseParser.parseFrom(response.data)
     }
 
-    // FIXME What should be fixed? it's just another method - without return type and last parameter
     @Throws(ProtocolException::class, ProtocolHttpException::class)
-    fun fireDelete(
+    @JvmOverloads fun fireDelete(
+            params: Map<String, String> = mapOf(),
             endpoint: String,
             headers: MutableMap<String, String> = mutableMapOf(),
             authToken: String
     ) {
         headers.addConstHeaders().addTokenHeader(authToken)
 
-        val (_, response, _) = "$serviceBaseUrl${endpoint}".httpDelete()
+        val stringParams = params.map { "${it.key}=${it.value}" }.joinToString(separator = "&", prefix = "?")
+
+        val (_, response, _) = "$serviceBaseUrl$endpoint$stringParams".httpDelete()
                 .header(headers)
                 .response()
 
@@ -316,47 +330,18 @@ class HttpClientProtobuf {
     private fun MutableMap<String, String>.addTokenHeader(authToken: String): MutableMap<String, String> =
             this.put(APP_TOKEN_KEY, authToken).let { this }
 
-    // FIXME: This should be moved to HttpPureClient -> Why?
     companion object {
-        private const val SERVICE_VERSION = "v1"
-        private const val PURE_SERVICE_BASE_URL = "https://api.passw0rd.io/phe/$SERVICE_VERSION"
-        private const val VIRGIL_SERVICE_BASE_URL = "https://api.virgilsecurity.com/phe/$SERVICE_VERSION"
-
         private const val PROTO_REQUEST_TYPE_KEY = "Content-Type"
         private const val PROTO_REQUEST_TYPE = "application/protobuf"
-
-        private const val APP_TOKEN_KEY = "AppToken"
 
         private const val USER_AGENT_KEY = "User-Agent"
         private const val USER_AGENT = "purekit/java"
 
         private const val VIRGIL_AGENT_HEADER_KEY = "virgil-agent"
+
+        private const val APP_TOKEN_KEY = "AppToken"
+
         private const val VIRGIL_AGENT_PRODUCT = "purekit"
         private const val VIRGIL_AGENT_FAMILY = "jvm"
-    }
-
-    /**
-     * Enum of available requests
-     */
-    // FIXME: Move this out -> Why do you want to move it out? HttpClientProtobuf.AvailableRequests looks good. It says
-    // that AvailableRequests are belong to HttpClientProtobuf.
-    enum class AvailableRequests(val type: String) {
-        ENROLL("/enroll"),
-        VERIFY_PASSWORD("/verify-password"),
-
-        INSERT_USER("/user"),
-        UPDATE_USER("/user/%s"),
-        GET_USER("/user/%s"),
-        GET_USERS("/get-users"),
-        DELETE_USER("/user/%s?cascade=%s"),
-        INSERT_CELL_KEY("/cell-key"),
-        UPDATE_CELL_KEY("/cell-key/%s/%s"),
-        GET_CELL_KEY("/cell-key/%s/%s"),
-        DELETE_CELL_KEY("/cell-key/%s/%s")
-    }
-
-    enum class DefaultBaseUrls(val url: String) {
-        PASSW0RD(PURE_SERVICE_BASE_URL),
-        VIRGIL(VIRGIL_SERVICE_BASE_URL)
     }
 }

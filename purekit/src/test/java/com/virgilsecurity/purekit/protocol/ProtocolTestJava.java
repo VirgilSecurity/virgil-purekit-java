@@ -130,7 +130,7 @@ class ProtocolTestJava {
 
     private static Stream<Arguments> testArgumentsNoToken() {
         return Stream.of(
-                Arguments.of(PropertyManager.getVirgilPheServerAddress(),
+                Arguments.of(PropertyManager.getServiceAddress(),
                              PropertyManager.getVirgilAppToken(),
                              PropertyManager.getVirgilPublicKeyNew(),
                              PropertyManager.getVirgilSecretKeyNew())
@@ -139,7 +139,7 @@ class ProtocolTestJava {
 
     private static Stream<Arguments> testArguments() {
         return Stream.of(
-                Arguments.of(PropertyManager.getVirgilPheServerAddress(),
+                Arguments.of(PropertyManager.getServiceAddress(),
                              PropertyManager.getVirgilAppToken(),
                              PropertyManager.getVirgilPublicKeyNew(),
                              PropertyManager.getVirgilSecretKeyNew(),

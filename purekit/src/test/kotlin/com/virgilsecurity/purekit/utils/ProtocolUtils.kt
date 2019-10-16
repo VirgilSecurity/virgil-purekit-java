@@ -51,7 +51,7 @@ object ProtocolUtils {
      * secretKey -> PropertyManager.virgilSecretKeyNew,
      * updateToken -> PropertyManager.virgilUpdateTokenNew,
      */
-    @JvmOverloads @JvmStatic fun initProtocol(serverAddress: String? = PropertyManager.virgilPheServerAddress,
+    @JvmOverloads @JvmStatic fun initProtocol(serverAddress: String? = PropertyManager.serviceAddress,
                                               appToken: String = PropertyManager.virgilAppToken,
                                               publicKey: String = PropertyManager.virgilPublicKeyNew,
                                               secretKey: String = PropertyManager.virgilSecretKeyNew,
