@@ -34,8 +34,8 @@
 package com.virgilsecurity.purekit.pure;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
+import java.util.Set;
 
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
@@ -176,7 +176,7 @@ public class VirgilCloudPureStorage implements PureStorage {
     /**
      * Obtains a users record with the given userId from a storage.
      *
-     * @param userIds User Ids. Should not contain duplicates.
+     * @param userIds User Ids.
      *
      * @return UserRecords.
      *
@@ -191,15 +191,11 @@ public class VirgilCloudPureStorage implements PureStorage {
      * @throws VerificationException If signature verification operation failed.
      */
     @Override
-    public Iterable<UserRecord> selectUsers(Collection<String> userIds) // FIXME maybe just use Set instead of Collection? so we can avoid DUPLICATE_USER_ID
+    public Iterable<UserRecord> selectUsers(Set<String> userIds)
         throws PureException, ProtocolException, ProtocolHttpException,
         InvalidProtocolBufferException, VerificationException {
 
         HashSet<String> idsSet = new HashSet<>(userIds);
-
-        if (idsSet.size() != userIds.size()) {
-            throw new PureException(PureException.ErrorStatus.DUPLICATE_USER_ID);
-        }
 
         PurekitProtosV3Storage.UserRecords protoRecords;
 

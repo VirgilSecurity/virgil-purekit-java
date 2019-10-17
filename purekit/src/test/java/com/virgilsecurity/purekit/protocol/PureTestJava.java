@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -74,7 +75,7 @@ class PureTestJava {
         }
 
         @Override
-        public Collection<UserRecord> selectUsers(Collection<String> userIds) {
+        public Collection<UserRecord> selectUsers(Set<String> userIds) {
             ArrayList<UserRecord> userRecords = new ArrayList<>(userIds.size());
 
             for (String userId: userIds) {

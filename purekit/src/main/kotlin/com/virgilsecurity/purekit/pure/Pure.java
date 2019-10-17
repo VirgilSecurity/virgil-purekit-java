@@ -37,8 +37,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
@@ -583,7 +585,7 @@ public class Pure {
 
                 recipientList.addAll(publicKeys);
 
-                ArrayList<String> userIds = new ArrayList<>(1 + otherUserIds.size());
+                HashSet<String> userIds = new HashSet<>(1 + otherUserIds.size());
                 userIds.add(userId);
                 userIds.addAll(otherUserIds);
 
@@ -746,7 +748,7 @@ public class Pure {
         ValidateUtils.checkNullOrEmpty(dataId, "dataId");
         ValidateUtils.checkNullOrEmpty(otherUserId, "otherUserId");
 
-        share(grant, dataId, Collections.singletonList(otherUserId), Collections.emptyList());
+        share(grant, dataId, Collections.singleton(otherUserId), Collections.emptyList());
     }
 
     /**
@@ -773,7 +775,7 @@ public class Pure {
      */
     public void share(PureGrant grant,
                       String dataId,
-                      Collection<String> otherUserIds,
+                      Set<String> otherUserIds,
                       Collection<VirgilPublicKey> publicKeys)
         throws Exception {
 
@@ -822,7 +824,7 @@ public class Pure {
 
         unshare(ownerUserId,
                 dataId,
-                Collections.singletonList(otherUserId),
+                Collections.singleton(otherUserId),
                 Collections.emptyList());
     }
 
@@ -852,7 +854,7 @@ public class Pure {
      */
     public void unshare(String ownerUserId,
                         String dataId,
-                        Collection<String> otherUserIds,
+                        Set<String> otherUserIds,
                         Collection<VirgilPublicKey> publicKeys)
         throws Exception {
 
@@ -983,7 +985,7 @@ public class Pure {
     }
 
     private ArrayList<VirgilPublicKey> keysWithOthers(Collection<VirgilPublicKey> publicKeys,
-                                                      Collection<String> otherUserIds)
+                                                      Set<String> otherUserIds)
         throws Exception {
 
         ArrayList<VirgilPublicKey> keys = new ArrayList<>(publicKeys);

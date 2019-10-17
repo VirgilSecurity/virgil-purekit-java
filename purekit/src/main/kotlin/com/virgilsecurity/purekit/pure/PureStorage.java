@@ -33,7 +33,7 @@
 
 package com.virgilsecurity.purekit.pure;
 
-import java.util.Collection;
+import java.util.Set;
 
 import com.virgilsecurity.purekit.pure.exception.PureException;
 import com.virgilsecurity.purekit.pure.model.CellKey;
@@ -70,11 +70,11 @@ public interface PureStorage {
     /**
      * Obtains users records with given userIds from a storage.
      *
-     * @param userIds User Ids. Should not contain duplicates.
+     * @param userIds User Ids.
      *
      * @return UserRecords.
      */
-    Iterable<UserRecord> selectUsers(Collection<String> userIds) throws Exception;
+    Iterable<UserRecord> selectUsers(Set<String> userIds) throws Exception;
 
     /**
      * Obtains users records with given userIds from a storage.
