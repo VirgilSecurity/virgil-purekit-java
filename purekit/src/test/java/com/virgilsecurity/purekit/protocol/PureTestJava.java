@@ -20,35 +20,23 @@ import java.util.UUID;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-import com.google.protobuf.ByteString;
 import com.virgilsecurity.crypto.foundation.FoundationException;
-import com.virgilsecurity.crypto.phe.PheCipher;
-import com.virgilsecurity.crypto.phe.PheClient;
-import com.virgilsecurity.crypto.phe.PheClientEnrollAccountResult;
 import com.virgilsecurity.crypto.phe.PheException;
-import com.virgilsecurity.purekit.data.ProtocolException;
-import com.virgilsecurity.purekit.data.ProtocolHttpException;
-import com.virgilsecurity.purekit.protobuf.build.PurekitProtos;
 import com.virgilsecurity.purekit.pure.AuthResult;
-import com.virgilsecurity.purekit.pure.HttpPheClient;
-import com.virgilsecurity.purekit.pure.HttpPureClient;
 import com.virgilsecurity.purekit.pure.Pure;
 import com.virgilsecurity.purekit.pure.PureContext;
 import com.virgilsecurity.purekit.pure.PureStorage;
-import com.virgilsecurity.purekit.pure.VirgilCloudPureStorage;
 import com.virgilsecurity.purekit.pure.exception.PureException;
 import com.virgilsecurity.purekit.pure.model.CellKey;
 import com.virgilsecurity.purekit.pure.model.PureGrant;
 import com.virgilsecurity.purekit.pure.model.UserRecord;
 import com.virgilsecurity.purekit.utils.PropertyManager;
 import com.virgilsecurity.purekit.utils.ThreadUtils;
-import com.virgilsecurity.sdk.crypto.HashAlgorithm;
 import com.virgilsecurity.sdk.crypto.KeyType;
 import com.virgilsecurity.sdk.crypto.VirgilCrypto;
 import com.virgilsecurity.sdk.crypto.VirgilKeyPair;
 import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
 
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -243,8 +231,7 @@ class PureTestJava {
         if (storage != null) {
             context = PureContext.createContext(appToken, akString, bupkpString, hkpString,
                     storage, secretKey, publicKey, externalPublicKeys, pheServerAddress);
-        }
-        else {
+        } else {
             VirgilKeyPair signingKeyPair = this.crypto.generateKeyPair();
             String vkString = String.format("VS.%s", Base64.getEncoder().encodeToString(this.crypto.exportPrivateKey(signingKeyPair.getPrivateKey())));
 
@@ -278,8 +265,7 @@ class PureTestJava {
 
                 pure.registerUser(userId, password);
             }
-        }
-        catch (Exception | ProtocolException | ProtocolHttpException e) {
+        } catch (Exception e) {
             fail(e);
         }
     }
@@ -315,8 +301,7 @@ class PureTestJava {
                 assertNotNull(grant.getUkp());
                 assertNotNull(grant.getCreationDate());
             }
-        }
-        catch (Exception | ProtocolException | ProtocolHttpException e) {
+        } catch (Exception e) {
             fail(e);
         }
     }
@@ -350,8 +335,7 @@ class PureTestJava {
 
                 assertArrayEquals(text, plainText);
             }
-        }
-        catch (Exception | ProtocolException | ProtocolHttpException e) {
+        } catch (Exception e) {
             fail(e);
         }
     }
@@ -393,8 +377,7 @@ class PureTestJava {
                 assertArrayEquals(text, plainText1);
                 assertArrayEquals(text, plainText2);
             }
-        }
-        catch (Exception | ProtocolException | ProtocolHttpException e) {
+        } catch (Exception e) {
             fail(e);
         }
     }
@@ -437,8 +420,7 @@ class PureTestJava {
 
                 assertEquals(e.getStatusCode(), ERROR_KEY_RECIPIENT_IS_NOT_FOUND);
             }
-        }
-        catch (Exception | ProtocolException | ProtocolHttpException e) {
+        } catch (Exception e) {
             fail(e);
         }
     }
@@ -481,8 +463,7 @@ class PureTestJava {
 
                 assertEquals(e.getStatusCode(), ERROR_AES_FAILED);
             }
-        }
-        catch (Exception | ProtocolException | ProtocolHttpException e) {
+        } catch (Exception e) {
             fail(e);
         }
     }
@@ -518,8 +499,7 @@ class PureTestJava {
 
                 assertArrayEquals(text, plainText);
             }
-        }
-        catch (Exception | ProtocolException | ProtocolHttpException e) {
+        } catch (Exception e) {
             fail(e);
         }
     }
@@ -560,8 +540,7 @@ class PureTestJava {
 
                 assertEquals(e.getStatusCode(), ERROR_KEY_RECIPIENT_IS_NOT_FOUND);
             }
-        }
-        catch (Exception | ProtocolException | ProtocolHttpException e) {
+        } catch (Exception e) {
             fail(e);
         }
     }
@@ -602,8 +581,7 @@ class PureTestJava {
 
                 assertArrayEquals(text, plainText);
             }
-        }
-        catch (Exception | ProtocolException | ProtocolHttpException e) {
+        } catch (Exception e) {
             fail(e);
         }
     }
@@ -638,8 +616,7 @@ class PureTestJava {
             long rotated = pure.performRotation();
 
             assertEquals(total, rotated);
-        }
-        catch (Exception | ProtocolException | ProtocolHttpException e) {
+        } catch (Exception e) {
             fail(e);
         }
     }
@@ -687,8 +664,7 @@ class PureTestJava {
 
                 assertArrayEquals(text, plainText);
             }
-        }
-        catch (Exception | ProtocolException | ProtocolHttpException e) {
+        } catch (Exception e) {
             fail(e);
         }
     }
@@ -726,8 +702,7 @@ class PureTestJava {
 
                 assertArrayEquals(text, plainText);
             }
-        }
-        catch (Exception | ProtocolException | ProtocolHttpException e) {
+        } catch (Exception e) {
             fail(e);
         }
     }
@@ -772,8 +747,7 @@ class PureTestJava {
 
                 assertEquals(PureException.ErrorStatus.CELL_KEY_NOT_FOUND_IN_STORAGE, e2.getErrorStatus());
             }
-        }
-        catch (Exception | ProtocolException | ProtocolHttpException e) {
+        } catch (Exception e) {
             fail(e);
         }
     }
@@ -816,8 +790,7 @@ class PureTestJava {
 
                 assertArrayEquals(text, plainText);
             }
-        }
-        catch (Exception | ProtocolException | ProtocolHttpException e) {
+        } catch (Exception e) {
             fail(e);
         }
     }
@@ -856,8 +829,7 @@ class PureTestJava {
 
                 assertEquals(PureException.ErrorStatus.CELL_KEY_NOT_FOUND_IN_STORAGE, e.getErrorStatus());
             }
-        }
-        catch (Exception | ProtocolException | ProtocolHttpException e) {
+        } catch (Exception e) {
             fail(e);
         }
     }
@@ -886,8 +858,7 @@ class PureTestJava {
             byte[] pwdHash = pureResult.getCrypto().computeHash(password.getBytes());
 
             assertArrayEquals(pwdHash, pwdHashDecrypted);
-        }
-        catch (Exception | ProtocolException | ProtocolHttpException e) {
+        } catch (Exception e) {
             fail(e);
         }
     }

@@ -43,7 +43,7 @@ package com.virgilsecurity.purekit.data
 class ProtocolException @JvmOverloads constructor(
     val errorCode: Int = -1,
     message: String? = "Unknown error"
-) : Throwable(message)
+) : Exception(message)
 
 /**
  * Exception that is thrown when purekit service answers with some error but not with default protobuf type.
@@ -51,24 +51,24 @@ class ProtocolException @JvmOverloads constructor(
 class ProtocolHttpException @JvmOverloads constructor(
     val errorCode: Int = -1,
     message: String? = "Unknown error"
-) : Throwable(message)
+) : Exception(message)
 
 /**
  * Exception that is been thrown when wrong password is used to perform some action.
  */
-class InvalidPasswordException(message: String?) : Throwable(message)
+class InvalidPasswordException(message: String?) : Exception(message)
 
 /**
  * Exception that is been thrown when trying to parse Protobuf message with wrong type.
  */
-class InvalidProtobufTypeException(message: String? = "Can not parse model you have given.") : Throwable(message)
+class InvalidProtobufTypeException(message: String? = "Can not parse model you have given.") : Exception(message)
 
 /**
  * Exception that is been thrown when no keys was found.
  */
-class NoKeysFoundException(message: String? = "Can not parse model you have given.") : Throwable(message)
+class NoKeysFoundException(message: String? = "Can not parse model you have given.") : Exception(message)
 
 /**
  * Exception that is been thrown when the proof is wrong.
  */
-class InvalidProofException(message: String? = "Can not parse model you have given.") : Throwable(message)
+class InvalidProofException(message: String? = "Can not parse model you have given.") : Exception(message)
