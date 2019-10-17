@@ -246,7 +246,7 @@ class PureTestJava {
         }
         else {
             VirgilKeyPair signingKeyPair = this.crypto.generateKeyPair();
-            String vkString = String.format("VK.%s", Base64.getEncoder().encodeToString(this.crypto.exportPrivateKey(signingKeyPair.getPrivateKey())));
+            String vkString = String.format("VS.%s", Base64.getEncoder().encodeToString(this.crypto.exportPrivateKey(signingKeyPair.getPrivateKey())));
 
             context = PureContext.createContext(appToken, akString, bupkpString, hkpString, vkString,
                     secretKey, publicKey, externalPublicKeys, pheServerAddress, pureServerAddress);

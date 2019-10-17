@@ -74,7 +74,7 @@ public class PureContext {
     private static final String HPK_PREFIX = "HB";
     private static final String SECRET_KEY_PREFIX = "SK";
     private static final String PUBLIC_KEY_PREFIX = "PK";
-    private static final String SIGNING_KEY_PREFIX = "VK";
+    private static final String SIGNING_KEY_PREFIX = "VS";
 
     private final VirgilCrypto crypto;
     private final Credentials ak;
