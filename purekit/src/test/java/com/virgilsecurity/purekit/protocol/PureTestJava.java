@@ -867,7 +867,6 @@ class PureTestJava {
     private static Stream<Arguments> testArgumentsNoToken() {
         return Stream.of(
             Arguments.of(PropertyManager.getServiceAddress(),
-                         PropertyManager.getVirgilPureServerAddress(),
                          PropertyManager.getVirgilAppToken(),
                          PropertyManager.getVirgilPublicKeyNew(),
                          PropertyManager.getVirgilSecretKeyNew())
@@ -877,7 +876,6 @@ class PureTestJava {
     private static Stream<Arguments> testArguments() {
         return Stream.of(
             Arguments.of(PropertyManager.getServiceAddress(),
-                         PropertyManager.getVirgilPureServerAddress(),
                          PropertyManager.getVirgilAppToken(),
                          PropertyManager.getVirgilPublicKeyOld(),
                          PropertyManager.getVirgilSecretKeyOld(),

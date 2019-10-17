@@ -100,13 +100,6 @@ object PropertyManager {
         else
             System.getenv(VIRGIL_PHE_SERVER_ADDRESS)
     }
-    @JvmStatic
-    val virgilPureServerAddress: String? by lazy {
-        if (System.getProperty(VIRGIL_PURE_SERVER_ADDRESS) != null)
-            System.getProperty(VIRGIL_PURE_SERVER_ADDRESS)
-        else
-            System.getenv(VIRGIL_PURE_SERVER_ADDRESS)
-    }
 
     private const val VIRGIL_APP_TOKEN = "VIRGIL_APP_TOKEN"
     private const val VIRGIL_PUBLIC_KEY_OLD = "VIRGIL_PUBLIC_KEY_OLD"
@@ -117,5 +110,4 @@ object PropertyManager {
     private const val VIRGIL_UPDATE_TOKEN_OLD = "VIRGIL_UPDATE_TOKEN_OLD"
     private const val VIRGIL_UPDATE_TOKEN_NEW = "VIRGIL_UPDATE_TOKEN_NEW"
     private const val VIRGIL_PHE_SERVER_ADDRESS = "VIRGIL_PHE_SERVER_ADDRESS"
-    private const val VIRGIL_PURE_SERVER_ADDRESS = "VIRGIL_PURE_SERVER_ADDRESS"
 }
