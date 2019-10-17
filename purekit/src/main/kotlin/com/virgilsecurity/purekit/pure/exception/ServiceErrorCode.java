@@ -31,71 +31,29 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.purekit.pure;
-
-import com.virgilsecurity.sdk.crypto.VirgilKeyPair;
-
-import java.util.Date;
+package com.virgilsecurity.purekit.pure.exception;
 
 /**
- *
+ * PHE service error codes.
  */
-public class PureGrant {
-    private final VirgilKeyPair ukp;
-    private final String userId;
-    private final String sessionId;
-    private final Date creationDate;
+public enum ServiceErrorCode {
+    USER_NOT_FOUND(50003),
+    CELL_KEY_NOT_FOUND(50004),
+    CELL_KEY_ALREADY_EXISTS(50006),
+    UNDEFINED(0);
 
-    /**
-     * Constructor
-     * @param ukp user key pair
-     * @param userId userId
-     * @param sessionId sessionId (optional)
-     * @param creationDate creation date
-     */
-    public PureGrant(VirgilKeyPair ukp,
-                     String userId,
-                     String sessionId,
-                     Date creationDate) {
-        if (ukp == null || userId == null || creationDate == null) {
-            throw new NullPointerException();
-        }
+    private final int code;
 
-        this.ukp = ukp;
-        this.userId = userId;
-        this.sessionId = sessionId;
-        this.creationDate = creationDate;
+    ServiceErrorCode(int code) {
+        this.code = code;
     }
 
     /**
-     * Returns user key pair
-     * @return User key pair
+     * Error code number.
+     *
+     * @return Error code number.
      */
-    public VirgilKeyPair getUkp() {
-        return ukp;
-    }
-
-    /**
-     * Returns session id
-     * @return Session id
-     */
-    public String getSessionId() {
-        return sessionId;
-    }
-
-    /**
-     * Returns creation date
-     * @return Creation date
-     */
-    public Date getCreationDate() {
-        return creationDate;
-    }
-
-    /**
-     * Returns user id
-     * @return User id
-     */
-    public String getUserId() {
-        return userId;
+    public int getCode() {
+        return code;
     }
 }

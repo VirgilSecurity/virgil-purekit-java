@@ -31,28 +31,79 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.purekit.utils
+package com.virgilsecurity.purekit.pure.model;
+
+import java.util.Date;
+
+import com.virgilsecurity.purekit.utils.ValidateUtils;
+import com.virgilsecurity.sdk.crypto.VirgilKeyPair;
 
 /**
- * EnrollResult class is intended to simplify work with return type of *Protocol#enrollAccount* method.
+ * PureGrant class.
  */
-data class EnrollResult(val enrollmentRecord: ByteArray, val accountKey: ByteArray) {
+public class PureGrant {
 
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
+    private final VirgilKeyPair ukp;
+    private final String userId;
+    private final String sessionId;
+    private final Date creationDate;
 
-        other as EnrollResult
+    /**
+     * Instantiates PureGrant.
+     *
+     * @param ukp User key pair.
+     * @param userId User Id.
+     * @param sessionId Session Id (optional).
+     * @param creationDate Creation date.
+     */
+    public PureGrant(VirgilKeyPair ukp,
+                     String userId,
+                     String sessionId,
+                     Date creationDate) {
+        ValidateUtils.checkNull(ukp, "ukp");
+        ValidateUtils.checkNull(creationDate, "creationDate");
 
-        if (!enrollmentRecord.contentEquals(other.enrollmentRecord)) return false
-        if (!accountKey.contentEquals(other.accountKey)) return false
+        ValidateUtils.checkNullOrEmpty(userId, "userId");
 
-        return true
+        this.ukp = ukp;
+        this.userId = userId;
+        this.sessionId = sessionId;
+        this.creationDate = creationDate;
     }
 
-    override fun hashCode(): Int {
-        var result = enrollmentRecord.contentHashCode()
-        result = 31 * result + accountKey.contentHashCode()
-        return result
+    /**
+     * Returns user key pair.
+     *
+     * @return User key pair.
+     */
+    public VirgilKeyPair getUkp() {
+        return ukp;
+    }
+
+    /**
+     * Returns session id.
+     *
+     * @return Session id.
+     */
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    /**
+     * Returns creation date.
+     *
+     * @return Creation date.
+     */
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    /**
+     * Returns user id.
+     *
+     * @return User id.
+     */
+    public String getUserId() {
+        return userId;
     }
 }

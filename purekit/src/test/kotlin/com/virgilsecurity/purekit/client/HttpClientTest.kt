@@ -35,37 +35,27 @@ package com.virgilsecurity.purekit.client
 
 import com.virgilsecurity.purekit.data.ProtocolException
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtos
-import com.virgilsecurity.purekit.utils.PREFIX_PURE_APP_TOKEN
-import com.virgilsecurity.purekit.utils.PREFIX_VIRGIL_APP_TOKEN
+import com.virgilsecurity.purekit.pure.HttpPureClient
+import com.virgilsecurity.purekit.utils.KEY_PUBLIC_KEY
+import com.virgilsecurity.purekit.utils.PREFIX_PUBLIC_KEY
 import com.virgilsecurity.purekit.utils.PropertyManager
-import com.virgilsecurity.purekit.utils.prefix
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.Arguments
-import org.junit.jupiter.params.provider.MethodSource
+import org.junit.jupiter.api.Test
 import java.util.*
+import kotlin.random.Random
 
 /**
  * HttpClientTest class.
  */
 class HttpClientTest {
 
-    @ParameterizedTest @MethodSource("testArguments")
-    fun response_proto_parse(serverAddress: String?, appToken: String, publicKeyNew: String) {
-        val httpClient = if (serverAddress != null) {
-            HttpClientProtobuf(serverAddress)
-        } else {
-            when {
-                appToken.prefix() == PREFIX_PURE_APP_TOKEN ->
-                    HttpClientProtobuf(HttpClientProtobuf.DefaultBaseUrls.PASSW0RD.url)
-                appToken.prefix() == PREFIX_VIRGIL_APP_TOKEN ->
-                    HttpClientProtobuf(HttpClientProtobuf.DefaultBaseUrls.VIRGIL.url)
-                else -> throw IllegalArgumentException("Wrong App token prefix")
-            }
-        }
+    @Test
+    fun response_proto_parse() {
+        val httpClient = HttpClientProtobuf(PropertyManager.serviceAddress ?: HttpPureClient.SERVICE_ADDRESS)
 
         val version = parseVersionAndContent(
-                publicKeyNew,
+                PropertyManager.virgilPublicKeyNew,
                 PREFIX_PUBLIC_KEY,
                 KEY_PUBLIC_KEY
         ).first
@@ -74,7 +64,7 @@ class HttpClientTest {
             PurekitProtos.EnrollmentRequest.newBuilder().setVersion(version).build().run {
                 httpClient.firePost(
                         this,
-                        HttpClientProtobuf.AvailableRequests.ENROLL.type,
+                        AvailableRequests.ENROLL.type,
                         authToken = WRONG_TOKEN,
                         responseParser = PurekitProtos.EnrollmentResponse.parser()
                 )
@@ -125,11 +115,5 @@ class HttpClientTest {
         private const val KEY_PUBLIC_KEY = "Public Key"
 
         private const val WRONG_TOKEN = "WRONG_TOKEN"
-
-        @JvmStatic fun testArguments() = listOf(
-                Arguments.of(PropertyManager.virgilPheServerAddress,
-                             PropertyManager.virgilAppToken,
-                             PropertyManager.virgilPublicKeyNew)
-        )
     }
 }

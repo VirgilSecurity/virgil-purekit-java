@@ -31,45 +31,54 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.purekit.pure;
-
-import com.virgilsecurity.purekit.pure.Pure;
-import com.virgilsecurity.purekit.pure.model.PureGrant;
+package com.virgilsecurity.purekit.pure.model;
 
 /**
- * AuthResult class is a Result of {@link Pure#authenticateUser(String, String)}.
+ * CellKey class represents encrypted asymmetric key used to encrypt data.
  */
-public class AuthResult {
+public class CellKey {
 
-    private final PureGrant grant;
-    private final String encryptedGrant;
+    private byte[] cpk;
+    private byte[] encryptedCskCms;
+    private byte[] encryptedCskBody;
 
     /**
-     * Instantiates AuthResult.
+     * Instantiates CellKey.
      *
-     * @param grant PureGrant.
-     * @param encryptedGrant Encrypted grant.
+     * @param cpk Cell public key.
+     * @param encryptedCskCms Encrypted cell secret key CMS.
+     * @param encryptedCskBody Encrypted cell secret key body.
      */
-    AuthResult(PureGrant grant, String encryptedGrant) {
-        this.grant = grant;
-        this.encryptedGrant = encryptedGrant;
+    public CellKey(byte[] cpk, byte[] encryptedCskCms, byte[] encryptedCskBody) {
+        this.cpk = cpk;
+        this.encryptedCskCms = encryptedCskCms;
+        this.encryptedCskBody = encryptedCskBody;
     }
 
     /**
-     * Returns grant.
+     * Cell public key.
      *
-     * @return PureGrant.
+     * @return Cell public key.
      */
-    public PureGrant getGrant() {
-        return grant;
+    public final byte[] getCpk() {
+        return cpk;
     }
 
     /**
-     * Returns encrypted PureGrant.
+     * Encrypted cell secret key CMS.
      *
-     * @return Encrypted PureGrant.
+     * @return Encrypted cell secret key CMS.
      */
-    public String getEncryptedGrant() {
-        return encryptedGrant;
+    public final byte[] getEncryptedCskCms() {
+        return encryptedCskCms;
+    }
+
+    /**
+     * Encrypted cell secret key body.
+     *
+     * @return Encrypted cell secret key body.
+     */
+    public final byte[] getEncryptedCskBody() {
+        return encryptedCskBody;
     }
 }

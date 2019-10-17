@@ -31,45 +31,22 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.purekit.pure;
-
-import com.virgilsecurity.purekit.pure.Pure;
-import com.virgilsecurity.purekit.pure.model.PureGrant;
+package com.virgilsecurity.purekit.client
 
 /**
- * AuthResult class is a Result of {@link Pure#authenticateUser(String, String)}.
+ * Enum of available requests
  */
-public class AuthResult {
+enum class AvailableRequests(val type: String) {
+    ENROLL("/enroll"),
+    VERIFY_PASSWORD("/verify-password"),
 
-    private final PureGrant grant;
-    private final String encryptedGrant;
-
-    /**
-     * Instantiates AuthResult.
-     *
-     * @param grant PureGrant.
-     * @param encryptedGrant Encrypted grant.
-     */
-    AuthResult(PureGrant grant, String encryptedGrant) {
-        this.grant = grant;
-        this.encryptedGrant = encryptedGrant;
-    }
-
-    /**
-     * Returns grant.
-     *
-     * @return PureGrant.
-     */
-    public PureGrant getGrant() {
-        return grant;
-    }
-
-    /**
-     * Returns encrypted PureGrant.
-     *
-     * @return Encrypted PureGrant.
-     */
-    public String getEncryptedGrant() {
-        return encryptedGrant;
-    }
+    INSERT_USER("/user"),
+    UPDATE_USER("/user/%s"),
+    GET_USER("/user/%s"),
+    GET_USERS("/get-users"),
+    DELETE_USER("/user/%s"),
+    INSERT_CELL_KEY("/cell-key"),
+    UPDATE_CELL_KEY("/cell-key/%s/%s"),
+    GET_CELL_KEY("/cell-key/%s/%s"),
+    DELETE_CELL_KEY("/cell-key/%s/%s")
 }

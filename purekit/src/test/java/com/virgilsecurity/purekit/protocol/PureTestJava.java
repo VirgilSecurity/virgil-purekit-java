@@ -1,27 +1,46 @@
 package com.virgilsecurity.purekit.protocol;
 
+import static com.virgilsecurity.crypto.foundation.FoundationException.ERROR_KEY_RECIPIENT_IS_NOT_FOUND;
+import static com.virgilsecurity.crypto.phe.PheException.ERROR_AES_FAILED;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
+
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
+
 import com.virgilsecurity.crypto.foundation.FoundationException;
 import com.virgilsecurity.crypto.phe.PheException;
-import com.virgilsecurity.purekit.data.ProtocolException;
-import com.virgilsecurity.purekit.data.ProtocolHttpException;
-import com.virgilsecurity.purekit.pure.*;
+import com.virgilsecurity.purekit.pure.AuthResult;
+import com.virgilsecurity.purekit.pure.Pure;
+import com.virgilsecurity.purekit.pure.PureContext;
+import com.virgilsecurity.purekit.pure.PureStorage;
+import com.virgilsecurity.purekit.pure.exception.PureException;
+import com.virgilsecurity.purekit.pure.model.CellKey;
+import com.virgilsecurity.purekit.pure.model.PureGrant;
+import com.virgilsecurity.purekit.pure.model.UserRecord;
 import com.virgilsecurity.purekit.utils.PropertyManager;
 import com.virgilsecurity.purekit.utils.ThreadUtils;
 import com.virgilsecurity.sdk.crypto.KeyType;
 import com.virgilsecurity.sdk.crypto.VirgilCrypto;
 import com.virgilsecurity.sdk.crypto.VirgilKeyPair;
 import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
+
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-
-import java.util.*;
-import java.util.function.Predicate;
-import java.util.stream.Stream;
-
-import static com.virgilsecurity.crypto.foundation.FoundationException.ERROR_KEY_RECIPIENT_IS_NOT_FOUND;
-import static com.virgilsecurity.crypto.phe.PheException.ERROR_AES_FAILED;
-import static org.junit.jupiter.api.Assertions.*;
 
 class PureTestJava {
     static class RamStorage implements PureStorage {
@@ -49,14 +68,14 @@ class PureTestJava {
             UserRecord userRecord = this.users.get(userId);
 
             if (userRecord == null) {
-                throw new PureException(PureException.ErrorCode.USER_NOT_FOUND_IN_STORAGE);
+                throw new PureException(PureException.ErrorStatus.USER_NOT_FOUND_IN_STORAGE);
             }
 
             return userRecord;
         }
 
         @Override
-        public Iterable<UserRecord> selectUsers(Collection<String> userIds) throws Exception {
+        public Collection<UserRecord> selectUsers(Set<String> userIds) {
             ArrayList<UserRecord> userRecords = new ArrayList<>(userIds.size());
 
             for (String userId: userIds) {
@@ -77,7 +96,7 @@ class PureTestJava {
         }
 
         @Override
-        public Iterable<UserRecord> selectUsers(int pheRecordVersion) {
+        public Collection<UserRecord> selectUsers(int pheRecordVersion) {
             Collection<UserRecord> records = this.users.values();
             records.removeIf(isNotVersion(pheRecordVersion));
 
@@ -89,7 +108,7 @@ class PureTestJava {
         }
 
         @Override
-        public void deleteUser(String userId, boolean cascade) throws Exception {
+        public void deleteUser(String userId, boolean cascade) {
             if (this.users.remove(userId) == null) {
                 throw new NullPointerException();
             }
@@ -100,7 +119,7 @@ class PureTestJava {
         }
 
         @Override
-        public CellKey selectKey(String userId, String dataId) throws PureException {
+        public CellKey selectKey(String userId, String dataId) {
             HashMap<String, CellKey> map = this.keys.get(userId);
 
             if (map == null) {
@@ -115,25 +134,25 @@ class PureTestJava {
             HashMap<String, CellKey> map = this.keys.getOrDefault(userId, new HashMap<>());
 
             if (map.putIfAbsent(dataId, cellKey) != null) {
-                throw new PureException(PureException.ErrorCode.CELL_KEY_ALREADY_EXISTS_IN_STORAGE);
+                throw new PureException(PureException.ErrorStatus.CELL_KEY_ALREADY_EXISTS_IN_STORAGE);
             }
 
             this.keys.put(userId, map);
         }
 
         @Override
-        public void updateKey(String userId, String dataId, CellKey cellKey) throws Exception {
+        public void updateKey(String userId, String dataId, CellKey cellKey) throws PureException {
             HashMap<String, CellKey> map = this.keys.get(userId);
 
             if (!map.containsKey(dataId)) {
-                throw new Exception();
+                throw new PureException(PureException.ErrorStatus.CELL_KEY_ALREADY_EXISTS_IN_STORAGE);
             }
 
             map.put(dataId, cellKey);
         }
 
         @Override
-        public void deleteKey(String userId, String dataId) throws Exception {
+        public void deleteKey(String userId, String dataId) {
             HashMap<String, CellKey> keys = this.keys.get(userId);
 
             if (keys == null) {
@@ -213,10 +232,9 @@ class PureTestJava {
         if (storage != null) {
             context = PureContext.createContext(appToken, akString, bupkpString, hkpString,
                     storage, secretKey, publicKey, externalPublicKeys, pheServerAddress);
-        }
-        else {
+        } else {
             VirgilKeyPair signingKeyPair = this.crypto.generateKeyPair();
-            String vkString = String.format("VK.%s", Base64.getEncoder().encodeToString(this.crypto.exportPrivateKey(signingKeyPair.getPrivateKey())));
+            String vkString = String.format("VS.%s", Base64.getEncoder().encodeToString(this.crypto.exportPrivateKey(signingKeyPair.getPrivateKey())));
 
             context = PureContext.createContext(appToken, akString, bupkpString, hkpString, vkString,
                     secretKey, publicKey, externalPublicKeys, pheServerAddress, pureServerAddress);
@@ -234,7 +252,7 @@ class PureTestJava {
                                                 String pureServerAddress,
                                                 String appToken,
                                                 String publicKey,
-                                                String secretKey) throws InterruptedException, ProtocolException {
+                                                String secretKey) throws InterruptedException {
         ThreadUtils.pause();
 
         try {
@@ -248,8 +266,7 @@ class PureTestJava {
 
                 pure.registerUser(userId, password);
             }
-        }
-        catch (Exception | ProtocolHttpException e) {
+        } catch (Exception e) {
             fail(e);
         }
     }
@@ -259,7 +276,7 @@ class PureTestJava {
                                                   String pureServerAddress,
                                                   String appToken,
                                                   String publicKey,
-                                                  String secretKey) throws InterruptedException, ProtocolException {
+                                                  String secretKey) throws InterruptedException {
         ThreadUtils.pause();
 
         try {
@@ -285,8 +302,7 @@ class PureTestJava {
                 assertNotNull(grant.getUkp());
                 assertNotNull(grant.getCreationDate());
             }
-        }
-        catch (Exception | ProtocolHttpException e) {
+        } catch (Exception e) {
             fail(e);
         }
     }
@@ -296,7 +312,7 @@ class PureTestJava {
                                                String pureServerAddress,
                                                String appToken,
                                                String publicKey,
-                                               String secretKey) throws InterruptedException, ProtocolException {
+                                               String secretKey) throws InterruptedException {
         ThreadUtils.pause();
 
         try {
@@ -320,8 +336,7 @@ class PureTestJava {
 
                 assertArrayEquals(text, plainText);
             }
-        }
-        catch (Exception | ProtocolHttpException e) {
+        } catch (Exception e) {
             fail(e);
         }
     }
@@ -331,7 +346,7 @@ class PureTestJava {
                                           String pureServerAddress,
                                           String appToken,
                                           String publicKey,
-                                          String secretKey) throws InterruptedException, ProtocolException {
+                                          String secretKey) throws InterruptedException {
         ThreadUtils.pause();
 
         try {
@@ -363,8 +378,7 @@ class PureTestJava {
                 assertArrayEquals(text, plainText1);
                 assertArrayEquals(text, plainText2);
             }
-        }
-        catch (Exception | ProtocolHttpException e) {
+        } catch (Exception e) {
             fail(e);
         }
     }
@@ -374,7 +388,7 @@ class PureTestJava {
                                                     String pureServerAddress,
                                                     String appToken,
                                                     String publicKey,
-                                                    String secretKey) throws InterruptedException, ProtocolException {
+                                                    String secretKey) throws InterruptedException {
         ThreadUtils.pause();
 
         try {
@@ -407,8 +421,7 @@ class PureTestJava {
 
                 assertEquals(e.getStatusCode(), ERROR_KEY_RECIPIENT_IS_NOT_FOUND);
             }
-        }
-        catch (Exception | ProtocolHttpException e) {
+        } catch (Exception e) {
             fail(e);
         }
     }
@@ -418,7 +431,7 @@ class PureTestJava {
                                                     String pureServerAddress,
                                                     String appToken,
                                                     String publicKey,
-                                                    String secretKey) throws InterruptedException, ProtocolException {
+                                                    String secretKey) throws InterruptedException {
         ThreadUtils.pause();
 
         try {
@@ -451,8 +464,7 @@ class PureTestJava {
 
                 assertEquals(e.getStatusCode(), ERROR_AES_FAILED);
             }
-        }
-        catch (Exception | ProtocolHttpException e) {
+        } catch (Exception e) {
             fail(e);
         }
     }
@@ -462,7 +474,7 @@ class PureTestJava {
                                              String pureServerAddress,
                                              String appToken,
                                              String publicKey,
-                                             String secretKey) throws InterruptedException, ProtocolException {
+                                             String secretKey) throws InterruptedException {
         ThreadUtils.pause();
 
         try {
@@ -488,8 +500,7 @@ class PureTestJava {
 
                 assertArrayEquals(text, plainText);
             }
-        }
-        catch (Exception | ProtocolHttpException e) {
+        } catch (Exception e) {
             fail(e);
         }
     }
@@ -499,7 +510,7 @@ class PureTestJava {
                                                  String pureServerAddress,
                                                  String appToken,
                                                  String publicKey,
-                                                 String secretKey) throws InterruptedException, ProtocolException {
+                                                 String secretKey) throws InterruptedException {
         ThreadUtils.pause();
 
         try {
@@ -530,8 +541,7 @@ class PureTestJava {
 
                 assertEquals(e.getStatusCode(), ERROR_KEY_RECIPIENT_IS_NOT_FOUND);
             }
-        }
-        catch (Exception | ProtocolHttpException e) {
+        } catch (Exception e) {
             fail(e);
         }
     }
@@ -541,7 +551,7 @@ class PureTestJava {
                                                String pureServerAddress,
                                                String appToken,
                                                String publicKey,
-                                               String secretKey) throws InterruptedException, ProtocolException {
+                                               String secretKey) throws InterruptedException {
         ThreadUtils.pause();
 
         try {
@@ -572,8 +582,7 @@ class PureTestJava {
 
                 assertArrayEquals(text, plainText);
             }
-        }
-        catch (Exception | ProtocolHttpException e) {
+        } catch (Exception e) {
             fail(e);
         }
     }
@@ -584,7 +593,7 @@ class PureTestJava {
                                                 String appToken,
                                                 String publicKey,
                                                 String secretKey,
-                                                String updateToken) throws InterruptedException, ProtocolException {
+                                                String updateToken) throws InterruptedException {
         ThreadUtils.pause();
 
         try {
@@ -608,8 +617,7 @@ class PureTestJava {
             long rotated = pure.performRotation();
 
             assertEquals(total, rotated);
-        }
-        catch (Exception | ProtocolHttpException e) {
+        } catch (Exception e) {
             fail(e);
         }
     }
@@ -619,7 +627,7 @@ class PureTestJava {
                                                      String pureServerAddress,
                                                      String appToken,
                                                      String publicKey,
-                                                     String secretKey) throws InterruptedException, ProtocolException {
+                                                     String secretKey) throws InterruptedException {
         ThreadUtils.pause();
 
         try {
@@ -657,8 +665,7 @@ class PureTestJava {
 
                 assertArrayEquals(text, plainText);
             }
-        }
-        catch (Exception | ProtocolHttpException e) {
+        } catch (Exception e) {
             fail(e);
         }
     }
@@ -668,7 +675,7 @@ class PureTestJava {
                                                    String pureServerAddress,
                                                    String appToken,
                                                    String publicKey,
-                                                   String secretKey) throws InterruptedException, ProtocolException {
+                                                   String secretKey) throws InterruptedException {
         ThreadUtils.pause();
 
         try {
@@ -696,8 +703,7 @@ class PureTestJava {
 
                 assertArrayEquals(text, plainText);
             }
-        }
-        catch (Exception | ProtocolHttpException e) {
+        } catch (Exception e) {
             fail(e);
         }
     }
@@ -707,7 +713,7 @@ class PureTestJava {
                                                            String pureServerAddress,
                                                            String appToken,
                                                            String publicKey,
-                                                           String secretKey) throws InterruptedException, ProtocolException {
+                                                           String secretKey) throws InterruptedException {
         ThreadUtils.pause();
 
         try {
@@ -734,16 +740,15 @@ class PureTestJava {
                     AuthResult authResult2 = pure.authenticateUser(userId, password);
                 });
 
-                assertEquals(PureException.ErrorCode.USER_NOT_FOUND_IN_STORAGE, e1.getErrorCode());
+                assertEquals(PureException.ErrorStatus.USER_NOT_FOUND_IN_STORAGE, e1.getErrorStatus());
 
                 PureException e2 = assertThrows(PureException.class, () -> {
                     byte[] plainText = pure.decrypt(authResult1.getGrant(), null, dataId, cipherText);
                 });
 
-                assertEquals(PureException.ErrorCode.CELL_KEY_NOT_FOUND_IN_STORAGE, e2.getErrorCode());
+                assertEquals(PureException.ErrorStatus.CELL_KEY_NOT_FOUND_IN_STORAGE, e2.getErrorStatus());
             }
-        }
-        catch (Exception | ProtocolHttpException e) {
+        } catch (Exception e) {
             fail(e);
         }
     }
@@ -753,7 +758,7 @@ class PureTestJava {
                                                      String pureServerAddress,
                                                      String appToken,
                                                      String publicKey,
-                                                     String secretKey) throws InterruptedException, ProtocolException {
+                                                     String secretKey) throws InterruptedException {
         ThreadUtils.pause();
 
         try {
@@ -780,14 +785,13 @@ class PureTestJava {
                     AuthResult authResult2 = pure.authenticateUser(userId, password);
                 });
 
-                assertEquals(PureException.ErrorCode.USER_NOT_FOUND_IN_STORAGE, e.getErrorCode());
+                assertEquals(PureException.ErrorStatus.USER_NOT_FOUND_IN_STORAGE, e.getErrorStatus());
 
                 byte[] plainText = pure.decrypt(authResult1.getGrant(), null, dataId, cipherText);
 
                 assertArrayEquals(text, plainText);
             }
-        }
-        catch (Exception | ProtocolHttpException e) {
+        } catch (Exception e) {
             fail(e);
         }
     }
@@ -797,7 +801,7 @@ class PureTestJava {
                                             String pureServerAddress,
                                             String appToken,
                                             String publicKey,
-                                            String secretKey) throws InterruptedException, ProtocolException {
+                                            String secretKey) throws InterruptedException {
         ThreadUtils.pause();
 
         try {
@@ -824,34 +828,58 @@ class PureTestJava {
                     byte[] plainText = pure.decrypt(authResult1.getGrant(), null, dataId, cipherText);
                 });
 
-                assertEquals(PureException.ErrorCode.CELL_KEY_NOT_FOUND_IN_STORAGE, e.getErrorCode());
+                assertEquals(PureException.ErrorStatus.CELL_KEY_NOT_FOUND_IN_STORAGE, e.getErrorStatus());
             }
-        }
-        catch (Exception | ProtocolHttpException e) {
+        } catch (Exception e) {
             fail(e);
         }
     }
 
-    // TODO: Test hashes encryption
+    @ParameterizedTest @MethodSource("testArgumentsNoToken")
+    void registration__new_user__backups_pwd_hash(String pheServerAddress,
+                                                  String pureServerAddress,
+                                                  String appToken,
+                                                  String publicKey,
+                                                  String secretKey) throws InterruptedException {
+        ThreadUtils.pause();
+
+        try {
+            RamStorage storage = new RamStorage();
+            PureSetupResult pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, storage);
+            Pure pure = pureResult.getPure();
+
+            String userId = UUID.randomUUID().toString();
+            String password = UUID.randomUUID().toString();
+
+            pure.registerUser(userId, password);
+
+            UserRecord record = storage.selectUser(userId);
+
+            byte[] pwdHashDecrypted = pureResult.getCrypto().decrypt(record.getEncryptedPwdHash(), pureResult.getHkp().getPrivateKey());
+            byte[] pwdHash = pureResult.getCrypto().computeHash(password.getBytes());
+
+            assertArrayEquals(pwdHash, pwdHashDecrypted);
+        } catch (Exception e) {
+            fail(e);
+        }
+    }
 
     private static Stream<Arguments> testArgumentsNoToken() {
         return Stream.of(
-                Arguments.of(PropertyManager.getVirgilPheServerAddress(),
-                        PropertyManager.getVirgilPureServerAddress(),
-                        PropertyManager.getVirgilAppToken(),
-                        PropertyManager.getVirgilPublicKeyNew(),
-                        PropertyManager.getVirgilSecretKeyNew())
+            Arguments.of(PropertyManager.getServiceAddress(),
+                         PropertyManager.getVirgilAppToken(),
+                         PropertyManager.getVirgilPublicKeyNew(),
+                         PropertyManager.getVirgilSecretKeyNew())
         );
     }
 
     private static Stream<Arguments> testArguments() {
         return Stream.of(
-                Arguments.of(PropertyManager.getVirgilPheServerAddress(),
-                        PropertyManager.getVirgilPureServerAddress(),
-                        PropertyManager.getVirgilAppToken(),
-                        PropertyManager.getVirgilPublicKeyOld(),
-                        PropertyManager.getVirgilSecretKeyOld(),
-                        PropertyManager.getVirgilUpdateTokenNew())
+            Arguments.of(PropertyManager.getServiceAddress(),
+                         PropertyManager.getVirgilAppToken(),
+                         PropertyManager.getVirgilPublicKeyOld(),
+                         PropertyManager.getVirgilSecretKeyOld(),
+                         PropertyManager.getVirgilUpdateTokenNew())
         );
     }
 }

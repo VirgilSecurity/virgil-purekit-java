@@ -33,95 +33,103 @@
 
 package com.virgilsecurity.purekit.pure;
 
-// FIXME: Add typed exceptions?
+import java.util.Set;
 
-import java.util.Collection;
+import com.virgilsecurity.purekit.pure.exception.PureException;
+import com.virgilsecurity.purekit.pure.model.CellKey;
+import com.virgilsecurity.purekit.pure.model.UserRecord;
 
 /**
- * Interface for Pure storage
+ * Interface for Pure storage.
  */
 public interface PureStorage {
+
     /**
-     * Insert new user into storage
-     * @param userRecord User record
-     * @throws Exception FIXME
+     * Insert a new user into a storage.
+     *
+     * @param userRecord User record.
      */
     void insertUser(UserRecord userRecord) throws Exception;
 
     /**
-     * Updates user in storage
-     * @param userRecord User record
-     * @throws Exception FIXME
+     * Updates a user in a storage.
+     *
+     * @param userRecord User record.
      */
     void updateUser(UserRecord userRecord) throws Exception;
 
     /**
-     * Obtains user record with given userId from storage
-     * @param userId userId
-     * @return UserRecord
-     * @throws Exception FIXME
+     * Obtains a user record with the given userId from a storage.
+     *
+     * @param userId User Id.
+     *
+     * @return UserRecord.
      */
     UserRecord selectUser(String userId) throws Exception;
 
     /**
-     * Obtains users record with given userId from storage
-     * @param userIds userIds
-     * @return UserRecords
-     * @throws Exception FIXME
+     * Obtains users records with given userIds from a storage.
+     *
+     * @param userIds User Ids.
+     *
+     * @return UserRecords.
      */
-    Iterable<UserRecord> selectUsers(Collection<String> userIds) throws Exception;
+    Iterable<UserRecord> selectUsers(Set<String> userIds) throws Exception;
 
     /**
-     * Obtains users with given pheRecordVersion from storage
-     * @implNote this method should have limit on number of returned values (e.g. 50, 100).
-     * Calling method will request records until empty value is returned
-     * @param pheRecordVersion PheRecordVersion
-     * @return UserRecords
-     * @throws Exception FIXME
+     * Obtains users records with given userIds from a storage.
+     *
+     * @param pheRecordVersion PHE record version.
+     *
+     * @return UserRecords.
      */
     Iterable<UserRecord> selectUsers(int pheRecordVersion) throws Exception;
 
     /**
-     * Deletes user with given id
-     * @param userId userId
-     * @param cascade deletes all user cell keys if true
-     * @throws Exception FIXME
+     * Deletes user with the given id.
+     *
+     * @param userId User Id.
+     * @param cascade Deletes all user cell keys if true.
      */
     void deleteUser(String userId, boolean cascade) throws Exception;
 
     /**
-     * Obtains CellKey for given userId and dataId from storage
-     * @param userId userId
-     * @param dataId dataId
-     * @return CellKey
-     * @throws Exception FIXME
+     * Obtains a CellKey for the given userId and dataId from a storage.
+     *
+     * @param userId User Id.
+     * @param dataId Data Id.
+     *
+     * @return CellKey.
      */
     CellKey selectKey(String userId, String dataId) throws Exception;
 
     /**
-     * Insert CellKey key into storage
-     * @implSpec this method MUST throw PureException(CELL_KEY_ALREADY_EXISTS) if key with given userId and dataId already exists
-     * @param userId userId
-     * @param dataId dataId
-     * @param cellKey cell key record
-     * @throws Exception FIXME
+     * Insert a CellKey key into a storage.
+     *
+     * @implSpec this method MUST throw {@link PureException} with
+     * {@link PureException.ErrorStatus#CELL_KEY_ALREADY_EXISTS_IN_STORAGE} if key with given
+     * userId and dataId already exists.
+     *
+     * @param userId User Id.
+     * @param dataId Data Id.
+     * @param cellKey Cell key record.
      */
     void insertKey(String userId, String dataId, CellKey cellKey) throws Exception;
 
     /**
-     * Updates CellKey
-     * @param userId userId
-     * @param dataId dataId
-     * @param cellKey cell key record
-     * @throws Exception FIXME
+     * Updates a CellKey.
+     *
+     * @param userId User Id.
+     * @param dataId Data Id.
+     * @param cellKey Cell key record.
      */
     void updateKey(String userId, String dataId, CellKey cellKey) throws Exception;
 
     /**
-     * Deletes cell key with given userId and dataId
-     * @param userId userId
-     * @param dataId dataId
-     * @throws Exception FIXME
+     * Deletes a CellKey with the given userId and dataId.
+     *
+     * @param userId User Id.
+     * @param dataId Data Id.
      */
     void deleteKey(String userId, String dataId) throws Exception;
 }

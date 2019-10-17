@@ -33,214 +33,258 @@
 
 package com.virgilsecurity.purekit.pure;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.virgilsecurity.purekit.client.AvailableRequests;
 import com.virgilsecurity.purekit.client.HttpClientProtobuf;
 import com.virgilsecurity.purekit.data.ProtocolException;
 import com.virgilsecurity.purekit.data.ProtocolHttpException;
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage;
-
-import java.util.Collection;
-import java.util.LinkedHashMap;
+import com.virgilsecurity.purekit.utils.ValidateUtils;
+import com.virgilsecurity.sdk.exception.EmptyArgumentException;
 
 /**
  * Class for http interactions with Pure service
  */
 public class HttpPureClient {
+
     private final String appToken;
     private final HttpClientProtobuf client;
 
-    /**
-     * Service address
-     */
-    static public String serviceAddress = "https://api.virgilsecurity.com/pure/v1";
+    public static final String SERVICE_ADDRESS = "https://api.virgilsecurity.com/pure/v1";
+    public static final String KEY_CASCADE = "cascade";
 
     /**
-     * Service error code
-     */
-    public enum ErrorCode {
-        USER_NOT_FOUND,
-        CELL_KEY_NOT_FOUND,
-        CELL_KEY_ALREADY_EXISTS;
-
-        /**
-         * Error code number
-         * @return error code number
-         */
-        public int getErrorNumber() {
-            switch (this) {
-                case USER_NOT_FOUND: return 50003;
-                case CELL_KEY_NOT_FOUND: return 50004;
-                case CELL_KEY_ALREADY_EXISTS: return 50006;
-            }
-
-            return 0;
-        }
-    }
-
-    /**
-     * Constructor
-     * @param appToken application token
-     * @param serviceAddress service url
+     * Instantiates HttpPureClient.
+     *
+     * @param appToken Application token.
+     * @param serviceAddress Service url.
      */
     public HttpPureClient(String appToken, String serviceAddress) {
-        if (appToken == null || appToken.isEmpty()) {
-            throw new NullPointerException();
-        }
-        if (serviceAddress == null || serviceAddress.isEmpty()) {
-            throw new NullPointerException();
-        }
+        ValidateUtils.checkNullOrEmpty(appToken, "appToken");
+        ValidateUtils.checkNullOrEmpty(serviceAddress, "appToken");
 
         this.appToken = appToken;
         this.client = new HttpClientProtobuf(serviceAddress);
     }
 
     /**
-     * Inserts new user
-     * @param userRecord user Record
-     * @throws ProtocolHttpException FIXME
-     * @throws ProtocolException FIXME
+     * Inserts new user.
+     *
+     * @param userRecord User Record.
+     *
+     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
+     * successfully.
+     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
+     * successfully. Represents a regular HTTP exception with code and message.
      */
-    public void insertUser(PurekitProtosV3Storage.UserRecord userRecord) throws ProtocolHttpException, ProtocolException {
-        this.client.firePost(
-                userRecord,
-                HttpClientProtobuf.AvailableRequests.INSERT_USER.getType(),
-                new LinkedHashMap<>(),
-                this.appToken
+    public void insertUser(PurekitProtosV3Storage.UserRecord userRecord) 
+        throws ProtocolHttpException, ProtocolException {
+        
+        client.firePost(
+            userRecord,
+            AvailableRequests.INSERT_USER.getType(),
+            this.appToken
         );
     }
 
     /**
-     * Updates user
-     * @param userId userId
-     * @param userRecord UserRecord
-     * @throws ProtocolHttpException FIXME
-     * @throws ProtocolException FIXME
+     * Updates user.
+     *
+     * @param userId User Id.
+     * @param userRecord UserRecord.
+     *
+     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
+     * successfully.
+     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
+     * successfully. Represents a regular HTTP exception with code and message.
      */
-    public void updateUser(String userId, PurekitProtosV3Storage.UserRecord userRecord) throws ProtocolHttpException, ProtocolException {
-        if (userId == null || userId.isEmpty()) {
-            throw new NullPointerException();
-        }
+    public void updateUser(String userId, PurekitProtosV3Storage.UserRecord userRecord) 
+        throws ProtocolHttpException, ProtocolException {
+        
+        ValidateUtils.checkNullOrEmpty(userId, "userId");
 
-        this.client.firePut(
-                userRecord,
-                String.format(HttpClientProtobuf.AvailableRequests.UPDATE_USER.getType(), userId),
-                new LinkedHashMap<>(),
-                this.appToken
+        client.firePut(
+            userRecord,
+            String.format(AvailableRequests.UPDATE_USER.getType(), userId),
+            this.appToken
         );
     }
 
     /**
-     * Obtains user
-     * @param userId userId
-     * @return UserRecord
-     * @throws ProtocolHttpException FIXME
-     * @throws ProtocolException FIXME
+     * Obtains user.
+     *
+     * @param userId User Id.
+     *
+     * @return UserRecord.
+     *
+     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
+     * successfully.
+     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
+     * successfully. Represents a regular HTTP exception with code and message.
      */
-    public PurekitProtosV3Storage.UserRecord getUser(String userId) throws ProtocolHttpException, ProtocolException {
-        return this.client.fireGet(
-                String.format(HttpClientProtobuf.AvailableRequests.GET_USER.getType(), userId),
-                new LinkedHashMap<>(),
+    public PurekitProtosV3Storage.UserRecord getUser(String userId) 
+        throws ProtocolHttpException, ProtocolException {
+
+        ValidateUtils.checkNullOrEmpty(userId, "userId");
+
+        return client.fireGet(
+                String.format(AvailableRequests.GET_USER.getType(), userId),
                 this.appToken,
                 PurekitProtosV3Storage.UserRecord.parser()
         );
     }
 
     /**
-     * Obtains user
-     * @param userIds userIds
-     * @return UserRecords
-     * @throws ProtocolHttpException FIXME
-     * @throws ProtocolException FIXME
+     * Obtains user.
+     *
+     * @param userIds User Ids.
+     *
+     * @return UserRecords.
+     *
+     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
+     * successfully.
+     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
+     * successfully. Represents a regular HTTP exception with code and message.
      */
-    public PurekitProtosV3Storage.UserRecords getUsers(Collection<String> userIds) throws ProtocolHttpException, ProtocolException {
-        PurekitProtosV3Storage.GetUserRecords getUserRecords = PurekitProtosV3Storage.GetUserRecords.newBuilder().addAllUserIds(userIds).build();
+    public PurekitProtosV3Storage.UserRecords getUsers(Collection<String> userIds) 
+        throws ProtocolHttpException, ProtocolException {
 
-        return this.client.firePost(
-                getUserRecords,
-                HttpClientProtobuf.AvailableRequests.GET_USERS.getType(),
-                new LinkedHashMap<>(),
-                this.appToken,
-                PurekitProtosV3Storage.UserRecords.parser()
+        ValidateUtils.checkNull(userIds, "userIds");
+        if (userIds.isEmpty()) {
+            throw new EmptyArgumentException("userIds");
+        }
+
+        PurekitProtosV3Storage.GetUserRecords getUserRecords = 
+            PurekitProtosV3Storage.GetUserRecords.newBuilder().addAllUserIds(userIds).build();
+
+        return client.firePost(
+            getUserRecords,
+            AvailableRequests.GET_USERS.getType(),
+            this.appToken,
+            PurekitProtosV3Storage.UserRecords.parser()
         );
     }
 
     /**
-     * Deletes user
-     * @param userId userIds
-     * @param cascade deletes all user cell keys if true
-     * @throws ProtocolHttpException FIXME
-     * @throws ProtocolException FIXME
+     * Deletes user.
+     *
+     * @param userId User Ids.
+     * @param cascade Deletes all user cell keys if true.
+     *
+     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
+     * successfully.
+     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
+     * successfully. Represents a regular HTTP exception with code and message.
      */
-    public void deleteUser(String userId, boolean cascade) throws ProtocolHttpException, ProtocolException {
-        // TODO: parameters ideally should not be added directly to url string
+    public void deleteUser(String userId, boolean cascade) 
+        throws ProtocolHttpException, ProtocolException {
 
-        this.client.fireDelete(
-                String.format(HttpClientProtobuf.AvailableRequests.DELETE_USER.getType(), userId, String.valueOf(cascade)),
-                new LinkedHashMap<>(),
-                this.appToken
+        ValidateUtils.checkNullOrEmpty(userId, "userId");
+
+        Map<String, String> params = new HashMap<>();
+        params.put(KEY_CASCADE, String.valueOf(cascade));
+
+        client.fireDelete(
+            params,
+            String.format(AvailableRequests.DELETE_USER.getType(), userId),
+            this.appToken
         );
     }
 
     /**
-     * Inserts new cell key
-     * @param cellKey CellKey
-     * @throws ProtocolHttpException FIXME
-     * @throws ProtocolException FIXME
+     * Inserts new cell key.
+     *
+     * @param cellKey CellKey.
+     *
+     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
+     * successfully.
+     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
+     * successfully. Represents a regular HTTP exception with code and message.
      */
-    public void insertCellKey(PurekitProtosV3Storage.CellKey cellKey) throws ProtocolHttpException, ProtocolException {
-        this.client.firePost(
-                cellKey,
-                HttpClientProtobuf.AvailableRequests.INSERT_CELL_KEY.getType(),
-                new LinkedHashMap<>(),
-                this.appToken
+    public void insertCellKey(PurekitProtosV3Storage.CellKey cellKey) 
+        throws ProtocolHttpException, ProtocolException {
+        
+        client.firePost(
+            cellKey,
+            AvailableRequests.INSERT_CELL_KEY.getType(),
+            this.appToken
         );
     }
 
     /**
-     * Updates cell key
-     * @param userId user id
-     * @param dataId data id
-     * @param cellKey CellKey
-     * @throws ProtocolHttpException FIXME
-     * @throws ProtocolException FIXME
+     * Updates cell key.
+     *
+     * @param userId User Id.
+     * @param dataId Data id.
+     * @param cellKey CellKey.
+     *
+     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
+     * successfully.
+     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
+     * successfully. Represents a regular HTTP exception with code and message.
      */
-    public void updateCellKey(String userId, String dataId, PurekitProtosV3Storage.CellKey cellKey) throws ProtocolHttpException, ProtocolException {
-        this.client.firePut(
-                cellKey,
-                String.format(HttpClientProtobuf.AvailableRequests.UPDATE_CELL_KEY.getType(), userId, dataId),
-                new LinkedHashMap<>(),
-                this.appToken
+    public void updateCellKey(String userId, String dataId, PurekitProtosV3Storage.CellKey cellKey) 
+        throws ProtocolHttpException, ProtocolException {
+
+        ValidateUtils.checkNullOrEmpty(userId, "userId");
+        ValidateUtils.checkNullOrEmpty(dataId, "dataId");
+
+        client.firePut(
+            cellKey,
+            String.format(AvailableRequests.UPDATE_CELL_KEY.getType(), userId, dataId),
+            this.appToken
         );
     }
 
     /**
-     * Obtains cell key
-     * @param userId userId
-     * @param dataId dataId
-     * @return CellKey
-     * @throws ProtocolHttpException FIXME
-     * @throws ProtocolException FIXME
+     * Obtains cell key.
+     *
+     * @param userId User Id.
+     * @param dataId Data Id.
+     *
+     * @return CellKey.
+     *
+     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
+     * successfully.
+     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
+     * successfully. Represents a regular HTTP exception with code and message.
      */
-    public PurekitProtosV3Storage.CellKey getCellKey(String userId, String dataId) throws ProtocolHttpException, ProtocolException {
-        return this.client.fireGet(
-                String.format(HttpClientProtobuf.AvailableRequests.GET_CELL_KEY.getType(), userId, dataId),
-                new LinkedHashMap<>(),
-                this.appToken,
-                PurekitProtosV3Storage.CellKey.parser()
+    public PurekitProtosV3Storage.CellKey getCellKey(String userId, String dataId)
+        throws ProtocolHttpException, ProtocolException {
+
+        ValidateUtils.checkNullOrEmpty(userId, "userId");
+        ValidateUtils.checkNullOrEmpty(dataId, "dataId");
+
+        return client.fireGet(
+            String.format(AvailableRequests.GET_CELL_KEY.getType(), userId, dataId),
+            this.appToken,
+            PurekitProtosV3Storage.CellKey.parser()
         );
     }
 
     /**
-     * Deletes cell key
-     * @param userId userIds
-     * @param dataId dataId
-     * @throws ProtocolHttpException FIXME
-     * @throws ProtocolException FIXME
+     * Deletes cell key.
+     *
+     * @param userId User Ids.
+     * @param dataId Data Id.
+     *
+     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
+     * successfully.
+     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
+     * successfully. Represents a regular HTTP exception with code and message.
      */
-    public void deleteCellKey(String userId, String dataId) throws ProtocolHttpException, ProtocolException {
-        this.client.fireDelete(
-                String.format(HttpClientProtobuf.AvailableRequests.DELETE_CELL_KEY.getType(), userId, dataId),
-                new LinkedHashMap<>(),
-                this.appToken
+    public void deleteCellKey(String userId, String dataId)
+        throws ProtocolHttpException, ProtocolException {
+
+        ValidateUtils.checkNullOrEmpty(userId, "userId");
+        ValidateUtils.checkNullOrEmpty(dataId, "dataId");
+
+        client.fireDelete(
+            String.format(AvailableRequests.DELETE_CELL_KEY.getType(), userId, dataId),
+            this.appToken
         );
     }
 }

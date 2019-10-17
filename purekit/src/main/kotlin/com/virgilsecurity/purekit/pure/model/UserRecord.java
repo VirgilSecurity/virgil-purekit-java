@@ -31,12 +31,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.purekit.pure;
+package com.virgilsecurity.purekit.pure.model;
 
 /**
  * User record
  */
 public class UserRecord {
+
     private final String userId;
     private final byte[] pheRecord;
     private final int pheRecordVersion;
@@ -46,16 +47,18 @@ public class UserRecord {
     private final byte[] encryptedPwdHash;
 
     /**
-     * Constructor
-     * @param userId userId
-     * @param pheRecord phe record
-     * @param pheRecordVersion phe record version
-     * @param upk user public key
-     * @param encryptedUsk encrypted user secret key
-     * @param encryptedUskBackup encrypted for backup user secret key
-     * @param encryptedPwdHash encrypted for backup user password hash
+     * Instantiates UserRecord.
+     *
+     * @param userId User Id.
+     * @param pheRecord PHE record.
+     * @param pheRecordVersion Phe record version.
+     * @param upk User public key.
+     * @param encryptedUsk Encrypted user secret key.
+     * @param encryptedUskBackup Encrypted for backup user secret key.
+     * @param encryptedPwdHash Encrypted for backup user password hash.
      */
-    public UserRecord(String userId, byte[] pheRecord, int pheRecordVersion, byte[] upk, byte[] encryptedUsk, byte[] encryptedUskBackup, byte[] encryptedPwdHash) {
+    public UserRecord(String userId, byte[] pheRecord, int pheRecordVersion, byte[] upk,
+                      byte[] encryptedUsk, byte[] encryptedUskBackup, byte[] encryptedPwdHash) {
         this.userId = userId;
         this.pheRecord = pheRecord;
         this.pheRecordVersion = pheRecordVersion;
@@ -66,56 +69,63 @@ public class UserRecord {
     }
 
     /**
-     * Return user id
-     * @return User id
+     * Return user id.
+     *
+     * @return User id.
      */
     public String getUserId() {
         return userId;
     }
 
     /**
-     * Returns phe record
-     * @return PHE record
+     * Returns phe record.
+     *
+     * @return PHE record.
      */
     public byte[] getPheRecord() {
         return pheRecord;
     }
 
     /**
-     * Returns phe record version
-     * @return PHE record version
+     * Returns phe record version.
+     *
+     * @return PHE record version.
      */
     public int getPheRecordVersion() {
         return pheRecordVersion;
     }
 
     /**
-     * Returns user public key
-     * @return User public key
+     * Returns user public key.
+     *
+     * @return User public key.
      */
     public byte[] getUpk() {
         return upk;
     }
 
     /**
-     * Returns encrypted user secret key
-     * @return Encrypted user secret key
+     * Returns encrypted user secret key.
+     *
+     * @return Encrypted user secret key.
      */
     public byte[] getEncryptedUsk() {
         return encryptedUsk;
     }
 
     /**
-     * Return encrypted for backup user secret key
-     * @return Encrypted for backup user secret key
+     * Return encrypted for backup user secret key.
+     *
+     * @return Encrypted for backup user secret key.
      */
     public byte[] getEncryptedUskBackup() {
         return encryptedUskBackup;
     }
 
     /**
-     * Returns encrypted for backup user password hash
-     * @return Encrypted for backup user password hash
+     * Returns encrypted for backup user password hash.
+     *
+     * @return Encrypted for backup user password hash.
      */
     public byte[] getEncryptedPwdHash() {
         return encryptedPwdHash;

@@ -33,76 +33,85 @@
 
 package com.virgilsecurity.purekit.pure;
 
+import java.util.LinkedHashMap;
+
+import com.virgilsecurity.purekit.client.AvailableRequests;
 import com.virgilsecurity.purekit.client.HttpClientProtobuf;
 import com.virgilsecurity.purekit.data.ProtocolException;
 import com.virgilsecurity.purekit.data.ProtocolHttpException;
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtos;
-import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage;
-import com.virgilsecurity.purekit.protocol.Protocol;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
-import java.util.LinkedHashMap;
+import com.virgilsecurity.purekit.utils.ValidateUtils;
 
 /**
- * Class for http interactions with PHE service
+ * HttpPheClient class is for http interactions with PHE service.
  */
 public class HttpPheClient {
+
     private final String appToken;
     private final HttpClientProtobuf client;
 
-    /**
-     * Service address
-     */
-    static public String serviceAddress = "https://api.virgilsecurity.com/phe/v1";
+    public static final String SERVICE_ADDRESS = "https://api.virgilsecurity.com/phe/v1";
 
     /**
-     * Constructor
-     * @param appToken application token
-     * @param serviceAddress service url
+     * Instantiates HttpPheClient.
+     *
+     * @param appToken Application token.
+     * @param serviceAddress Service url.
      */
     public HttpPheClient(String appToken, String serviceAddress) {
-        if (appToken == null || appToken.isEmpty()) {
-            throw new NullPointerException();
-        }
-        if (serviceAddress == null || serviceAddress.isEmpty()) {
-            throw new NullPointerException();
-        }
+        ValidateUtils.checkNullOrEmpty(appToken, "appToken");
+        ValidateUtils.checkNullOrEmpty(serviceAddress, "serviceAddress");
 
         this.appToken = appToken;
         this.client = new HttpClientProtobuf(serviceAddress);
     }
 
     /**
-     * Enrolls new account
-     * @param request enrollment request
-     * @return enrollment response
-     * @throws ProtocolException FIXME
-     * @throws ProtocolHttpException FIXME
+     * Enrolls new account.
+     *
+     * @param request Enrollment request.
+     *
+     * @return Enrollment response.
+     *
+     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
+     * successfully.
+     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
+     * successfully. Represents a regular HTTP exception with code and message.
      */
-    public PurekitProtos.EnrollmentResponse enrollAccount(PurekitProtos.EnrollmentRequest request) throws ProtocolException, ProtocolHttpException {
-        return this.client.firePost(
-                request,
-                HttpClientProtobuf.AvailableRequests.ENROLL.getType(),
-                new LinkedHashMap<>(),
-                this.appToken,
-                PurekitProtos.EnrollmentResponse.parser()
+    public PurekitProtos.EnrollmentResponse enrollAccount(PurekitProtos.EnrollmentRequest request)
+        throws ProtocolException, ProtocolHttpException {
+
+        return client.firePost(
+            request,
+            AvailableRequests.ENROLL.getType(),
+            new LinkedHashMap<>(),
+            this.appToken,
+            PurekitProtos.EnrollmentResponse.parser()
         );
     }
 
     /**
-     * Verifies password
-     * @param request verify password request
-     * @return verify password response
-     * @throws ProtocolException FIXME
-     * @throws ProtocolHttpException FIXME
+     * Verifies password.
+     *
+     * @param request Verify password request.
+     *
+     * @return Verify password response.
+     *
+     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
+     * successfully.
+     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
+     * successfully. Represents a regular HTTP exception with code and message.
      */
-    public PurekitProtos.VerifyPasswordResponse verifyPassword(PurekitProtos.VerifyPasswordRequest request) throws ProtocolException, ProtocolHttpException {
-        return this.client.firePost(
-                request,
-                HttpClientProtobuf.AvailableRequests.VERIFY_PASSWORD.getType(),
-                new LinkedHashMap<>(),
-                this.appToken,
-                PurekitProtos.VerifyPasswordResponse.parser()
+    public PurekitProtos.VerifyPasswordResponse verifyPassword(
+        PurekitProtos.VerifyPasswordRequest request
+    ) throws ProtocolException, ProtocolHttpException {
+
+        return client.firePost(
+            request,
+            AvailableRequests.VERIFY_PASSWORD.getType(),
+            new LinkedHashMap<>(),
+            this.appToken,
+            PurekitProtos.VerifyPasswordResponse.parser()
         );
     }
 }

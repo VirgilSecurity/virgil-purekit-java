@@ -31,49 +31,49 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.purekit.pure;
+package com.virgilsecurity.purekit.pure.exception;
 
-/**
- * Class represents encrypted asymmetric key used to encrypt data
- */
-public class CellKey {
-    /**
-     * Constructor
-     * @param cpk cell public key
-     * @param encryptedCskCms encrypted cell secret key CMS
-     * @param encryptedCskBody encrypted cell secret key body
-     */
-    public CellKey(byte[] cpk, byte[] encryptedCskCms, byte[] encryptedCskBody) {
-        this.cpk = cpk;
-        this.encryptedCskCms = encryptedCskCms;
-        this.encryptedCskBody = encryptedCskBody;
+public class PureException extends Exception {
+
+    private final ErrorStatus errorStatus;
+
+    public PureException(ErrorStatus errorStatus) {
+        super(errorStatus.getMessage());
+
+        this.errorStatus = errorStatus;
     }
 
-    /**
-     * Cell public key
-     * @return cell public key
-     */
-    public final byte[] getCpk() {
-        return cpk;
+    public ErrorStatus getErrorStatus() {
+        return errorStatus;
     }
 
-    /**
-     * Encrypted cell secret key CMS
-     * @return encrypted cell secret key CMS
-     */
-    public final byte[] getEncryptedCskCms() {
-        return encryptedCskCms;
-    }
+    public enum ErrorStatus {
+        USER_NOT_FOUND_IN_STORAGE(0, "User has not been found in the storage"),
+        CELL_KEY_NOT_FOUND_IN_STORAGE(1, "Cell key has not been found in the storage"),
+        CELL_KEY_ALREADY_EXISTS_IN_STORAGE(2, "Cell key already exists in the storage"),
+        STORAGE_SIGNATURE_VERIFICATION_FAILED(3, "Storage signature verification has been failed"),
+        KEYS_VERSION_MISMATCH(4, "Keys version mismatch"),
+        UPDATE_TOKEN_VERSION_MISMATCH(5, "Update token version mismatch"),
+        AK_INVALID_LENGTH(6, "AK invalid length"),
+        CREDENTIALS_PARSING_ERROR(7, "Credentials parsing error"),
+        USER_ID_MISMATCH(8, "User Id mismatch"),
+        DUPLICATE_USER_ID(9, "Duplicate user Id"),
+        INVALID_PASSWORD(10, "Invalid password");
 
-    /**
-     * Encrypted cell secret key body
-     * @return encrypted cell secret key body
-     */
-    public final byte[] getEncryptedCskBody() {
-        return encryptedCskBody;
-    }
+        private final int code;
+        private final String message;
 
-    private byte[] cpk;
-    private byte[] encryptedCskCms;
-    private byte[] encryptedCskBody;
+        ErrorStatus(int code, String message) {
+            this.code = code;
+            this.message = message;
+        }
+
+        public int getCode() {
+            return code;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+    }
 }

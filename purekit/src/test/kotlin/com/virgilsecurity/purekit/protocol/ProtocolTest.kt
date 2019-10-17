@@ -37,7 +37,7 @@ import com.virgilsecurity.purekit.data.InvalidPasswordException
 import com.virgilsecurity.purekit.data.InvalidProofException
 import com.virgilsecurity.purekit.data.NoKeysFoundException
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtos
-import com.virgilsecurity.purekit.utils.EnrollResult
+import com.virgilsecurity.purekit.data.EnrollResult
 import com.virgilsecurity.purekit.utils.PropertyManager
 import com.virgilsecurity.purekit.utils.ProtocolUtils
 import com.virgilsecurity.purekit.utils.ThreadUtils
@@ -372,14 +372,14 @@ class ProtocolTest {
         const val TEXT = "The best text ever."
 
         @JvmStatic fun testArgumentsNoToken() = listOf(
-                Arguments.of(PropertyManager.virgilPheServerAddress,
+                Arguments.of(PropertyManager.serviceAddress,
                              PropertyManager.virgilAppToken,
                              PropertyManager.virgilPublicKeyNew,
                              PropertyManager.virgilSecretKeyNew)
         )
 
         @JvmStatic fun testArguments() = listOf(
-                Arguments.of(PropertyManager.virgilPheServerAddress,
+                Arguments.of(PropertyManager.serviceAddress,
                              PropertyManager.virgilAppToken,
                              PropertyManager.virgilPublicKeyNew,
                              PropertyManager.virgilSecretKeyNew,
@@ -387,7 +387,7 @@ class ProtocolTest {
         )
 
         @JvmStatic fun testArgumentsWithWrongKey() = listOf(
-                Arguments.of(PropertyManager.virgilPheServerAddress,
+                Arguments.of(PropertyManager.serviceAddress,
                              PropertyManager.virgilAppToken,
                              PropertyManager.virgilPublicKeyNew,
                              PropertyManager.virgilPublicKeyWrong,
