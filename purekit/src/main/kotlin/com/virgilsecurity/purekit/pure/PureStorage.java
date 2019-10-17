@@ -35,11 +35,14 @@ package com.virgilsecurity.purekit.pure;
 
 import java.util.Collection;
 
+import com.google.protobuf.InvalidProtocolBufferException;
 import com.virgilsecurity.purekit.data.ProtocolException;
 import com.virgilsecurity.purekit.data.ProtocolHttpException;
 import com.virgilsecurity.purekit.pure.exception.PureException;
 import com.virgilsecurity.purekit.pure.model.CellKey;
 import com.virgilsecurity.purekit.pure.model.UserRecord;
+import com.virgilsecurity.sdk.crypto.exceptions.SigningException;
+import com.virgilsecurity.sdk.crypto.exceptions.VerificationException;
 
 /**
  * Interface for Pure storage.
@@ -55,9 +58,14 @@ public interface PureStorage {
      * successfully.
      * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
      * successfully. Represents a regular HTTP exception with code and message.
+     * @throws InvalidProtocolBufferException If provided UserRecord cannot be parsed as
+     * Protobuf message.
+     * @throws SigningException Please, see
+     * {@link com.virgilsecurity.sdk.crypto.VirgilCrypto#generateSignature} method's doc.
      */
     void insertUser(UserRecord userRecord)
-        throws ProtocolException, ProtocolHttpException;
+        throws ProtocolException, ProtocolHttpException, InvalidProtocolBufferException,
+        SigningException;
 
     /**
      * Updates a user in a storage.
@@ -68,9 +76,13 @@ public interface PureStorage {
      * successfully.
      * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
      * successfully. Represents a regular HTTP exception with code and message.
+     * @throws InvalidProtocolBufferException If provided UserRecord cannot be parsed as
+     * Protobuf message.
+     * @throws SigningException Please, see
+     * {@link com.virgilsecurity.sdk.crypto.VirgilCrypto#generateSignature} method's doc.
      */
     void updateUser(UserRecord userRecord)
-        throws ProtocolException, ProtocolHttpException;
+        throws ProtocolException, ProtocolHttpException, InvalidProtocolBufferException, SigningException;
 
     /**
      * Obtains a user record with the given userId from a storage.
@@ -85,9 +97,13 @@ public interface PureStorage {
      * successfully.
      * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
      * successfully. Represents a regular HTTP exception with code and message.
+     * @throws InvalidProtocolBufferException If a PurekitProtosV3Storage.UserRecord received from
+     * a server cannot be parsed as a Protobuf message.
+     * @throws VerificationException If signature verification operation failed.
      */
     UserRecord selectUser(String userId)
-        throws PureException, ProtocolException, ProtocolHttpException;
+        throws PureException, ProtocolException, ProtocolHttpException,
+        InvalidProtocolBufferException, VerificationException;
 
     /**
      * Obtains a users record with the given userId from a storage.
@@ -102,9 +118,13 @@ public interface PureStorage {
      * successfully.
      * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
      * successfully. Represents a regular HTTP exception with code and message.
+     * @throws InvalidProtocolBufferException If a PurekitProtosV3Storage.UserRecord received from
+     * a server cannot be parsed as a Protobuf message.
+     * @throws VerificationException If signature verification operation failed.
      */
     Iterable<UserRecord> selectUsers(Collection<String> userIds)
-        throws PureException, ProtocolException, ProtocolHttpException;
+        throws PureException, ProtocolException, ProtocolHttpException,
+        InvalidProtocolBufferException, VerificationException;
 
     /**
      * This method throws UnsupportedOperationException, as in case of using Virgil Cloud storage,
@@ -146,9 +166,13 @@ public interface PureStorage {
      * successfully.
      * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
      * successfully. Represents a regular HTTP exception with code and message.
+     * @throws VerificationException If signature verification operation failed.
+     * @throws InvalidProtocolBufferException If a CellKey received from a server cannot be parsed
+     * as a Protobuf message.
      */
     CellKey selectKey(String userId, String dataId)
-        throws PureException, ProtocolException, ProtocolHttpException;
+        throws PureException, ProtocolException, ProtocolHttpException, VerificationException,
+        InvalidProtocolBufferException;
 
     /**
      * Insert CellKey key into a storage.
@@ -167,9 +191,10 @@ public interface PureStorage {
      * successfully.
      * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
      * successfully. Represents a regular HTTP exception with code and message.
+     * @throws SigningException If crypto sign operation failed.
      */
     void insertKey(String userId, String dataId, CellKey cellKey)
-        throws PureException, ProtocolException, ProtocolHttpException;
+        throws PureException, ProtocolException, ProtocolHttpException, SigningException;
 
     /**
      * Updates CellKey.
@@ -184,9 +209,10 @@ public interface PureStorage {
      * successfully.
      * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
      * successfully. Represents a regular HTTP exception with code and message.
+     * @throws SigningException If crypto sign operation failed.
      */
     void updateKey(String userId, String dataId, CellKey cellKey)
-        throws PureException, ProtocolException, ProtocolHttpException;
+        throws PureException, ProtocolException, ProtocolHttpException, SigningException;
 
     /**
      * Deletes cell key with given userId and dataId.

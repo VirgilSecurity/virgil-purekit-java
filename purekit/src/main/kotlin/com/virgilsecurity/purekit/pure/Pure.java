@@ -61,8 +61,8 @@ import com.virgilsecurity.sdk.crypto.VirgilKeyPair;
 import com.virgilsecurity.sdk.crypto.VirgilPrivateKey;
 import com.virgilsecurity.sdk.crypto.VirgilPublicKey;
 import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
-import com.virgilsecurity.sdk.crypto.exceptions.DecryptionException;
-import com.virgilsecurity.sdk.crypto.exceptions.EncryptionException;
+import com.virgilsecurity.sdk.crypto.exceptions.SigningException;
+import com.virgilsecurity.sdk.crypto.exceptions.VerificationException;
 
 /**
  * Main class for interactions with PureKit
@@ -135,9 +135,16 @@ public class Pure {
      * successfully.
      * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
      * successfully. Represents a regular HTTP exception with code and message.
+     * @throws CryptoException Please, see {@link VirgilCrypto#encrypt},
+     * {@link VirgilCrypto#generateKeyPair}, {@link VirgilCrypto#exportPrivateKey},
+     * {@link VirgilCrypto#exportPublicKey}, {@link VirgilCrypto#generateSignature} methods'
+     * CryptoException doc.
+     * @throws InvalidProtocolBufferException If provided UserRecord cannot be parsed as
+     * Protobuf message.
      */
     public void registerUser(String userId, String password)
-        throws ProtocolException, ProtocolHttpException {
+        throws ProtocolException, ProtocolHttpException, CryptoException,
+        InvalidProtocolBufferException {
 
         registerUser(userId, password, true);
     }
@@ -157,10 +164,14 @@ public class Pure {
      * successfully. Represents a regular HTTP exception with code and message.
      * @throws PureException If provided password is invalid or - please, see
      * {@link PureStorage#selectUser(String)} PureException doc.
-     * @throws CryptoException Thrown if key importing has been failed.
+     * @throws CryptoException Please, see {@link VirgilCrypto#importPrivateKey},
+     * {@link VirgilCrypto#verifySignature} methods' CryptoException doc.
+     * @throws InvalidProtocolBufferException If a PurekitProtosV3Storage.UserRecord received from
+     * a server cannot be parsed as a Protobuf message.
      */
     public AuthResult authenticateUser(String userId, String password, String sessionId)
-        throws ProtocolException, ProtocolHttpException, PureException, CryptoException {
+        throws ProtocolException, ProtocolHttpException, PureException, CryptoException,
+        InvalidProtocolBufferException {
 
         ValidateUtils.checkNullOrEmpty(userId, "userId");
         ValidateUtils.checkNullOrEmpty(password, "password");
@@ -215,11 +226,14 @@ public class Pure {
      * successfully. Represents a regular HTTP exception with code and message.
      * @throws PureException If provided password is invalid or - please, see
      * {@link PureStorage#selectUser(String)} PureException doc.
-     * @throws CryptoException Thrown if key importing has been failed.
+     * @throws CryptoException Please, see {@link VirgilCrypto#importPrivateKey},
+     * method's CryptoException doc.
+     * @throws InvalidProtocolBufferException If a PurekitProtosV3Storage.UserRecord received from
+     * a server cannot be parsed as a Protobuf message.
      */
     public AuthResult authenticateUser(String userId, String password)
-        throws ProtocolException, ProtocolHttpException, PureException, CryptoException {
-
+        throws ProtocolException, ProtocolHttpException, PureException, CryptoException,
+        InvalidProtocolBufferException {
 
         return authenticateUser(userId, password, null);
     }
@@ -237,11 +251,15 @@ public class Pure {
      * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
      * successfully. Represents a regular HTTP exception with code and message.
      * @throws PureException Please, see {@link PureStorage#selectUser(String)} PureException doc.
-     * @throws DecryptionException If decryption failed.
-     * @throws CryptoException Thrown if key importing has been failed.
+     * @throws CryptoException Please, see {@link VirgilCrypto#decrypt},
+     * {@link VirgilCrypto#importPrivateKey}, {@link VirgilCrypto#verifySignature} methods'
+     * CryptoException doc.
+     * @throws InvalidProtocolBufferException If a PurekitProtosV3Storage.UserRecord received from
+     * a server cannot be parsed as a Protobuf message.
      */
     public PureGrant createUserGrantAsAdmin(String userId, VirgilPrivateKey bupsk)
-        throws ProtocolException, ProtocolHttpException, PureException, CryptoException {
+        throws ProtocolException, ProtocolHttpException, PureException, CryptoException,
+        InvalidProtocolBufferException {
 
         ValidateUtils.checkNullOrEmpty(userId, "userId");
 
@@ -267,8 +285,10 @@ public class Pure {
      * successfully. Represents a regular HTTP exception with code and message.
      * @throws PureException Please, see {@link PureStorage#selectUser(String)} PureException doc.
      * @throws InvalidProtocolBufferException If provided encryptedGrantString cannot be parsed as
-     * protobuf message.
-     * @throws CryptoException Thrown if key importing has been failed.
+     * protobuf message or a PurekitProtosV3Storage.UserRecord received from a server cannot be
+     * parsed as a Protobuf message..
+     * @throws CryptoException Please, see {@link VirgilCrypto#importPrivateKey},
+     * {@link VirgilCrypto#verifySignature} methods' CryptoException doc.
      */
     public PureGrant decryptGrantFromUser(String encryptedGrantString)
         throws ProtocolException, ProtocolHttpException, PureException,
@@ -324,9 +344,16 @@ public class Pure {
      * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
      * successfully. Represents a regular HTTP exception with code and message.
      * @throws PureException Please, see {@link PureStorage#selectUser(String)} PureException doc.
+     * @throws CryptoException Please, see {@link VirgilCrypto#encrypt},
+     * {@link VirgilCrypto#generateSignature}, {@link VirgilCrypto#verifySignature} methods'
+     * CryptoException doc.
+     * @throws InvalidProtocolBufferException If provided UserRecord cannot be parsed as
+     * Protobuf message or a PurekitProtosV3Storage.UserRecord received from a server cannot be
+     * parsed as a Protobuf message..
      */
     public void changeUserPassword(String userId, String oldPassword, String newPassword)
-        throws ProtocolException, ProtocolHttpException, PureException {
+        throws ProtocolException, ProtocolHttpException, PureException, CryptoException,
+        InvalidProtocolBufferException {
 
         ValidateUtils.checkNullOrEmpty(userId, "userId");
         ValidateUtils.checkNullOrEmpty(oldPassword, "oldPassword");
@@ -351,10 +378,16 @@ public class Pure {
      * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
      * successfully. Represents a regular HTTP exception with code and message.
      * @throws PureException Please, see {@link PureStorage#selectUser(String)} PureException doc.
-     * @throws CryptoException If private key cannot be exported from provided {@link PureGrant}.
+     * @throws CryptoException Please, see {@link VirgilCrypto#exportPrivateKey},
+     * {@link VirgilCrypto#encrypt}, {@link VirgilCrypto#generateSignature},
+     * {@link VirgilCrypto#verifySignature} methods' CryptoException doc.
+     * @throws InvalidProtocolBufferException If provided UserRecord cannot be parsed as
+     * Protobuf message or a PurekitProtosV3Storage.UserRecord received from a server cannot be
+     * parsed as a Protobuf message.
      */
     public void changeUserPassword(PureGrant grant, String newPassword)
-        throws ProtocolException, ProtocolHttpException, PureException, CryptoException {
+        throws ProtocolException, ProtocolHttpException, PureException, CryptoException,
+        InvalidProtocolBufferException {
 
         ValidateUtils.checkNull(grant, "grant");
 
@@ -377,9 +410,16 @@ public class Pure {
      * successfully.
      * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
      * successfully. Represents a regular HTTP exception with code and message.
+     * @throws CryptoException Please, see {@link VirgilCrypto#encrypt},
+     * {@link VirgilCrypto#generateKeyPair}, {@link VirgilCrypto#exportPrivateKey},
+     * {@link VirgilCrypto#exportPublicKey}, {@link VirgilCrypto#generateSignature} methods'
+     * CryptoException doc.
+     * @throws InvalidProtocolBufferException If provided UserRecord cannot be parsed as
+     * Protobuf message.
      */
     public void resetUserPassword(String userId, String newPassword)
-        throws ProtocolException, ProtocolHttpException {
+        throws ProtocolException, ProtocolHttpException, CryptoException,
+        InvalidProtocolBufferException {
         // TODO: Add possibility to delete cell keys? -> ????
         registerUser(userId, newPassword, false);
     }
@@ -411,8 +451,13 @@ public class Pure {
      * successfully.
      * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
      * successfully. Represents a regular HTTP exception with code and message.
+     * @throws InvalidProtocolBufferException If provided UserRecord cannot be parsed as
+     * Protobuf message.
+     * @throws com.virgilsecurity.sdk.crypto.exceptions.SigningException Please, see
+     * {@link com.virgilsecurity.sdk.crypto.VirgilCrypto#generateSignature} method's doc.
      */
-    public long performRotation() throws ProtocolException, ProtocolHttpException {
+    public long performRotation() throws ProtocolException, ProtocolHttpException,
+        InvalidProtocolBufferException, SigningException {
 
         ValidateUtils.checkNull(this.updateToken, "updateToken");
 
@@ -422,10 +467,10 @@ public class Pure {
 
         long rotations = 0;
 
-        PheClient pheClient = this.getClient(this.currentVersion - 1);
+        PheClient pheClient = getClient(this.currentVersion - 1);
 
         while (true) {
-            Iterable<UserRecord> userRecords = this.storage.selectUsers(this.currentVersion - 1);
+            Iterable<UserRecord> userRecords = storage.selectUsers(this.currentVersion - 1);
 
             long currentRotations = 0;
 
@@ -437,7 +482,7 @@ public class Pure {
                 UserRecord newUserRecord = new UserRecord(userRecord.getUserId(), newRecord, this.currentVersion,
                         userRecord.getUpk(), userRecord.getEncryptedUsk(), userRecord.getEncryptedUskBackup(), userRecord.getEncryptedPwdHash());
 
-                this.storage.updateUser(newUserRecord);
+                storage.updateUser(newUserRecord);
 
                 currentRotations += 1;
             }
@@ -471,11 +516,17 @@ public class Pure {
      * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
      * successfully. Represents a regular HTTP exception with code and message.
      * @throws PureException Please, see {@link PureStorage#selectKey},
-     * {@link PureStorage#selectUsers}, {@link PureStorage#insertKey} methods PureException doc.
-     * @throws CryptoException Thrown if key importing has been failed.
+     * {@link PureStorage#selectUsers}, {@link PureStorage#insertKey} methods' PureException doc.
+     * @throws CryptoException Please, see {@link VirgilCrypto#generateKeyPair},
+     * {@link VirgilCrypto#importPublicKey}, {@link VirgilCrypto#exportPublicKey},
+     * {@link VirgilCrypto#exportPrivateKey}, {@link VirgilCrypto#encrypt}
+     * {@link VirgilCrypto#verifySignature} methods' CryptoException doc.
+     * @throws InvalidProtocolBufferException If a CellKey received from a server cannot be parsed
+     * as a Protobuf message.
      */
     public byte[] encrypt(String userId, String dataId, byte[] plainText)
-        throws ProtocolException, ProtocolHttpException, PureException, CryptoException {
+        throws ProtocolException, ProtocolHttpException, PureException, CryptoException,
+        InvalidProtocolBufferException {
 
         return encrypt(userId,
                        dataId,
@@ -504,12 +555,20 @@ public class Pure {
      * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
      * successfully. Represents a regular HTTP exception with code and message.
      * @throws PureException Please, see {@link PureStorage#selectKey},
-     * {@link PureStorage#selectUsers}, {@link PureStorage#insertKey} methods PureException doc.
-     * @throws CryptoException Thrown if key importing has been failed.
+     * {@link PureStorage#selectUsers}, {@link PureStorage#insertKey} methods' PureException doc.
+     * @throws CryptoException Please, see {@link VirgilCrypto#generateKeyPair},
+     * {@link VirgilCrypto#importPublicKey}, {@link VirgilCrypto#exportPublicKey},
+     * {@link VirgilCrypto#exportPrivateKey}, {@link VirgilCrypto#encrypt},
+     * {@link VirgilCrypto#verifySignature}, {@link VirgilCrypto#generateSignature} methods'
+     * CryptoException doc.
+     * @throws InvalidProtocolBufferException If a CellKey received from a server cannot be parsed
+     * as a Protobuf message or a PurekitProtosV3Storage.UserRecord received from
+     * a server cannot be parsed as a Protobuf message.
      */
     public byte[] encrypt(String userId, String dataId, Collection<String> otherUserIds,
                           Collection<VirgilPublicKey> publicKeys, byte[] plainText)
-        throws ProtocolException, ProtocolHttpException, PureException, CryptoException {
+        throws ProtocolException, ProtocolHttpException, PureException, CryptoException,
+        InvalidProtocolBufferException {
 
         ValidateUtils.checkNull(otherUserIds, "otherUserIds");
         ValidateUtils.checkNull(publicKeys, "publicKeys");
@@ -551,18 +610,9 @@ public class Pure {
                     recipientList.addAll(externalPublicKeys);
                 }
 
-                VirgilKeyPair ckp;
-                byte[] cpkData;
-                byte[] cskData;
-                try {
-                    ckp = crypto.generateKeyPair();
-                    cpkData = crypto.exportPublicKey(ckp.getPublicKey());
-                    cskData = crypto.exportPrivateKey(ckp.getPrivateKey());
-                } catch (CryptoException exception) {
-                    throw new IllegalStateException("This should not happen. "
-                                                        + "Please, contact developer.",
-                                                    exception);
-                }
+                VirgilKeyPair ckp = crypto.generateKeyPair();
+                byte[] cpkData = crypto.exportPublicKey(ckp.getPublicKey());
+                byte[] cskData = crypto.exportPrivateKey(ckp.getPrivateKey());
 
                 PureCryptoData encryptedCskData = pureCrypto.encrypt(cskData, recipientList);
 
@@ -587,12 +637,7 @@ public class Pure {
             cpk = crypto.importPublicKey(cellKey1.getCpk());
         }
 
-        try {
-            return crypto.encrypt(plainText, Collections.singletonList(cpk));
-        } catch (EncryptionException exception) {
-            throw new IllegalStateException("This should not happen. Please, contact developer.",
-                                            exception);
-        }
+        return crypto.encrypt(plainText, Collections.singletonList(cpk));
     }
 
     /**
@@ -612,11 +657,15 @@ public class Pure {
      * successfully. Represents a regular HTTP exception with code and message.
      * @throws PureException If cell key has not been found in a storage, or please see
      * {@link PureStorage#selectKey(String, String)} method's PureException doc.
-     * @throws CryptoException If private key import has been failed.
-     * @throws DecryptionException If decryption failed.
+     * @throws CryptoException Please, see {@link VirgilCrypto#importPrivateKey},
+     * {@link VirgilCrypto#decrypt}, {@link VirgilCrypto#verifySignature} methods'
+     * CryptoException doc.
+     * @throws InvalidProtocolBufferException If a CellKey received from a server cannot be parsed
+     * as a Protobuf message.
      */
     public byte[] decrypt(PureGrant grant, String ownerUserId, String dataId, byte[] cipherText)
-        throws ProtocolException, ProtocolHttpException, PureException, CryptoException {
+        throws ProtocolException, ProtocolHttpException, PureException, CryptoException,
+        InvalidProtocolBufferException {
 
         ValidateUtils.checkNull(grant, "grant");
         ValidateUtils.checkNull(cipherText, "cipherText");
@@ -649,14 +698,18 @@ public class Pure {
      * successfully. Represents a regular HTTP exception with code and message.
      * @throws PureException If cell key has not been found in a storage, or please see
      * {@link PureStorage#selectKey(String, String)} method's PureException doc.
-     * @throws CryptoException If private key import has been failed.
-     * @throws DecryptionException If decryption failed.
+     * @throws CryptoException Please, see {@link VirgilCrypto#importPrivateKey},
+     * {@link VirgilCrypto#decrypt}, {@link VirgilCrypto#verifySignature} methods'
+     * CryptoException doc.
+     * @throws InvalidProtocolBufferException If a CellKey received from a server cannot be parsed
+     * as a Protobuf message.
      */
     public byte[] decrypt(VirgilPrivateKey privateKey,
                           String ownerUserId,
                           String dataId,
                           byte[] cipherText)
-        throws ProtocolException, ProtocolHttpException, PureException, CryptoException {
+        throws ProtocolException, ProtocolHttpException, PureException, CryptoException,
+        InvalidProtocolBufferException {
 
         ValidateUtils.checkNull(privateKey, "privateKey");
 
@@ -692,10 +745,14 @@ public class Pure {
      * successfully. Represents a regular HTTP exception with code and message.
      * @throws PureException Please, see {@link PureStorage#selectKey},
      * {@link PureStorage#updateKey}, {@link PureStorage#selectUsers} methods' PureException doc.
-     * @throws CryptoException Thrown if key importing has been failed.
+     * @throws CryptoException Please, see {@link VirgilCrypto#importPublicKey},
+     * {@link VirgilCrypto#verifySignature} methods' CryptoException doc.
+     * @throws InvalidProtocolBufferException If a CellKey received from a server cannot be parsed
+     * as a Protobuf message.
      */
     public void share(PureGrant grant, String dataId, String otherUserId)
-        throws ProtocolException, ProtocolHttpException, PureException, CryptoException {
+        throws ProtocolException, ProtocolHttpException, PureException, CryptoException,
+        InvalidProtocolBufferException {
 
         ValidateUtils.checkNull(grant, "grant");
 
@@ -720,11 +777,17 @@ public class Pure {
      * successfully. Represents a regular HTTP exception with code and message.
      * @throws PureException Please, see {@link PureStorage#selectKey},
      * {@link PureStorage#updateKey}, {@link PureStorage#selectUsers} methods' PureException doc.
-     * @throws CryptoException Thrown if key importing has been failed.
+     * @throws CryptoException Please, see {@link VirgilCrypto#importPublicKey},
+     * {@link VirgilCrypto#verifySignature}, {@link VirgilCrypto#generateSignature} methods'
+     * CryptoException doc.
+     * @throws InvalidProtocolBufferException If a CellKey received from a server cannot be parsed
+     * as a Protobuf message or a PurekitProtosV3Storage.UserRecord received from a server cannot
+     * be parsed as a Protobuf message.
      */
     public void share(PureGrant grant, String dataId, Collection<String> otherUserIds,
                       Collection<VirgilPublicKey> publicKeys)
-        throws ProtocolException, ProtocolHttpException, PureException, CryptoException {
+        throws ProtocolException, ProtocolHttpException, PureException, CryptoException,
+        InvalidProtocolBufferException {
 
         ValidateUtils.checkNull(grant, "grant");
         ValidateUtils.checkNull(otherUserIds, "otherUserIds");
@@ -762,10 +825,14 @@ public class Pure {
      * successfully. Represents a regular HTTP exception with code and message.
      * @throws PureException Please, see {@link PureStorage#selectKey},
      * {@link PureStorage#updateKey}, {@link PureStorage#selectUsers} methods' PureException doc.
-     * @throws CryptoException Thrown if key importing has been failed.
+     * @throws CryptoException Please, see {@link VirgilCrypto#importPublicKey},
+     * {@link VirgilCrypto#verifySignature} methods' CryptoException doc.
+     * @throws InvalidProtocolBufferException If a CellKey received from a server cannot be parsed
+     * as a Protobuf message.
      */
     public void unshare(String ownerUserId, String dataId, String otherUserId)
-        throws ProtocolException, ProtocolHttpException, PureException, CryptoException {
+        throws ProtocolException, ProtocolHttpException, PureException, CryptoException,
+        InvalidProtocolBufferException {
 
         unshare(ownerUserId,
                 dataId,
@@ -790,13 +857,19 @@ public class Pure {
      * successfully. Represents a regular HTTP exception with code and message.
      * @throws PureException Please, see {@link PureStorage#selectKey},
      * {@link PureStorage#updateKey}, {@link PureStorage#selectUsers} methods' PureException doc.
-     * @throws CryptoException Thrown if key importing has been failed.
+     * @throws CryptoException Please, see {@link VirgilCrypto#importPublicKey},
+     * {@link VirgilCrypto#verifySignature}, {@link VirgilCrypto#generateSignature} methods'
+     * CryptoException doc.
+     * @throws InvalidProtocolBufferException If a CellKey received from a server cannot be parsed
+     * as a Protobuf message or a PurekitProtosV3Storage.UserRecord received from a server cannot
+     * be parsed as a Protobuf message
      */
     public void unshare(String ownerUserId,
                         String dataId,
                         Collection<String> otherUserIds,
                         Collection<VirgilPublicKey> publicKeys)
-        throws ProtocolException, ProtocolHttpException, PureException, CryptoException {
+        throws ProtocolException, ProtocolHttpException, PureException, CryptoException,
+        InvalidProtocolBufferException {
 
         ValidateUtils.checkNull(otherUserIds, "otherUserIds");
         ValidateUtils.checkNull(publicKeys, "publicKeys");
@@ -835,7 +908,8 @@ public class Pure {
     }
 
     private void registerUser(String userId, String password, boolean isUserNew)
-        throws ProtocolException, ProtocolHttpException {
+        throws ProtocolException, ProtocolHttpException, CryptoException,
+        InvalidProtocolBufferException {
 
         ValidateUtils.checkNullOrEmpty(userId, "userId");
         ValidateUtils.checkNullOrEmpty(password, "password");
@@ -848,57 +922,22 @@ public class Pure {
 
         byte[] passwordHash = crypto.computeHash(password.getBytes(), HashAlgorithm.SHA512);
 
-        byte[] encryptedPwdHash;
-        try {
-            encryptedPwdHash = crypto.encrypt(passwordHash, Collections.singletonList(this.hpk));
-        } catch (EncryptionException exception) {
-            throw new IllegalStateException("Exception while encrypting. This should not"
-                                                + " happen. Please, contact developer.",
-                                            exception);
-        }
+        byte[] encryptedPwdHash = crypto.encrypt(passwordHash, Collections.singletonList(this.hpk));
 
         PheClientEnrollAccountResult result = currentClient.enrollAccount(
             response.getResponse().toByteArray(),
             passwordHash
         );
 
-        VirgilKeyPair ukp;
-        try {
-            ukp = crypto.generateKeyPair();
-        } catch (CryptoException exception) {
-            throw new IllegalStateException("Exception while generating key pair. This should not"
-                                                + " happen. Please, contact developer.",
-                                            exception);
-        }
+        VirgilKeyPair ukp = crypto.generateKeyPair();
 
-        byte[] uskData;
-        try {
-            uskData = crypto.exportPrivateKey(ukp.getPrivateKey());
-        } catch (CryptoException exception) {
-            throw new IllegalStateException("Exception while exporting key. This should not"
-                                                + " happen. Please, contact developer.",
-                                            exception);
-        }
+        byte[] uskData = crypto.exportPrivateKey(ukp.getPrivateKey());
 
         byte[] encryptedUsk = cipher.encrypt(uskData, result.getAccountKey());
 
-        byte[] encryptedUskBackup;
-        try {
-            encryptedUskBackup = crypto.encrypt(uskData, Collections.singletonList(this.buppk));
-        } catch (EncryptionException exception) {
-            throw new IllegalStateException("Exception while encrypting. This should not"
-                                                + " happen. Please, contact developer.",
-                                            exception);
-        }
+        byte[] encryptedUskBackup = crypto.encrypt(uskData, Collections.singletonList(this.buppk));
 
-        byte[] publicKey;
-        try {
-            publicKey = crypto.exportPublicKey(ukp.getPublicKey());
-        } catch (CryptoException exception) {
-            throw new IllegalStateException("Exception while exporting key. This should not"
-                                                + " happen. Please, contact developer.",
-                                            exception);
-        }
+        byte[] publicKey = crypto.exportPublicKey(ukp.getPublicKey());
 
         UserRecord userRecord = new UserRecord(userId,
                                                result.getEnrollmentRecord(),
@@ -928,7 +967,8 @@ public class Pure {
     private void changeUserPassword(UserRecord userRecord,
                                     byte[] privateKeyData,
                                     String newPassword)
-        throws ProtocolException, ProtocolHttpException {
+        throws ProtocolException, ProtocolHttpException, CryptoException,
+        InvalidProtocolBufferException {
 
         ValidateUtils.checkNullOrEmpty(newPassword, "newPassword");
 
@@ -947,14 +987,8 @@ public class Pure {
 
         byte[] newEncryptedUsk = cipher.encrypt(privateKeyData, enrollResult.getAccountKey());
 
-        byte[] encryptedPwdHash;
-        try {
-            encryptedPwdHash = crypto.encrypt(newPasswordHash,
+        byte[] encryptedPwdHash = crypto.encrypt(newPasswordHash,
                                               Collections.singletonList(this.hpk));
-        } catch (EncryptionException exception) {
-            throw new IllegalStateException("This should not happen. Please, contact developer.",
-                                            exception);
-        }
 
         UserRecord newUserRecord = new UserRecord(userRecord.getUserId(),
                                                   enrollResult.getEnrollmentRecord(),
@@ -969,7 +1003,8 @@ public class Pure {
 
     private ArrayList<VirgilPublicKey> keysWithOthers(Collection<VirgilPublicKey> publicKeys,
                                                       Collection<String> otherUserIds)
-        throws ProtocolException, ProtocolHttpException, PureException, CryptoException {
+        throws ProtocolException, ProtocolHttpException, PureException, CryptoException,
+        InvalidProtocolBufferException {
 
         ArrayList<VirgilPublicKey> keys = new ArrayList<>(publicKeys);
 
@@ -987,13 +1022,14 @@ public class Pure {
     }
 
     private byte[] computePheKey(String userId, String password)
-        throws ProtocolException, ProtocolHttpException, PureException {
+        throws ProtocolException, ProtocolHttpException, PureException,
+        InvalidProtocolBufferException, VerificationException {
 
-        byte[] passwordHash = this.crypto.computeHash(password.getBytes(), HashAlgorithm.SHA512);
+        byte[] passwordHash = crypto.computeHash(password.getBytes(), HashAlgorithm.SHA512);
 
-        UserRecord userRecord = this.storage.selectUser(userId);
+        UserRecord userRecord = storage.selectUser(userId);
 
-        PheClient client = this.getClient(userRecord.getPheRecordVersion());
+        PheClient client = getClient(userRecord.getPheRecordVersion());
 
         byte[] pheVerifyRequest = client.createVerifyPasswordRequest(passwordHash,
                                                                      userRecord.getPheRecord());
