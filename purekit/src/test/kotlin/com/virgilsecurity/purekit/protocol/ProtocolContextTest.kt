@@ -70,27 +70,33 @@ class ProtocolContextTest {
     // HTC-10
     @Test fun context_with_wrong_update_token() {
         assertThrows<IllegalArgumentException> {
-            ProtocolContext.create(PropertyManager.virgilAppToken,
-                                   PropertyManager.virgilPublicKeyOld,
-                                   PropertyManager.virgilSecretKeyOld,
-                                   PropertyManager.virgilUpdateTokenNew
+            ProtocolContext.create(PropertyManager.appToken,
+                                   PropertyManager.publicKeyOld,
+                                   PropertyManager.secretKeyOld,
+                                   updateToken3()
             )
         }
     }
 
+    /**
+     * Mocks update token 3 using update token 2.
+     */
+    private fun updateToken3() =
+        PropertyManager.updateToken.split(".").toList().let { "${it[0]}.3.${it[2]}" }
+
     companion object {
 
         @JvmStatic fun testArgumentsNoToken() = listOf(
-                Arguments.of(PropertyManager.virgilAppToken,
-                             PropertyManager.virgilPublicKeyNew,
-                             PropertyManager.virgilSecretKeyNew)
+                Arguments.of(PropertyManager.appToken,
+                             PropertyManager.publicKeyNew,
+                             PropertyManager.secretKeyNew)
         )
 
         @JvmStatic fun testArguments() = listOf(
-                Arguments.of(PropertyManager.virgilAppToken,
-                             PropertyManager.virgilPublicKeyOld,
-                             PropertyManager.virgilSecretKeyOld,
-                             PropertyManager.virgilUpdateTokenOld)
+                Arguments.of(PropertyManager.appToken,
+                             PropertyManager.publicKeyOld,
+                             PropertyManager.secretKeyOld,
+                             PropertyManager.updateToken)
         )
     }
 }

@@ -31,57 +31,49 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.purekit.utils
+package com.virgilsecurity.purekit.pure.exception;
 
-import java.util.*
+public class PureException extends Exception {
 
-/**
- * This function intention is just to make code a little bit more elegant/concise.
- *
- * @throws IllegalArgumentException
- */
-@Throws(IllegalArgumentException::class)
-fun requires(value: Boolean, argumentName: String) {
-    require(value) { "Parameter '$argumentName' should not be empty" }
+    private final ErrorStatus errorStatus;
+
+    public PureException(ErrorStatus errorStatus) {
+        super(errorStatus.getMessage());
+
+        this.errorStatus = errorStatus;
+    }
+
+    public ErrorStatus getErrorStatus() {
+        return errorStatus;
+    }
+
+    public enum ErrorStatus {
+        USER_NOT_FOUND_IN_STORAGE(0, "User has not been found in the storage"),
+        CELL_KEY_NOT_FOUND_IN_STORAGE(1, "Cell key has not been found in the storage"),
+        CELL_KEY_ALREADY_EXISTS_IN_STORAGE(2, "Cell key already exists in the storage"),
+        STORAGE_SIGNATURE_VERIFICATION_FAILED(3, "Storage signature verification has been failed"),
+        KEYS_VERSION_MISMATCH(4, "Keys version mismatch"),
+        UPDATE_TOKEN_VERSION_MISMATCH(5, "Update token version mismatch"),
+        AK_INVALID_LENGTH(6, "AK invalid length"),
+        CREDENTIALS_PARSING_ERROR(7, "Credentials parsing error"),
+        USER_ID_MISMATCH(8, "User Id mismatch"),
+        DUPLICATE_USER_ID(9, "Duplicate user Id"),
+        INVALID_PASSWORD(10, "Invalid password");
+
+        private final int code;
+        private final String message;
+
+        ErrorStatus(int code, String message) {
+            this.code = code;
+            this.message = message;
+        }
+
+        public int getCode() {
+            return code;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+    }
 }
-
-/**
- * This function splits string into 3 parts: Prefix, version and decoded base64 content.
- *
- * @throws IllegalArgumentException
- */
-@Throws(IllegalArgumentException::class)
-fun String.parseVersionAndContent(prefix: String, name: String): Pair<Int, ByteArray> {
-    val parsedParts = split('.')
-    require(parsedParts.size == 3) {
-        "Provided '$name' has wrong parts count. Should be '3'. Actual is '{${parsedParts.size}}'."
-    }
-    require(parsedParts[0] == prefix) {
-        "Wrong token prefix. Should be '$prefix'. Actual is '{${parsedParts[0]}'."
-    }
-
-    val version: Int
-    try {
-        version = parsedParts[1].toInt()
-        require(version >= 1) { "$name version can not be zero or negative number." }
-    } catch (e: NumberFormatException) {
-        throw IllegalArgumentException("$name version can not be parsed.")
-    }
-
-    val content: ByteArray
-    try {
-        content = Base64.getDecoder().decode(parsedParts[2])
-    } catch (e: IllegalArgumentException) {
-        throw IllegalArgumentException("$name content can not be parsed.")
-    }
-
-    return Pair(version, content)
-}
-
-const val PREFIX_UPDATE_TOKEN = "UT"
-const val PREFIX_SECRET_KEY = "SK"
-const val PREFIX_PUBLIC_KEY = "PK"
-
-const val KEY_UPDATE_TOKEN = "Update Token"
-const val KEY_SECRET_KEY = "Secret Key"
-const val KEY_PUBLIC_KEY = "Public Key"

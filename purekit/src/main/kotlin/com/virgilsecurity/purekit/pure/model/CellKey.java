@@ -31,57 +31,54 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.purekit.utils
-
-import java.util.*
+package com.virgilsecurity.purekit.pure.model;
 
 /**
- * This function intention is just to make code a little bit more elegant/concise.
- *
- * @throws IllegalArgumentException
+ * CellKey class represents encrypted asymmetric key used to encrypt data.
  */
-@Throws(IllegalArgumentException::class)
-fun requires(value: Boolean, argumentName: String) {
-    require(value) { "Parameter '$argumentName' should not be empty" }
+public class CellKey {
+
+    private byte[] cpk;
+    private byte[] encryptedCskCms;
+    private byte[] encryptedCskBody;
+
+    /**
+     * Instantiates CellKey.
+     *
+     * @param cpk Cell public key.
+     * @param encryptedCskCms Encrypted cell secret key CMS.
+     * @param encryptedCskBody Encrypted cell secret key body.
+     */
+    public CellKey(byte[] cpk, byte[] encryptedCskCms, byte[] encryptedCskBody) {
+        this.cpk = cpk;
+        this.encryptedCskCms = encryptedCskCms;
+        this.encryptedCskBody = encryptedCskBody;
+    }
+
+    /**
+     * Cell public key.
+     *
+     * @return Cell public key.
+     */
+    public final byte[] getCpk() {
+        return cpk;
+    }
+
+    /**
+     * Encrypted cell secret key CMS.
+     *
+     * @return Encrypted cell secret key CMS.
+     */
+    public final byte[] getEncryptedCskCms() {
+        return encryptedCskCms;
+    }
+
+    /**
+     * Encrypted cell secret key body.
+     *
+     * @return Encrypted cell secret key body.
+     */
+    public final byte[] getEncryptedCskBody() {
+        return encryptedCskBody;
+    }
 }
-
-/**
- * This function splits string into 3 parts: Prefix, version and decoded base64 content.
- *
- * @throws IllegalArgumentException
- */
-@Throws(IllegalArgumentException::class)
-fun String.parseVersionAndContent(prefix: String, name: String): Pair<Int, ByteArray> {
-    val parsedParts = split('.')
-    require(parsedParts.size == 3) {
-        "Provided '$name' has wrong parts count. Should be '3'. Actual is '{${parsedParts.size}}'."
-    }
-    require(parsedParts[0] == prefix) {
-        "Wrong token prefix. Should be '$prefix'. Actual is '{${parsedParts[0]}'."
-    }
-
-    val version: Int
-    try {
-        version = parsedParts[1].toInt()
-        require(version >= 1) { "$name version can not be zero or negative number." }
-    } catch (e: NumberFormatException) {
-        throw IllegalArgumentException("$name version can not be parsed.")
-    }
-
-    val content: ByteArray
-    try {
-        content = Base64.getDecoder().decode(parsedParts[2])
-    } catch (e: IllegalArgumentException) {
-        throw IllegalArgumentException("$name content can not be parsed.")
-    }
-
-    return Pair(version, content)
-}
-
-const val PREFIX_UPDATE_TOKEN = "UT"
-const val PREFIX_SECRET_KEY = "SK"
-const val PREFIX_PUBLIC_KEY = "PK"
-
-const val KEY_UPDATE_TOKEN = "Update Token"
-const val KEY_SECRET_KEY = "Secret Key"
-const val KEY_PUBLIC_KEY = "Public Key"

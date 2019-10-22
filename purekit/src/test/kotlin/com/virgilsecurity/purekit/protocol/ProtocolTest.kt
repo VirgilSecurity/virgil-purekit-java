@@ -37,7 +37,7 @@ import com.virgilsecurity.purekit.data.InvalidPasswordException
 import com.virgilsecurity.purekit.data.InvalidProofException
 import com.virgilsecurity.purekit.data.NoKeysFoundException
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtos
-import com.virgilsecurity.purekit.utils.EnrollResult
+import com.virgilsecurity.purekit.data.EnrollResult
 import com.virgilsecurity.purekit.utils.PropertyManager
 import com.virgilsecurity.purekit.utils.ProtocolUtils
 import com.virgilsecurity.purekit.utils.ThreadUtils
@@ -98,7 +98,7 @@ class ProtocolTest {
         val enrollmentResponse = PurekitProtos.EnrollmentResponse.parseFrom(enrollResult!!.enrollmentRecord)
 
         assertEquals(ACCOUNT_KEY_SIZE, enrollResult!!.accountKey.size)
-        assertEquals(3, enrollmentResponse.version)
+        assertEquals(2, enrollmentResponse.version)
 
         var accountKey: ByteArray? = null
         runBlocking {
@@ -152,7 +152,7 @@ class ProtocolTest {
         val enrollmentResponse = PurekitProtos.EnrollmentResponse.parseFrom(enrollResult!!.enrollmentRecord)
 
         assertEquals(ACCOUNT_KEY_SIZE, enrollResult!!.accountKey.size)
-        assertEquals(2, enrollmentResponse.version)
+        assertEquals(1, enrollmentResponse.version)
 
         // Using wrong public key
         val protocolNew = ProtocolUtils.initProtocol(serverAddress, appToken, publicKeyWrong, secretKey, updateToken)
@@ -189,7 +189,7 @@ class ProtocolTest {
         val enrollmentResponse = PurekitProtos.EnrollmentResponse.parseFrom(enrollResult!!.enrollmentRecord)
 
         assertEquals(ACCOUNT_KEY_SIZE, enrollResult!!.accountKey.size)
-        assertEquals(2, enrollmentResponse.version)
+        assertEquals(1, enrollmentResponse.version)
 
         val protocolNew = ProtocolUtils.initProtocol(serverAddress, appToken, publicKey, secretKey, updateToken)
 
@@ -203,7 +203,7 @@ class ProtocolTest {
         val dbRecord = PurekitProtos.DatabaseRecord.parseFrom(record!!)
 
         assertEquals(ACCOUNT_KEY_SIZE, enrollResult!!.accountKey.size)
-        assertEquals(3, dbRecord.version)
+        assertEquals(2, dbRecord.version)
 
         var accountKey: ByteArray? = null
         runBlocking {
@@ -240,7 +240,7 @@ class ProtocolTest {
         val enrollmentResponse = PurekitProtos.EnrollmentResponse.parseFrom(enrollResult!!.enrollmentRecord)
 
         assertEquals(ACCOUNT_KEY_SIZE, enrollResult!!.accountKey.size)
-        assertEquals(3, enrollmentResponse.version)
+        assertEquals(2, enrollmentResponse.version)
 
         assertThrows<IllegalArgumentException> {
             runBlocking {
@@ -270,11 +270,11 @@ class ProtocolTest {
         val enrollmentResponse = PurekitProtos.EnrollmentResponse.parseFrom(enrollResult!!.enrollmentRecord)
         val wrongEnrollmentResponse = PurekitProtos.EnrollmentResponse.newBuilder()
                 .setResponse(enrollmentResponse.response)
-                .setVersion(1)
+                .setVersion(0)
                 .build()
 
         assertEquals(ACCOUNT_KEY_SIZE, enrollResult!!.accountKey.size)
-        assertEquals(3, enrollmentResponse.version)
+        assertEquals(2, enrollmentResponse.version)
 
         assertThrows<IllegalArgumentException> {
             runBlocking {
@@ -372,27 +372,27 @@ class ProtocolTest {
         const val TEXT = "The best text ever."
 
         @JvmStatic fun testArgumentsNoToken() = listOf(
-                Arguments.of(PropertyManager.virgilServerAddress,
-                             PropertyManager.virgilAppToken,
-                             PropertyManager.virgilPublicKeyNew,
-                             PropertyManager.virgilSecretKeyNew)
+                Arguments.of(PropertyManager.pheServiceAddress,
+                             PropertyManager.appToken,
+                             PropertyManager.publicKeyNew,
+                             PropertyManager.secretKeyNew)
         )
 
         @JvmStatic fun testArguments() = listOf(
-                Arguments.of(PropertyManager.virgilServerAddress,
-                             PropertyManager.virgilAppToken,
-                             PropertyManager.virgilPublicKeyNew,
-                             PropertyManager.virgilSecretKeyNew,
-                             PropertyManager.virgilUpdateTokenNew)
+                Arguments.of(PropertyManager.pheServiceAddress,
+                             PropertyManager.appToken,
+                             PropertyManager.publicKeyOld,
+                             PropertyManager.secretKeyOld,
+                             PropertyManager.updateToken)
         )
 
         @JvmStatic fun testArgumentsWithWrongKey() = listOf(
-                Arguments.of(PropertyManager.virgilServerAddress,
-                             PropertyManager.virgilAppToken,
-                             PropertyManager.virgilPublicKeyNew,
-                             PropertyManager.virgilPublicKeyWrong,
-                             PropertyManager.virgilSecretKeyNew,
-                             PropertyManager.virgilUpdateTokenNew)
+                Arguments.of(PropertyManager.pheServiceAddress,
+                             PropertyManager.appToken,
+                             PropertyManager.publicKeyOld,
+                             PropertyManager.publicKeyWrong,
+                             PropertyManager.secretKeyOld,
+                             PropertyManager.updateToken)
         )
     }
 }

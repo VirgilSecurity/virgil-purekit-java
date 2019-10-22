@@ -31,57 +31,29 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.purekit.utils
-
-import java.util.*
+package com.virgilsecurity.purekit.pure.exception;
 
 /**
- * This function intention is just to make code a little bit more elegant/concise.
- *
- * @throws IllegalArgumentException
+ * PHE service error codes.
  */
-@Throws(IllegalArgumentException::class)
-fun requires(value: Boolean, argumentName: String) {
-    require(value) { "Parameter '$argumentName' should not be empty" }
+public enum ServiceErrorCode {
+    USER_NOT_FOUND(50003),
+    CELL_KEY_NOT_FOUND(50004),
+    CELL_KEY_ALREADY_EXISTS(50006),
+    UNDEFINED(0);
+
+    private final int code;
+
+    ServiceErrorCode(int code) {
+        this.code = code;
+    }
+
+    /**
+     * Error code number.
+     *
+     * @return Error code number.
+     */
+    public int getCode() {
+        return code;
+    }
 }
-
-/**
- * This function splits string into 3 parts: Prefix, version and decoded base64 content.
- *
- * @throws IllegalArgumentException
- */
-@Throws(IllegalArgumentException::class)
-fun String.parseVersionAndContent(prefix: String, name: String): Pair<Int, ByteArray> {
-    val parsedParts = split('.')
-    require(parsedParts.size == 3) {
-        "Provided '$name' has wrong parts count. Should be '3'. Actual is '{${parsedParts.size}}'."
-    }
-    require(parsedParts[0] == prefix) {
-        "Wrong token prefix. Should be '$prefix'. Actual is '{${parsedParts[0]}'."
-    }
-
-    val version: Int
-    try {
-        version = parsedParts[1].toInt()
-        require(version >= 1) { "$name version can not be zero or negative number." }
-    } catch (e: NumberFormatException) {
-        throw IllegalArgumentException("$name version can not be parsed.")
-    }
-
-    val content: ByteArray
-    try {
-        content = Base64.getDecoder().decode(parsedParts[2])
-    } catch (e: IllegalArgumentException) {
-        throw IllegalArgumentException("$name content can not be parsed.")
-    }
-
-    return Pair(version, content)
-}
-
-const val PREFIX_UPDATE_TOKEN = "UT"
-const val PREFIX_SECRET_KEY = "SK"
-const val PREFIX_PUBLIC_KEY = "PK"
-
-const val KEY_UPDATE_TOKEN = "Update Token"
-const val KEY_SECRET_KEY = "Secret Key"
-const val KEY_PUBLIC_KEY = "Public Key"

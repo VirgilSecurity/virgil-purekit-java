@@ -31,57 +31,79 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.purekit.utils
+package com.virgilsecurity.purekit.pure.model;
 
-import java.util.*
+import java.util.Date;
 
-/**
- * This function intention is just to make code a little bit more elegant/concise.
- *
- * @throws IllegalArgumentException
- */
-@Throws(IllegalArgumentException::class)
-fun requires(value: Boolean, argumentName: String) {
-    require(value) { "Parameter '$argumentName' should not be empty" }
-}
+import com.virgilsecurity.purekit.utils.ValidateUtils;
+import com.virgilsecurity.sdk.crypto.VirgilKeyPair;
 
 /**
- * This function splits string into 3 parts: Prefix, version and decoded base64 content.
- *
- * @throws IllegalArgumentException
+ * PureGrant class.
  */
-@Throws(IllegalArgumentException::class)
-fun String.parseVersionAndContent(prefix: String, name: String): Pair<Int, ByteArray> {
-    val parsedParts = split('.')
-    require(parsedParts.size == 3) {
-        "Provided '$name' has wrong parts count. Should be '3'. Actual is '{${parsedParts.size}}'."
-    }
-    require(parsedParts[0] == prefix) {
-        "Wrong token prefix. Should be '$prefix'. Actual is '{${parsedParts[0]}'."
+public class PureGrant {
+
+    private final VirgilKeyPair ukp;
+    private final String userId;
+    private final String sessionId;
+    private final Date creationDate;
+
+    /**
+     * Instantiates PureGrant.
+     *
+     * @param ukp User key pair.
+     * @param userId User Id.
+     * @param sessionId Session Id (optional).
+     * @param creationDate Creation date.
+     */
+    public PureGrant(VirgilKeyPair ukp,
+                     String userId,
+                     String sessionId,
+                     Date creationDate) {
+        ValidateUtils.checkNull(ukp, "ukp");
+        ValidateUtils.checkNull(creationDate, "creationDate");
+
+        ValidateUtils.checkNullOrEmpty(userId, "userId");
+
+        this.ukp = ukp;
+        this.userId = userId;
+        this.sessionId = sessionId;
+        this.creationDate = creationDate;
     }
 
-    val version: Int
-    try {
-        version = parsedParts[1].toInt()
-        require(version >= 1) { "$name version can not be zero or negative number." }
-    } catch (e: NumberFormatException) {
-        throw IllegalArgumentException("$name version can not be parsed.")
+    /**
+     * Returns user key pair.
+     *
+     * @return User key pair.
+     */
+    public VirgilKeyPair getUkp() {
+        return ukp;
     }
 
-    val content: ByteArray
-    try {
-        content = Base64.getDecoder().decode(parsedParts[2])
-    } catch (e: IllegalArgumentException) {
-        throw IllegalArgumentException("$name content can not be parsed.")
+    /**
+     * Returns session id.
+     *
+     * @return Session id.
+     */
+    public String getSessionId() {
+        return sessionId;
     }
 
-    return Pair(version, content)
+    /**
+     * Returns creation date.
+     *
+     * @return Creation date.
+     */
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    /**
+     * Returns user id.
+     *
+     * @return User id.
+     */
+    public String getUserId() {
+        return userId;
+    }
 }
-
-const val PREFIX_UPDATE_TOKEN = "UT"
-const val PREFIX_SECRET_KEY = "SK"
-const val PREFIX_PUBLIC_KEY = "PK"
-
-const val KEY_UPDATE_TOKEN = "Update Token"
-const val KEY_SECRET_KEY = "Secret Key"
-const val KEY_PUBLIC_KEY = "Public Key"

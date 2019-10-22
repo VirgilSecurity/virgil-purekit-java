@@ -46,16 +46,16 @@ object ProtocolUtils {
     /**
      * This function initializes [Protocol] with specified credentials.
      * Or if any of arguments is not specified next values will be used:
-     * virgilAppToken -> PropertyManager.virgilAppToken,
-     * publicKey -> PropertyManager.virgilPublicKeyNew,
-     * secretKey -> PropertyManager.virgilSecretKeyNew,
-     * updateToken -> PropertyManager.virgilUpdateTokenNew,
+     * appToken -> PropertyManager.appToken,
+     * publicKey -> PropertyManager.publicKeyNew,
+     * secretKey -> PropertyManager.secretKeyNew,
+     * updateToken2 -> PropertyManager.updateToken,
      */
-    @JvmOverloads @JvmStatic fun initProtocol(serverAddress: String? = PropertyManager.virgilServerAddress,
-                                              appToken: String = PropertyManager.virgilAppToken,
-                                              publicKey: String = PropertyManager.virgilPublicKeyNew,
-                                              secretKey: String = PropertyManager.virgilSecretKeyNew,
-                                              updateToken: String = PropertyManager.virgilUpdateTokenNew): Protocol {
+    @JvmOverloads @JvmStatic fun initProtocol(serverAddress: String? = PropertyManager.pheServiceAddress,
+                                              appToken: String = PropertyManager.appToken,
+                                              publicKey: String = PropertyManager.publicKeyNew,
+                                              secretKey: String = PropertyManager.secretKeyNew,
+                                              updateToken: String = PropertyManager.updateToken): Protocol {
 
         val context = ProtocolContext.create(
                 appToken,

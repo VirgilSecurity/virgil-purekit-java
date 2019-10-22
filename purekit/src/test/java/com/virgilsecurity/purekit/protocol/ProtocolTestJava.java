@@ -41,7 +41,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.virgilsecurity.purekit.data.InvalidPasswordException;
 import com.virgilsecurity.purekit.data.InvalidProtobufTypeException;
 import com.virgilsecurity.purekit.data.ProtocolException;
-import com.virgilsecurity.purekit.utils.EnrollResult;
+import com.virgilsecurity.purekit.data.EnrollResult;
 import com.virgilsecurity.purekit.utils.PropertyManager;
 import com.virgilsecurity.purekit.utils.ProtocolUtils;
 import com.virgilsecurity.purekit.utils.ThreadUtils;
@@ -130,20 +130,20 @@ class ProtocolTestJava {
 
     private static Stream<Arguments> testArgumentsNoToken() {
         return Stream.of(
-                Arguments.of(PropertyManager.getVirgilServerAddress(),
-                             PropertyManager.getVirgilAppToken(),
-                             PropertyManager.getVirgilPublicKeyNew(),
-                             PropertyManager.getVirgilSecretKeyNew())
+                Arguments.of(PropertyManager.getPheServiceAddress(),
+                             PropertyManager.getAppToken(),
+                             PropertyManager.getPublicKeyNew(),
+                             PropertyManager.getSecretKeyNew())
         );
     }
 
     private static Stream<Arguments> testArguments() {
         return Stream.of(
-                Arguments.of(PropertyManager.getVirgilServerAddress(),
-                             PropertyManager.getVirgilAppToken(),
-                             PropertyManager.getVirgilPublicKeyNew(),
-                             PropertyManager.getVirgilSecretKeyNew(),
-                             PropertyManager.getVirgilUpdateTokenNew())
+                Arguments.of(PropertyManager.getPheServiceAddress(),
+                             PropertyManager.getAppToken(),
+                             PropertyManager.getPublicKeyOld(),
+                             PropertyManager.getSecretKeyOld(),
+                             PropertyManager.getUpdateToken())
         );
     }
 }

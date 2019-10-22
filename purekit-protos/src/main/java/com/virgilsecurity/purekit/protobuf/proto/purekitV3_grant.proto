@@ -31,20 +31,21 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.purekit.utils
+syntax = "proto3";
 
-import java.io.File
+package build;
 
-/**
- * FileUtils class.
- */
-object FileUtils {
+option java_package = "com.virgilsecurity.purekit.protobuf.build";
+option java_outer_classname = "PurekitProtosV3Grant";
 
-    @JvmStatic fun versionFromGradle(): String =
-            File(".", "build.gradle").readLines()
-                    .first { it.startsWith(VERSION_PREFIX) }
-                    .substringAfter(VERSION_PREFIX)
-                    .removeSuffix("\"")
+message EncryptedGrantHeader {
+    uint32 creation_date = 1;
+    string user_id = 2;
+    string session_id = 3;
+}
 
-    private const val VERSION_PREFIX = "version \""
+message EncryptedGrant {
+    uint32 version = 1;
+    bytes encrypted_phek = 2;
+    bytes header = 3;
 }

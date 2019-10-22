@@ -31,28 +31,45 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.purekit.utils
+package com.virgilsecurity.purekit.pure;
+
+import com.virgilsecurity.purekit.pure.Pure;
+import com.virgilsecurity.purekit.pure.model.PureGrant;
 
 /**
- * EnrollResult class is intended to simplify work with return type of *Protocol#enrollAccount* method.
+ * AuthResult class is a Result of {@link Pure#authenticateUser(String, String)}.
  */
-data class EnrollResult(val enrollmentRecord: ByteArray, val accountKey: ByteArray) {
+public class AuthResult {
 
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
+    private final PureGrant grant;
+    private final String encryptedGrant;
 
-        other as EnrollResult
-
-        if (!enrollmentRecord.contentEquals(other.enrollmentRecord)) return false
-        if (!accountKey.contentEquals(other.accountKey)) return false
-
-        return true
+    /**
+     * Instantiates AuthResult.
+     *
+     * @param grant PureGrant.
+     * @param encryptedGrant Encrypted grant.
+     */
+    AuthResult(PureGrant grant, String encryptedGrant) {
+        this.grant = grant;
+        this.encryptedGrant = encryptedGrant;
     }
 
-    override fun hashCode(): Int {
-        var result = enrollmentRecord.contentHashCode()
-        result = 31 * result + accountKey.contentHashCode()
-        return result
+    /**
+     * Returns grant.
+     *
+     * @return PureGrant.
+     */
+    public PureGrant getGrant() {
+        return grant;
+    }
+
+    /**
+     * Returns encrypted PureGrant.
+     *
+     * @return Encrypted PureGrant.
+     */
+    public String getEncryptedGrant() {
+        return encryptedGrant;
     }
 }

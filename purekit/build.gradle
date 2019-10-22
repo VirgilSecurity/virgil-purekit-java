@@ -31,6 +31,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+import org.gradle.api.tasks.testing.logging.TestLogEvent
+
 plugins {
     id 'java-library'
     id 'maven-publish'
@@ -41,7 +44,6 @@ group "com.virgilsecurity"
 version "2.1.1"
 
 apply plugin: 'kotlin'
-apply plugin: 'org.junit.platform.gradle.plugin'
 apply plugin: 'maven'
 apply plugin: 'org.jetbrains.dokka'
 
@@ -55,6 +57,8 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.coroutines"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:$versions.coroutines"
 
+    implementation "com.virgilsecurity.sdk:crypto:5.2.1"
+
     // Phe crypto
     api "com.virgilsecurity.crypto:common:$versions.virgilCrypto"
     api "com.virgilsecurity.crypto:foundation:$versions.virgilCrypto"
@@ -64,9 +68,7 @@ dependencies {
     implementation "com.github.kittinunf.fuel:fuel:$versions.fuel"
 
     // Tests
-    testImplementation "org.junit.jupiter:junit-jupiter-api:$versions.junit"
-    testImplementation "org.junit.jupiter:junit-jupiter-params:$versions.junit"
-    testRuntime "org.junit.jupiter:junit-jupiter-engine:$versions.junit"
+    testImplementation "org.junit.jupiter:junit-jupiter:$versions.junit"
 }
 
 task generateVersionVirgilAgent {
@@ -99,12 +101,41 @@ compileTestKotlin {
 
 test {
     systemProperties System.properties
+    useJUnitPlatform()
 }
 
-afterEvaluate {
-    def junitPlatformTestTask = tasks.getByName('junitPlatformTest')
+tasks.withType(Test) {
+    testLogging {
+        events TestLogEvent.FAILED,
+                TestLogEvent.PASSED,
+                TestLogEvent.SKIPPED,
+                TestLogEvent.STANDARD_OUT
+        exceptionFormat TestExceptionFormat.FULL
+        showExceptions true
+        showCauses true
+        showStackTraces true
 
-    junitPlatformTestTask.systemProperties project.gradle.startParameter.systemPropertiesArgs
+        debug {
+            events TestLogEvent.STARTED,
+                    TestLogEvent.FAILED,
+                    TestLogEvent.PASSED,
+                    TestLogEvent.SKIPPED,
+                    TestLogEvent.STANDARD_ERROR,
+                    TestLogEvent.STANDARD_OUT
+            exceptionFormat TestExceptionFormat.FULL
+        }
+        info.events = debug.events
+        info.exceptionFormat = debug.exceptionFormat
+
+        afterSuite { desc, result ->
+            if (!desc.parent) {
+                def output = "Results: ${result.resultType} (${result.testCount} tests, ${result.successfulTestCount} successes, ${result.failedTestCount} failures, ${result.skippedTestCount} skipped)"
+                def startItem = '|  ', endItem = '  |'
+                def repeatLength = startItem.length() + output.length() + endItem.length()
+                println('\n' + ('-' * repeatLength) + '\n' + startItem + output + endItem + '\n' + ('-' * repeatLength))
+            }
+        }
+    }
 }
 
 task sourcesJar(type: Jar) {

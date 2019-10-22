@@ -60,7 +60,7 @@ class ProtocolContextNegativeTest {
     }
 
     @Test fun context_app_token_wrong_prefix() {
-        if (PropertyManager.virgilServerAddress == null) { // If virgilServerAddress is not null - we use default http client
+        if (PropertyManager.pheServiceAddress == null) { // If virgilServerAddress is not null - we use default http client
             val protocol = ProtocolUtils.initProtocol(appToken = WRONG_CRED, updateToken = "")
 
             runBlocking {
@@ -76,9 +76,9 @@ class ProtocolContextNegativeTest {
     @Test fun context_public_key_wrong() {
         assertThrows<IllegalArgumentException> {
             ProtocolContext.create(
-                    PropertyManager.virgilAppToken,
+                    PropertyManager.appToken,
                     WRONG_CRED,
-                    PropertyManager.virgilSecretKeyNew,
+                    PropertyManager.secretKeyNew,
                     ""
             )
         }
@@ -87,8 +87,8 @@ class ProtocolContextNegativeTest {
     @Test fun context_secret_key_wrong() {
         assertThrows<IllegalArgumentException> {
             ProtocolContext.create(
-                    PropertyManager.virgilAppToken,
-                    PropertyManager.virgilPublicKeyNew,
+                    PropertyManager.appToken,
+                    PropertyManager.publicKeyNew,
                     WRONG_CRED,
                     ""
             )
@@ -98,9 +98,9 @@ class ProtocolContextNegativeTest {
     @Test fun context_update_token_wrong() {
         assertThrows<IllegalArgumentException> {
             ProtocolContext.create(
-                    PropertyManager.virgilAppToken,
-                    PropertyManager.virgilPublicKeyNew,
-                    PropertyManager.virgilSecretKeyNew,
+                    PropertyManager.appToken,
+                    PropertyManager.publicKeyNew,
+                    PropertyManager.secretKeyNew,
                     WRONG_CRED
             )
         }
