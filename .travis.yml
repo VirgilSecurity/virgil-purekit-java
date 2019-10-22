@@ -10,7 +10,6 @@ branches:
   only:
   - dev
   - master
-  - travis-setup
 
 env:
   global:
