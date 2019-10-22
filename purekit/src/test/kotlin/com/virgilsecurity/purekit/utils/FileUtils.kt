@@ -41,7 +41,7 @@ import java.io.File
 object FileUtils {
 
     @JvmStatic fun versionFromGradle(): String =
-            File(System.getProperty("user.dir"), "build.gradle").readLines()
+            File(".", "build.gradle").readLines()
                     .first { it.startsWith(VERSION_PREFIX) }
                     .substringAfter(VERSION_PREFIX)
                     .removeSuffix("\"")

@@ -866,20 +866,22 @@ class PureTestJava {
 
     private static Stream<Arguments> testArgumentsNoToken() {
         return Stream.of(
-            Arguments.of(PropertyManager.getServiceAddress(),
-                         PropertyManager.getVirgilAppToken(),
-                         PropertyManager.getVirgilPublicKeyNew(),
-                         PropertyManager.getVirgilSecretKeyNew())
+            Arguments.of(PropertyManager.getPheServiceAddress(),
+                         PropertyManager.getPureServerAddress(),
+                         PropertyManager.getAppToken(),
+                         PropertyManager.getPublicKeyNew(),
+                         PropertyManager.getSecretKeyNew())
         );
     }
 
     private static Stream<Arguments> testArguments() {
         return Stream.of(
-            Arguments.of(PropertyManager.getServiceAddress(),
-                         PropertyManager.getVirgilAppToken(),
-                         PropertyManager.getVirgilPublicKeyOld(),
-                         PropertyManager.getVirgilSecretKeyOld(),
-                         PropertyManager.getVirgilUpdateTokenNew())
+            Arguments.of(PropertyManager.getPheServiceAddress(),
+                         PropertyManager.getPureServerAddress(),
+                         PropertyManager.getAppToken(),
+                         PropertyManager.getPublicKeyOld(),
+                         PropertyManager.getSecretKeyOld(),
+                         PropertyManager.getUpdateToken())
         );
     }
 }
