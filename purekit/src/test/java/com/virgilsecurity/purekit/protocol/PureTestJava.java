@@ -228,7 +228,7 @@ class PureTestJava {
 
         String bupkpString = String.format("BU.%s", Base64.getEncoder().encodeToString(this.crypto.exportPublicKey(bupkp.getPublicKey())));
         String hkpString = String.format("HB.%s", Base64.getEncoder().encodeToString(this.crypto.exportPublicKey(hkp.getPublicKey())));
-        String oskpString = String.format("OS.%s", Base64.getEncoder().encodeToString(this.crypto.exportPublicKey(oskp.getPublicKey())));
+        String oskpString = String.format("OS.%s", Base64.getEncoder().encodeToString(this.crypto.exportPrivateKey(oskp.getPrivateKey())));
 
         PureContext context;
         if (storage != null) {
