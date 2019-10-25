@@ -221,22 +221,24 @@ class PureTestJava {
                                       PureStorage storage) throws CryptoException, PureException {
         VirgilKeyPair bupkp = this.crypto.generateKeyPair(KeyType.ED25519);
         VirgilKeyPair hkp = this.crypto.generateKeyPair(KeyType.ED25519);
+        VirgilKeyPair oskp = this.crypto.generateKeyPair(KeyType.ED25519);
 
         byte[] akData = this.crypto.generateRandomData(32);
         String akString = String.format("AK.%s", Base64.getEncoder().encodeToString(akData));
 
         String bupkpString = String.format("BU.%s", Base64.getEncoder().encodeToString(this.crypto.exportPublicKey(bupkp.getPublicKey())));
         String hkpString = String.format("HB.%s", Base64.getEncoder().encodeToString(this.crypto.exportPublicKey(hkp.getPublicKey())));
+        String oskpString = String.format("OS.%s", Base64.getEncoder().encodeToString(this.crypto.exportPublicKey(oskp.getPublicKey())));
 
         PureContext context;
         if (storage != null) {
-            context = PureContext.createContext(appToken, akString, bupkpString, hkpString,
+            context = PureContext.createContext(appToken, akString, bupkpString, hkpString, oskpString,
                     storage, secretKey, publicKey, externalPublicKeys, pheServerAddress);
         } else {
             VirgilKeyPair signingKeyPair = this.crypto.generateKeyPair();
             String vkString = String.format("VS.%s", Base64.getEncoder().encodeToString(this.crypto.exportPrivateKey(signingKeyPair.getPrivateKey())));
 
-            context = PureContext.createContext(appToken, akString, bupkpString, hkpString, vkString,
+            context = PureContext.createContext(appToken, akString, bupkpString, hkpString, oskpString, vkString,
                     secretKey, publicKey, externalPublicKeys, pheServerAddress, pureServerAddress);
         }
 

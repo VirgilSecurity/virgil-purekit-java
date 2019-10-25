@@ -80,6 +80,7 @@ public class Pure {
     private final byte[] ak;
     private final VirgilPublicKey buppk;
     private final VirgilPublicKey hpk;
+    private final VirgilKeyPair oskp;
     private final HttpPheClient httpPheClient;
     private final Map<String, List<VirgilPublicKey>> externalPublicKeys;
 
@@ -121,6 +122,7 @@ public class Pure {
         this.ak = context.getAk().getPayload();
         this.buppk = context.getBuppk();
         this.hpk = context.getHpk();
+        this.oskp = context.getOskp();
         this.httpPheClient = context.getPheClient();
         this.externalPublicKeys = context.getExternalPublicKeys();
     }
