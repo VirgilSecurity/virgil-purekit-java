@@ -6,11 +6,6 @@ os:
 - linux
 - osx
 
-branches:
-  only:
-  - dev
-  - master
-
 env:
   global:
   - secure: avLHBggUa3NPAjQKKhggQSWIs4P5armTV2Hmb5WH8ylllZkvClkDTdbjhfiJKjzxVaB2EEXuCacZTsLUOTjbWBXhNgMu3FgmEgtbuOM80sL67Xt/Aj/USyawzKX74CxXYvEW7H31Sh09nxoJpS2rmhtMKs/OWBiEY+IGYpvYaiRrCZdbuH70FboKcWDSnvDr32CuWio7NF3kGdiwy70Im32+fHnt9l+WbufzAUOskmBGdE25PwC79YTmIrXe6m6v+NlPpJ0tp0xlSNHVVCSC3dRsnBW1pYy+1BqE1slRNXBzhtg7+fNk2WHtX9z6BBlNXcCXaE5AwreLbfeQd1kx1qxDLacmNT6Yk4pjCiHAkxi5IdVg106zX73pGRbYpFZNzJNq3dK8+cjbJj+44DMkRPEQnxA1V7h7LxwurzJGirA2ZBfYZAymvJfqsamOb2JPxrV4TJdUqvC+YtzWatmSeCHu0Ewf/WUbkurrY5VpxFbRkHO96qaBnPu9RgOTRGz9kaGyro5Zq+fSwmun+5oaKaFtvrREb65GC2Jon7Q3/39NdNk3XiF6r24feI/wG4xS37Wh+MnIr2eRsBrPvKudZURwQHGzSzP/uKzNjYdkxB7MM5F9Eta+m8alZP4ifFOn1qzNPAZzj7IwwysnE1ci3DiON+YVIooc2OSQ8CnEKlw=
