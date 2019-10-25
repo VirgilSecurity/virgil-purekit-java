@@ -99,7 +99,72 @@ compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
 }
 
+enum Environment {
+    DEV("dev"),
+    STG("stg"),
+    PRO("pro")
+
+    private final String name
+
+    Environment(String name) {
+        this.name = name
+    }
+
+    String getName() {
+        name
+    }
+
+    static String getPossibleValues() {
+        return DEV.getName() + ", " + STG.getName() + ", " + PRO.getName()
+    }
+}
+
+def getEnvironmentalVariables() {
+    def allProperties = new Properties()
+    file("../env.properties").withInputStream {
+        stream -> allProperties.load(stream)
+    }
+
+    def environment = Environment.PRO.getName() + "."
+    if (rootProject.hasProperty("environment")) {
+        switch (getProperty("environment")) {
+            case Environment.DEV.getName():
+                environment = Environment.DEV.getName() + "."
+                break
+            case Environment.STG.getName():
+                environment = Environment.STG.getName() + "."
+                break
+            case Environment.PRO.getName():
+                environment = Environment.PRO.getName() + "."
+                break
+            default:
+                throw new IllegalStateException("environment can only be: ${Environment.getPossibleValues()}")
+        }
+    }
+    println environment
+
+    def propsMap = new HashMap<String, String>()
+    allProperties.entrySet().findAll {
+        it.key.startsWith("$environment")
+    }.forEach {
+        def keyWithoutPrefix = ((String) it.key).replace(environment, "")
+        propsMap.put(keyWithoutPrefix, (String) it.value)
+    }
+    println "testProperty:  $propsMap"
+
+    return propsMap
+}
+
+task loadEnvironmentalVariables {
+    getEnvironmentalVariables().entrySet().forEach {
+        println("Before: " + System.getProperty(it.key))
+        System.setProperty(it.key, it.value)
+        println("After: " + System.getProperty(it.key))
+    }
+}
+
 test {
+    dependsOn loadEnvironmentalVariables
     systemProperties System.properties
     useJUnitPlatform()
 }
