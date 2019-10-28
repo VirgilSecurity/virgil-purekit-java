@@ -31,9 +31,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.gradle.api.tasks.testing.logging.TestExceptionFormat
-import org.gradle.api.tasks.testing.logging.TestLogEvent
-
 plugins {
     id 'java-library'
     id 'maven-publish'
@@ -46,6 +43,7 @@ version "2.1.1"
 apply plugin: 'kotlin'
 apply plugin: 'maven'
 apply plugin: 'org.jetbrains.dokka'
+apply from: "../tests-verbal-output.gradle"
 
 sourceCompatibility = 1.8
 
@@ -66,6 +64,9 @@ dependencies {
 
     // Http client
     implementation "com.github.kittinunf.fuel:fuel:$versions.fuel"
+
+    // Gson
+    testImplementation "com.google.code.gson:gson:$versions.gson"
 
     // Tests
     testImplementation "org.junit.jupiter:junit-jupiter:$versions.junit"
@@ -99,108 +100,9 @@ compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
 }
 
-enum Environment {
-    DEV("dev"),
-    STG("stg"),
-    PRO("pro")
-
-    private final String name
-
-    Environment(String name) {
-        this.name = name
-    }
-
-    String getName() {
-        name
-    }
-
-    static String getPossibleValues() {
-        return DEV.getName() + ", " + STG.getName() + ", " + PRO.getName()
-    }
-}
-
-def getEnvironmentalVariables() {
-    def allProperties = new Properties()
-    file("../env.properties").withInputStream {
-        stream -> allProperties.load(stream)
-    }
-
-    def environment = Environment.PRO.getName() + "."
-    if (rootProject.hasProperty("environment")) {
-        switch (getProperty("environment")) {
-            case Environment.DEV.getName():
-                environment = Environment.DEV.getName() + "."
-                break
-            case Environment.STG.getName():
-                environment = Environment.STG.getName() + "."
-                break
-            case Environment.PRO.getName():
-                environment = Environment.PRO.getName() + "."
-                break
-            default:
-                throw new IllegalStateException("environment can only be: ${Environment.getPossibleValues()}")
-        }
-    }
-    println environment
-
-    def propsMap = new HashMap<String, String>()
-    allProperties.entrySet().findAll {
-        it.key.startsWith("$environment")
-    }.forEach {
-        def keyWithoutPrefix = ((String) it.key).replace(environment, "")
-        propsMap.put(keyWithoutPrefix, (String) it.value)
-    }
-    println "testProperty:  $propsMap"
-
-    return propsMap
-}
-
-task loadEnvironmentalVariables {
-    getEnvironmentalVariables().entrySet().forEach {
-        println("Before: " + System.getProperty(it.key))
-        System.setProperty(it.key, it.value)
-        println("After: " + System.getProperty(it.key))
-    }
-}
-
 test {
-    dependsOn loadEnvironmentalVariables
     systemProperties System.properties
     useJUnitPlatform()
-}
-
-tasks.withType(Test) {
-    testLogging {
-        events TestLogEvent.FAILED,
-                TestLogEvent.PASSED,
-                TestLogEvent.SKIPPED,
-                TestLogEvent.STANDARD_OUT
-        exceptionFormat TestExceptionFormat.FULL
-        showExceptions true
-        showCauses true
-        showStackTraces true
-
-        debug {
-            events TestLogEvent.STARTED,
-                    TestLogEvent.FAILED,
-                    TestLogEvent.PASSED,
-                    TestLogEvent.SKIPPED,
-                    TestLogEvent.STANDARD_ERROR,
-                    TestLogEvent.STANDARD_OUT
-            exceptionFormat TestExceptionFormat.FULL
-        }
-        info.events = debug.events
-        info.exceptionFormat = debug.exceptionFormat
-
-        afterSuite { desc, result ->
-            if (!desc.parent) {
-                def output = "Results: ${result.resultType} (${result.testCount} tests, ${result.successfulTestCount} successes, ${result.failedTestCount} failures, ${result.skippedTestCount} skipped)"
-                def startItem = '|  ', endItem = '  |'
-                def repeatLength = startItem.length() + output.length() + endItem.length()
-                println('\n' + ('-' * repeatLength) + '\n' + startItem + output + endItem + '\n' + ('-' * repeatLength))
-            }
-        }
-    }
 }
 
 task sourcesJar(type: Jar) {

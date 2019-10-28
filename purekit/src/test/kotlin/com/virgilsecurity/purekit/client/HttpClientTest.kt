@@ -35,7 +35,6 @@ package com.virgilsecurity.purekit.client
 
 import com.virgilsecurity.purekit.data.ProtocolException
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtos
-import com.virgilsecurity.purekit.pure.HttpPureClient
 import com.virgilsecurity.purekit.utils.PropertyManager
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
@@ -48,7 +47,7 @@ class HttpClientTest {
 
     @Test
     fun response_proto_parse() {
-        val httpClient = HttpClientProtobuf(PropertyManager.pheServiceAddress ?: HttpPureClient.SERVICE_ADDRESS)
+        val httpClient = HttpClientProtobuf(PropertyManager.pheServiceAddress)
 
         val version = parseVersionAndContent(
                 PropertyManager.publicKeyNew,
