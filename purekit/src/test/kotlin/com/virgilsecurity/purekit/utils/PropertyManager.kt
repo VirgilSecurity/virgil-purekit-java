@@ -33,81 +33,38 @@
 
 package com.virgilsecurity.purekit.utils
 
-object PropertyManager {
+class PropertyManager {
 
-    // Virgil parameters
+    companion object {
+        private const val APP_TOKEN = "APP_TOKEN"
+        private const val PUBLIC_KEY_OLD = "PUBLIC_KEY_OLD"
+        private const val SECRET_KEY_OLD = "SECRET_KEY_OLD"
+        private const val PUBLIC_KEY_NEW = "PUBLIC_KEY_NEW"
+        private const val SECRET_KEY_NEW = "SECRET_KEY_NEW"
+        private const val PUBLIC_KEY_WRONG = "PUBLIC_KEY_WRONG"
+        private const val UPDATE_TOKEN = "UPDATE_TOKEN"
+        private const val PHE_SERVER_ADDRESS = "PHE_SERVER_ADDRESS"
+        private const val PURE_SERVER_ADDRESS = "PURE_SERVER_ADDRESS"
 
-    @JvmStatic
-    val appToken: String by lazy {
-        if (System.getProperty(APP_TOKEN) != null)
-            System.getProperty(APP_TOKEN)
-        else
-            System.getenv(APP_TOKEN)
-    }
-    @JvmStatic
-    val publicKeyOld: String by lazy {
-        if (System.getProperty(PUBLIC_KEY_OLD) != null)
-            System.getProperty(PUBLIC_KEY_OLD)
-        else
-            System.getenv(PUBLIC_KEY_OLD)
-    }
-    @JvmStatic
-    val secretKeyOld: String by lazy {
-        if (System.getProperty(SECRET_KEY_OLD) != null)
-            System.getProperty(SECRET_KEY_OLD)
-        else
-            System.getenv(SECRET_KEY_OLD)
-    }
-    @JvmStatic
-    val publicKeyNew: String by lazy {
-        if (System.getProperty(PUBLIC_KEY_NEW) != null)
-            System.getProperty(PUBLIC_KEY_NEW)
-        else
-            System.getenv(PUBLIC_KEY_NEW)
-    }
-    @JvmStatic
-    val secretKeyNew: String by lazy {
-        if (System.getProperty(SECRET_KEY_NEW) != null)
-            System.getProperty(SECRET_KEY_NEW)
-        else
-            System.getenv(SECRET_KEY_NEW)
-    }
-    @JvmStatic
-    val publicKeyWrong: String by lazy {
-        if (System.getProperty(PUBLIC_KEY_WRONG) != null)
-            System.getProperty(PUBLIC_KEY_WRONG)
-        else
-            System.getenv(PUBLIC_KEY_WRONG)
-    }
-    @JvmStatic
-    val updateToken: String by lazy {
-        if (System.getProperty(UPDATE_TOKEN) != null)
-            System.getProperty(UPDATE_TOKEN)
-        else
-            System.getenv(UPDATE_TOKEN)
-    }
-    @JvmStatic
-    val pheServiceAddress: String? by lazy {
-        if (System.getProperty(PHE_SERVER_ADDRESS) != null)
-            System.getProperty(PHE_SERVER_ADDRESS)
-        else
-            System.getenv(PHE_SERVER_ADDRESS)
-    }
-    @JvmStatic
-    val pureServerAddress: String? by lazy {
-        if (System.getProperty(PURE_SERVER_ADDRESS) != null)
-            System.getProperty(PURE_SERVER_ADDRESS)
-        else
-            System.getenv(PURE_SERVER_ADDRESS)
-    }
+        private const val ENVIRONMENT_PARAMETER = "environment"
 
-    private const val APP_TOKEN = "APP_TOKEN"
-    private const val PUBLIC_KEY_OLD = "PUBLIC_KEY_OLD"
-    private const val SECRET_KEY_OLD = "SECRET_KEY_OLD"
-    private const val PUBLIC_KEY_NEW = "PUBLIC_KEY_NEW"
-    private const val SECRET_KEY_NEW = "SECRET_KEY_NEW"
-    private const val PUBLIC_KEY_WRONG = "PUBLIC_KEY_WRONG"
-    private const val UPDATE_TOKEN = "UPDATE_TOKEN"
-    private const val PHE_SERVER_ADDRESS = "PHE_SERVER_ADDRESS"
-    private const val PURE_SERVER_ADDRESS = "PURE_SERVER_ADDRESS"
+        @JvmStatic val appToken: String by lazy { envPropertyReader.getProperty(APP_TOKEN) }
+        @JvmStatic val publicKeyOld: String by lazy { envPropertyReader.getProperty(PUBLIC_KEY_OLD) }
+        @JvmStatic val secretKeyOld: String by lazy { envPropertyReader.getProperty(SECRET_KEY_OLD) }
+        @JvmStatic val publicKeyNew: String by lazy { envPropertyReader.getProperty(PUBLIC_KEY_NEW) }
+        @JvmStatic val secretKeyNew: String by lazy { envPropertyReader.getProperty(SECRET_KEY_NEW) }
+        @JvmStatic val publicKeyWrong: String by lazy { envPropertyReader.getProperty(PUBLIC_KEY_WRONG) }
+        @JvmStatic val updateToken: String by lazy { envPropertyReader.getProperty(UPDATE_TOKEN) }
+        @JvmStatic val pheServiceAddress: String by lazy { envPropertyReader.getProperty(PHE_SERVER_ADDRESS) }
+        @JvmStatic val pureServerAddress: String by lazy { envPropertyReader.getProperty(PURE_SERVER_ADDRESS) }
+
+        private val envPropertyReader: EnvPropertyReader by lazy {
+            val environment = PropertyUtils.getSystemProperty(ENVIRONMENT_PARAMETER)
+
+            if (environment != null)
+                EnvPropertyReader(EnvPropertyReader.Environment.fromType(environment))
+            else
+                EnvPropertyReader(EnvPropertyReader.Environment.PRO)
+        }
+    }
 }

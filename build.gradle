@@ -46,6 +46,9 @@ buildscript {
             // Protobuf
             protobufVersion: '3.9.1',
 
+            // Gson
+            gson           : '2.8.5',
+
             // Docs
             dokka          : '0.9.18',
 

@@ -33,24 +33,16 @@
 
 package com.virgilsecurity.purekit.utils
 
-import java.io.File
-
 /**
- * FileUtils class.
+ * PropertyUtils class.
  */
-object FileUtils {
+object PropertyUtils {
 
-    @JvmStatic fun versionFromGradle(): String =
-            File(PropertyUtils.getSystemProperty("user.dir")
-                         + File.separator
-                         + PUREKIT_MODULE_NAME,
-                 "build.gradle")
-                    .readLines()
-                    .first { it.startsWith(VERSION_PREFIX) }
-                    .substringAfter(VERSION_PREFIX)
-                    .removeSuffix("\"")
-
-    private const val VERSION_PREFIX = "version \""
-
-    private const val PUREKIT_MODULE_NAME = "purekit"
+    @JvmStatic fun getSystemProperty(name: String): String? {
+        return if (System.getProperty(name) != null) {
+            System.getProperty(name)
+        } else {
+            System.getenv(name)
+        }
+    }
 }
