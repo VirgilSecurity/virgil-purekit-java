@@ -1,13 +1,13 @@
 language: java
 jdk:
-- oraclejdk9
+  - oraclejdk9
 
 os:
-- linux
-- osx
+  - linux
+  - osx
 
 before_install:
   - openssl aes-256-cbc -K $encrypted_8204292ae215_key -iv $encrypted_8204292ae215_iv -in env.json.enc -out env.json -d
 
 script:
-- "./gradlew clean test"
+  - "./gradlew clean test"
