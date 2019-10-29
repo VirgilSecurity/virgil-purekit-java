@@ -39,7 +39,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.virgilsecurity.crypto.foundation.Base64;
-import com.virgilsecurity.purekit.pure.exception.PureException;
+import com.virgilsecurity.purekit.pure.exception.PureLogicException;
 import com.virgilsecurity.purekit.utils.ValidateUtils;
 import com.virgilsecurity.sdk.crypto.VirgilCrypto;
 import com.virgilsecurity.sdk.crypto.VirgilKeyPair;
@@ -100,7 +100,7 @@ public class PureContext {
                         String servicePublicKey,
                         PureStorage storage,
                         Map<String, List<String>> externalPublicKeys,
-                        String pheServiceAddress) throws PureException, CryptoException {
+                        String pheServiceAddress) throws PureLogicException, CryptoException {
         ValidateUtils.checkNull(storage, "storage");
 
         this.crypto = crypto;
@@ -141,11 +141,11 @@ public class PureContext {
         }
 
         if (this.appSecretKey.getVersion() != this.servicePublicKey.getVersion()) {
-            throw new PureException(PureException.ErrorStatus.KEYS_VERSION_MISMATCH);
+            throw new PureLogicException(PureLogicException.ErrorStatus.KEYS_VERSION_MISMATCH);
         }
 
         if (this.ak.getPayload().length != AK_LENGTH) {
-            throw new PureException(PureException.ErrorStatus.AK_INVALID_LENGTH);
+            throw new PureLogicException(PureLogicException.ErrorStatus.AK_INVALID_LENGTH);
         }
     }
 
@@ -172,7 +172,7 @@ public class PureContext {
                                             String sk,
                                             String pk,
                                             Map<String, List<String>> externalPublicKeys)
-        throws CryptoException, PureException {
+        throws CryptoException, PureLogicException {
 
         return PureContext.createContext(appToken, ak, bu, hb, os, vs, sk, pk,
                                          externalPublicKeys, HttpPheClient.SERVICE_ADDRESS,
@@ -207,7 +207,7 @@ public class PureContext {
                                             Map<String, List<String>> externalPublicKeys,
                                             String pheServiceAddress,
                                             String pureServiceAddress)
-        throws CryptoException, PureException {
+        throws CryptoException, PureLogicException {
 
         VirgilCrypto crypto = new VirgilCrypto();
         HttpPureClient pureClient = new HttpPureClient(appToken, pureServiceAddress);
@@ -245,7 +245,7 @@ public class PureContext {
                                             String appSecretKey,
                                             String servicePublicKey,
                                             Map<String, List<String>> externalPublicKeys)
-        throws CryptoException, PureException {
+        throws CryptoException, PureLogicException {
 
         return PureContext.createContext(appToken, ak, bu, hb, os, storage,
                                          appSecretKey, servicePublicKey, externalPublicKeys,
@@ -277,7 +277,7 @@ public class PureContext {
                                             String servicePublicKey,
                                             Map<String, List<String>> externalPublicKeys,
                                             String pheServiceAddress)
-        throws CryptoException, PureException {
+        throws CryptoException, PureLogicException {
 
         return new PureContext(new VirgilCrypto(), appToken, ak, bu, hb, os,
                                appSecretKey, servicePublicKey, storage, externalPublicKeys,
@@ -286,20 +286,20 @@ public class PureContext {
 
     private static Credentials parseCredentials(String prefix,
                                                 String credentials,
-                                                boolean isVersioned) throws PureException {
+                                                boolean isVersioned) throws PureLogicException {
         ValidateUtils.checkNullOrEmpty(prefix, "prefix");
         ValidateUtils.checkNullOrEmpty(credentials, "credentials");
 
         String[] parts = credentials.split("\\.");
 
         if (parts.length != (isVersioned ? 3 : 2)) {
-            throw new PureException(PureException.ErrorStatus.CREDENTIALS_PARSING_ERROR);
+            throw new PureLogicException(PureLogicException.ErrorStatus.CREDENTIALS_PARSING_ERROR);
         }
 
         int index = 0;
 
         if (!parts[index].equals(prefix)) {
-            throw new PureException(PureException.ErrorStatus.CREDENTIALS_PARSING_ERROR);
+            throw new PureLogicException(PureLogicException.ErrorStatus.CREDENTIALS_PARSING_ERROR);
         }
         index++;
 
@@ -337,11 +337,11 @@ public class PureContext {
     /**
      * Sets Update token.
      */
-    public void setUpdateToken(String updateToken) throws PureException {
+    public void setUpdateToken(String updateToken) throws PureLogicException {
         this.updateToken = PureContext.parseCredentials("UT", updateToken, true);
 
         if (this.updateToken.getVersion() != this.appSecretKey.getVersion() + 1) {
-            throw new PureException(PureException.ErrorStatus.UPDATE_TOKEN_VERSION_MISMATCH);
+            throw new PureLogicException(PureLogicException.ErrorStatus.UPDATE_TOKEN_VERSION_MISMATCH);
         }
     }
 

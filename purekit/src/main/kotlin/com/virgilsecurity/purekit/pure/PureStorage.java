@@ -35,7 +35,7 @@ package com.virgilsecurity.purekit.pure;
 
 import java.util.Set;
 
-import com.virgilsecurity.purekit.pure.exception.PureException;
+import com.virgilsecurity.purekit.pure.exception.PureLogicException;
 import com.virgilsecurity.purekit.pure.model.CellKey;
 import com.virgilsecurity.purekit.pure.model.UserRecord;
 
@@ -106,8 +106,8 @@ public interface PureStorage {
     /**
      * Insert a CellKey key into a storage.
      *
-     * @implSpec this method MUST throw {@link PureException} with
-     * {@link PureException.ErrorStatus#CELL_KEY_ALREADY_EXISTS_IN_STORAGE} if key with given
+     * @implSpec this method MUST throw {@link PureLogicException} with
+     * {@link PureLogicException.ErrorStatus#CELL_KEY_ALREADY_EXISTS_IN_STORAGE} if key with given
      * userId and dataId already exists.
      *
      * @param userId User Id.

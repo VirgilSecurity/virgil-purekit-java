@@ -48,11 +48,13 @@ import com.virgilsecurity.crypto.foundation.Base64;
 import com.virgilsecurity.crypto.phe.PheCipher;
 import com.virgilsecurity.crypto.phe.PheClient;
 import com.virgilsecurity.crypto.phe.PheClientEnrollAccountResult;
+import com.virgilsecurity.crypto.phe.PheException;
 import com.virgilsecurity.purekit.data.ProtocolException;
 import com.virgilsecurity.purekit.data.ProtocolHttpException;
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtos;
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Grant;
-import com.virgilsecurity.purekit.pure.exception.PureException;
+import com.virgilsecurity.purekit.pure.exception.PureCryptoException;
+import com.virgilsecurity.purekit.pure.exception.PureLogicException;
 import com.virgilsecurity.purekit.pure.model.CellKey;
 import com.virgilsecurity.purekit.pure.model.PureGrant;
 import com.virgilsecurity.purekit.pure.model.UserRecord;
@@ -91,40 +93,44 @@ public class Pure {
      *
      * @param context PureContext.
      */
-    public Pure(PureContext context) {
-        this.crypto = context.getCrypto();
-        this.pureCrypto = new PureCrypto(this.crypto);
-        this.cipher = new PheCipher();
-        this.cipher.setRandom(this.crypto.getRng());
-        this.storage = context.getStorage();
-        this.currentClient = new PheClient();
-        this.currentClient.setOperationRandom(this.crypto.getRng());
-        this.currentClient.setRandom(this.crypto.getRng());
-        this.currentClient.setKeys(context.getAppSecretKey().getPayload(),
-                                   context.getServicePublicKey().getPayload());
+    public Pure(PureContext context) throws PureCryptoException {
+        try {
+            this.crypto = context.getCrypto();
+            this.pureCrypto = new PureCrypto(this.crypto);
+            this.cipher = new PheCipher();
+            this.cipher.setRandom(this.crypto.getRng());
+            this.storage = context.getStorage();
+            this.currentClient = new PheClient();
+            this.currentClient.setOperationRandom(this.crypto.getRng());
+            this.currentClient.setRandom(this.crypto.getRng());
+            this.currentClient.setKeys(context.getAppSecretKey().getPayload(),
+                    context.getServicePublicKey().getPayload());
 
-        if (context.getUpdateToken() != null) {
-            this.currentVersion = context.getServicePublicKey().getVersion() + 1;
-            this.updateToken = context.getUpdateToken().getPayload();
-            this.previousClient = new PheClient();
-            this.previousClient.setOperationRandom(this.crypto.getRng());
-            this.previousClient.setRandom(this.crypto.getRng());
-            this.previousClient.setKeys(context.getAppSecretKey().getPayload(),
-                                        context.getServicePublicKey().getPayload());
-            this.currentClient.rotateKeys(context.getUpdateToken().getPayload());
-        }
-        else {
-            this.currentVersion = context.getServicePublicKey().getVersion();
-            this.updateToken = null;
-            this.previousClient = null;
-        }
+            if (context.getUpdateToken() != null) {
+                this.currentVersion = context.getServicePublicKey().getVersion() + 1;
+                this.updateToken = context.getUpdateToken().getPayload();
+                this.previousClient = new PheClient();
+                this.previousClient.setOperationRandom(this.crypto.getRng());
+                this.previousClient.setRandom(this.crypto.getRng());
+                this.previousClient.setKeys(context.getAppSecretKey().getPayload(),
+                        context.getServicePublicKey().getPayload());
+                this.currentClient.rotateKeys(context.getUpdateToken().getPayload());
+            } else {
+                this.currentVersion = context.getServicePublicKey().getVersion();
+                this.updateToken = null;
+                this.previousClient = null;
+            }
 
-        this.ak = context.getAk().getPayload();
-        this.buppk = context.getBuppk();
-        this.hpk = context.getHpk();
-        this.oskp = context.getOskp();
-        this.httpPheClient = context.getPheClient();
-        this.externalPublicKeys = context.getExternalPublicKeys();
+            this.ak = context.getAk().getPayload();
+            this.buppk = context.getBuppk();
+            this.hpk = context.getHpk();
+            this.oskp = context.getOskp();
+            this.httpPheClient = context.getPheClient();
+            this.externalPublicKeys = context.getExternalPublicKeys();
+        }
+        catch (PheException e) {
+            throw new PureCryptoException(e);
+        }
     }
 
     /**
@@ -162,8 +168,8 @@ public class Pure {
      * successfully.
      * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
      * successfully. Represents a regular HTTP exception with code and message.
-     * @throws PureException If provided password is invalid or - please, see
-     * {@link PureStorage#selectUser(String)} PureException doc.
+     * @throws PureLogicException If provided password is invalid or - please, see
+     * {@link PureStorage#selectUser(String)} PureLogicException doc.
      * @throws CryptoException Please, see {@link VirgilCrypto#importPrivateKey},
      * {@link VirgilCrypto#verifySignature} methods' CryptoException doc.
      * @throws InvalidProtocolBufferException If a PurekitProtosV3Storage.UserRecord received from
@@ -172,43 +178,48 @@ public class Pure {
     public AuthResult authenticateUser(String userId, String password, String sessionId)
         throws Exception {
 
-        ValidateUtils.checkNullOrEmpty(userId, "userId");
-        ValidateUtils.checkNullOrEmpty(password, "password");
+        try {
+            ValidateUtils.checkNullOrEmpty(userId, "userId");
+            ValidateUtils.checkNullOrEmpty(password, "password");
 
-        byte[] phek = computePheKey(userId, password);
+            byte[] phek = computePheKey(userId, password);
 
-        byte[] uskData = cipher.decrypt(storage.selectUser(userId).getEncryptedUsk(), phek);
+            byte[] uskData = cipher.decrypt(storage.selectUser(userId).getEncryptedUsk(), phek);
 
-        VirgilKeyPair ukp = this.crypto.importPrivateKey(uskData);
+            VirgilKeyPair ukp = this.crypto.importPrivateKey(uskData);
 
-        PureGrant grant = new PureGrant(ukp, userId, sessionId, new Date());
+            PureGrant grant = new PureGrant(ukp, userId, sessionId, new Date());
 
-        int timestamp = (int) (grant.getCreationDate().getTime() / 1000);
-        PurekitProtosV3Grant.EncryptedGrantHeader.Builder headerBuilder =
-            PurekitProtosV3Grant.EncryptedGrantHeader.newBuilder()
-                .setCreationDate(timestamp)
-                .setUserId(grant.getUserId());
+            int timestamp = (int) (grant.getCreationDate().getTime() / 1000);
+            PurekitProtosV3Grant.EncryptedGrantHeader.Builder headerBuilder =
+                    PurekitProtosV3Grant.EncryptedGrantHeader.newBuilder()
+                            .setCreationDate(timestamp)
+                            .setUserId(grant.getUserId());
 
-        if (sessionId != null) {
-            headerBuilder.setSessionId(sessionId);
+            if (sessionId != null) {
+                headerBuilder.setSessionId(sessionId);
+            }
+
+            PurekitProtosV3Grant.EncryptedGrantHeader header = headerBuilder.build();
+
+            byte[] headerBytes = header.toByteArray();
+
+            byte[] encryptedPhek = cipher.authEncrypt(phek, headerBytes, this.ak);
+
+            PurekitProtosV3Grant.EncryptedGrant encryptedGrantData =
+                    PurekitProtosV3Grant.EncryptedGrant.newBuilder()
+                            .setVersion(Pure.currentGrantVersion)
+                            .setHeader(ByteString.copyFrom(headerBytes))
+                            .setEncryptedPhek(ByteString.copyFrom(encryptedPhek))
+                            .build();
+
+            String encryptedGrant = new String(Base64.encode(encryptedGrantData.toByteArray()));
+
+            return new AuthResult(grant, encryptedGrant);
         }
-
-        PurekitProtosV3Grant.EncryptedGrantHeader header = headerBuilder.build();
-
-        byte[] headerBytes = header.toByteArray();
-
-        byte[] encryptedPhek = cipher.authEncrypt(phek, headerBytes, this.ak);
-
-        PurekitProtosV3Grant.EncryptedGrant encryptedGrantData =
-            PurekitProtosV3Grant.EncryptedGrant.newBuilder()
-                .setVersion(Pure.currentGrantVersion)
-                .setHeader(ByteString.copyFrom(headerBytes))
-                .setEncryptedPhek(ByteString.copyFrom(encryptedPhek))
-                .build();
-
-        String encryptedGrant = new String(Base64.encode(encryptedGrantData.toByteArray()));
-
-        return new AuthResult(grant, encryptedGrant);
+        catch (PheException e) {
+            throw new PureCryptoException(e);
+        }
     }
 
     /**
@@ -223,8 +234,8 @@ public class Pure {
      * successfully.
      * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
      * successfully. Represents a regular HTTP exception with code and message.
-     * @throws PureException If provided password is invalid or - please, see
-     * {@link PureStorage#selectUser(String)} PureException doc.
+     * @throws PureLogicException If provided password is invalid or - please, see
+     * {@link PureStorage#selectUser(String)} PureLogicException doc.
      * @throws CryptoException Please, see {@link VirgilCrypto#importPrivateKey},
      * method's CryptoException doc.
      * @throws InvalidProtocolBufferException If a PurekitProtosV3Storage.UserRecord received from
@@ -247,7 +258,7 @@ public class Pure {
      * successfully.
      * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
      * successfully. Represents a regular HTTP exception with code and message.
-     * @throws PureException Please, see {@link PureStorage#selectUser(String)} PureException doc.
+     * @throws PureLogicException Please, see {@link PureStorage#selectUser(String)} PureLogicException doc.
      * @throws CryptoException Please, see {@link VirgilCrypto#decrypt},
      * {@link VirgilCrypto#importPrivateKey}, {@link VirgilCrypto#verifySignature} methods'
      * CryptoException doc.
@@ -279,7 +290,7 @@ public class Pure {
      * successfully.
      * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
      * successfully. Represents a regular HTTP exception with code and message.
-     * @throws PureException Please, see {@link PureStorage#selectUser(String)} PureException doc.
+     * @throws PureLogicException Please, see {@link PureStorage#selectUser(String)} PureLogicException doc.
      * @throws InvalidProtocolBufferException If provided encryptedGrantString cannot be parsed as
      * protobuf message or a PurekitProtosV3Storage.UserRecord received from a server cannot be
      * parsed as a Protobuf message..
@@ -288,39 +299,44 @@ public class Pure {
      */
     public PureGrant decryptGrantFromUser(String encryptedGrantString) throws Exception {
 
-        ValidateUtils.checkNullOrEmpty(encryptedGrantString, "encryptedGrantString");
+        try {
+            ValidateUtils.checkNullOrEmpty(encryptedGrantString, "encryptedGrantString");
 
-        byte[] encryptedGrantData = Base64.decode(encryptedGrantString.getBytes());
+            byte[] encryptedGrantData = Base64.decode(encryptedGrantString.getBytes());
 
-        PurekitProtosV3Grant.EncryptedGrant encryptedGrant =
-            PurekitProtosV3Grant.EncryptedGrant.parseFrom(encryptedGrantData);
+            PurekitProtosV3Grant.EncryptedGrant encryptedGrant =
+                    PurekitProtosV3Grant.EncryptedGrant.parseFrom(encryptedGrantData);
 
-        ByteString encryptedData = encryptedGrant.getEncryptedPhek();
+            ByteString encryptedData = encryptedGrant.getEncryptedPhek();
 
-        byte[] phek = cipher.authDecrypt(encryptedData.toByteArray(),
-                                         encryptedGrant.getHeader().toByteArray(),
-                                         this.ak);
+            byte[] phek = cipher.authDecrypt(encryptedData.toByteArray(),
+                    encryptedGrant.getHeader().toByteArray(),
+                    this.ak);
 
-        PurekitProtosV3Grant.EncryptedGrantHeader header =
-            PurekitProtosV3Grant.EncryptedGrantHeader.parseFrom(encryptedGrant.getHeader());
+            PurekitProtosV3Grant.EncryptedGrantHeader header =
+                    PurekitProtosV3Grant.EncryptedGrantHeader.parseFrom(encryptedGrant.getHeader());
 
-        UserRecord userRecord = storage.selectUser(header.getUserId());
+            UserRecord userRecord = storage.selectUser(header.getUserId());
 
-        byte[] usk = cipher.decrypt(userRecord.getEncryptedUsk(), phek);
+            byte[] usk = cipher.decrypt(userRecord.getEncryptedUsk(), phek);
 
-        VirgilKeyPair ukp = crypto.importPrivateKey(usk);
+            VirgilKeyPair ukp = crypto.importPrivateKey(usk);
 
 
-        String sessionId = header.getSessionId();
+            String sessionId = header.getSessionId();
 
-        if (sessionId.isEmpty()) {
-            sessionId = null;
+            if (sessionId.isEmpty()) {
+                sessionId = null;
+            }
+
+            return new PureGrant(ukp,
+                    header.getUserId(),
+                    sessionId,
+                    new Date((long) header.getCreationDate() * 1000));
         }
-
-        return new PureGrant(ukp,
-                             header.getUserId(),
-                             sessionId,
-                             new Date((long) header.getCreationDate() * 1000));
+        catch (PheException e) {
+            throw new PureCryptoException(e);
+        }
     }
 
 
@@ -337,7 +353,7 @@ public class Pure {
      * successfully.
      * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
      * successfully. Represents a regular HTTP exception with code and message.
-     * @throws PureException Please, see {@link PureStorage#selectUser(String)} PureException doc.
+     * @throws PureLogicException Please, see {@link PureStorage#selectUser(String)} PureLogicException doc.
      * @throws CryptoException Please, see {@link VirgilCrypto#encrypt},
      * {@link VirgilCrypto#generateSignature}, {@link VirgilCrypto#verifySignature} methods'
      * CryptoException doc.
@@ -348,15 +364,20 @@ public class Pure {
     public void changeUserPassword(String userId, String oldPassword, String newPassword)
         throws Exception {
 
-        ValidateUtils.checkNullOrEmpty(userId, "userId");
-        ValidateUtils.checkNullOrEmpty(oldPassword, "oldPassword");
-        ValidateUtils.checkNullOrEmpty(newPassword, "newPassword");
+        try {
+            ValidateUtils.checkNullOrEmpty(userId, "userId");
+            ValidateUtils.checkNullOrEmpty(oldPassword, "oldPassword");
+            ValidateUtils.checkNullOrEmpty(newPassword, "newPassword");
 
-        byte[] oldPhek = computePheKey(userId, oldPassword);
-        UserRecord userRecord = this.storage.selectUser(userId);
-        byte[] privateKeyData = this.cipher.decrypt(userRecord.getEncryptedUsk(), oldPhek);
+            byte[] oldPhek = computePheKey(userId, oldPassword);
+            UserRecord userRecord = this.storage.selectUser(userId);
+            byte[] privateKeyData = this.cipher.decrypt(userRecord.getEncryptedUsk(), oldPhek);
 
-        changeUserPassword(userRecord, privateKeyData, newPassword);
+            changeUserPassword(userRecord, privateKeyData, newPassword);
+        }
+        catch (PheException e) {
+            throw new PureCryptoException(e);
+        }
     }
 
     /**
@@ -370,7 +391,7 @@ public class Pure {
      * successfully.
      * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
      * successfully. Represents a regular HTTP exception with code and message.
-     * @throws PureException Please, see {@link PureStorage#selectUser(String)} PureException doc.
+     * @throws PureLogicException Please, see {@link PureStorage#selectUser(String)} PureLogicException doc.
      * @throws CryptoException Please, see {@link VirgilCrypto#exportPrivateKey},
      * {@link VirgilCrypto#encrypt}, {@link VirgilCrypto#generateSignature},
      * {@link VirgilCrypto#verifySignature} methods' CryptoException doc.
@@ -510,8 +531,8 @@ public class Pure {
      * successfully.
      * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
      * successfully. Represents a regular HTTP exception with code and message.
-     * @throws PureException Please, see {@link PureStorage#selectKey},
-     * {@link PureStorage#selectUsers}, {@link PureStorage#insertKey} methods' PureException doc.
+     * @throws PureLogicException Please, see {@link PureStorage#selectKey},
+     * {@link PureStorage#selectUsers}, {@link PureStorage#insertKey} methods' PureLogicException doc.
      * @throws CryptoException Please, see {@link VirgilCrypto#generateKeyPair},
      * {@link VirgilCrypto#importPublicKey}, {@link VirgilCrypto#exportPublicKey},
      * {@link VirgilCrypto#exportPrivateKey}, {@link VirgilCrypto#encrypt}
@@ -547,8 +568,8 @@ public class Pure {
      * successfully.
      * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
      * successfully. Represents a regular HTTP exception with code and message.
-     * @throws PureException Please, see {@link PureStorage#selectKey},
-     * {@link PureStorage#selectUsers}, {@link PureStorage#insertKey} methods' PureException doc.
+     * @throws PureLogicException Please, see {@link PureStorage#selectKey},
+     * {@link PureStorage#selectUsers}, {@link PureStorage#insertKey} methods' PureLogicException doc.
      * @throws CryptoException Please, see {@link VirgilCrypto#generateKeyPair},
      * {@link VirgilCrypto#importPublicKey}, {@link VirgilCrypto#exportPublicKey},
      * {@link VirgilCrypto#exportPrivateKey}, {@link VirgilCrypto#encrypt},
@@ -609,7 +630,7 @@ public class Pure {
                 byte[] cpkData = crypto.exportPublicKey(ckp.getPublicKey());
                 byte[] cskData = crypto.exportPrivateKey(ckp.getPrivateKey());
 
-                PureCryptoData encryptedCskData = pureCrypto.encrypt(cskData, recipientList);
+                PureCryptoData encryptedCskData = pureCrypto.encrypt(cskData, oskp.getPrivateKey(), recipientList);
 
                 storage.insertKey(userId,
                                   dataId,
@@ -617,9 +638,9 @@ public class Pure {
                                               encryptedCskData.getCms(),
                                               encryptedCskData.getBody()));
                 cpk = ckp.getPublicKey();
-            } catch (PureException exception) {
+            } catch (PureLogicException exception) {
                 if (exception.getErrorStatus()
-                    != PureException.ErrorStatus.CELL_KEY_ALREADY_EXISTS_IN_STORAGE) {
+                    != PureLogicException.ErrorStatus.CELL_KEY_ALREADY_EXISTS_IN_STORAGE) {
 
                     throw exception;
                 }
@@ -650,8 +671,8 @@ public class Pure {
      * successfully.
      * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
      * successfully. Represents a regular HTTP exception with code and message.
-     * @throws PureException If cell key has not been found in a storage, or please see
-     * {@link PureStorage#selectKey(String, String)} method's PureException doc.
+     * @throws PureLogicException If cell key has not been found in a storage, or please see
+     * {@link PureStorage#selectKey(String, String)} method's PureLogicException doc.
      * @throws CryptoException Please, see {@link VirgilCrypto#importPrivateKey},
      * {@link VirgilCrypto#decrypt}, {@link VirgilCrypto#verifySignature} methods'
      * CryptoException doc.
@@ -690,8 +711,8 @@ public class Pure {
      * successfully.
      * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
      * successfully. Represents a regular HTTP exception with code and message.
-     * @throws PureException If cell key has not been found in a storage, or please see
-     * {@link PureStorage#selectKey(String, String)} method's PureException doc.
+     * @throws PureLogicException If cell key has not been found in a storage, or please see
+     * {@link PureStorage#selectKey(String, String)} method's PureLogicException doc.
      * @throws CryptoException Please, see {@link VirgilCrypto#importPrivateKey},
      * {@link VirgilCrypto#decrypt}, {@link VirgilCrypto#verifySignature} methods'
      * CryptoException doc.
@@ -712,12 +733,12 @@ public class Pure {
         CellKey cellKey = storage.selectKey(ownerUserId, dataId);
 
         if (cellKey == null) {
-            throw new PureException(PureException.ErrorStatus.CELL_KEY_NOT_FOUND_IN_STORAGE);
+            throw new PureLogicException(PureLogicException.ErrorStatus.CELL_KEY_NOT_FOUND_IN_STORAGE);
         }
 
         PureCryptoData pureCryptoData = new PureCryptoData(cellKey.getEncryptedCskCms(),
                                                            cellKey.getEncryptedCskBody());
-        byte[] csk = pureCrypto.decrypt(pureCryptoData, privateKey);
+        byte[] csk = pureCrypto.decrypt(pureCryptoData, oskp.getPublicKey(), privateKey);
 
         VirgilKeyPair ckp = crypto.importPrivateKey(csk);
 
@@ -736,8 +757,8 @@ public class Pure {
      * successfully.
      * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
      * successfully. Represents a regular HTTP exception with code and message.
-     * @throws PureException Please, see {@link PureStorage#selectKey},
-     * {@link PureStorage#updateKey}, {@link PureStorage#selectUsers} methods' PureException doc.
+     * @throws PureLogicException Please, see {@link PureStorage#selectKey},
+     * {@link PureStorage#updateKey}, {@link PureStorage#selectUsers} methods' PureLogicException doc.
      * @throws CryptoException Please, see {@link VirgilCrypto#importPublicKey},
      * {@link VirgilCrypto#verifySignature} methods' CryptoException doc.
      * @throws InvalidProtocolBufferException If a CellKey received from a server cannot be parsed
@@ -766,8 +787,8 @@ public class Pure {
      * successfully.
      * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
      * successfully. Represents a regular HTTP exception with code and message.
-     * @throws PureException Please, see {@link PureStorage#selectKey},
-     * {@link PureStorage#updateKey}, {@link PureStorage#selectUsers} methods' PureException doc.
+     * @throws PureLogicException Please, see {@link PureStorage#selectKey},
+     * {@link PureStorage#updateKey}, {@link PureStorage#selectUsers} methods' PureLogicException doc.
      * @throws CryptoException Please, see {@link VirgilCrypto#importPublicKey},
      * {@link VirgilCrypto#verifySignature}, {@link VirgilCrypto#generateSignature} methods'
      * CryptoException doc.
@@ -815,8 +836,8 @@ public class Pure {
      * successfully.
      * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
      * successfully. Represents a regular HTTP exception with code and message.
-     * @throws PureException Please, see {@link PureStorage#selectKey},
-     * {@link PureStorage#updateKey}, {@link PureStorage#selectUsers} methods' PureException doc.
+     * @throws PureLogicException Please, see {@link PureStorage#selectKey},
+     * {@link PureStorage#updateKey}, {@link PureStorage#selectUsers} methods' PureLogicException doc.
      * @throws CryptoException Please, see {@link VirgilCrypto#importPublicKey},
      * {@link VirgilCrypto#verifySignature} methods' CryptoException doc.
      * @throws InvalidProtocolBufferException If a CellKey received from a server cannot be parsed
@@ -845,8 +866,8 @@ public class Pure {
      * successfully.
      * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
      * successfully. Represents a regular HTTP exception with code and message.
-     * @throws PureException Please, see {@link PureStorage#selectKey},
-     * {@link PureStorage#updateKey}, {@link PureStorage#selectUsers} methods' PureException doc.
+     * @throws PureLogicException Please, see {@link PureStorage#selectKey},
+     * {@link PureStorage#updateKey}, {@link PureStorage#selectUsers} methods' PureLogicException doc.
      * @throws CryptoException Please, see {@link VirgilCrypto#importPublicKey},
      * {@link VirgilCrypto#verifySignature}, {@link VirgilCrypto#generateSignature} methods'
      * CryptoException doc.
@@ -897,46 +918,51 @@ public class Pure {
 
     private void registerUser(String userId, String password, boolean isUserNew) throws Exception {
 
-        ValidateUtils.checkNullOrEmpty(userId, "userId");
-        ValidateUtils.checkNullOrEmpty(password, "password");
+        try {
+            ValidateUtils.checkNullOrEmpty(userId, "userId");
+            ValidateUtils.checkNullOrEmpty(password, "password");
 
-        PurekitProtos.EnrollmentRequest request = PurekitProtos.EnrollmentRequest
-            .newBuilder()
-            .setVersion(this.currentVersion)
-            .build();
-        PurekitProtos.EnrollmentResponse response = httpPheClient.enrollAccount(request);
+            PurekitProtos.EnrollmentRequest request = PurekitProtos.EnrollmentRequest
+                    .newBuilder()
+                    .setVersion(this.currentVersion)
+                    .build();
+            PurekitProtos.EnrollmentResponse response = httpPheClient.enrollAccount(request);
 
-        byte[] passwordHash = crypto.computeHash(password.getBytes(), HashAlgorithm.SHA512);
+            byte[] passwordHash = crypto.computeHash(password.getBytes(), HashAlgorithm.SHA512);
 
-        byte[] encryptedPwdHash = crypto.encrypt(passwordHash, Collections.singletonList(this.hpk));
+            byte[] encryptedPwdHash = crypto.encrypt(passwordHash, Collections.singletonList(this.hpk));
 
-        PheClientEnrollAccountResult result = currentClient.enrollAccount(
-            response.getResponse().toByteArray(),
-            passwordHash
-        );
+            PheClientEnrollAccountResult result = currentClient.enrollAccount(
+                    response.getResponse().toByteArray(),
+                    passwordHash
+            );
 
-        VirgilKeyPair ukp = crypto.generateKeyPair();
+            VirgilKeyPair ukp = crypto.generateKeyPair();
 
-        byte[] uskData = crypto.exportPrivateKey(ukp.getPrivateKey());
+            byte[] uskData = crypto.exportPrivateKey(ukp.getPrivateKey());
 
-        byte[] encryptedUsk = cipher.encrypt(uskData, result.getAccountKey());
+            byte[] encryptedUsk = cipher.encrypt(uskData, result.getAccountKey());
 
-        byte[] encryptedUskBackup = crypto.encrypt(uskData, Collections.singletonList(this.buppk));
+            byte[] encryptedUskBackup = crypto.encrypt(uskData, Collections.singletonList(this.buppk));
 
-        byte[] publicKey = crypto.exportPublicKey(ukp.getPublicKey());
+            byte[] publicKey = crypto.exportPublicKey(ukp.getPublicKey());
 
-        UserRecord userRecord = new UserRecord(userId,
-                                               result.getEnrollmentRecord(),
-                                               this.currentVersion,
-                                               publicKey,
-                                               encryptedUsk,
-                                               encryptedUskBackup,
-                                               encryptedPwdHash);
+            UserRecord userRecord = new UserRecord(userId,
+                    result.getEnrollmentRecord(),
+                    this.currentVersion,
+                    publicKey,
+                    encryptedUsk,
+                    encryptedUskBackup,
+                    encryptedPwdHash);
 
-        if (isUserNew) {
-            storage.insertUser(userRecord);
-        } else {
-            storage.updateUser(userRecord);
+            if (isUserNew) {
+                storage.insertUser(userRecord);
+            } else {
+                storage.updateUser(userRecord);
+            }
+        }
+        catch (PheException e) {
+            throw new PureCryptoException(e);
         }
     }
 
@@ -955,35 +981,40 @@ public class Pure {
                                     String newPassword)
         throws Exception {
 
-        ValidateUtils.checkNullOrEmpty(newPassword, "newPassword");
+        try {
+            ValidateUtils.checkNullOrEmpty(newPassword, "newPassword");
 
-        byte[] newPasswordHash = crypto.computeHash(newPassword.getBytes(),
-                                                    HashAlgorithm.SHA512);
+            byte[] newPasswordHash = crypto.computeHash(newPassword.getBytes(),
+                    HashAlgorithm.SHA512);
 
-        PurekitProtos.EnrollmentRequest enrollRequest = PurekitProtos.EnrollmentRequest
-            .newBuilder()
-            .setVersion(this.currentVersion)
-            .build();
-        PurekitProtos.EnrollmentResponse enrollResponse = httpPheClient.enrollAccount(enrollRequest);
+            PurekitProtos.EnrollmentRequest enrollRequest = PurekitProtos.EnrollmentRequest
+                    .newBuilder()
+                    .setVersion(this.currentVersion)
+                    .build();
+            PurekitProtos.EnrollmentResponse enrollResponse = httpPheClient.enrollAccount(enrollRequest);
 
-        PheClientEnrollAccountResult enrollResult =
-            currentClient.enrollAccount(enrollResponse.getResponse().toByteArray(),
-                                        newPasswordHash);
+            PheClientEnrollAccountResult enrollResult =
+                    currentClient.enrollAccount(enrollResponse.getResponse().toByteArray(),
+                            newPasswordHash);
 
-        byte[] newEncryptedUsk = cipher.encrypt(privateKeyData, enrollResult.getAccountKey());
+            byte[] newEncryptedUsk = cipher.encrypt(privateKeyData, enrollResult.getAccountKey());
 
-        byte[] encryptedPwdHash = crypto.encrypt(newPasswordHash,
-                                              Collections.singletonList(this.hpk));
+            byte[] encryptedPwdHash = crypto.encrypt(newPasswordHash,
+                    Collections.singletonList(this.hpk));
 
-        UserRecord newUserRecord = new UserRecord(userRecord.getUserId(),
-                                                  enrollResult.getEnrollmentRecord(),
-                                                  this.currentVersion,
-                                                  userRecord.getUpk(),
-                                                  newEncryptedUsk,
-                                                  userRecord.getEncryptedUskBackup(),
-                                                  encryptedPwdHash);
+            UserRecord newUserRecord = new UserRecord(userRecord.getUserId(),
+                    enrollResult.getEnrollmentRecord(),
+                    this.currentVersion,
+                    userRecord.getUpk(),
+                    newEncryptedUsk,
+                    userRecord.getEncryptedUskBackup(),
+                    encryptedPwdHash);
 
-        storage.updateUser(newUserRecord);
+            storage.updateUser(newUserRecord);
+        }
+        catch (PheException e) {
+            throw new PureCryptoException(e);
+        }
     }
 
     private ArrayList<VirgilPublicKey> keysWithOthers(Collection<VirgilPublicKey> publicKeys,
@@ -994,7 +1025,6 @@ public class Pure {
 
         Iterable<UserRecord> otherUserRecords = this.storage.selectUsers(otherUserIds);
 
-        // TODO: Optimize -> Optimize what?
         for (UserRecord record : otherUserRecords) {
             VirgilPublicKey otherUpk;
             otherUpk = crypto.importPublicKey(record.getUpk());
@@ -1007,31 +1037,36 @@ public class Pure {
 
     private byte[] computePheKey(String userId, String password) throws Exception {
 
-        byte[] passwordHash = crypto.computeHash(password.getBytes(), HashAlgorithm.SHA512);
+        try {
+            byte[] passwordHash = crypto.computeHash(password.getBytes(), HashAlgorithm.SHA512);
 
-        UserRecord userRecord = storage.selectUser(userId);
+            UserRecord userRecord = storage.selectUser(userId);
 
-        PheClient client = getClient(userRecord.getPheRecordVersion());
+            PheClient client = getClient(userRecord.getPheRecordVersion());
 
-        byte[] pheVerifyRequest = client.createVerifyPasswordRequest(passwordHash,
-                                                                     userRecord.getPheRecord());
+            byte[] pheVerifyRequest = client.createVerifyPasswordRequest(passwordHash,
+                    userRecord.getPheRecord());
 
-        PurekitProtos.VerifyPasswordRequest request = PurekitProtos.VerifyPasswordRequest
-            .newBuilder()
-            .setVersion(userRecord.getPheRecordVersion())
-            .setRequest(ByteString.copyFrom(pheVerifyRequest))
-            .build();
+            PurekitProtos.VerifyPasswordRequest request = PurekitProtos.VerifyPasswordRequest
+                    .newBuilder()
+                    .setVersion(userRecord.getPheRecordVersion())
+                    .setRequest(ByteString.copyFrom(pheVerifyRequest))
+                    .build();
 
-        PurekitProtos.VerifyPasswordResponse response = this.httpPheClient.verifyPassword(request);
+            PurekitProtos.VerifyPasswordResponse response = this.httpPheClient.verifyPassword(request);
 
-        byte[] phek = client.checkResponseAndDecrypt(passwordHash,
-                                                     userRecord.getPheRecord(),
-                                                     response.getResponse().toByteArray());
+            byte[] phek = client.checkResponseAndDecrypt(passwordHash,
+                    userRecord.getPheRecord(),
+                    response.getResponse().toByteArray());
 
-        if (phek.length == 0) {
-            throw new PureException(PureException.ErrorStatus.INVALID_PASSWORD);
+            if (phek.length == 0) {
+                throw new PureLogicException(PureLogicException.ErrorStatus.INVALID_PASSWORD);
+            }
+
+            return phek;
         }
-
-        return phek;
+        catch (PheException e) {
+            throw new PureCryptoException(e);
+        }
     }
 }
