@@ -33,11 +33,11 @@
 
 package com.virgilsecurity.purekit.pure;
 
+import java.util.Arrays;
 import java.util.Collection;
 
-import com.virgilsecurity.crypto.foundation.Aes256Gcm;
-import com.virgilsecurity.crypto.foundation.MessageInfoEditor;
-import com.virgilsecurity.crypto.foundation.RecipientCipher;
+import com.virgilsecurity.crypto.foundation.*;
+import com.virgilsecurity.purekit.pure.exception.PureCryptoException;
 import com.virgilsecurity.sdk.crypto.VirgilCrypto;
 import com.virgilsecurity.sdk.crypto.VirgilPrivateKey;
 import com.virgilsecurity.sdk.crypto.VirgilPublicKey;
@@ -50,41 +50,76 @@ class PureCrypto {
         this.crypto = crypto;
     }
 
-    PureCryptoData encrypt(byte[] plainTextData, Collection<VirgilPublicKey> recipients) {
+    PureCryptoData encrypt(byte[] plainTextData,
+                           VirgilPrivateKey signingKey,
+                           Collection<VirgilPublicKey> recipients)
+            throws PureCryptoException {
+
         try (Aes256Gcm aesGcm = new Aes256Gcm();
              RecipientCipher cipher = new RecipientCipher()) {
 
             cipher.setEncryptionCipher(aesGcm);
             cipher.setRandom(crypto.getRng());
 
+            cipher.addSigner(signingKey.getIdentifier(), signingKey.getPrivateKey());
+
             for (VirgilPublicKey key : recipients) {
                 cipher.addKeyRecipient(key.getIdentifier(), key.getPublicKey());
             }
 
-            cipher.startEncryption();
+            cipher.setSignerHash(new Sha512());
+            cipher.startSignedEncryption(plainTextData.length);
 
             byte[] cms = cipher.packMessageInfo();
 
             byte[] body1 = cipher.processEncryption(plainTextData);
             byte[] body2 = cipher.finishEncryption();
+            byte[] body3 = cipher.packMessageInfoFooter();
 
-            byte[] body = concat(body1, body2);
+            byte[] body = concat(concat(body1, body2), body3);
 
             return new PureCryptoData(cms, body);
         }
+        catch (FoundationException e) {
+            throw new PureCryptoException(e);
+        }
     }
 
-    byte[] decrypt(PureCryptoData data, VirgilPrivateKey privateKey) {
+    byte[] decrypt(PureCryptoData data, VirgilPublicKey verifyingKey, VirgilPrivateKey privateKey)
+        throws PureCryptoException {
+
         try (RecipientCipher cipher = new RecipientCipher()) {
 
             cipher.setRandom(crypto.getRng());
 
-            cipher.startDecryptionWithKey(privateKey.getIdentifier(),
-                                          privateKey.getPrivateKey(),
-                                          data.getCms());
+            cipher.startVerifiedDecryptionWithKey(privateKey.getIdentifier(),
+                    privateKey.getPrivateKey(),
+                    data.getCms(), new byte[0]);
 
             byte[] body1 = cipher.processDecryption(data.getBody());
             byte[] body2 = cipher.finishDecryption();
+
+            if (!cipher.isDataSigned()) {
+                throw new PureCryptoException(PureCryptoException.ErrorStatus.SIGNATURE_IS_ABSENT);
+            }
+
+            SignerInfoList signerInfoList = cipher.signerInfos();
+
+            if (!signerInfoList.hasItem() && signerInfoList.hasNext()) {
+                throw new PureCryptoException(PureCryptoException.ErrorStatus.SIGNER_IS_ABSENT);
+            }
+
+            SignerInfo signerInfo = signerInfoList.item();
+
+            if (!Arrays.equals(signerInfo.signerId(), verifyingKey.getIdentifier())) {
+                throw new PureCryptoException(PureCryptoException.ErrorStatus.SIGNER_IS_ABSENT);
+            }
+
+            if (!cipher.verifySignerInfo(signerInfo, verifyingKey.getPublicKey())) {
+                throw new PureCryptoException(
+                    PureCryptoException.ErrorStatus.SIGNATURE_VERIFICATION_FAILED
+                );
+            }
 
             return concat(body1, body2);
         }
@@ -92,7 +127,8 @@ class PureCrypto {
 
     byte[] addRecipients(byte[] cms,
                          VirgilPrivateKey privateKey,
-                         Collection<VirgilPublicKey> publicKeys) {
+                         Collection<VirgilPublicKey> publicKeys)
+        throws PureCryptoException {
 
         try (MessageInfoEditor infoEditor = new MessageInfoEditor()) {
             infoEditor.setRandom(crypto.getRng());
@@ -106,9 +142,14 @@ class PureCrypto {
 
             return infoEditor.pack();
         }
+        catch (FoundationException e) {
+            throw new PureCryptoException(e);
+        }
     }
 
-    byte[] deleteRecipients(byte[] cms, Collection<VirgilPublicKey> publicKeys) {
+    byte[] deleteRecipients(byte[] cms, Collection<VirgilPublicKey> publicKeys)
+        throws PureCryptoException {
+
         try (MessageInfoEditor infoEditor = new MessageInfoEditor()) {
             infoEditor.setRandom(this.crypto.getRng());
 
@@ -119,6 +160,9 @@ class PureCrypto {
             }
 
             return infoEditor.pack();
+        }
+        catch (FoundationException e) {
+            throw new PureCryptoException(e);
         }
     }
 

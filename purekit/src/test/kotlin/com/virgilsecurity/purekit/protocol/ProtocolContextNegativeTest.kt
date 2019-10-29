@@ -59,20 +59,6 @@ class ProtocolContextNegativeTest {
         }
     }
 
-    @Test fun context_app_token_wrong_prefix() {
-        if (PropertyManager.pheServiceAddress == null) { // If virgilServerAddress is not null - we use default http client
-            val protocol = ProtocolUtils.initProtocol(appToken = WRONG_CRED, updateToken = "")
-
-            runBlocking {
-                try {
-                    protocol.enrollAccount(PASSWORD).await()
-                } catch (t: Throwable) {
-                    Assertions.assertTrue(t is IllegalArgumentException)
-                }
-            }
-        }
-    }
-
     @Test fun context_public_key_wrong() {
         assertThrows<IllegalArgumentException> {
             ProtocolContext.create(

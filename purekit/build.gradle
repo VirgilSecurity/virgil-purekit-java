@@ -31,9 +31,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.gradle.api.tasks.testing.logging.TestExceptionFormat
-import org.gradle.api.tasks.testing.logging.TestLogEvent
-
 plugins {
     id 'java-library'
     id 'maven-publish'
@@ -46,6 +43,7 @@ version "2.1.1"
 apply plugin: 'kotlin'
 apply plugin: 'maven'
 apply plugin: 'org.jetbrains.dokka'
+apply from: "../tests-verbal-output.gradle"
 
 sourceCompatibility = 1.8
 
@@ -57,15 +55,17 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.coroutines"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:$versions.coroutines"
 
-    implementation "com.virgilsecurity.sdk:crypto:5.2.1"
+    // Virgil Core SDK
+    implementation "com.virgilsecurity.sdk:crypto:$versions.sdk"
 
     // Phe crypto
-    api "com.virgilsecurity.crypto:common:$versions.virgilCrypto"
-    api "com.virgilsecurity.crypto:foundation:$versions.virgilCrypto"
     api "com.virgilsecurity.crypto:phe:$versions.virgilCrypto"
 
     // Http client
     implementation "com.github.kittinunf.fuel:fuel:$versions.fuel"
+
+    // Gson
+    testImplementation "com.google.code.gson:gson:$versions.gson"
 
     // Tests
     testImplementation "org.junit.jupiter:junit-jupiter:$versions.junit"
@@ -102,40 +102,6 @@ compileTestKotlin {
 test {
     systemProperties System.properties
     useJUnitPlatform()
-}
-
-tasks.withType(Test) {
-    testLogging {
-        events TestLogEvent.FAILED,
-                TestLogEvent.PASSED,
-                TestLogEvent.SKIPPED,
-                TestLogEvent.STANDARD_OUT
-        exceptionFormat TestExceptionFormat.FULL
-        showExceptions true
-        showCauses true
-        showStackTraces true
-
-        debug {
-            events TestLogEvent.STARTED,
-                    TestLogEvent.FAILED,
-                    TestLogEvent.PASSED,
-                    TestLogEvent.SKIPPED,
-                    TestLogEvent.STANDARD_ERROR,
-                    TestLogEvent.STANDARD_OUT
-            exceptionFormat TestExceptionFormat.FULL
-        }
-        info.events = debug.events
-        info.exceptionFormat = debug.exceptionFormat
-
-        afterSuite { desc, result ->
-            if (!desc.parent) {
-                def output = "Results: ${result.resultType} (${result.testCount} tests, ${result.successfulTestCount} successes, ${result.failedTestCount} failures, ${result.skippedTestCount} skipped)"
-                def startItem = '|  ', endItem = '  |'
-                def repeatLength = startItem.length() + output.length() + endItem.length()
-                println('\n' + ('-' * repeatLength) + '\n' + startItem + output + endItem + '\n' + ('-' * repeatLength))
-            }
-        }
-    }
 }
 
 task sourcesJar(type: Jar) {

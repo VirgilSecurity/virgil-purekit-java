@@ -97,3 +97,4 @@ gradle-app.setting
 testsDev.sh
 testsStg.sh
 testsProd.sh
+env.json

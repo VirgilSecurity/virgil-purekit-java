@@ -7,7 +7,7 @@
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *  
+ *
  *     (1) Redistributions of source code must retain the above copyright notice, this
  *     list of conditions and the following disclaimer.
  *
@@ -31,57 +31,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-buildscript {
-    ext.versions = [
-            // Virgil
-            virgilCrypto   : '0.11.0',
-            sdk            : '6.0',
+package com.virgilsecurity.purekit.utils
 
-            // Http client
-            fuel           : '2.1.0',
+/**
+ * PropertyUtils class.
+ */
+object PropertyUtils {
 
-            // Kotlin
-            kotlin         : '1.3.50',
-            coroutines     : '1.3.0-M2',
-
-            // Protobuf
-            protobufVersion: '3.9.1',
-
-            // Gson
-            gson           : '2.8.5',
-
-            // Docs
-            dokka          : '0.9.18',
-
-            // Tests
-            junit          : '5.5.0',
-
-    ]
-    repositories {
-        jcenter()
-        mavenCentral()
+    @JvmStatic fun getSystemProperty(name: String): String? {
+        return if (System.getProperty(name) != null) {
+            System.getProperty(name)
+        } else {
+            System.getenv(name)
+        }
     }
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin"
-        classpath "org.jetbrains.dokka:dokka-gradle-plugin:$versions.dokka"
-    }
-}
-
-allprojects {
-    repositories {
-        jcenter()
-        mavenCentral()
-    }
-}
-
-task clean(type: Delete) {
-    delete rootProject.buildDir
-}
-
-task installPurekit() {
-    dependsOn ':purekit-protos:publishToMavenLocal', ':purekit:publishToMavenLocal'
-}
-
-task publishPurekit() {
-    dependsOn ':purekit-protos:publish', ':purekit:publish'
 }

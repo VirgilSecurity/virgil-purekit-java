@@ -27,7 +27,9 @@ import com.virgilsecurity.purekit.pure.AuthResult;
 import com.virgilsecurity.purekit.pure.Pure;
 import com.virgilsecurity.purekit.pure.PureContext;
 import com.virgilsecurity.purekit.pure.PureStorage;
+import com.virgilsecurity.purekit.pure.exception.PureCryptoException;
 import com.virgilsecurity.purekit.pure.exception.PureException;
+import com.virgilsecurity.purekit.pure.exception.PureLogicException;
 import com.virgilsecurity.purekit.pure.model.CellKey;
 import com.virgilsecurity.purekit.pure.model.PureGrant;
 import com.virgilsecurity.purekit.pure.model.UserRecord;
@@ -68,7 +70,7 @@ class PureTestJava {
             UserRecord userRecord = this.users.get(userId);
 
             if (userRecord == null) {
-                throw new PureException(PureException.ErrorStatus.USER_NOT_FOUND_IN_STORAGE);
+                throw new PureLogicException(PureLogicException.ErrorStatus.USER_NOT_FOUND_IN_STORAGE);
             }
 
             return userRecord;
@@ -134,7 +136,7 @@ class PureTestJava {
             HashMap<String, CellKey> map = this.keys.getOrDefault(userId, new HashMap<>());
 
             if (map.putIfAbsent(dataId, cellKey) != null) {
-                throw new PureException(PureException.ErrorStatus.CELL_KEY_ALREADY_EXISTS_IN_STORAGE);
+                throw new PureLogicException(PureLogicException.ErrorStatus.CELL_KEY_ALREADY_EXISTS_IN_STORAGE);
             }
 
             this.keys.put(userId, map);
@@ -145,7 +147,7 @@ class PureTestJava {
             HashMap<String, CellKey> map = this.keys.get(userId);
 
             if (!map.containsKey(dataId)) {
-                throw new PureException(PureException.ErrorStatus.CELL_KEY_ALREADY_EXISTS_IN_STORAGE);
+                throw new PureLogicException(PureLogicException.ErrorStatus.CELL_KEY_ALREADY_EXISTS_IN_STORAGE);
             }
 
             map.put(dataId, cellKey);
@@ -221,22 +223,24 @@ class PureTestJava {
                                       PureStorage storage) throws CryptoException, PureException {
         VirgilKeyPair bupkp = this.crypto.generateKeyPair(KeyType.ED25519);
         VirgilKeyPair hkp = this.crypto.generateKeyPair(KeyType.ED25519);
+        VirgilKeyPair oskp = this.crypto.generateKeyPair(KeyType.ED25519);
 
         byte[] akData = this.crypto.generateRandomData(32);
         String akString = String.format("AK.%s", Base64.getEncoder().encodeToString(akData));
 
         String bupkpString = String.format("BU.%s", Base64.getEncoder().encodeToString(this.crypto.exportPublicKey(bupkp.getPublicKey())));
         String hkpString = String.format("HB.%s", Base64.getEncoder().encodeToString(this.crypto.exportPublicKey(hkp.getPublicKey())));
+        String oskpString = String.format("OS.%s", Base64.getEncoder().encodeToString(this.crypto.exportPrivateKey(oskp.getPrivateKey())));
 
         PureContext context;
         if (storage != null) {
-            context = PureContext.createContext(appToken, akString, bupkpString, hkpString,
+            context = PureContext.createContext(appToken, akString, bupkpString, hkpString, oskpString,
                     storage, secretKey, publicKey, externalPublicKeys, pheServerAddress);
         } else {
             VirgilKeyPair signingKeyPair = this.crypto.generateKeyPair();
             String vkString = String.format("VS.%s", Base64.getEncoder().encodeToString(this.crypto.exportPrivateKey(signingKeyPair.getPrivateKey())));
 
-            context = PureContext.createContext(appToken, akString, bupkpString, hkpString, vkString,
+            context = PureContext.createContext(appToken, akString, bupkpString, hkpString, oskpString, vkString,
                     secretKey, publicKey, externalPublicKeys, pheServerAddress, pureServerAddress);
         }
 
@@ -458,11 +462,11 @@ class PureTestJava {
 
                 pure.changeUserPassword(userId, password1, password2);
 
-                PheException e = assertThrows(PheException.class, () -> {
+                PureCryptoException ex = assertThrows(PureCryptoException.class, () -> {
                     PureGrant grant1 = pure.decryptGrantFromUser(authResult1.getEncryptedGrant());
                 });
 
-                assertEquals(e.getStatusCode(), ERROR_AES_FAILED);
+                assertEquals(ex.getPheException().getStatusCode(), ERROR_AES_FAILED);
             }
         } catch (Exception e) {
             fail(e);
@@ -736,17 +740,17 @@ class PureTestJava {
 
                 pure.deleteUser(userId, true);
 
-                PureException e1 = assertThrows(PureException.class, () -> {
+                PureLogicException e1 = assertThrows(PureLogicException.class, () -> {
                     AuthResult authResult2 = pure.authenticateUser(userId, password);
                 });
 
-                assertEquals(PureException.ErrorStatus.USER_NOT_FOUND_IN_STORAGE, e1.getErrorStatus());
+                assertEquals(PureLogicException.ErrorStatus.USER_NOT_FOUND_IN_STORAGE, e1.getErrorStatus());
 
-                PureException e2 = assertThrows(PureException.class, () -> {
+                PureLogicException e2 = assertThrows(PureLogicException.class, () -> {
                     byte[] plainText = pure.decrypt(authResult1.getGrant(), null, dataId, cipherText);
                 });
 
-                assertEquals(PureException.ErrorStatus.CELL_KEY_NOT_FOUND_IN_STORAGE, e2.getErrorStatus());
+                assertEquals(PureLogicException.ErrorStatus.CELL_KEY_NOT_FOUND_IN_STORAGE, e2.getErrorStatus());
             }
         } catch (Exception e) {
             fail(e);
@@ -781,11 +785,11 @@ class PureTestJava {
 
                 pure.deleteUser(userId, false);
 
-                PureException e = assertThrows(PureException.class, () -> {
+                PureLogicException e = assertThrows(PureLogicException.class, () -> {
                     AuthResult authResult2 = pure.authenticateUser(userId, password);
                 });
 
-                assertEquals(PureException.ErrorStatus.USER_NOT_FOUND_IN_STORAGE, e.getErrorStatus());
+                assertEquals(PureLogicException.ErrorStatus.USER_NOT_FOUND_IN_STORAGE, e.getErrorStatus());
 
                 byte[] plainText = pure.decrypt(authResult1.getGrant(), null, dataId, cipherText);
 
@@ -824,11 +828,11 @@ class PureTestJava {
 
                 pure.deleteKey(userId, dataId);
 
-                PureException e = assertThrows(PureException.class, () -> {
+                PureLogicException e = assertThrows(PureLogicException.class, () -> {
                     byte[] plainText = pure.decrypt(authResult1.getGrant(), null, dataId, cipherText);
                 });
 
-                assertEquals(PureException.ErrorStatus.CELL_KEY_NOT_FOUND_IN_STORAGE, e.getErrorStatus());
+                assertEquals(PureLogicException.ErrorStatus.CELL_KEY_NOT_FOUND_IN_STORAGE, e.getErrorStatus());
             }
         } catch (Exception e) {
             fail(e);

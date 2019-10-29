@@ -7,7 +7,7 @@
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *  
+ *
  *     (1) Redistributions of source code must retain the above copyright notice, this
  *     list of conditions and the following disclaimer.
  *
@@ -31,57 +31,40 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-buildscript {
-    ext.versions = [
-            // Virgil
-            virgilCrypto   : '0.11.0',
-            sdk            : '6.0',
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+import org.gradle.api.tasks.testing.logging.TestLogEvent
 
-            // Http client
-            fuel           : '2.1.0',
+// Adds verbal output for tests when running them via CLI
+tasks.withType(Test) {
+    testLogging {
+        events TestLogEvent.FAILED,
+                TestLogEvent.PASSED,
+                TestLogEvent.SKIPPED,
+                TestLogEvent.STANDARD_OUT
+        exceptionFormat TestExceptionFormat.FULL
+        showExceptions true
+        showCauses true
+        showStackTraces true
 
-            // Kotlin
-            kotlin         : '1.3.50',
-            coroutines     : '1.3.0-M2',
+        debug {
+            events TestLogEvent.STARTED,
+                    TestLogEvent.FAILED,
+                    TestLogEvent.PASSED,
+                    TestLogEvent.SKIPPED,
+                    TestLogEvent.STANDARD_ERROR,
+                    TestLogEvent.STANDARD_OUT
+            exceptionFormat TestExceptionFormat.FULL
+        }
+        info.events = debug.events
+        info.exceptionFormat = debug.exceptionFormat
 
-            // Protobuf
-            protobufVersion: '3.9.1',
-
-            // Gson
-            gson           : '2.8.5',
-
-            // Docs
-            dokka          : '0.9.18',
-
-            // Tests
-            junit          : '5.5.0',
-
-    ]
-    repositories {
-        jcenter()
-        mavenCentral()
+        afterSuite { desc, result ->
+            if (!desc.parent) {
+                def output = "Results: ${result.resultType} (${result.testCount} tests, ${result.successfulTestCount} successes, ${result.failedTestCount} failures, ${result.skippedTestCount} skipped)"
+                def startItem = '|  ', endItem = '  |'
+                def repeatLength = startItem.length() + output.length() + endItem.length()
+                println('\n' + ('-' * repeatLength) + '\n' + startItem + output + endItem + '\n' + ('-' * repeatLength))
+            }
+        }
     }
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin"
-        classpath "org.jetbrains.dokka:dokka-gradle-plugin:$versions.dokka"
-    }
-}
-
-allprojects {
-    repositories {
-        jcenter()
-        mavenCentral()
-    }
-}
-
-task clean(type: Delete) {
-    delete rootProject.buildDir
-}
-
-task installPurekit() {
-    dependsOn ':purekit-protos:publishToMavenLocal', ':purekit:publishToMavenLocal'
-}
-
-task publishPurekit() {
-    dependsOn ':purekit-protos:publish', ':purekit:publish'
 }

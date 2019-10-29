@@ -43,7 +43,7 @@ import com.virgilsecurity.purekit.data.ProtocolException;
 import com.virgilsecurity.purekit.data.ProtocolHttpException;
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Crypto;
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage;
-import com.virgilsecurity.purekit.pure.exception.PureException;
+import com.virgilsecurity.purekit.pure.exception.PureLogicException;
 import com.virgilsecurity.purekit.pure.exception.ServiceErrorCode;
 import com.virgilsecurity.purekit.pure.model.CellKey;
 import com.virgilsecurity.purekit.pure.model.UserRecord;
@@ -135,8 +135,9 @@ public class VirgilCloudPureStorage implements PureStorage {
      *
      * @return UserRecord.
      *
-     * @throws PureException If a user has not been found in a storage or user id mismatches the one
-     * from a server. Use {@link PureException#getErrorStatus()} to know the particular case.
+     * @throws PureLogicException If a user has not been found in a storage or user id mismatches
+     * the one from a server. Use {@link PureLogicException#getErrorStatus()} to know the particular
+     * case.
      * @throws ProtocolException Thrown if an error from the PHE service has been parsed
      * successfully.
      * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
@@ -147,7 +148,7 @@ public class VirgilCloudPureStorage implements PureStorage {
      */
     @Override
     public UserRecord selectUser(String userId)
-        throws PureException, ProtocolException, ProtocolHttpException,
+        throws PureLogicException, ProtocolException, ProtocolHttpException,
         InvalidProtocolBufferException, VerificationException {
 
         PurekitProtosV3Storage.UserRecord protobufRecord;
@@ -156,7 +157,9 @@ public class VirgilCloudPureStorage implements PureStorage {
             protobufRecord = client.getUser(userId);
         } catch (ProtocolException exception) {
             if (exception.getErrorCode() == ServiceErrorCode.USER_NOT_FOUND.getCode()) {
-                throw new PureException(PureException.ErrorStatus.USER_NOT_FOUND_IN_STORAGE);
+                throw new PureLogicException(
+                    PureLogicException.ErrorStatus.USER_NOT_FOUND_IN_STORAGE
+                );
             }
 
             throw exception;
@@ -167,7 +170,7 @@ public class VirgilCloudPureStorage implements PureStorage {
         UserRecord userRecord = parse(protobufRecord);
 
         if (!userRecord.getUserId().equals(userId)) {
-            throw new PureException(PureException.ErrorStatus.USER_ID_MISMATCH);
+            throw new PureLogicException(PureLogicException.ErrorStatus.USER_ID_MISMATCH);
         }
 
         return userRecord;
@@ -180,8 +183,8 @@ public class VirgilCloudPureStorage implements PureStorage {
      *
      * @return UserRecords.
      *
-     * @throws PureException If user Id duplicate has been found or user id mismatches the one
-     * from a server. Use {@link PureException#getErrorStatus()} to know the particular case.
+     * @throws PureLogicException If user Id duplicate has been found or user id mismatches the one
+     * from a server. Use {@link PureLogicException#getErrorStatus()} to know the particular case.
      * @throws ProtocolException Thrown if an error from the PHE service has been parsed
      * successfully.
      * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
@@ -192,7 +195,7 @@ public class VirgilCloudPureStorage implements PureStorage {
      */
     @Override
     public Iterable<UserRecord> selectUsers(Set<String> userIds)
-        throws PureException, ProtocolException, ProtocolHttpException,
+        throws PureLogicException, ProtocolException, ProtocolHttpException,
         InvalidProtocolBufferException, VerificationException {
 
         HashSet<String> idsSet = new HashSet<>(userIds);
@@ -202,7 +205,7 @@ public class VirgilCloudPureStorage implements PureStorage {
         protoRecords = client.getUsers(userIds);
 
         if (protoRecords.getUserRecordsCount() != userIds.size()) {
-            throw new PureException(PureException.ErrorStatus.DUPLICATE_USER_ID);
+            throw new PureLogicException(PureLogicException.ErrorStatus.DUPLICATE_USER_ID);
         }
 
         ArrayList<UserRecord> userRecords = new ArrayList<>(protoRecords.getUserRecordsCount());
@@ -211,7 +214,7 @@ public class VirgilCloudPureStorage implements PureStorage {
             UserRecord userRecord = parse(protobufRecord);
 
             if (!idsSet.contains(userRecord.getUserId())) {
-                throw new PureException(PureException.ErrorStatus.USER_ID_MISMATCH);
+                throw new PureLogicException(PureLogicException.ErrorStatus.USER_ID_MISMATCH);
             }
 
             idsSet.remove(userRecord.getUserId());
@@ -252,8 +255,9 @@ public class VirgilCloudPureStorage implements PureStorage {
      * successfully. Represents a regular HTTP exception with code and message.
      */
     @Override
-    public void deleteUser(String userId,
-                           boolean cascade) throws ProtocolException, ProtocolHttpException {
+    public void deleteUser(String userId, boolean cascade)
+        throws ProtocolException, ProtocolHttpException {
+
         client.deleteUser(userId, cascade);
     }
 
@@ -265,9 +269,9 @@ public class VirgilCloudPureStorage implements PureStorage {
      *
      * @return CellKey.
      *
-     * @throws PureException If cell key has not been found or if storage signature verification has
-     * been failed or user id mismatches the one from a server.
-     * Use {@link PureException#getErrorStatus()} to know the particular case.
+     * @throws PureLogicException If cell key has not been found or if storage signature
+     * verification has been failed or user id mismatches the one from a server.
+     * Use {@link PureLogicException#getErrorStatus()} to know the particular case.
      * @throws ProtocolException Thrown if an error from the PHE service has been parsed
      * successfully.
      * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
@@ -278,7 +282,7 @@ public class VirgilCloudPureStorage implements PureStorage {
      */
     @Override
     public CellKey selectKey(String userId, String dataId)
-        throws PureException, ProtocolException, ProtocolHttpException, VerificationException,
+        throws PureLogicException, ProtocolException, ProtocolHttpException, VerificationException,
         InvalidProtocolBufferException {
 
         PurekitProtosV3Storage.CellKey protobufRecord;
@@ -301,8 +305,8 @@ public class VirgilCloudPureStorage implements PureStorage {
             );
 
         if (!verified) {
-            throw new PureException(
-                PureException.ErrorStatus.STORAGE_SIGNATURE_VERIFICATION_FAILED
+            throw new PureLogicException(
+                PureLogicException.ErrorStatus.STORAGE_SIGNATURE_VERIFICATION_FAILED
             );
         }
 
@@ -314,7 +318,7 @@ public class VirgilCloudPureStorage implements PureStorage {
                                       keySigned.getEncryptedCskBody().toByteArray());
 
         if (!userId.equals(keySigned.getUserId()) || !dataId.equals(keySigned.getDataId())) {
-            throw new PureException(PureException.ErrorStatus.USER_ID_MISMATCH);
+            throw new PureLogicException(PureLogicException.ErrorStatus.USER_ID_MISMATCH);
         }
 
         return cellKey;
@@ -323,16 +327,16 @@ public class VirgilCloudPureStorage implements PureStorage {
     /**
      * Insert CellKey key into a storage.
      *
-     * @implSpec this method MUST throw {@link PureException} with
-     * {@link PureException.ErrorStatus#CELL_KEY_ALREADY_EXISTS_IN_STORAGE} if key with given
+     * @implSpec this method MUST throw {@link PureLogicException} with
+     * {@link PureLogicException.ErrorStatus#CELL_KEY_ALREADY_EXISTS_IN_STORAGE} if key with given
      * userId and dataId already exists.
      *
      * @param userId User Id.
      * @param dataId Data Id.
      * @param cellKey Cell key record.
      *
-     * @throws PureException If a cell key already exists in a storage.
-     * Use {@link PureException#getErrorStatus()} to know the particular case.
+     * @throws PureLogicException If a cell key already exists in a storage.
+     * Use {@link PureLogicException#getErrorStatus()} to know the particular case.
      * @throws ProtocolException Thrown if an error from the PHE service has been parsed
      * successfully.
      * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
@@ -341,7 +345,7 @@ public class VirgilCloudPureStorage implements PureStorage {
      */
     @Override
     public void insertKey(String userId, String dataId, CellKey cellKey)
-        throws PureException, ProtocolException, ProtocolHttpException, SigningException {
+        throws PureLogicException, ProtocolException, ProtocolHttpException, SigningException {
 
         insertKey(userId, dataId, cellKey, true);
     }
@@ -353,8 +357,8 @@ public class VirgilCloudPureStorage implements PureStorage {
      * @param dataId Data Id.
      * @param cellKey Cell key record.
      *
-     * @throws PureException If a cell key already exists in a storage.
-     * Use {@link PureException#getErrorStatus()} to know the particular case.
+     * @throws PureLogicException If a cell key already exists in a storage.
+     * Use {@link PureLogicException#getErrorStatus()} to know the particular case.
      * @throws ProtocolException Thrown if an error from the PHE service has been parsed
      * successfully.
      * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
@@ -363,7 +367,7 @@ public class VirgilCloudPureStorage implements PureStorage {
      */
     @Override
     public void updateKey(String userId, String dataId, CellKey cellKey)
-        throws PureException, ProtocolException, ProtocolHttpException, SigningException {
+        throws PureLogicException, ProtocolException, ProtocolHttpException, SigningException {
 
         insertKey(userId, dataId, cellKey, false);
     }
@@ -427,7 +431,7 @@ public class VirgilCloudPureStorage implements PureStorage {
     }
 
     private void insertKey(String userId, String dataId, CellKey cellKey, boolean isInsert)
-        throws PureException, ProtocolException, ProtocolHttpException, SigningException {
+        throws PureLogicException, ProtocolException, ProtocolHttpException, SigningException {
 
         byte[] cellKeySigned = PurekitProtosV3Storage.CellKeySigned
             .newBuilder()
@@ -457,8 +461,8 @@ public class VirgilCloudPureStorage implements PureStorage {
                     if (exception.getErrorCode()
                         == ServiceErrorCode.CELL_KEY_ALREADY_EXISTS.getCode()) {
 
-                        throw new PureException(
-                            PureException.ErrorStatus.CELL_KEY_ALREADY_EXISTS_IN_STORAGE
+                        throw new PureLogicException(
+                            PureLogicException.ErrorStatus.CELL_KEY_ALREADY_EXISTS_IN_STORAGE
                         );
                     }
 
@@ -473,7 +477,7 @@ public class VirgilCloudPureStorage implements PureStorage {
     }
 
     private UserRecord parse(PurekitProtosV3Storage.UserRecord protobufRecord)
-        throws PureException, VerificationException, InvalidProtocolBufferException {
+        throws PureLogicException, VerificationException, InvalidProtocolBufferException {
 
         boolean verified = crypto.verifySignature(protobufRecord.getSignature().toByteArray(),
                                               protobufRecord.getUserRecordSigned()
@@ -481,8 +485,8 @@ public class VirgilCloudPureStorage implements PureStorage {
                                               this.signingKey.getPublicKey());
 
         if (!verified) {
-            throw new PureException(
-                PureException.ErrorStatus.STORAGE_SIGNATURE_VERIFICATION_FAILED
+            throw new PureLogicException(
+                PureLogicException.ErrorStatus.STORAGE_SIGNATURE_VERIFICATION_FAILED
             );
         }
 
