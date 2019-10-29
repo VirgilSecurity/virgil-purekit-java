@@ -37,6 +37,7 @@ import com.virgilsecurity.crypto.foundation.FoundationException;
 import com.virgilsecurity.crypto.phe.PheException;
 
 public class PureCryptoException extends PureException {
+
     private final FoundationException foundationException;
     private final PheException pheException;
     private final PureCryptoException.ErrorStatus errorStatus;
@@ -46,7 +47,7 @@ public class PureCryptoException extends PureException {
 
         if (errorStatus == ErrorStatus.UNDERLYING_FOUNDATION_EXCEPTION
                 || errorStatus == ErrorStatus.UNDERLYING_PHE_EXCEPTION) {
-            throw new RuntimeException();
+            throw new RuntimeException("Underlying foundation/phe exception");
         }
 
         this.errorStatus = errorStatus;
@@ -55,7 +56,7 @@ public class PureCryptoException extends PureException {
     }
 
     public PureCryptoException(FoundationException foundationException) {
-        super(foundationException.getMessage());
+        super(foundationException);
 
         this.errorStatus = ErrorStatus.UNDERLYING_FOUNDATION_EXCEPTION;
         this.foundationException = foundationException;
@@ -63,7 +64,7 @@ public class PureCryptoException extends PureException {
     }
 
     public PureCryptoException(PheException pheException) {
-        super(pheException.getMessage());
+        super(pheException);
 
         this.errorStatus = ErrorStatus.UNDERLYING_PHE_EXCEPTION;
         this.foundationException = null;
@@ -87,7 +88,7 @@ public class PureCryptoException extends PureException {
         UNDERLYING_PHE_EXCEPTION(2, "Underlying phe exception"),
         SIGNER_IS_ABSENT(3, "Signer is absent"),
         SIGNATURE_IS_ABSENT(4, "Signature is absent"),
-        SIGNATURE_VERIFICATION_FAILED(6, "Signature verification failed");
+        SIGNATURE_VERIFICATION_FAILED(5, "Signature verification failed");
 
         private final int code;
         private final String message;

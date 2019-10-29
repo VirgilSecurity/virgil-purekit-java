@@ -174,9 +174,13 @@ public class PureContext {
                                             Map<String, List<String>> externalPublicKeys)
         throws CryptoException, PureLogicException {
 
-        return PureContext.createContext(appToken, ak, bu, hb, os, vs, sk, pk,
-                                         externalPublicKeys, HttpPheClient.SERVICE_ADDRESS,
-                                         HttpPureClient.SERVICE_ADDRESS);
+        return PureContext.createContext(
+            appToken,
+            ak, bu, hb, os, vs, sk, pk,
+            externalPublicKeys,
+            HttpPheClient.SERVICE_ADDRESS,
+            HttpPureClient.SERVICE_ADDRESS
+        );
     }
 
     /**
@@ -219,7 +223,14 @@ public class PureContext {
             crypto.importPrivateKey(vkCredentials.getPayload())
         );
 
-        return new PureContext(crypto, appToken, ak, bu, hb, os, sk, pk, storage, externalPublicKeys, pheServiceAddress);
+        return new PureContext(
+            crypto,
+            appToken,
+            ak, bu, hb, os, sk, pk,
+            storage,
+            externalPublicKeys,
+            pheServiceAddress
+        );
     }
 
     /**
@@ -247,9 +258,15 @@ public class PureContext {
                                             Map<String, List<String>> externalPublicKeys)
         throws CryptoException, PureLogicException {
 
-        return PureContext.createContext(appToken, ak, bu, hb, os, storage,
-                                         appSecretKey, servicePublicKey, externalPublicKeys,
-                                         HttpPheClient.SERVICE_ADDRESS);
+        return PureContext.createContext(
+            appToken,
+            ak, bu, hb, os,
+            storage,
+            appSecretKey,
+            servicePublicKey,
+            externalPublicKeys,
+            HttpPheClient.SERVICE_ADDRESS
+        );
     }
 
     /**
@@ -279,9 +296,16 @@ public class PureContext {
                                             String pheServiceAddress)
         throws CryptoException, PureLogicException {
 
-        return new PureContext(new VirgilCrypto(), appToken, ak, bu, hb, os,
-                               appSecretKey, servicePublicKey, storage, externalPublicKeys,
-                               pheServiceAddress);
+        return new PureContext(
+            new VirgilCrypto(),
+            appToken,
+            ak, bu, hb, os,
+            appSecretKey,
+            servicePublicKey,
+            storage,
+            externalPublicKeys,
+            pheServiceAddress
+        );
     }
 
     private static Credentials parseCredentials(String prefix,

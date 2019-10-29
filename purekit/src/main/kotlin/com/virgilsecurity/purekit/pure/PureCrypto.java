@@ -50,8 +50,11 @@ class PureCrypto {
         this.crypto = crypto;
     }
 
-    PureCryptoData encrypt(byte[] plainTextData, VirgilPrivateKey signingKey, Collection<VirgilPublicKey> recipients)
+    PureCryptoData encrypt(byte[] plainTextData,
+                           VirgilPrivateKey signingKey,
+                           Collection<VirgilPublicKey> recipients)
             throws PureCryptoException {
+
         try (Aes256Gcm aesGcm = new Aes256Gcm();
              RecipientCipher cipher = new RecipientCipher()) {
 
@@ -82,7 +85,9 @@ class PureCrypto {
         }
     }
 
-    byte[] decrypt(PureCryptoData data, VirgilPublicKey verifyingKey, VirgilPrivateKey privateKey) throws PureCryptoException {
+    byte[] decrypt(PureCryptoData data, VirgilPublicKey verifyingKey, VirgilPrivateKey privateKey)
+        throws PureCryptoException {
+
         try (RecipientCipher cipher = new RecipientCipher()) {
 
             cipher.setRandom(crypto.getRng());
@@ -111,7 +116,9 @@ class PureCrypto {
             }
 
             if (!cipher.verifySignerInfo(signerInfo, verifyingKey.getPublicKey())) {
-                throw new PureCryptoException(PureCryptoException.ErrorStatus.SIGNATURE_VERIFICATION_FAILED);
+                throw new PureCryptoException(
+                    PureCryptoException.ErrorStatus.SIGNATURE_VERIFICATION_FAILED
+                );
             }
 
             return concat(body1, body2);
@@ -120,7 +127,8 @@ class PureCrypto {
 
     byte[] addRecipients(byte[] cms,
                          VirgilPrivateKey privateKey,
-                         Collection<VirgilPublicKey> publicKeys) throws PureCryptoException {
+                         Collection<VirgilPublicKey> publicKeys)
+        throws PureCryptoException {
 
         try (MessageInfoEditor infoEditor = new MessageInfoEditor()) {
             infoEditor.setRandom(crypto.getRng());
@@ -139,7 +147,9 @@ class PureCrypto {
         }
     }
 
-    byte[] deleteRecipients(byte[] cms, Collection<VirgilPublicKey> publicKeys) throws PureCryptoException {
+    byte[] deleteRecipients(byte[] cms, Collection<VirgilPublicKey> publicKeys)
+        throws PureCryptoException {
+
         try (MessageInfoEditor infoEditor = new MessageInfoEditor()) {
             infoEditor.setRandom(this.crypto.getRng());
 

@@ -186,7 +186,7 @@ public class Pure {
 
             byte[] uskData = cipher.decrypt(storage.selectUser(userId).getEncryptedUsk(), phek);
 
-            VirgilKeyPair ukp = this.crypto.importPrivateKey(uskData);
+            VirgilKeyPair ukp = crypto.importPrivateKey(uskData);
 
             PureGrant grant = new PureGrant(ukp, userId, sessionId, new Date());
 
@@ -370,8 +370,8 @@ public class Pure {
             ValidateUtils.checkNullOrEmpty(newPassword, "newPassword");
 
             byte[] oldPhek = computePheKey(userId, oldPassword);
-            UserRecord userRecord = this.storage.selectUser(userId);
-            byte[] privateKeyData = this.cipher.decrypt(userRecord.getEncryptedUsk(), oldPhek);
+            UserRecord userRecord = storage.selectUser(userId);
+            byte[] privateKeyData = cipher.decrypt(userRecord.getEncryptedUsk(), oldPhek);
 
             changeUserPassword(userRecord, privateKeyData, newPassword);
         }
@@ -447,7 +447,7 @@ public class Pure {
      */
     public void deleteUser(String userId, boolean cascade) throws Exception {
 
-        this.storage.deleteUser(userId, cascade);
+        storage.deleteUser(userId, cascade);
     }
 
     /**
@@ -947,13 +947,15 @@ public class Pure {
 
             byte[] publicKey = crypto.exportPublicKey(ukp.getPublicKey());
 
-            UserRecord userRecord = new UserRecord(userId,
-                    result.getEnrollmentRecord(),
-                    this.currentVersion,
-                    publicKey,
-                    encryptedUsk,
-                    encryptedUskBackup,
-                    encryptedPwdHash);
+            UserRecord userRecord = new UserRecord(
+                userId,
+                result.getEnrollmentRecord(),
+                this.currentVersion,
+                publicKey,
+                encryptedUsk,
+                encryptedUskBackup,
+                encryptedPwdHash
+            );
 
             if (isUserNew) {
                 storage.insertUser(userRecord);
@@ -991,7 +993,8 @@ public class Pure {
                     .newBuilder()
                     .setVersion(this.currentVersion)
                     .build();
-            PurekitProtos.EnrollmentResponse enrollResponse = httpPheClient.enrollAccount(enrollRequest);
+            PurekitProtos.EnrollmentResponse enrollResponse =
+                httpPheClient.enrollAccount(enrollRequest);
 
             PheClientEnrollAccountResult enrollResult =
                     currentClient.enrollAccount(enrollResponse.getResponse().toByteArray(),
@@ -1002,13 +1005,15 @@ public class Pure {
             byte[] encryptedPwdHash = crypto.encrypt(newPasswordHash,
                     Collections.singletonList(this.hpk));
 
-            UserRecord newUserRecord = new UserRecord(userRecord.getUserId(),
-                    enrollResult.getEnrollmentRecord(),
-                    this.currentVersion,
-                    userRecord.getUpk(),
-                    newEncryptedUsk,
-                    userRecord.getEncryptedUskBackup(),
-                    encryptedPwdHash);
+            UserRecord newUserRecord = new UserRecord(
+                userRecord.getUserId(),
+                enrollResult.getEnrollmentRecord(),
+                this.currentVersion,
+                userRecord.getUpk(),
+                newEncryptedUsk,
+                userRecord.getEncryptedUskBackup(),
+                encryptedPwdHash
+            );
 
             storage.updateUser(newUserRecord);
         }
@@ -1023,7 +1028,7 @@ public class Pure {
 
         ArrayList<VirgilPublicKey> keys = new ArrayList<>(publicKeys);
 
-        Iterable<UserRecord> otherUserRecords = this.storage.selectUsers(otherUserIds);
+        Iterable<UserRecord> otherUserRecords = storage.selectUsers(otherUserIds);
 
         for (UserRecord record : otherUserRecords) {
             VirgilPublicKey otherUpk;
@@ -1053,7 +1058,7 @@ public class Pure {
                     .setRequest(ByteString.copyFrom(pheVerifyRequest))
                     .build();
 
-            PurekitProtos.VerifyPasswordResponse response = this.httpPheClient.verifyPassword(request);
+            PurekitProtos.VerifyPasswordResponse response = httpPheClient.verifyPassword(request);
 
             byte[] phek = client.checkResponseAndDecrypt(passwordHash,
                     userRecord.getPheRecord(),

@@ -135,8 +135,9 @@ public class VirgilCloudPureStorage implements PureStorage {
      *
      * @return UserRecord.
      *
-     * @throws PureLogicException If a user has not been found in a storage or user id mismatches the one
-     * from a server. Use {@link PureLogicException#getErrorStatus()} to know the particular case.
+     * @throws PureLogicException If a user has not been found in a storage or user id mismatches
+     * the one from a server. Use {@link PureLogicException#getErrorStatus()} to know the particular
+     * case.
      * @throws ProtocolException Thrown if an error from the PHE service has been parsed
      * successfully.
      * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
@@ -156,7 +157,9 @@ public class VirgilCloudPureStorage implements PureStorage {
             protobufRecord = client.getUser(userId);
         } catch (ProtocolException exception) {
             if (exception.getErrorCode() == ServiceErrorCode.USER_NOT_FOUND.getCode()) {
-                throw new PureLogicException(PureLogicException.ErrorStatus.USER_NOT_FOUND_IN_STORAGE);
+                throw new PureLogicException(
+                    PureLogicException.ErrorStatus.USER_NOT_FOUND_IN_STORAGE
+                );
             }
 
             throw exception;
@@ -252,8 +255,9 @@ public class VirgilCloudPureStorage implements PureStorage {
      * successfully. Represents a regular HTTP exception with code and message.
      */
     @Override
-    public void deleteUser(String userId,
-                           boolean cascade) throws ProtocolException, ProtocolHttpException {
+    public void deleteUser(String userId, boolean cascade)
+        throws ProtocolException, ProtocolHttpException {
+
         client.deleteUser(userId, cascade);
     }
 
@@ -265,8 +269,8 @@ public class VirgilCloudPureStorage implements PureStorage {
      *
      * @return CellKey.
      *
-     * @throws PureLogicException If cell key has not been found or if storage signature verification has
-     * been failed or user id mismatches the one from a server.
+     * @throws PureLogicException If cell key has not been found or if storage signature
+     * verification has been failed or user id mismatches the one from a server.
      * Use {@link PureLogicException#getErrorStatus()} to know the particular case.
      * @throws ProtocolException Thrown if an error from the PHE service has been parsed
      * successfully.
@@ -301,7 +305,9 @@ public class VirgilCloudPureStorage implements PureStorage {
             );
 
         if (!verified) {
-            throw new PureLogicException(PureLogicException.ErrorStatus.STORAGE_SIGNATURE_VERIFICATION_FAILED);
+            throw new PureLogicException(
+                PureLogicException.ErrorStatus.STORAGE_SIGNATURE_VERIFICATION_FAILED
+            );
         }
 
         PurekitProtosV3Storage.CellKeySigned keySigned =
@@ -455,7 +461,9 @@ public class VirgilCloudPureStorage implements PureStorage {
                     if (exception.getErrorCode()
                         == ServiceErrorCode.CELL_KEY_ALREADY_EXISTS.getCode()) {
 
-                        throw new PureLogicException(PureLogicException.ErrorStatus.CELL_KEY_ALREADY_EXISTS_IN_STORAGE);
+                        throw new PureLogicException(
+                            PureLogicException.ErrorStatus.CELL_KEY_ALREADY_EXISTS_IN_STORAGE
+                        );
                     }
 
                     throw exception;
@@ -477,7 +485,9 @@ public class VirgilCloudPureStorage implements PureStorage {
                                               this.signingKey.getPublicKey());
 
         if (!verified) {
-            throw new PureLogicException(PureLogicException.ErrorStatus.STORAGE_SIGNATURE_VERIFICATION_FAILED);
+            throw new PureLogicException(
+                PureLogicException.ErrorStatus.STORAGE_SIGNATURE_VERIFICATION_FAILED
+            );
         }
 
         PurekitProtosV3Storage.UserRecordSigned recordSigned =

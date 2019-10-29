@@ -34,7 +34,26 @@
 package com.virgilsecurity.purekit.pure.exception;
 
 public class PureException extends Exception {
+
+    public PureException() {
+    }
+
     public PureException(String errorMessage) {
         super(errorMessage);
+    }
+
+    public PureException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public PureException(Throwable cause) {
+        super(cause);
+    }
+
+    public PureException(String message,
+                         Throwable cause,
+                         boolean enableSuppression,
+                         boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
     }
 }
