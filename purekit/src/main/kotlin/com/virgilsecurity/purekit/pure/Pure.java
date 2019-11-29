@@ -33,6 +33,7 @@
 
 package com.virgilsecurity.purekit.pure;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -45,6 +46,7 @@ import java.util.Set;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.virgilsecurity.crypto.foundation.Base64;
+import com.virgilsecurity.crypto.foundation.FoundationException;
 import com.virgilsecurity.crypto.phe.PheCipher;
 import com.virgilsecurity.crypto.phe.PheClient;
 import com.virgilsecurity.crypto.phe.PheClientEnrollAccountResult;
@@ -54,10 +56,9 @@ import com.virgilsecurity.purekit.data.ProtocolHttpException;
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtos;
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Grant;
 import com.virgilsecurity.purekit.pure.exception.PureCryptoException;
+import com.virgilsecurity.purekit.pure.exception.PureException;
 import com.virgilsecurity.purekit.pure.exception.PureLogicException;
-import com.virgilsecurity.purekit.pure.model.CellKey;
-import com.virgilsecurity.purekit.pure.model.PureGrant;
-import com.virgilsecurity.purekit.pure.model.UserRecord;
+import com.virgilsecurity.purekit.pure.model.*;
 import com.virgilsecurity.purekit.utils.ValidateUtils;
 import com.virgilsecurity.sdk.crypto.HashAlgorithm;
 import com.virgilsecurity.sdk.crypto.VirgilCrypto;
@@ -65,6 +66,8 @@ import com.virgilsecurity.sdk.crypto.VirgilKeyPair;
 import com.virgilsecurity.sdk.crypto.VirgilPrivateKey;
 import com.virgilsecurity.sdk.crypto.VirgilPublicKey;
 import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
+
+import static com.virgilsecurity.crypto.foundation.FoundationException.ERROR_KEY_RECIPIENT_IS_NOT_FOUND;
 
 /**
  * Main class for interactions with PureKit
@@ -322,7 +325,6 @@ public class Pure {
 
             VirgilKeyPair ukp = crypto.importPrivateKey(usk);
 
-
             String sessionId = header.getSessionId();
 
             if (sessionId.isEmpty()) {
@@ -448,6 +450,7 @@ public class Pure {
     public void deleteUser(String userId, boolean cascade) throws Exception {
 
         storage.deleteUser(userId, cascade);
+        // TODO: Should delete role assignments
     }
 
     /**
@@ -544,8 +547,9 @@ public class Pure {
 
         return encrypt(userId,
                        dataId,
-                       Collections.emptyList(),
-                       Collections.emptyList(),
+                       Collections.emptySet(),
+                       Collections.emptySet(),
+                       Collections.emptySet(),
                        plainText);
     }
 
@@ -581,7 +585,8 @@ public class Pure {
      */
     public byte[] encrypt(String userId,
                           String dataId,
-                          Collection<String> otherUserIds,
+                          Set<String> otherUserIds,
+                          Set<String> roleNames,
                           Collection<VirgilPublicKey> publicKeys,
                           byte[] plainText)
         throws Exception {
@@ -593,7 +598,6 @@ public class Pure {
         ValidateUtils.checkNullOrEmpty(userId, "userId");
         ValidateUtils.checkNullOrEmpty(dataId, "dataId");
 
-
         VirgilPublicKey cpk;
 
         // Key already exists
@@ -603,7 +607,7 @@ public class Pure {
             // Try to generate and save new key
             try {
                 ArrayList<VirgilPublicKey> recipientList = new ArrayList<>(
-                    externalPublicKeys.size() + publicKeys.size() + otherUserIds.size() + 1
+                    externalPublicKeys.size() + publicKeys.size() + otherUserIds.size() + roleNames.size() + 1
                 );
 
                 recipientList.addAll(publicKeys);
@@ -614,10 +618,16 @@ public class Pure {
 
                 Iterable<UserRecord> userRecords = storage.selectUsers(userIds);
 
-                // TODO: Optimize -> Optimize what?
                 for (UserRecord record : userRecords) {
                     VirgilPublicKey otherUpk = crypto.importPublicKey(record.getUpk());
                     recipientList.add(otherUpk);
+                }
+
+                Iterable<Role> roles = storage.selectRoles(roleNames);
+
+                for (Role role: roles) {
+                    VirgilPublicKey rpk = crypto.importPublicKey(role.getRpk());
+                    recipientList.add(rpk);
                 }
 
                 List<VirgilPublicKey> externalPublicKeys = this.externalPublicKeys.get(dataId);
@@ -653,6 +663,7 @@ public class Pure {
             cpk = crypto.importPublicKey(cellKey1.getCpk());
         }
 
+        // TODO: Replace crypto.encrypt everywhere
         return crypto.encrypt(plainText, Collections.singletonList(cpk));
     }
 
@@ -693,7 +704,52 @@ public class Pure {
             userId = grant.getUserId();
         }
 
-        return decrypt(grant.getUkp().getPrivateKey(), userId, dataId, cipherText);
+        CellKey cellKey = storage.selectKey(userId, dataId);
+
+        if (cellKey == null) {
+            throw new PureLogicException(PureLogicException.ErrorStatus.CELL_KEY_NOT_FOUND_IN_STORAGE);
+        }
+
+        PureCryptoData pureCryptoData = new PureCryptoData(cellKey.getEncryptedCskCms(),
+                cellKey.getEncryptedCskBody());
+
+        byte[] csk = null;
+
+        try {
+            csk = pureCrypto.decrypt(pureCryptoData, oskp.getPublicKey(), grant.getUkp().getPrivateKey());
+        }
+        catch (PureCryptoException e) {
+            if (e.getFoundationException() == null || e.getFoundationException().getStatusCode() != ERROR_KEY_RECIPIENT_IS_NOT_FOUND) {
+                throw e;
+            }
+
+            Iterable<RoleAssignment> roleAssignments = storage.selectRoleAssignments(grant.getUserId());
+
+            // TODO: Replace ByteBuffer
+            Set<ByteBuffer> publicKeysIds = pureCrypto.extractPublicKeysIds(cellKey.getEncryptedCskCms());
+
+            for (RoleAssignment roleAssignment: roleAssignments) {
+                ByteBuffer publicKeyId = ByteBuffer.wrap(roleAssignment.getPublicKeyId());
+
+                if (publicKeysIds.contains(publicKeyId)) {
+                    // FIXME: Refactor
+                    byte[] rskData = crypto.decrypt(roleAssignment.getEncryptedRsk(), grant.getUkp().getPrivateKey());
+
+                    VirgilKeyPair rkp = crypto.importPrivateKey(rskData);
+
+                    csk = pureCrypto.decrypt(pureCryptoData, oskp.getPublicKey(), rkp.getPrivateKey());
+                    break;
+                }
+            }
+
+            if (csk == null) {
+                throw new PureLogicException(PureLogicException.ErrorStatus.USER_HAS_NO_ACCESS_TO_DATA);
+            }
+        }
+
+        VirgilKeyPair ckp = crypto.importPrivateKey(csk);
+
+        return crypto.decrypt(cipherText, ckp.getPrivateKey());
     }
 
     /**
@@ -720,10 +776,12 @@ public class Pure {
      * as a Protobuf message.
      */
     public byte[] decrypt(VirgilPrivateKey privateKey,
-                          String ownerUserId,
-                          String dataId,
-                          byte[] cipherText)
-        throws Exception {
+                           String ownerUserId,
+                           String dataId,
+                           byte[] cipherText)
+            throws Exception {
+
+        // TODO: Delete copy&paste
 
         ValidateUtils.checkNull(privateKey, "privateKey");
 
@@ -737,7 +795,8 @@ public class Pure {
         }
 
         PureCryptoData pureCryptoData = new PureCryptoData(cellKey.getEncryptedCskCms(),
-                                                           cellKey.getEncryptedCskBody());
+                cellKey.getEncryptedCskBody());
+
         byte[] csk = pureCrypto.decrypt(pureCryptoData, oskp.getPublicKey(), privateKey);
 
         VirgilKeyPair ckp = crypto.importPrivateKey(csk);
@@ -916,6 +975,46 @@ public class Pure {
         storage.deleteKey(userId, dataId);
     }
 
+    public void createRole(String roleName, Set<String> userIds) throws Exception {
+        VirgilKeyPair rkp = crypto.generateKeyPair();
+        byte[] rpkData = crypto.exportPublicKey(rkp.getPublicKey());
+        byte[] rskData = crypto.exportPrivateKey(rkp.getPrivateKey());
+
+        Role role = new Role(roleName, rpkData);
+
+        storage.insertRole(role);
+
+        assignRole(roleName, rkp.getPublicKey().getIdentifier(), rskData, userIds);
+    }
+
+    public void assignRole(String roleToAssign, PureGrant grant, Set<String> userIds) throws Exception {
+        RoleAssignment roleAssignment = storage.selectRoleAssignment(roleToAssign, grant.getUserId());
+
+        byte[] rskData = crypto.decrypt(roleAssignment.getEncryptedRsk(), grant.getUkp().getPrivateKey());
+
+        assignRole(roleToAssign, roleAssignment.getPublicKeyId(), rskData, userIds);
+    }
+
+    private void assignRole(String roleName, byte[] publicKeyId, byte[] rskData, Set<String> userIds) throws Exception {
+        Iterable<UserRecord> userRecords = storage.selectUsers(userIds);
+
+        ArrayList<RoleAssignment> roleAssignments = new ArrayList<>(userIds.size());
+
+        for (UserRecord userRecord: userRecords) {
+            VirgilPublicKey upk = crypto.importPublicKey(userRecord.getUpk());
+
+            byte[] encryptedRsk = crypto.encrypt(rskData, upk);
+
+            roleAssignments.add(new RoleAssignment(roleName, userRecord.getUserId(), publicKeyId, encryptedRsk));
+        }
+
+        storage.insertRoleAssignments(roleAssignments);
+    }
+
+    public void deassignRole(String roleName, Set<String> userIds) throws Exception {
+        storage.deleteRoleAssignments(roleName, userIds);
+    }
+
     private void registerUser(String userId, String password, boolean isUserNew) throws Exception {
 
         try {
@@ -1073,5 +1172,41 @@ public class Pure {
         catch (PheException e) {
             throw new PureCryptoException(e);
         }
+    }
+
+    public VirgilCrypto getCrypto() {
+        return crypto;
+    }
+
+    public PureStorage getStorage() {
+        return storage;
+    }
+
+    public int getCurrentVersion() {
+        return currentVersion;
+    }
+
+    public byte[] getUpdateToken() {
+        return updateToken;
+    }
+
+    public byte[] getAk() {
+        return ak;
+    }
+
+    public VirgilPublicKey getBuppk() {
+        return buppk;
+    }
+
+    public VirgilPublicKey getHpk() {
+        return hpk;
+    }
+
+    public VirgilKeyPair getOskp() {
+        return oskp;
+    }
+
+    public Map<String, List<VirgilPublicKey>> getExternalPublicKeys() {
+        return externalPublicKeys;
     }
 }

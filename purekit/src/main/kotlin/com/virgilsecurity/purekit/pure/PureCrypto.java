@@ -33,8 +33,11 @@
 
 package com.virgilsecurity.purekit.pure;
 
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.virgilsecurity.crypto.foundation.*;
 import com.virgilsecurity.purekit.pure.exception.PureCryptoException;
@@ -123,6 +126,9 @@ class PureCrypto {
 
             return concat(body1, body2);
         }
+        catch (FoundationException e) {
+            throw new PureCryptoException(e);
+        }
     }
 
     byte[] addRecipients(byte[] cms,
@@ -160,6 +166,40 @@ class PureCrypto {
             }
 
             return infoEditor.pack();
+        }
+        catch (FoundationException e) {
+            throw new PureCryptoException(e);
+        }
+    }
+
+    // FIXME: Should be replaced with Set<byte[]> but such set doesn't work properly
+    Set<ByteBuffer> extractPublicKeysIds(byte[] cms) throws PureCryptoException {
+        HashSet<ByteBuffer> publicKeysIds = new HashSet<>();
+
+        try (MessageInfoDerSerializer messageInfoSerializer = new MessageInfoDerSerializer()) {
+            messageInfoSerializer.setupDefaults();
+            try (MessageInfo messageInfo = messageInfoSerializer.deserialize(cms)) {
+                // FIXME: KeyRecipientInfoList is also autoclosable
+                KeyRecipientInfoList keyRecipientInfoList = messageInfo.keyRecipientInfoList();
+
+                while (keyRecipientInfoList != null && keyRecipientInfoList.hasItem()) {
+                    try (KeyRecipientInfo keyRecipientInfo = keyRecipientInfoList.item()) {
+                        publicKeysIds.add(ByteBuffer.wrap(keyRecipientInfo.recipientId()));
+                    }
+
+                    if (keyRecipientInfoList.hasNext()) {
+                        keyRecipientInfoList = keyRecipientInfoList.next();
+                    }
+                    else {
+                        keyRecipientInfoList = null;
+                    }
+                }
+
+                return publicKeysIds;
+            }
+            catch (FoundationException e) {
+                throw new PureCryptoException(e);
+            }
         }
         catch (FoundationException e) {
             throw new PureCryptoException(e);

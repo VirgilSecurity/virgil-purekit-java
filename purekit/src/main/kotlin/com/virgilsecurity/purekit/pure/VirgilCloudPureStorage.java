@@ -34,6 +34,7 @@
 package com.virgilsecurity.purekit.pure;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -45,13 +46,13 @@ import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Crypto;
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage;
 import com.virgilsecurity.purekit.pure.exception.PureLogicException;
 import com.virgilsecurity.purekit.pure.exception.ServiceErrorCode;
-import com.virgilsecurity.purekit.pure.model.CellKey;
-import com.virgilsecurity.purekit.pure.model.UserRecord;
+import com.virgilsecurity.purekit.pure.model.*;
 import com.virgilsecurity.purekit.utils.ValidateUtils;
 import com.virgilsecurity.sdk.crypto.VirgilCrypto;
 import com.virgilsecurity.sdk.crypto.VirgilKeyPair;
 import com.virgilsecurity.sdk.crypto.exceptions.SigningException;
 import com.virgilsecurity.sdk.crypto.exceptions.VerificationException;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * PureStorage on Virgil cloud side
@@ -388,6 +389,36 @@ public class VirgilCloudPureStorage implements PureStorage {
         throws ProtocolException, ProtocolHttpException {
 
         client.deleteCellKey(userId, dataId);
+    }
+
+    @Override
+    public void insertRole(Role role) throws Exception {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public Iterable<Role> selectRoles(Set<String> roleNames) throws Exception {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public void insertRoleAssignments(Collection<RoleAssignment> roleAssignment) throws Exception {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public Iterable<RoleAssignment> selectRoleAssignments(String userId) throws Exception {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public RoleAssignment selectRoleAssignment(String roleName, String userId) throws Exception {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public void deleteRoleAssignments(String roleName, Set<String> userIds) throws Exception {
+        throw new NotImplementedException();
     }
 
     private void sendUser(UserRecord userRecord, boolean isInsert)

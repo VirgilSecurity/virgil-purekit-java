@@ -33,11 +33,11 @@
 
 package com.virgilsecurity.purekit.pure;
 
+import java.util.Collection;
 import java.util.Set;
 
 import com.virgilsecurity.purekit.pure.exception.PureLogicException;
-import com.virgilsecurity.purekit.pure.model.CellKey;
-import com.virgilsecurity.purekit.pure.model.UserRecord;
+import com.virgilsecurity.purekit.pure.model.*;
 
 /**
  * Interface for Pure storage.
@@ -132,4 +132,16 @@ public interface PureStorage {
      * @param dataId Data Id.
      */
     void deleteKey(String userId, String dataId) throws Exception;
+
+    void insertRole(Role role) throws Exception;
+
+    Iterable<Role> selectRoles(Set<String> roleNames) throws Exception;
+
+    void insertRoleAssignments(Collection<RoleAssignment> roleAssignments) throws Exception;
+
+    Iterable<RoleAssignment> selectRoleAssignments(String userId) throws Exception;
+
+    RoleAssignment selectRoleAssignment(String roleName, String userId) throws Exception;
+
+    void deleteRoleAssignments(String roleName, Set<String> userIds) throws Exception;
 }

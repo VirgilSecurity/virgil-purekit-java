@@ -9,15 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -30,9 +22,7 @@ import com.virgilsecurity.purekit.pure.PureStorage;
 import com.virgilsecurity.purekit.pure.exception.PureCryptoException;
 import com.virgilsecurity.purekit.pure.exception.PureException;
 import com.virgilsecurity.purekit.pure.exception.PureLogicException;
-import com.virgilsecurity.purekit.pure.model.CellKey;
-import com.virgilsecurity.purekit.pure.model.PureGrant;
-import com.virgilsecurity.purekit.pure.model.UserRecord;
+import com.virgilsecurity.purekit.pure.model.*;
 import com.virgilsecurity.purekit.utils.PropertyManager;
 import com.virgilsecurity.purekit.utils.ThreadUtils;
 import com.virgilsecurity.sdk.crypto.KeyType;
@@ -49,10 +39,14 @@ class PureTestJava {
 
         private HashMap<String, UserRecord> users;
         private HashMap<String, HashMap<String, CellKey>> keys;
+        private HashMap<String, Role> roles;
+        private HashMap<String, HashMap<String, RoleAssignment>> roleAssignments;
 
         RamStorage() {
             this.users = new HashMap<>();
             this.keys = new HashMap<>();
+            this.roles = new HashMap<>();
+            this.roleAssignments = new HashMap<>();
         }
 
         @Override
@@ -163,6 +157,74 @@ class PureTestJava {
 
             if (keys.remove(dataId) == null) {
                 throw new NullPointerException();
+            }
+        }
+
+        @Override
+        public void insertRole(Role role) throws Exception {
+            this.roles.put(role.getRoleName(), role);
+        }
+
+        @Override
+        public Iterable<Role> selectRoles(Set<String> roleNames) throws Exception {
+
+            ArrayList<Role> roles = new ArrayList<>(roleNames.size());
+
+            for (String roleName: roleNames) {
+                Role role = this.roles.get(roleName);
+
+                if (role == null) {
+                    throw new NullPointerException();
+                }
+
+                roles.add(role);
+            }
+
+            return roles;
+        }
+
+        @Override
+        public void insertRoleAssignments(Collection<RoleAssignment> roleAssignments) throws Exception {
+
+            for (RoleAssignment roleAssignment: roleAssignments) {
+                HashMap<String, RoleAssignment> map = this.roleAssignments.getOrDefault(roleAssignment.getRoleName(), new HashMap<>());
+
+                map.put(roleAssignment.getUserId(), roleAssignment);
+
+                this.roleAssignments.put(roleAssignment.getRoleName(), map);
+            }
+        }
+
+        @Override
+        public Iterable<RoleAssignment> selectRoleAssignments(String userId) throws Exception {
+            Set<String> roleNames = this.roleAssignments.keySet();
+            ArrayList<RoleAssignment> assignments = new ArrayList<>();
+
+            for (String roleName: roleNames) {
+                HashMap<String, RoleAssignment> roleAssignments = this.roleAssignments.get(roleName);
+                RoleAssignment assignment = roleAssignments.get(userId);
+
+                if (assignment != null) {
+                    assignments.add(assignment);
+                }
+            }
+
+            return assignments;
+        }
+
+        @Override
+        public RoleAssignment selectRoleAssignment(String roleName, String userId) throws Exception {
+
+            return this.roleAssignments.get(roleName).get(userId);
+        }
+
+        @Override
+        public void deleteRoleAssignments(String roleName, Set<String> userIds) throws Exception {
+
+            HashMap<String, RoleAssignment> map = this.roleAssignments.getOrDefault(roleName, new HashMap<>());
+
+            for (String userId: userIds) {
+                map.remove(userId);
             }
         }
     }
@@ -655,7 +717,7 @@ class PureTestJava {
 
                 VirgilKeyPair keyPair = pureResult.getCrypto().generateKeyPair();
 
-                byte[] cipherText = pure.encrypt(userId1, dataId, Collections.singletonList(userId2), Collections.singletonList(keyPair.getPublicKey()), text);
+                byte[] cipherText = pure.encrypt(userId1, dataId, Collections.singleton(userId2), Collections.emptySet(), Collections.singletonList(keyPair.getPublicKey()), text);
 
                 byte[] plainText = pure.decrypt(authResult1.getGrant(), null, dataId, cipherText);
 
@@ -848,21 +910,72 @@ class PureTestJava {
         ThreadUtils.pause();
 
         try {
-            RamStorage storage = new RamStorage();
-            PureSetupResult pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, storage);
-            Pure pure = pureResult.getPure();
+            PureSetupResult pureResult;
+            for (int i = 0; i < 2; i++) {
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, i == 0 ? new RamStorage() : null);
+                Pure pure = pureResult.getPure();
 
-            String userId = UUID.randomUUID().toString();
-            String password = UUID.randomUUID().toString();
+                String userId = UUID.randomUUID().toString();
+                String password = UUID.randomUUID().toString();
 
-            pure.registerUser(userId, password);
+                pure.registerUser(userId, password);
 
-            UserRecord record = storage.selectUser(userId);
+                UserRecord record = pure.getStorage().selectUser(userId);
 
-            byte[] pwdHashDecrypted = pureResult.getCrypto().decrypt(record.getEncryptedPwdHash(), pureResult.getHkp().getPrivateKey());
-            byte[] pwdHash = pureResult.getCrypto().computeHash(password.getBytes());
+                byte[] pwdHashDecrypted = pureResult.getCrypto().decrypt(record.getEncryptedPwdHash(), pureResult.getHkp().getPrivateKey());
+                byte[] pwdHash = pureResult.getCrypto().computeHash(password.getBytes());
 
-            assertArrayEquals(pwdHash, pwdHashDecrypted);
+                assertArrayEquals(pwdHash, pwdHashDecrypted);
+            }
+        } catch (Exception e) {
+            fail(e);
+        }
+    }
+
+    @ParameterizedTest @MethodSource("testArgumentsNoToken")
+    void encryption__roles__should_decrypt(String pheServerAddress,
+                                           String pureServerAddress,
+                                           String appToken,
+                                           String publicKey,
+                                           String secretKey) throws InterruptedException {
+        ThreadUtils.pause();
+
+        try {
+            PureSetupResult pureResult;
+            for (int i = 0; i < 1; i++) {
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, i == 0 ? new RamStorage() : null);
+                Pure pure = pureResult.getPure();
+
+                String userId1 = UUID.randomUUID().toString();
+                String userId2 = UUID.randomUUID().toString();
+                String password1 = UUID.randomUUID().toString();
+                String password2 = UUID.randomUUID().toString();
+                String dataId = UUID.randomUUID().toString();
+                String roleName = UUID.randomUUID().toString();
+
+                pure.registerUser(userId1, password1);
+                pure.registerUser(userId2, password2);
+
+                byte[] text = UUID.randomUUID().toString().getBytes();
+
+                AuthResult authResult1 = pure.authenticateUser(userId1, password1);
+                AuthResult authResult2 = pure.authenticateUser(userId2, password2);
+
+                Set<String> userIds = new HashSet<>();
+
+                userIds.add(userId1);
+                userIds.add(userId2);
+
+                pure.createRole(roleName, userIds);
+
+                byte[] cipherText = pure.encrypt(userId1, dataId, Collections.emptySet(), Collections.singleton(roleName), Collections.emptyList(), text);
+
+                byte[] plainText1 = pure.decrypt(authResult1.getGrant(), null, dataId, cipherText);
+                byte[] plainText2 = pure.decrypt(authResult2.getGrant(), userId1, dataId, cipherText);
+
+                assertArrayEquals(text, plainText1);
+                assertArrayEquals(text, plainText2);
+            }
         } catch (Exception e) {
             fail(e);
         }

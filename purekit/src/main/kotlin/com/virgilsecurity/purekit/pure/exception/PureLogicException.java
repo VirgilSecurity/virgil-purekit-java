@@ -58,7 +58,8 @@ public class PureLogicException extends PureException {
         CREDENTIALS_PARSING_ERROR(7, "Credentials parsing error"),
         USER_ID_MISMATCH(8, "User Id mismatch"),
         DUPLICATE_USER_ID(9, "Duplicate user Id"),
-        INVALID_PASSWORD(10, "Invalid password");
+        INVALID_PASSWORD(10, "Invalid password"),
+        USER_HAS_NO_ACCESS_TO_DATA(11, "User has no access to data");
 
         private final int code;
         private final String message;
