@@ -69,6 +69,7 @@ dependencies {
 
     // Tests
     testImplementation "org.junit.jupiter:junit-jupiter:$versions.junit"
+    testImplementation "com.virgilsecurity:test-common:0.1"
 }
 
 task generateVersionVirgilAgent {
@@ -114,8 +115,8 @@ task javadocJar(type: Jar, dependsOn: 'dokka') {
     classifier = 'javadoc'
 }
 
-def authentication_username = hasProperty('authentication_username') ? authentication_username : System.getenv('authentication_username')
-def authentication_password = hasProperty('authentication_password') ? authentication_password : System.getenv('authentication_password')
+def authentication_username = hasProperty('authentication_username') ? getProperty("authentication_username") : System.getenv('authentication_username')
+def authentication_password = hasProperty('authentication_password') ? getProperty("authentication_password") : System.getenv('authentication_password')
 
 publishing {
     publications {
