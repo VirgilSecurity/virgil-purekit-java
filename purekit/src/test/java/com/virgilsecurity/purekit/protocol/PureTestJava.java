@@ -60,6 +60,13 @@ class PureTestJava {
         }
 
         @Override
+        public void updateUsers(Iterable<UserRecord> userRecords, int previousPheVersion) {
+            for (UserRecord userRecord: userRecords) {
+                updateUser(userRecord);
+            }
+        }
+
+        @Override
         public UserRecord selectUser(String userId) throws PureException {
             UserRecord userRecord = this.users.get(userId);
 
@@ -317,8 +324,7 @@ class PureTestJava {
         PureStorage[] storages = new PureStorage[1];
 
 //        storages[0] = new RamStorage();
-//        storages[1] = null;
-        // FIXME
+//        storages[0] = null; /* VirgilCloudPureStorage */
         storages[0] = new MariaDbPureStorage("jdbc:mariadb://localhost/puretest?user=root&password=qwerty");
 
         return storages;
@@ -690,16 +696,24 @@ class PureTestJava {
                     continue;
                 }
 
+                if (storage instanceof MariaDbPureStorage) {
+                    MariaDbPureStorage mariaDbPureStorage = (MariaDbPureStorage)storage;
+                    mariaDbPureStorage.dropTables();
+                    mariaDbPureStorage.createTables();
+                }
+
                 long total = 30;
 
-                for (long i = 0; i < total; i++) {
+                {
                     PureSetupResult pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, null, storage);
                     Pure pure = pureResult.getPure();
 
-                    String userId = UUID.randomUUID().toString();
-                    String password = UUID.randomUUID().toString();
+                    for (long i = 0; i < total; i++) {
+                        String userId = UUID.randomUUID().toString();
+                        String password = UUID.randomUUID().toString();
 
-                    pure.registerUser(userId, password);
+                        pure.registerUser(userId, password);
+                    }
                 }
 
                 PureSetupResult pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, updateToken, null, storage);
@@ -710,6 +724,54 @@ class PureTestJava {
                 assertEquals(total, rotated);
 
                 // TODO: Check auth and decryption works
+            }
+        } catch (Exception e) {
+            fail(e);
+        }
+    }
+
+    @ParameterizedTest @MethodSource("testArguments")
+    void performance(String pheServerAddress,
+                     String pureServerAddress,
+                     String appToken,
+                     String publicKey,
+                     String secretKey,
+                     String updateToken) throws InterruptedException {
+        ThreadUtils.pause();
+
+        try {
+            PureStorage[] storages = createStorages();
+            for (PureStorage storage: storages) {
+                if (storage instanceof VirgilCloudPureStorage) {
+                    continue;
+                }
+
+                PureSetupResult pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, null, storage);
+                Pure pure = pureResult.getPure();
+
+                String userId = UUID.randomUUID().toString();
+                String password = UUID.randomUUID().toString();
+
+                pure.registerUser(userId, password);
+                AuthResult authResult = pure.authenticateUser(userId, password);
+
+                long startTime = System.currentTimeMillis();
+
+                long total = 1;
+                for (long i = 0; i < total; i++) {
+
+                    String dataId = UUID.randomUUID().toString();
+                    byte[] text = UUID.randomUUID().toString().getBytes();
+
+                    byte[] cipherText = pure.encrypt(userId, dataId, text);
+
+                    byte[] plainText = pure.decrypt(authResult.getGrant(), null, dataId, cipherText);
+
+                    assertArrayEquals(text, plainText);
+                }
+
+                long finishTime = System.currentTimeMillis();
+                System.out.println("That took: " + (finishTime - startTime) + " ms");
             }
         } catch (Exception e) {
             fail(e);

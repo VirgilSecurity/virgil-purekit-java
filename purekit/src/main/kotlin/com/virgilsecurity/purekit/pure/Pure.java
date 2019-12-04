@@ -482,8 +482,7 @@ public class Pure {
 
         while (true) {
             Iterable<UserRecord> userRecords = storage.selectUsers(this.currentVersion - 1);
-
-            long currentRotations = 0;
+            ArrayList<UserRecord> newUserRecords = new ArrayList<>();
 
             for (UserRecord userRecord: userRecords) {
                 assert userRecord.getPheRecordVersion() == this.currentVersion - 1;
@@ -501,16 +500,16 @@ public class Pure {
                     userRecord.getEncryptedPwdHash()
                 );
 
-                storage.updateUser(newUserRecord);
-
-                currentRotations += 1;
+                newUserRecords.add(newUserRecord);
             }
 
-            if (currentRotations == 0) {
+            storage.updateUsers(newUserRecords, this.currentVersion - 1);
+
+            if (newUserRecords.isEmpty()) {
                 break;
             }
             else {
-                rotations += currentRotations;
+                rotations += newUserRecords.size();
             }
         }
 

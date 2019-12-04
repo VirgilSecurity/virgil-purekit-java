@@ -73,6 +73,31 @@ public class MariaDbPureStorage implements PureStorage {
         }
     }
 
+    @Override
+    public void updateUsers(Iterable<UserRecord> userRecords, int previousPheVersion) throws Exception {
+        try (Connection conn = getConnection()) {
+            try (PreparedStatement stmt = conn.prepareStatement("UPDATE virgil_users " +
+                    "SET phe_record=?," +
+                    "phe_record_version=?," +
+                    "encrypted_usk=?," +
+                    "encrypted_pwd_hash=? " +
+                    "WHERE user_id=? AND phe_record_version=?;")) {
+
+                for (UserRecord userRecord: userRecords) {
+                    stmt.setBytes(1, userRecord.getPheRecord());
+                    stmt.setInt(2, userRecord.getPheRecordVersion());
+                    stmt.setBytes(3, userRecord.getEncryptedUsk());
+                    stmt.setBytes(4, userRecord.getEncryptedPwdHash());
+                    stmt.setString(5, userRecord.getUserId());
+                    stmt.setInt(6, previousPheVersion);
+                    stmt.addBatch();
+                }
+
+                stmt.executeBatch();
+            }
+        }
+    }
+
     private static UserRecord parseUserRecord(String userId, ResultSet rs) throws SQLException {
         int i = 0;
         if (userId == null) {
@@ -416,6 +441,71 @@ public class MariaDbPureStorage implements PureStorage {
                 }
 
                 stmt.executeUpdate();
+            }
+        }
+    }
+
+    public void dropTables() throws SQLException {
+        try (Connection conn = getConnection()) {
+            try (Statement stmt = conn.createStatement()) {
+                stmt.executeUpdate("DROP TABLE IF EXISTS virgil_role_assignments, virgil_roles, virgil_keys, virgil_users;");
+            }
+        }
+    }
+
+    public void createTables() throws SQLException {
+        try (Connection conn = getConnection()) {
+            try (Statement stmt = conn.createStatement()) {
+                stmt.executeUpdate("CREATE TABLE virgil_users (\n" +
+                        "    user_id CHAR(36) NOT NULL PRIMARY KEY,\n" +
+                        "    phe_record BINARY(202) NOT NULL,\n" +
+                        "    phe_record_version INTEGER NOT NULL,\n" +
+                        "    INDEX phe_record_version_index(phe_record_version),\n" +
+                        "    UNIQUE INDEX user_id_phe_record_version_index(user_id, phe_record_version),\n" +
+                        "    upk BINARY(44) NOT NULL,\n" +
+                        "    encrypted_usk BINARY(96) NOT NULL,\n" +
+                        "    encrypted_usk_bkp VARBINARY(394) NOT NULL,\n" +
+                        "    encrypted_pwd_hash VARBINARY(410) NOT NULL \n" +
+                        ");");
+            }
+            try (Statement stmt = conn.createStatement()) {
+                stmt.executeUpdate("CREATE TABLE virgil_keys(\n" +
+                        "\tid INT NOT NULL AUTO_INCREMENT PRIMARY KEY,\n" +
+                        "    user_id CHAR(36) NOT NULL,\n" +
+                        "    FOREIGN KEY (user_id)\n" +
+                        "\t\tREFERENCES virgil_users(user_id)\n" +
+                        "        ON DELETE CASCADE,\n" +
+                        "\tdata_id VARCHAR(128) NOT NULL,\n" +
+                        "    UNIQUE INDEX user_id_data_id_index(user_id, data_id),\n" +
+                        "    cpk BINARY(44) NOT NULL,\n" +
+                        "    encrypted_csk_cms VARBINARY(32768) NOT NULL, /* Up to 128 recipients */\n" +
+                        "    encrypted_csk_body VARBINARY(177) NOT NULL\n" +
+                        ");");
+            }
+            try (Statement stmt = conn.createStatement()) {
+                stmt.executeUpdate("CREATE TABLE virgil_roles (\n" +
+                        "\tid INT NOT NULL AUTO_INCREMENT PRIMARY KEY,\n" +
+                        "    role_name VARCHAR(64) NOT NULL,\n" +
+                        "    rpk BINARY(44) NOT NULL,\n" +
+                        "    INDEX role_name_index(role_name)\n" +
+                        ");");
+            }
+            try (Statement stmt = conn.createStatement()) {
+                stmt.executeUpdate("CREATE TABLE virgil_role_assignments (\n" +
+                        "\tid INT NOT NULL AUTO_INCREMENT PRIMARY KEY,\n" +
+                        "    role_name VARCHAR(64) NOT NULL,\n" +
+                        "    FOREIGN KEY (role_name)\n" +
+                        "\t\tREFERENCES virgil_roles(role_name)\n" +
+                        "        ON DELETE CASCADE,\n" +
+                        "    user_id CHAR(36) NOT NULL,\n" +
+                        "    FOREIGN KEY (user_id)\n" +
+                        "\t\tREFERENCES virgil_users(user_id)\n" +
+                        "        ON DELETE CASCADE,\n" +
+                        "    public_key_id BINARY(8) NOT NULL,\n" +
+                        "    encrypted_rsk VARBINARY(394) NOT NULL,\n" +
+                        "    INDEX user_id_index(user_id),\n" +
+                        "    UNIQUE INDEX user_id_role_name_index(user_id, role_name)\n" +
+                        ")");
             }
         }
     }

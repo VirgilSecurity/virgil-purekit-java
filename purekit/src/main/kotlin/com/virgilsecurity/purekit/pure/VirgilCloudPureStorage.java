@@ -129,6 +129,14 @@ public class VirgilCloudPureStorage implements PureStorage {
         sendUser(userRecord, false);
     }
 
+    @Override
+    public void updateUsers(Iterable<UserRecord> userRecords, int previousPheVersion) throws Exception {
+        throw new UnsupportedOperationException(
+                "This method always throws UnsupportedOperationException, as in case of using "
+                        + "Virgil Cloud storage, rotation happens on the Virgil side."
+        );
+    }
+
     /**
      * Obtains a user record with the given userId from a storage.
      *
@@ -393,32 +401,36 @@ public class VirgilCloudPureStorage implements PureStorage {
 
     @Override
     public void insertRole(Role role) throws Exception {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public Iterable<Role> selectRoles(Set<String> roleNames) throws Exception {
-        throw new NotImplementedException();
+        return new ArrayList<>();
     }
 
     @Override
     public void insertRoleAssignments(Collection<RoleAssignment> roleAssignment) throws Exception {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public Iterable<RoleAssignment> selectRoleAssignments(String userId) throws Exception {
-        throw new NotImplementedException();
+        return new ArrayList<>();
     }
 
     @Override
     public RoleAssignment selectRoleAssignment(String roleName, String userId) throws Exception {
-        throw new NotImplementedException();
+        return null;
     }
 
     @Override
     public void deleteRoleAssignments(String roleName, Set<String> userIds) throws Exception {
-        throw new NotImplementedException();
+        if (userIds.isEmpty()) {
+            return;
+        }
+
+        throw new UnsupportedOperationException();
     }
 
     private void sendUser(UserRecord userRecord, boolean isInsert)

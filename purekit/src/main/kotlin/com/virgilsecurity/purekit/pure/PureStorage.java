@@ -58,6 +58,8 @@ public interface PureStorage {
      */
     void updateUser(UserRecord userRecord) throws Exception;
 
+    void updateUsers(Iterable<UserRecord> userRecords, int previousPheVersion) throws Exception;
+
     /**
      * Obtains a user record with the given userId from a storage.
      *
