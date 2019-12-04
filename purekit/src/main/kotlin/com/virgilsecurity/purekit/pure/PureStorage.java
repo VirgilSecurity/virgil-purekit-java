@@ -61,6 +61,9 @@ public interface PureStorage {
     /**
      * Obtains a user record with the given userId from a storage.
      *
+     * @implSpec this method MUST throw {@link PureLogicException} with
+     * {@link PureLogicException.ErrorStatus#USER_NOT_FOUND_IN_STORAGE} if user not found
+     *
      * @param userId User Id.
      *
      * @return UserRecord.

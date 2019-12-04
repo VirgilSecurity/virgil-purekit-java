@@ -9,19 +9,18 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.sql.SQLException;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import com.virgilsecurity.crypto.foundation.FoundationException;
 import com.virgilsecurity.crypto.phe.PheException;
-import com.virgilsecurity.purekit.pure.AuthResult;
-import com.virgilsecurity.purekit.pure.Pure;
-import com.virgilsecurity.purekit.pure.PureContext;
-import com.virgilsecurity.purekit.pure.PureStorage;
+import com.virgilsecurity.purekit.pure.*;
 import com.virgilsecurity.purekit.pure.exception.PureCryptoException;
 import com.virgilsecurity.purekit.pure.exception.PureException;
 import com.virgilsecurity.purekit.pure.exception.PureLogicException;
+import com.virgilsecurity.purekit.pure.mariadb.MariaDbPureStorage;
 import com.virgilsecurity.purekit.pure.model.*;
 import com.virgilsecurity.purekit.utils.PropertyManager;
 import com.virgilsecurity.purekit.utils.ThreadUtils;
@@ -33,6 +32,7 @@ import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.mariadb.jdbc.MariaDbDataSource;
 
 class PureTestJava {
     static class RamStorage implements PureStorage {
@@ -313,6 +313,17 @@ class PureTestJava {
         return new PureSetupResult(new Pure(context), crypto, bupkp, hkp);
     }
 
+    private static PureStorage[] createStorages() {
+        PureStorage[] storages = new PureStorage[1];
+
+//        storages[0] = new RamStorage();
+//        storages[1] = null;
+        // FIXME
+        storages[0] = new MariaDbPureStorage("jdbc:mariadb://localhost/puretest?user=root&password=qwerty");
+
+        return storages;
+    }
+
     @ParameterizedTest @MethodSource("testArgumentsNoToken")
     void registration__new_user__should_succeed(String pheServerAddress,
                                                 String pureServerAddress,
@@ -323,8 +334,10 @@ class PureTestJava {
 
         try {
             PureSetupResult pureResult;
-            for (int i = 0; i < 2; i++) {
-                pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, i == 0 ? new RamStorage() : null);
+
+            PureStorage[] storages = createStorages();
+            for (PureStorage storage: storages) {
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, storage);
                 Pure pure = pureResult.getPure();
 
                 String userId = UUID.randomUUID().toString();
@@ -347,8 +360,9 @@ class PureTestJava {
 
         try {
             PureSetupResult pureResult;
-            for (int i = 0; i < 2; i++) {
-                pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, i == 0 ? new RamStorage() : null);
+            PureStorage[] storages = createStorages();
+            for (PureStorage storage: storages) {
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, storage);
                 Pure pure = pureResult.getPure();
 
                 String userId = UUID.randomUUID().toString();
@@ -383,8 +397,9 @@ class PureTestJava {
 
         try {
             PureSetupResult pureResult;
-            for (int i = 0; i < 2; i++) {
-                pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, i == 0 ? new RamStorage() : null);
+            PureStorage[] storages = createStorages();
+            for (PureStorage storage: storages) {
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, storage);
                 Pure pure = pureResult.getPure();
 
                 String userId = UUID.randomUUID().toString();
@@ -417,8 +432,9 @@ class PureTestJava {
 
         try {
             PureSetupResult pureResult;
-            for (int i = 0; i < 2; i++) {
-                pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, i == 0 ? new RamStorage() : null);
+            PureStorage[] storages = createStorages();
+            for (PureStorage storage: storages) {
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, storage);
                 Pure pure = pureResult.getPure();
 
                 String userId1 = UUID.randomUUID().toString();
@@ -459,8 +475,9 @@ class PureTestJava {
 
         try {
             PureSetupResult pureResult;
-            for (int i = 0; i < 2; i++) {
-                pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, i == 0 ? new RamStorage() : null);
+            PureStorage[] storages = createStorages();
+            for (PureStorage storage: storages) {
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, storage);
                 Pure pure = pureResult.getPure();
 
                 String userId1 = UUID.randomUUID().toString();
@@ -481,11 +498,11 @@ class PureTestJava {
                 pure.share(authResult1.getGrant(), dataId, userId2);
                 pure.unshare(userId1, dataId, userId2);
 
-                FoundationException e = assertThrows(FoundationException.class, () -> {
+                PureLogicException e = assertThrows(PureLogicException.class, () -> {
                     pure.decrypt(authResult2.getGrant(), userId1, dataId, cipherText);
                 });
 
-                assertEquals(e.getStatusCode(), ERROR_KEY_RECIPIENT_IS_NOT_FOUND);
+                assertEquals(e.getErrorStatus(), PureLogicException.ErrorStatus.USER_HAS_NO_ACCESS_TO_DATA);
             }
         } catch (Exception e) {
             fail(e);
@@ -502,8 +519,9 @@ class PureTestJava {
 
         try {
             PureSetupResult pureResult;
-            for (int i = 0; i < 2; i++) {
-                pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, i == 0 ? new RamStorage() : null);
+            PureStorage[] storages = createStorages();
+            for (PureStorage storage: storages) {
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, storage);
                 Pure pure = pureResult.getPure();
 
                 String userId = UUID.randomUUID().toString();
@@ -525,7 +543,7 @@ class PureTestJava {
                 pure.changeUserPassword(userId, password1, password2);
 
                 PureCryptoException ex = assertThrows(PureCryptoException.class, () -> {
-                    PureGrant grant1 = pure.decryptGrantFromUser(authResult1.getEncryptedGrant());
+                    pure.decryptGrantFromUser(authResult1.getEncryptedGrant());
                 });
 
                 assertEquals(ex.getPheException().getStatusCode(), ERROR_AES_FAILED);
@@ -545,8 +563,9 @@ class PureTestJava {
 
         try {
             PureSetupResult pureResult;
-            for (int i = 0; i < 2; i++) {
-                pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, i == 0 ? new RamStorage() : null);
+            PureStorage[] storages = createStorages();
+            for (PureStorage storage: storages) {
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, storage);
                 Pure pure = pureResult.getPure();
 
                 String userId = UUID.randomUUID().toString();
@@ -581,8 +600,9 @@ class PureTestJava {
 
         try {
             PureSetupResult pureResult;
-            for (int i = 0; i < 2; i++) {
-                pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, i == 0 ? new RamStorage() : null);
+            PureStorage[] storages = createStorages();
+            for (PureStorage storage: storages) {
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, storage);
                 Pure pure = pureResult.getPure();
 
                 String userId = UUID.randomUUID().toString();
@@ -601,11 +621,11 @@ class PureTestJava {
 
                 assertNotNull(authResult);
 
-                FoundationException e = assertThrows(FoundationException.class, () -> {
-                    byte[] plainText = pure.decrypt(authResult.getGrant(), null, dataId, cipherText);
+                PureLogicException e = assertThrows(PureLogicException.class, () -> {
+                    pure.decrypt(authResult.getGrant(), null, dataId, cipherText);
                 });
 
-                assertEquals(e.getStatusCode(), ERROR_KEY_RECIPIENT_IS_NOT_FOUND);
+                assertEquals(e.getErrorStatus(), PureLogicException.ErrorStatus.USER_HAS_NO_ACCESS_TO_DATA);
             }
         } catch (Exception e) {
             fail(e);
@@ -622,8 +642,9 @@ class PureTestJava {
 
         try {
             PureSetupResult pureResult;
-            for (int i = 0; i < 2; i++) {
-                pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, i == 0 ? new RamStorage() : null);
+            PureStorage[] storages = createStorages();
+            for (PureStorage storage: storages) {
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, storage);
                 Pure pure = pureResult.getPure();
 
                 String userId = UUID.randomUUID().toString();
@@ -663,26 +684,33 @@ class PureTestJava {
         ThreadUtils.pause();
 
         try {
-            RamStorage ramStorage = new RamStorage();
+            PureStorage[] storages = createStorages();
+            for (PureStorage storage: storages) {
+                if (storage instanceof VirgilCloudPureStorage) {
+                    continue;
+                }
 
-            long total = 30;
+                long total = 30;
 
-            for (long i = 0; i < total;  i++) {
-                PureSetupResult pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, null, ramStorage);
+                for (long i = 0; i < total; i++) {
+                    PureSetupResult pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, null, storage);
+                    Pure pure = pureResult.getPure();
+
+                    String userId = UUID.randomUUID().toString();
+                    String password = UUID.randomUUID().toString();
+
+                    pure.registerUser(userId, password);
+                }
+
+                PureSetupResult pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, updateToken, null, storage);
                 Pure pure = pureResult.getPure();
 
-                String userId = UUID.randomUUID().toString();
-                String password = UUID.randomUUID().toString();
+                long rotated = pure.performRotation();
 
-                pure.registerUser(userId, password);
+                assertEquals(total, rotated);
+
+                // TODO: Check auth and decryption works
             }
-
-            PureSetupResult pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, updateToken, null, ramStorage);
-            Pure pure = pureResult.getPure();
-
-            long rotated = pure.performRotation();
-
-            assertEquals(total, rotated);
         } catch (Exception e) {
             fail(e);
         }
@@ -698,8 +726,9 @@ class PureTestJava {
 
         try {
             PureSetupResult pureResult;
-            for (int i = 0; i < 2; i++) {
-                pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, i == 0 ? new RamStorage() : null);
+            PureStorage[] storages = createStorages();
+            for (PureStorage storage: storages) {
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, storage);
                 Pure pure = pureResult.getPure();
 
                 String userId1 = UUID.randomUUID().toString();
@@ -746,13 +775,14 @@ class PureTestJava {
 
         try {
             PureSetupResult pureResult;
-            for (int i = 0; i < 2; i++) {
+            PureStorage[] storages = createStorages();
+            for (PureStorage storage: storages) {
                 VirgilKeyPair keyPair = this.crypto.generateKeyPair();
                 String dataId = UUID.randomUUID().toString();
                 String publicKeyBase64 = Base64.getEncoder().encodeToString(crypto.exportPublicKey(keyPair.getPublicKey()));
                 Map<String, List<String>> externalPublicKeys = Collections.singletonMap(dataId, Collections.singletonList(publicKeyBase64));
 
-                pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, externalPublicKeys, i == 0 ? new RamStorage() : null);
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, externalPublicKeys, storage);
 
                 Pure pure = pureResult.getPure();
 
@@ -784,8 +814,9 @@ class PureTestJava {
 
         try {
             PureSetupResult pureResult;
-            for (int i = 0; i < 2; i++) {
-                pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, i == 0 ? new RamStorage() : null);
+            PureStorage[] storages = createStorages();
+            for (PureStorage storage: storages) {
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, storage);
                 Pure pure = pureResult.getPure();
 
                 String userId = UUID.randomUUID().toString();
@@ -803,13 +834,13 @@ class PureTestJava {
                 pure.deleteUser(userId, true);
 
                 PureLogicException e1 = assertThrows(PureLogicException.class, () -> {
-                    AuthResult authResult2 = pure.authenticateUser(userId, password);
+                    pure.authenticateUser(userId, password);
                 });
 
                 assertEquals(PureLogicException.ErrorStatus.USER_NOT_FOUND_IN_STORAGE, e1.getErrorStatus());
 
                 PureLogicException e2 = assertThrows(PureLogicException.class, () -> {
-                    byte[] plainText = pure.decrypt(authResult1.getGrant(), null, dataId, cipherText);
+                    pure.decrypt(authResult1.getGrant(), null, dataId, cipherText);
                 });
 
                 assertEquals(PureLogicException.ErrorStatus.CELL_KEY_NOT_FOUND_IN_STORAGE, e2.getErrorStatus());
@@ -829,8 +860,14 @@ class PureTestJava {
 
         try {
             PureSetupResult pureResult;
-            for (int i = 0; i < 2; i++) {
-                pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, i == 0 ? new RamStorage() : null);
+            PureStorage[] storages = createStorages();
+            for (PureStorage storage: storages) {
+                // MariaDbPureStorage only supports cascade = true
+                if (storage instanceof MariaDbPureStorage) {
+                    continue;
+                }
+
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, storage);
                 Pure pure = pureResult.getPure();
 
                 String userId = UUID.randomUUID().toString();
@@ -848,7 +885,7 @@ class PureTestJava {
                 pure.deleteUser(userId, false);
 
                 PureLogicException e = assertThrows(PureLogicException.class, () -> {
-                    AuthResult authResult2 = pure.authenticateUser(userId, password);
+                    pure.authenticateUser(userId, password);
                 });
 
                 assertEquals(PureLogicException.ErrorStatus.USER_NOT_FOUND_IN_STORAGE, e.getErrorStatus());
@@ -872,8 +909,9 @@ class PureTestJava {
 
         try {
             PureSetupResult pureResult;
-            for (int i = 0; i < 2; i++) {
-                pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, i == 0 ? new RamStorage() : null);
+            PureStorage[] storages = createStorages();
+            for (PureStorage storage: storages) {
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, storage);
                 Pure pure = pureResult.getPure();
 
                 String userId = UUID.randomUUID().toString();
@@ -911,8 +949,9 @@ class PureTestJava {
 
         try {
             PureSetupResult pureResult;
-            for (int i = 0; i < 2; i++) {
-                pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, i == 0 ? new RamStorage() : null);
+            PureStorage[] storages = createStorages();
+            for (PureStorage storage: storages) {
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, storage);
                 Pure pure = pureResult.getPure();
 
                 String userId = UUID.randomUUID().toString();
@@ -942,8 +981,14 @@ class PureTestJava {
 
         try {
             PureSetupResult pureResult;
-            for (int i = 0; i < 1; i++) {
-                pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, i == 0 ? new RamStorage() : null);
+            PureStorage[] storages = createStorages();
+            for (PureStorage storage: storages) {
+                // TODO: Remove
+                if (storage instanceof VirgilCloudPureStorage) {
+                    continue;
+                }
+
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, storage);
                 Pure pure = pureResult.getPure();
 
                 String userId1 = UUID.randomUUID().toString();
