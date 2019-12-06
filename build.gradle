@@ -60,6 +60,7 @@ buildscript {
     repositories {
         jcenter()
         mavenCentral()
+        mavenLocal()
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin"
@@ -71,6 +72,7 @@ allprojects {
     repositories {
         jcenter()
         mavenCentral()
+        mavenLocal()
     }
 }
 

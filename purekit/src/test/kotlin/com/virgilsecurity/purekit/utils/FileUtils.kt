@@ -33,6 +33,7 @@
 
 package com.virgilsecurity.purekit.utils
 
+import com.virgilsecurity.testcommon.utils.PropertyUtils
 import java.io.File
 
 /**

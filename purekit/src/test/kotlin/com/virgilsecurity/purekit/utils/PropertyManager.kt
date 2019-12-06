@@ -33,6 +33,9 @@
 
 package com.virgilsecurity.purekit.utils
 
+import com.virgilsecurity.testcommon.property.EnvPropertyReader
+import com.virgilsecurity.testcommon.utils.PropertyUtils
+
 class PropertyManager {
 
     companion object {
@@ -62,9 +65,13 @@ class PropertyManager {
             val environment = PropertyUtils.getSystemProperty(ENVIRONMENT_PARAMETER)
 
             if (environment != null)
-                EnvPropertyReader(EnvPropertyReader.Environment.fromType(environment))
+                EnvPropertyReader.Builder()
+                        .environment(EnvPropertyReader.Environment.fromType(environment))
+                        .build()
             else
-                EnvPropertyReader(EnvPropertyReader.Environment.PRO)
+                EnvPropertyReader.Builder()
+                        .environment(EnvPropertyReader.Environment.PRO)
+                        .build()
         }
     }
 }
