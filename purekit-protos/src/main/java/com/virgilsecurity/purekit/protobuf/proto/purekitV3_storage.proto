@@ -77,6 +77,28 @@ message CellKey {
     bytes signature = 3;
 }
 
-message GetUserRecords {
-    repeated string user_ids = 1;
+message RoleSigned {
+    uint32 version = 1;
+    string name = 2;
+    bytes rpk = 3;
+}
+
+message Role {
+    uint32 version = 1;
+    bytes role_signed = 2;
+    bytes signature = 3;
+}
+
+message RoleAssignmentSigned {
+    uint32 version = 1;
+    string role_name = 2;
+    string user_id = 3;
+    bytes public_key_id = 4;
+    bytes ecrypted_rsk = 5;
+}
+
+message RoleAssignment {
+    uint32 version = 1;
+    bytes role_assignment_signed = 2;
+    bytes signature = 3;
 }

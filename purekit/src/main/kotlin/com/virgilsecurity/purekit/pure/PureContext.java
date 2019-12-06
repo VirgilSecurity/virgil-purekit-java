@@ -85,7 +85,7 @@ public class PureContext {
     private final VirgilKeyPair oskp;
     private final Credentials appSecretKey;
     private final Credentials servicePublicKey;
-    private final PureStorage storage;
+    private PureStorage storage;
     private final HttpPheClient pheClient;
     private final Map<String, List<VirgilPublicKey>> externalPublicKeys;
     private Credentials updateToken;
@@ -191,8 +191,7 @@ public class PureContext {
      * @param bu Backup public key.
      * @param hb Password hashes backup public key.
      * @param os Private key used to sign data during encryption.
-     * @param vs Private key used to sign records before sending to Virgil cloud,
-     *              if null, setStorage should be called.
+     * @param vs Private key used to sign records before sending to Virgil cloud
      * @param sk App secret key.
      * @param pk Service public key.
      * @param externalPublicKeys External public keys that will be added during encryption by
@@ -215,12 +214,12 @@ public class PureContext {
 
         VirgilCrypto crypto = new VirgilCrypto();
         HttpPureClient pureClient = new HttpPureClient(appToken, pureServiceAddress);
-        Credentials vkCredentials =
+        Credentials vsCredentials =
             PureContext.parseCredentials(VIRGIL_SIGNING_KEY_PREFIX, vs, false);
         PureStorage storage = new VirgilCloudPureStorage(
             crypto,
             pureClient,
-            crypto.importPrivateKey(vkCredentials.getPayload())
+            crypto.importPrivateKey(vsCredentials.getPayload())
         );
 
         return new PureContext(
@@ -367,6 +366,10 @@ public class PureContext {
         if (this.updateToken.getVersion() != this.appSecretKey.getVersion() + 1) {
             throw new PureLogicException(PureLogicException.ErrorStatus.UPDATE_TOKEN_VERSION_MISMATCH);
         }
+    }
+
+    public void setStorage(PureStorage storage) {
+        this.storage = storage;
     }
 
     /**

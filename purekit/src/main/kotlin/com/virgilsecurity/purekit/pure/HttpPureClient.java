@@ -41,6 +41,7 @@ import com.virgilsecurity.purekit.client.AvailableRequests;
 import com.virgilsecurity.purekit.client.HttpClientProtobuf;
 import com.virgilsecurity.purekit.data.ProtocolException;
 import com.virgilsecurity.purekit.data.ProtocolHttpException;
+import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client;
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage;
 import com.virgilsecurity.purekit.utils.ValidateUtils;
 import com.virgilsecurity.sdk.exception.EmptyArgumentException;
@@ -157,8 +158,8 @@ public class HttpPureClient {
             throw new EmptyArgumentException("userIds");
         }
 
-        PurekitProtosV3Storage.GetUserRecords getUserRecords = 
-            PurekitProtosV3Storage.GetUserRecords.newBuilder().addAllUserIds(userIds).build();
+        PurekitProtosV3Client.GetUserRecords getUserRecords =
+            PurekitProtosV3Client.GetUserRecords.newBuilder().addAllUserIds(userIds).build();
 
         return client.firePost(
             getUserRecords,

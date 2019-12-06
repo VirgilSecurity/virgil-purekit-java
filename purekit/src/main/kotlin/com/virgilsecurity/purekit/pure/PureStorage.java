@@ -106,7 +106,7 @@ public interface PureStorage {
      *
      * @return CellKey.
      */
-    CellKey selectKey(String userId, String dataId) throws Exception;
+    CellKey selectCellKey(String userId, String dataId) throws Exception;
 
     /**
      * Insert a CellKey key into a storage.
@@ -119,7 +119,7 @@ public interface PureStorage {
      * @param dataId Data Id.
      * @param cellKey Cell key record.
      */
-    void insertKey(String userId, String dataId, CellKey cellKey) throws Exception;
+    void insertCellKey(CellKey cellKey) throws Exception;
 
     /**
      * Updates a CellKey.
@@ -128,7 +128,7 @@ public interface PureStorage {
      * @param dataId Data Id.
      * @param cellKey Cell key record.
      */
-    void updateKey(String userId, String dataId, CellKey cellKey) throws Exception;
+    void updateCellKey(CellKey cellKey) throws Exception;
 
     /**
      * Deletes a CellKey with the given userId and dataId.
@@ -136,7 +136,7 @@ public interface PureStorage {
      * @param userId User Id.
      * @param dataId Data Id.
      */
-    void deleteKey(String userId, String dataId) throws Exception;
+    void deleteCellKey(String userId, String dataId) throws Exception;
 
     void insertRole(Role role) throws Exception;
 

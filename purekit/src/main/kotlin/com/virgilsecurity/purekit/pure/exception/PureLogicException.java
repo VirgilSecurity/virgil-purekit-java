@@ -57,9 +57,14 @@ public class PureLogicException extends PureException {
         AK_INVALID_LENGTH(6, "AK invalid length"),
         CREDENTIALS_PARSING_ERROR(7, "Credentials parsing error"),
         USER_ID_MISMATCH(8, "User Id mismatch"),
-        DUPLICATE_USER_ID(9, "Duplicate user Id"),
-        INVALID_PASSWORD(10, "Invalid password"),
-        USER_HAS_NO_ACCESS_TO_DATA(11, "User has no access to data");
+        KEY_ID_MISMATCH(9, "Key id mismatch"),
+        PHE_VERSION_MISMATCH(10, "PHE version mismatch"),
+        ROLE_NAME_MISMATCH(11, "Role name mismatch"),
+        ROLE_USER_ID_MISMATCH(12, "Role user id mismatch"),
+        ROLE_NAME_USER_ID_MISMATCH(13, "Role name and user id mismatch"),
+        DUPLICATE_USER_ID(14, "Duplicate user Id"),
+        INVALID_PASSWORD(15, "Invalid password"),
+        USER_HAS_NO_ACCESS_TO_DATA(16, "User has no access to data");
 
         private final int code;
         private final String message;

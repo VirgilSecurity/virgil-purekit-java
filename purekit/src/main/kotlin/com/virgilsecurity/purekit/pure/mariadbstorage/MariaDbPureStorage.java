@@ -1,5 +1,7 @@
-package com.virgilsecurity.purekit.pure.mariadb;
+package com.virgilsecurity.purekit.pure.mariadbstorage;
 
+import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage;
+import com.virgilsecurity.purekit.pure.PureModelSerializer;
 import com.virgilsecurity.purekit.pure.PureStorage;
 import com.virgilsecurity.purekit.pure.exception.PureLogicException;
 import com.virgilsecurity.purekit.pure.model.CellKey;
@@ -7,19 +9,22 @@ import com.virgilsecurity.purekit.pure.model.Role;
 import com.virgilsecurity.purekit.pure.model.RoleAssignment;
 import com.virgilsecurity.purekit.pure.model.UserRecord;
 
-import org.mariadb.jdbc.*;
+import com.virgilsecurity.sdk.crypto.exceptions.VerificationException;
 
-import javax.xml.transform.Result;
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 public class MariaDbPureStorage implements PureStorage {
-    private String url;
+    private final String url;
+    private final PureModelSerializer pureModelSerializer;
 
-    public MariaDbPureStorage(String url) {
+    public MariaDbPureStorage(String url, PureModelSerializer pureModelSerializer) {
         this.url = url;
+        this.pureModelSerializer = pureModelSerializer;
     }
 
     private Connection getConnection() throws SQLException {
@@ -28,24 +33,18 @@ public class MariaDbPureStorage implements PureStorage {
 
     @Override
     public void insertUser(UserRecord userRecord) throws Exception {
+        PurekitProtosV3Storage.UserRecord protobuf = pureModelSerializer.serializeUserRecord(userRecord);
+
         try (Connection conn = getConnection()) {
             try (PreparedStatement stmt = conn.prepareStatement("INSERT INTO virgil_users (" +
                     "user_id," +
-                    "phe_record," +
                     "phe_record_version," +
-                    "upk," +
-                    "encrypted_usk," +
-                    "encrypted_usk_bkp," +
-                    "encrypted_pwd_hash) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?);")) {
+                    "protobuf) " +
+                    "VALUES (?, ?, ?);")) {
 
                 stmt.setString(1, userRecord.getUserId());
-                stmt.setBytes(2, userRecord.getPheRecord());
-                stmt.setInt(3, userRecord.getPheRecordVersion());
-                stmt.setBytes(4, userRecord.getUpk());
-                stmt.setBytes(5, userRecord.getEncryptedUsk());
-                stmt.setBytes(6, userRecord.getEncryptedUskBackup());
-                stmt.setBytes(7, userRecord.getEncryptedPwdHash());
+                stmt.setInt(2, userRecord.getPheRecordVersion());
+                stmt.setBytes(3, protobuf.toByteArray());
 
                 stmt.executeUpdate();
             }
@@ -54,19 +53,17 @@ public class MariaDbPureStorage implements PureStorage {
 
     @Override
     public void updateUser(UserRecord userRecord) throws Exception {
+        PurekitProtosV3Storage.UserRecord protobuf = pureModelSerializer.serializeUserRecord(userRecord);
+
         try (Connection conn = getConnection()) {
             try (PreparedStatement stmt = conn.prepareStatement("UPDATE virgil_users " +
-                    "SET phe_record=?," +
-                    "phe_record_version=?," +
-                    "encrypted_usk=?," +
-                    "encrypted_pwd_hash=? " +
+                    "SET phe_record_version=?," +
+                    "protobuf=? " +
                     "WHERE user_id=?;")) {
 
-                stmt.setBytes(1, userRecord.getPheRecord());
-                stmt.setInt(2, userRecord.getPheRecordVersion());
-                stmt.setBytes(3, userRecord.getEncryptedUsk());
-                stmt.setBytes(4, userRecord.getEncryptedPwdHash());
-                stmt.setString(5, userRecord.getUserId());
+                stmt.setInt(1, userRecord.getPheRecordVersion());
+                stmt.setBytes(2, protobuf.toByteArray());
+                stmt.setString(3, userRecord.getUserId());
 
                 stmt.executeUpdate();
             }
@@ -76,44 +73,41 @@ public class MariaDbPureStorage implements PureStorage {
     @Override
     public void updateUsers(Iterable<UserRecord> userRecords, int previousPheVersion) throws Exception {
         try (Connection conn = getConnection()) {
+            conn.setAutoCommit(false);
             try (PreparedStatement stmt = conn.prepareStatement("UPDATE virgil_users " +
-                    "SET phe_record=?," +
-                    "phe_record_version=?," +
-                    "encrypted_usk=?," +
-                    "encrypted_pwd_hash=? " +
+                    "SET phe_record_version=?," +
+                    "protobuf=? " +
                     "WHERE user_id=? AND phe_record_version=?;")) {
 
                 for (UserRecord userRecord: userRecords) {
-                    stmt.setBytes(1, userRecord.getPheRecord());
-                    stmt.setInt(2, userRecord.getPheRecordVersion());
-                    stmt.setBytes(3, userRecord.getEncryptedUsk());
-                    stmt.setBytes(4, userRecord.getEncryptedPwdHash());
-                    stmt.setString(5, userRecord.getUserId());
-                    stmt.setInt(6, previousPheVersion);
+                    PurekitProtosV3Storage.UserRecord protobuf = pureModelSerializer.serializeUserRecord(userRecord);
+
+                    stmt.setInt(1, userRecord.getPheRecordVersion());
+                    stmt.setBytes(2, protobuf.toByteArray());
+                    stmt.setString(3, userRecord.getUserId());
+                    stmt.setInt(4, previousPheVersion);
                     stmt.addBatch();
                 }
 
                 stmt.executeBatch();
             }
+            finally {
+                conn.setAutoCommit(true);
+            }
         }
     }
 
-    private static UserRecord parseUserRecord(String userId, ResultSet rs) throws SQLException {
-        int i = 0;
-        if (userId == null) {
-            userId = rs.getString(1);
-            i = 1;
-        }
+    private UserRecord parseUserRecord(ResultSet rs) throws SQLException, IOException, PureLogicException, VerificationException {
+        PurekitProtosV3Storage.UserRecord protobuf =
+                PurekitProtosV3Storage.UserRecord.parseFrom(rs.getBinaryStream(1));
 
-        return new UserRecord(userId,
-                rs.getBytes(i + 1), rs.getInt(i + 2), rs.getBytes(i + 3),
-                rs.getBytes(i + 4), rs.getBytes(i + 5), rs.getBytes(i + 6));
+        return pureModelSerializer.parseUserRecord(protobuf);
     }
 
     @Override
     public UserRecord selectUser(String userId) throws Exception {
         try (Connection conn = getConnection()) {
-            try (PreparedStatement stmt = conn.prepareStatement("SELECT phe_record, phe_record_version, upk, encrypted_usk, encrypted_usk_bkp, encrypted_pwd_hash " +
+            try (PreparedStatement stmt = conn.prepareStatement("SELECT protobuf " +
                     "FROM virgil_users " +
                     "WHERE user_id=?;")) {
 
@@ -121,7 +115,12 @@ public class MariaDbPureStorage implements PureStorage {
 
                 try (ResultSet rs = stmt.executeQuery()) {
                     if (rs.next()) {
-                        return parseUserRecord(userId, rs);
+                        UserRecord userRecord = parseUserRecord(rs);
+                        if (!userId.equals(userRecord.getUserId())) {
+                            throw new PureLogicException(PureLogicException.ErrorStatus.USER_ID_MISMATCH);
+                        }
+
+                        return userRecord;
                     }
                     else {
                         throw new PureLogicException(PureLogicException.ErrorStatus.USER_NOT_FOUND_IN_STORAGE);
@@ -137,9 +136,11 @@ public class MariaDbPureStorage implements PureStorage {
             return new ArrayList<>();
         }
 
+        HashSet<String> idsSet = new HashSet<>(userIds);
+
         try (Connection conn = getConnection()) {
             StringBuilder sbSql = new StringBuilder( 512 );
-            sbSql.append("SELECT user_id, phe_record, phe_record_version, upk, encrypted_usk, encrypted_usk_bkp, encrypted_pwd_hash " +
+            sbSql.append("SELECT protobuf " +
                     "FROM virgil_users " +
                     "WHERE user_id in (" );
 
@@ -158,7 +159,15 @@ public class MariaDbPureStorage implements PureStorage {
                 try (ResultSet rs = stmt.executeQuery()) {
                     ArrayList<UserRecord> userRecords = new ArrayList<>();
                     while (rs.next()) {
-                        userRecords.add(parseUserRecord(null, rs));
+                        UserRecord userRecord = parseUserRecord(rs);
+
+                        if (!idsSet.contains(userRecord.getUserId())) {
+                            throw new PureLogicException(PureLogicException.ErrorStatus.USER_ID_MISMATCH);
+                        }
+
+                        idsSet.remove(userRecord.getUserId());
+
+                        userRecords.add(userRecord);
                     }
 
                     return userRecords;
@@ -170,7 +179,7 @@ public class MariaDbPureStorage implements PureStorage {
     @Override
     public Iterable<UserRecord> selectUsers(int pheRecordVersion) throws Exception {
         try (Connection conn = getConnection()) {
-            try (PreparedStatement stmt = conn.prepareStatement("SELECT user_id, phe_record, phe_record_version, upk, encrypted_usk, encrypted_usk_bkp, encrypted_pwd_hash " +
+            try (PreparedStatement stmt = conn.prepareStatement("SELECT protobuf " +
                     "FROM virgil_users " +
                     "WHERE phe_record_version=? " +
                     "LIMIT 1000;")) {
@@ -180,7 +189,13 @@ public class MariaDbPureStorage implements PureStorage {
                 try (ResultSet rs = stmt.executeQuery()) {
                     ArrayList<UserRecord> userRecords = new ArrayList<>();
                     while (rs.next()) {
-                        userRecords.add(parseUserRecord(null, rs));
+                        UserRecord userRecord = parseUserRecord(rs);
+
+                        if (pheRecordVersion != userRecord.getPheRecordVersion()) {
+                            throw new PureLogicException(PureLogicException.ErrorStatus.PHE_VERSION_MISMATCH);
+                        }
+
+                        userRecords.add(userRecord);
                     }
 
                     return userRecords;
@@ -205,10 +220,17 @@ public class MariaDbPureStorage implements PureStorage {
         }
     }
 
+    private CellKey parseCellKey(ResultSet rs) throws SQLException, IOException, PureLogicException, VerificationException {
+        PurekitProtosV3Storage.CellKey protobuf =
+                PurekitProtosV3Storage.CellKey.parseFrom(rs.getBinaryStream(1));
+
+        return pureModelSerializer.parseCellKey(protobuf);
+    }
+
     @Override
-    public CellKey selectKey(String userId, String dataId) throws Exception {
+    public CellKey selectCellKey(String userId, String dataId) throws Exception {
         try (Connection conn = getConnection()) {
-            try (PreparedStatement stmt = conn.prepareStatement("SELECT cpk, encrypted_csk_cms, encrypted_csk_body " +
+            try (PreparedStatement stmt = conn.prepareStatement("SELECT protobuf " +
                     "FROM virgil_keys " +
                     "WHERE user_id=? AND data_id=?;")) {
 
@@ -217,7 +239,13 @@ public class MariaDbPureStorage implements PureStorage {
 
                 try (ResultSet rs = stmt.executeQuery()) {
                     if (rs.next()) {
-                        return new CellKey(rs.getBytes(1), rs.getBytes(2), rs.getBytes(3));
+                        CellKey cellKey = parseCellKey(rs);
+
+                        if (!userId.equals(cellKey.getUserId()) || !dataId.equals(cellKey.getDataId())) {
+                            throw new PureLogicException(PureLogicException.ErrorStatus.KEY_ID_MISMATCH);
+                        }
+
+                        return cellKey;
                     }
                     else {
                         return null;
@@ -228,21 +256,19 @@ public class MariaDbPureStorage implements PureStorage {
     }
 
     @Override
-    public void insertKey(String userId, String dataId, CellKey cellKey) throws Exception {
+    public void insertCellKey(CellKey cellKey) throws Exception {
+        PurekitProtosV3Storage.CellKey protobuf = pureModelSerializer.serializeCellKey(cellKey);
+
         try (Connection conn = getConnection()) {
             try (PreparedStatement stmt = conn.prepareStatement("INSERT INTO virgil_keys (" +
                     "user_id," +
                     "data_id," +
-                    "cpk," +
-                    "encrypted_csk_cms," +
-                    "encrypted_csk_body) " +
-                    "VALUES (?, ?, ?, ?, ?);")) {
+                    "protobuf) " +
+                    "VALUES (?, ?, ?);")) {
 
-                stmt.setString(1, userId);
-                stmt.setString(2, dataId);
-                stmt.setBytes(3, cellKey.getCpk());
-                stmt.setBytes(4, cellKey.getEncryptedCskCms());
-                stmt.setBytes(5, cellKey.getEncryptedCskBody());
+                stmt.setString(1, cellKey.getUserId());
+                stmt.setString(2, cellKey.getDataId());
+                stmt.setBytes(3, protobuf.toByteArray());
 
                 try {
                     stmt.executeUpdate();
@@ -259,15 +285,17 @@ public class MariaDbPureStorage implements PureStorage {
     }
 
     @Override
-    public void updateKey(String userId, String dataId, CellKey cellKey) throws Exception {
+    public void updateCellKey(CellKey cellKey) throws Exception {
+        PurekitProtosV3Storage.CellKey protobuf = pureModelSerializer.serializeCellKey(cellKey);
+
         try (Connection conn = getConnection()) {
             try (PreparedStatement stmt = conn.prepareStatement("UPDATE virgil_keys " +
-                    "SET encrypted_csk_cms=? " +
+                    "SET protobuf=? " +
                     "WHERE user_id=? AND data_id=?;")) {
 
-                stmt.setBytes(1, cellKey.getEncryptedCskCms());
-                stmt.setString(2, userId);
-                stmt.setString(3, dataId);
+                stmt.setBytes(1, protobuf.toByteArray());
+                stmt.setString(2, cellKey.getUserId());
+                stmt.setString(3, cellKey.getDataId());
 
                 stmt.executeUpdate();
             }
@@ -275,7 +303,7 @@ public class MariaDbPureStorage implements PureStorage {
     }
 
     @Override
-    public void deleteKey(String userId, String dataId) throws Exception {
+    public void deleteCellKey(String userId, String dataId) throws Exception {
         try (Connection conn = getConnection()) {
             try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM virgil_keys WHERE user_id = ? AND data_id = ?;")) {
                 stmt.setString(1, userId);
@@ -288,22 +316,27 @@ public class MariaDbPureStorage implements PureStorage {
 
     @Override
     public void insertRole(Role role) throws Exception {
+        PurekitProtosV3Storage.Role protobuf = pureModelSerializer.serializeRole(role);
+
         try (Connection conn = getConnection()) {
             try (PreparedStatement stmt = conn.prepareStatement("INSERT INTO virgil_roles (" +
                     "role_name," +
-                    "rpk) " +
+                    "protobuf) " +
                     "VALUES (?, ?);")) {
 
                 stmt.setString(1, role.getRoleName());
-                stmt.setBytes(2, role.getRpk());
+                stmt.setBytes(2, protobuf.toByteArray());
 
                 stmt.executeUpdate();
             }
         }
     }
 
-    private static Role parseRole(ResultSet rs) throws SQLException {
-        return new Role(rs.getString(1), rs.getBytes(2));
+    private Role parseRole(ResultSet rs) throws SQLException, IOException, PureLogicException, VerificationException {
+        PurekitProtosV3Storage.Role protobuf =
+                PurekitProtosV3Storage.Role.parseFrom(rs.getBinaryStream(1));
+
+        return pureModelSerializer.parseRole(protobuf);
     }
 
     @Override
@@ -312,9 +345,11 @@ public class MariaDbPureStorage implements PureStorage {
             return new ArrayList<>();
         }
 
+        HashSet<String> namesSet = new HashSet<>(roleNames);
+
         try (Connection conn = getConnection()) {
             StringBuilder sbSql = new StringBuilder(512);
-            sbSql.append("SELECT role_name, rpk " +
+            sbSql.append("SELECT protobuf " +
                     "FROM virgil_roles " +
                     "WHERE role_name in (");
 
@@ -326,14 +361,22 @@ public class MariaDbPureStorage implements PureStorage {
 
             try (PreparedStatement stmt = conn.prepareStatement(sbSql.toString())) {
                 int i = 1;
-                for (String roleNmae : roleNames) {
-                    stmt.setString(i++, roleNmae);
+                for (String roleName : roleNames) {
+                    stmt.setString(i++, roleName);
                 }
 
                 try (ResultSet rs = stmt.executeQuery()) {
                     ArrayList<Role> roles = new ArrayList<>();
                     while (rs.next()) {
-                        roles.add(parseRole(rs));
+                        Role role = parseRole(rs);
+
+                        if (!namesSet.contains(role.getRoleName())) {
+                            throw new PureLogicException(PureLogicException.ErrorStatus.ROLE_NAME_MISMATCH);
+                        }
+
+                        namesSet.remove(role.getRoleName());
+
+                        roles.add(role);
                     }
 
                     return roles;
@@ -349,15 +392,15 @@ public class MariaDbPureStorage implements PureStorage {
             try (PreparedStatement stmt = conn.prepareStatement("INSERT INTO virgil_role_assignments (" +
                     "role_name," +
                     "user_id," +
-                    "public_key_id," +
-                    "encrypted_rsk) " +
-                    "VALUES (?, ?, ?, ?);")) {
+                    "protobuf) " +
+                    "VALUES (?, ?, ?);")) {
 
                 for (RoleAssignment roleAssignment: roleAssignments) {
+                    PurekitProtosV3Storage.RoleAssignment protobuf = pureModelSerializer.serializeRoleAssignment(roleAssignment);
+
                     stmt.setString(1, roleAssignment.getRoleName());
                     stmt.setString(2, roleAssignment.getUserId());
-                    stmt.setBytes(3, roleAssignment.getPublicKeyId());
-                    stmt.setBytes(4, roleAssignment.getEncryptedRsk());
+                    stmt.setBytes(3, protobuf.toByteArray());
                     stmt.addBatch();
                 }
 
@@ -369,14 +412,17 @@ public class MariaDbPureStorage implements PureStorage {
         }
     }
 
-    private static RoleAssignment parseRoleAssignment(ResultSet rs) throws SQLException {
-        return new RoleAssignment(rs.getString(1), rs.getString(2), rs.getBytes(3), rs.getBytes(4));
+    private RoleAssignment parseRoleAssignment(ResultSet rs) throws SQLException, IOException, PureLogicException, VerificationException {
+        PurekitProtosV3Storage.RoleAssignment protobuf =
+                PurekitProtosV3Storage.RoleAssignment.parseFrom(rs.getBinaryStream(1));
+
+        return pureModelSerializer.parseRoleAssignment(protobuf);
     }
 
     @Override
     public Iterable<RoleAssignment> selectRoleAssignments(String userId) throws Exception {
         try (Connection conn = getConnection()) {
-            try (PreparedStatement stmt = conn.prepareStatement("SELECT role_name, user_id, public_key_id, encrypted_rsk " +
+            try (PreparedStatement stmt = conn.prepareStatement("SELECT protobuf " +
                     "FROM virgil_role_assignments " +
                     "WHERE user_id=?;")) {
 
@@ -385,7 +431,13 @@ public class MariaDbPureStorage implements PureStorage {
                 try (ResultSet rs = stmt.executeQuery()) {
                     ArrayList<RoleAssignment> roleAssignments = new ArrayList<>();
                     while (rs.next()) {
-                        roleAssignments.add(parseRoleAssignment(rs));
+                        RoleAssignment roleAssignment = parseRoleAssignment(rs);
+
+                        if (!roleAssignment.getUserId().equals(userId)) {
+                            throw new PureLogicException(PureLogicException.ErrorStatus.ROLE_USER_ID_MISMATCH);
+                        }
+
+                        roleAssignments.add(roleAssignment);
                     }
 
                     return roleAssignments;
@@ -397,7 +449,7 @@ public class MariaDbPureStorage implements PureStorage {
     @Override
     public RoleAssignment selectRoleAssignment(String roleName, String userId) throws Exception {
         try (Connection conn = getConnection()) {
-            try (PreparedStatement stmt = conn.prepareStatement("SELECT role_name, user_id, public_key_id, encrypted_rsk " +
+            try (PreparedStatement stmt = conn.prepareStatement("SELECT protobuf " +
                     "FROM virgil_role_assignments " +
                     "WHERE user_id=? AND role_name=?;")) {
 
@@ -406,7 +458,13 @@ public class MariaDbPureStorage implements PureStorage {
 
                 try (ResultSet rs = stmt.executeQuery()) {
                     if (rs.next()) {
-                        return parseRoleAssignment(rs);
+                        RoleAssignment roleAssignment = parseRoleAssignment(rs);
+
+                        if (!roleAssignment.getUserId().equals(userId) || !roleAssignment.getRoleName().equals(roleName)) {
+                            throw new PureLogicException(PureLogicException.ErrorStatus.ROLE_NAME_USER_ID_MISMATCH);
+                        }
+
+                        return roleAssignment;
                     }
                     else {
                         return null;
@@ -458,14 +516,10 @@ public class MariaDbPureStorage implements PureStorage {
             try (Statement stmt = conn.createStatement()) {
                 stmt.executeUpdate("CREATE TABLE virgil_users (\n" +
                         "    user_id CHAR(36) NOT NULL PRIMARY KEY,\n" +
-                        "    phe_record BINARY(202) NOT NULL,\n" +
                         "    phe_record_version INTEGER NOT NULL,\n" +
                         "    INDEX phe_record_version_index(phe_record_version),\n" +
                         "    UNIQUE INDEX user_id_phe_record_version_index(user_id, phe_record_version),\n" +
-                        "    upk BINARY(44) NOT NULL,\n" +
-                        "    encrypted_usk BINARY(96) NOT NULL,\n" +
-                        "    encrypted_usk_bkp VARBINARY(394) NOT NULL,\n" +
-                        "    encrypted_pwd_hash VARBINARY(410) NOT NULL \n" +
+                        "    protobuf VARBINARY(2048) NOT NULL\n" +
                         ");");
             }
             try (Statement stmt = conn.createStatement()) {
@@ -477,17 +531,15 @@ public class MariaDbPureStorage implements PureStorage {
                         "        ON DELETE CASCADE,\n" +
                         "\tdata_id VARCHAR(128) NOT NULL,\n" +
                         "    UNIQUE INDEX user_id_data_id_index(user_id, data_id),\n" +
-                        "    cpk BINARY(44) NOT NULL,\n" +
-                        "    encrypted_csk_cms VARBINARY(32768) NOT NULL, /* Up to 128 recipients */\n" +
-                        "    encrypted_csk_body VARBINARY(177) NOT NULL\n" +
+                        "    protobuf VARBINARY(32768) NOT NULL /* FIXME Up to 128 recipients */\n" +
                         ");");
             }
             try (Statement stmt = conn.createStatement()) {
                 stmt.executeUpdate("CREATE TABLE virgil_roles (\n" +
                         "\tid INT NOT NULL AUTO_INCREMENT PRIMARY KEY,\n" +
                         "    role_name VARCHAR(64) NOT NULL,\n" +
-                        "    rpk BINARY(44) NOT NULL,\n" +
-                        "    INDEX role_name_index(role_name)\n" +
+                        "    INDEX role_name_index(role_name),\n" +
+                        "    protobuf VARBINARY(196) NOT NULL\n" +
                         ");");
             }
             try (Statement stmt = conn.createStatement()) {
@@ -501,11 +553,10 @@ public class MariaDbPureStorage implements PureStorage {
                         "    FOREIGN KEY (user_id)\n" +
                         "\t\tREFERENCES virgil_users(user_id)\n" +
                         "        ON DELETE CASCADE,\n" +
-                        "    public_key_id BINARY(8) NOT NULL,\n" +
-                        "    encrypted_rsk VARBINARY(394) NOT NULL,\n" +
                         "    INDEX user_id_index(user_id),\n" +
-                        "    UNIQUE INDEX user_id_role_name_index(user_id, role_name)\n" +
-                        ")");
+                        "    UNIQUE INDEX user_id_role_name_index(user_id, role_name),\n" +
+                        "    protobuf VARBINARY(1024) NOT NULL\n" +
+                        ");");
             }
         }
     }

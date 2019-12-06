@@ -31,65 +31,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.purekit.pure.model;
+syntax = "proto3";
 
-/**
- * CellKey class represents encrypted asymmetric key used to encrypt data.
- */
-public class CellKey {
-    private final String userId;
-    private final String dataId;
-    private final byte[] cpk;
-    private final byte[] encryptedCskCms;
-    private final byte[] encryptedCskBody;
+package build;
 
-    /**
-     * Instantiates CellKey.
-     *
-     * @param cpk Cell public key.
-     * @param encryptedCskCms Encrypted cell secret key CMS.
-     * @param encryptedCskBody Encrypted cell secret key body.
-     */
-    public CellKey(String userId, String dataId, byte[] cpk, byte[] encryptedCskCms, byte[] encryptedCskBody) {
-        this.userId = userId;
-        this.dataId = dataId;
-        this.cpk = cpk;
-        this.encryptedCskCms = encryptedCskCms;
-        this.encryptedCskBody = encryptedCskBody;
-    }
+option java_package = "com.virgilsecurity.purekit.protobuf.build";
+option java_outer_classname = "PurekitProtosV3Client";
 
-    public String getUserId() {
-        return userId;
-    }
-
-    public String getDataId() {
-        return dataId;
-    }
-
-    /**
-     * Cell public key.
-     *
-     * @return Cell public key.
-     */
-    public final byte[] getCpk() {
-        return cpk;
-    }
-
-    /**
-     * Encrypted cell secret key CMS.
-     *
-     * @return Encrypted cell secret key CMS.
-     */
-    public final byte[] getEncryptedCskCms() {
-        return encryptedCskCms;
-    }
-
-    /**
-     * Encrypted cell secret key body.
-     *
-     * @return Encrypted cell secret key body.
-     */
-    public final byte[] getEncryptedCskBody() {
-        return encryptedCskBody;
-    }
+message GetUserRecords {
+    repeated string user_ids = 1;
 }

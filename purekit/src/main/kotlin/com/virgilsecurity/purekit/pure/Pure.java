@@ -46,7 +46,6 @@ import java.util.Set;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.virgilsecurity.crypto.foundation.Base64;
-import com.virgilsecurity.crypto.foundation.FoundationException;
 import com.virgilsecurity.crypto.phe.PheCipher;
 import com.virgilsecurity.crypto.phe.PheClient;
 import com.virgilsecurity.crypto.phe.PheClientEnrollAccountResult;
@@ -56,7 +55,6 @@ import com.virgilsecurity.purekit.data.ProtocolHttpException;
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtos;
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Grant;
 import com.virgilsecurity.purekit.pure.exception.PureCryptoException;
-import com.virgilsecurity.purekit.pure.exception.PureException;
 import com.virgilsecurity.purekit.pure.exception.PureLogicException;
 import com.virgilsecurity.purekit.pure.model.*;
 import com.virgilsecurity.purekit.utils.ValidateUtils;
@@ -533,8 +531,8 @@ public class Pure {
      * successfully.
      * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
      * successfully. Represents a regular HTTP exception with code and message.
-     * @throws PureLogicException Please, see {@link PureStorage#selectKey},
-     * {@link PureStorage#selectUsers}, {@link PureStorage#insertKey} methods' PureLogicException doc.
+     * @throws PureLogicException Please, see {@link PureStorage#selectCellKey},
+     * {@link PureStorage#selectUsers}, {@link PureStorage#insertCellKey} methods' PureLogicException doc.
      * @throws CryptoException Please, see {@link VirgilCrypto#generateKeyPair},
      * {@link VirgilCrypto#importPublicKey}, {@link VirgilCrypto#exportPublicKey},
      * {@link VirgilCrypto#exportPrivateKey}, {@link VirgilCrypto#encrypt}
@@ -571,8 +569,8 @@ public class Pure {
      * successfully.
      * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
      * successfully. Represents a regular HTTP exception with code and message.
-     * @throws PureLogicException Please, see {@link PureStorage#selectKey},
-     * {@link PureStorage#selectUsers}, {@link PureStorage#insertKey} methods' PureLogicException doc.
+     * @throws PureLogicException Please, see {@link PureStorage#selectCellKey},
+     * {@link PureStorage#selectUsers}, {@link PureStorage#insertCellKey} methods' PureLogicException doc.
      * @throws CryptoException Please, see {@link VirgilCrypto#generateKeyPair},
      * {@link VirgilCrypto#importPublicKey}, {@link VirgilCrypto#exportPublicKey},
      * {@link VirgilCrypto#exportPrivateKey}, {@link VirgilCrypto#encrypt},
@@ -600,7 +598,7 @@ public class Pure {
         VirgilPublicKey cpk;
 
         // Key already exists
-        CellKey cellKey1 = storage.selectKey(userId, dataId);
+        CellKey cellKey1 = storage.selectCellKey(userId, dataId);
 
         if (cellKey1 == null) {
             // Try to generate and save new key
@@ -641,11 +639,9 @@ public class Pure {
 
                 PureCryptoData encryptedCskData = pureCrypto.encrypt(cskData, oskp.getPrivateKey(), recipientList);
 
-                storage.insertKey(userId,
-                                  dataId,
-                                  new CellKey(cpkData,
-                                              encryptedCskData.getCms(),
-                                              encryptedCskData.getBody()));
+                CellKey cellKey = new CellKey(userId, dataId, cpkData, encryptedCskData.getCms(), encryptedCskData.getBody());
+
+                storage.insertCellKey(cellKey);
                 cpk = ckp.getPublicKey();
             } catch (PureLogicException exception) {
                 if (exception.getErrorStatus()
@@ -654,7 +650,7 @@ public class Pure {
                     throw exception;
                 }
 
-                CellKey cellKey2 = storage.selectKey(userId, dataId);
+                CellKey cellKey2 = storage.selectCellKey(userId, dataId);
 
                 cpk = crypto.importPublicKey(cellKey2.getCpk());
             }
@@ -682,7 +678,7 @@ public class Pure {
      * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
      * successfully. Represents a regular HTTP exception with code and message.
      * @throws PureLogicException If cell key has not been found in a storage, or please see
-     * {@link PureStorage#selectKey(String, String)} method's PureLogicException doc.
+     * {@link PureStorage#selectCellKey(String, String)} method's PureLogicException doc.
      * @throws CryptoException Please, see {@link VirgilCrypto#importPrivateKey},
      * {@link VirgilCrypto#decrypt}, {@link VirgilCrypto#verifySignature} methods'
      * CryptoException doc.
@@ -703,7 +699,7 @@ public class Pure {
             userId = grant.getUserId();
         }
 
-        CellKey cellKey = storage.selectKey(userId, dataId);
+        CellKey cellKey = storage.selectCellKey(userId, dataId);
 
         if (cellKey == null) {
             throw new PureLogicException(PureLogicException.ErrorStatus.CELL_KEY_NOT_FOUND_IN_STORAGE);
@@ -767,7 +763,7 @@ public class Pure {
      * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
      * successfully. Represents a regular HTTP exception with code and message.
      * @throws PureLogicException If cell key has not been found in a storage, or please see
-     * {@link PureStorage#selectKey(String, String)} method's PureLogicException doc.
+     * {@link PureStorage#selectCellKey(String, String)} method's PureLogicException doc.
      * @throws CryptoException Please, see {@link VirgilCrypto#importPrivateKey},
      * {@link VirgilCrypto#decrypt}, {@link VirgilCrypto#verifySignature} methods'
      * CryptoException doc.
@@ -787,7 +783,7 @@ public class Pure {
         ValidateUtils.checkNullOrEmpty(dataId, "dataId");
         ValidateUtils.checkNullOrEmpty(ownerUserId, "ownerUserId");
 
-        CellKey cellKey = storage.selectKey(ownerUserId, dataId);
+        CellKey cellKey = storage.selectCellKey(ownerUserId, dataId);
 
         if (cellKey == null) {
             throw new PureLogicException(PureLogicException.ErrorStatus.CELL_KEY_NOT_FOUND_IN_STORAGE);
@@ -815,8 +811,8 @@ public class Pure {
      * successfully.
      * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
      * successfully. Represents a regular HTTP exception with code and message.
-     * @throws PureLogicException Please, see {@link PureStorage#selectKey},
-     * {@link PureStorage#updateKey}, {@link PureStorage#selectUsers} methods' PureLogicException doc.
+     * @throws PureLogicException Please, see {@link PureStorage#selectCellKey},
+     * {@link PureStorage#updateCellKey}, {@link PureStorage#selectUsers} methods' PureLogicException doc.
      * @throws CryptoException Please, see {@link VirgilCrypto#importPublicKey},
      * {@link VirgilCrypto#verifySignature} methods' CryptoException doc.
      * @throws InvalidProtocolBufferException If a CellKey received from a server cannot be parsed
@@ -845,8 +841,8 @@ public class Pure {
      * successfully.
      * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
      * successfully. Represents a regular HTTP exception with code and message.
-     * @throws PureLogicException Please, see {@link PureStorage#selectKey},
-     * {@link PureStorage#updateKey}, {@link PureStorage#selectUsers} methods' PureLogicException doc.
+     * @throws PureLogicException Please, see {@link PureStorage#selectCellKey},
+     * {@link PureStorage#updateCellKey}, {@link PureStorage#selectUsers} methods' PureLogicException doc.
      * @throws CryptoException Please, see {@link VirgilCrypto#importPublicKey},
      * {@link VirgilCrypto#verifySignature}, {@link VirgilCrypto#generateSignature} methods'
      * CryptoException doc.
@@ -867,17 +863,17 @@ public class Pure {
         ValidateUtils.checkNullOrEmpty(dataId, "dataId");
 
         ArrayList<VirgilPublicKey> keys = keysWithOthers(publicKeys, otherUserIds);
-        CellKey cellKey = storage.selectKey(grant.getUserId(), dataId);
+        CellKey cellKey = storage.selectCellKey(grant.getUserId(), dataId);
 
         byte[] encryptedCskCms = pureCrypto.addRecipients(cellKey.getEncryptedCskCms(),
                                                           grant.getUkp().getPrivateKey(),
                                                           keys);
 
-        CellKey cellKeyNew = new CellKey(cellKey.getCpk(),
-                                         encryptedCskCms,
+        CellKey cellKeyNew = new CellKey(cellKey.getUserId(), cellKey.getDataId(),
+                                         cellKey.getCpk(), encryptedCskCms,
                                          cellKey.getEncryptedCskBody());
 
-        storage.updateKey(grant.getUserId(), dataId, cellKeyNew);
+        storage.updateCellKey(cellKeyNew);
     }
 
     /**
@@ -894,8 +890,8 @@ public class Pure {
      * successfully.
      * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
      * successfully. Represents a regular HTTP exception with code and message.
-     * @throws PureLogicException Please, see {@link PureStorage#selectKey},
-     * {@link PureStorage#updateKey}, {@link PureStorage#selectUsers} methods' PureLogicException doc.
+     * @throws PureLogicException Please, see {@link PureStorage#selectCellKey},
+     * {@link PureStorage#updateCellKey}, {@link PureStorage#selectUsers} methods' PureLogicException doc.
      * @throws CryptoException Please, see {@link VirgilCrypto#importPublicKey},
      * {@link VirgilCrypto#verifySignature} methods' CryptoException doc.
      * @throws InvalidProtocolBufferException If a CellKey received from a server cannot be parsed
@@ -924,8 +920,8 @@ public class Pure {
      * successfully.
      * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
      * successfully. Represents a regular HTTP exception with code and message.
-     * @throws PureLogicException Please, see {@link PureStorage#selectKey},
-     * {@link PureStorage#updateKey}, {@link PureStorage#selectUsers} methods' PureLogicException doc.
+     * @throws PureLogicException Please, see {@link PureStorage#selectCellKey},
+     * {@link PureStorage#updateCellKey}, {@link PureStorage#selectUsers} methods' PureLogicException doc.
      * @throws CryptoException Please, see {@link VirgilCrypto#importPublicKey},
      * {@link VirgilCrypto#verifySignature}, {@link VirgilCrypto#generateSignature} methods'
      * CryptoException doc.
@@ -947,15 +943,15 @@ public class Pure {
 
         ArrayList<VirgilPublicKey> keys = keysWithOthers(publicKeys, otherUserIds);
 
-        CellKey cellKey = storage.selectKey(ownerUserId, dataId);
+        CellKey cellKey = storage.selectCellKey(ownerUserId, dataId);
 
         byte[] encryptedCskCms = pureCrypto.deleteRecipients(cellKey.getEncryptedCskCms(), keys);
 
-        CellKey cellKeyNew = new CellKey(cellKey.getCpk(),
-                                         encryptedCskCms,
+        CellKey cellKeyNew = new CellKey(cellKey.getUserId(), cellKey.getDataId(),
+                                         cellKey.getCpk(), encryptedCskCms,
                                          cellKey.getEncryptedCskBody());
 
-        storage.updateKey(ownerUserId, dataId, cellKeyNew);
+        storage.updateCellKey(cellKeyNew);
     }
 
     /**
@@ -971,7 +967,7 @@ public class Pure {
      */
     public void deleteKey(String userId, String dataId) throws Exception {
 
-        storage.deleteKey(userId, dataId);
+        storage.deleteCellKey(userId, dataId);
     }
 
     public void createRole(String roleName, Set<String> userIds) throws Exception {
@@ -1024,6 +1020,7 @@ public class Pure {
                     .newBuilder()
                     .setVersion(this.currentVersion)
                     .build();
+
             PurekitProtos.EnrollmentResponse response = httpPheClient.enrollAccount(request);
 
             byte[] passwordHash = crypto.computeHash(password.getBytes(), HashAlgorithm.SHA512);
