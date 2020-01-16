@@ -89,6 +89,10 @@ message Role {
     bytes signature = 3;
 }
 
+message Roles {
+    repeated Role roles = 1;
+}
+
 message RoleAssignmentSigned {
     uint32 version = 1;
     string role_name = 2;
@@ -101,4 +105,8 @@ message RoleAssignment {
     uint32 version = 1;
     bytes role_assignment_signed = 2;
     bytes signature = 3;
+}
+
+message RoleAssignments {
+    repeated RoleAssignment role_assignments = 1;
 }

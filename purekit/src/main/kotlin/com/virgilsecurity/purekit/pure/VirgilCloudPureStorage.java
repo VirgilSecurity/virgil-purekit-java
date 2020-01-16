@@ -33,16 +33,14 @@
 
 package com.virgilsecurity.purekit.pure;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.virgilsecurity.purekit.data.ProtocolException;
 import com.virgilsecurity.purekit.data.ProtocolHttpException;
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtos;
+import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client;
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Crypto;
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage;
 import com.virgilsecurity.purekit.pure.exception.PureLogicException;
@@ -199,6 +197,10 @@ public class VirgilCloudPureStorage implements PureStorage {
     public Iterable<UserRecord> selectUsers(Set<String> userIds)
         throws PureLogicException, ProtocolException, ProtocolHttpException,
         InvalidProtocolBufferException, VerificationException {
+
+        if (userIds.isEmpty()) {
+            return Collections.emptyList();
+        }
 
         HashSet<String> idsSet = new HashSet<>(userIds);
 
@@ -377,27 +379,88 @@ public class VirgilCloudPureStorage implements PureStorage {
 
     @Override
     public void insertRole(Role role) throws Exception {
-        throw new UnsupportedOperationException();
+        PurekitProtosV3Storage.Role protobufRecord = pureModelSerializer.serializeRole(role);
+
+        client.insertRole(protobufRecord);
     }
 
     @Override
     public Iterable<Role> selectRoles(Set<String> roleNames) throws Exception {
-        return new ArrayList<>();
+        if (roleNames.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        HashSet<String> namesSet = new HashSet<>(roleNames);
+
+        PurekitProtosV3Storage.Roles protoRecords = client.getRoles(roleNames);
+
+        if (protoRecords.getRolesCount() != roleNames.size()) {
+            throw new PureLogicException(PureLogicException.ErrorStatus.DUPLICATE_ROLE_NAME);
+        }
+
+        ArrayList<Role> roles = new ArrayList<>(protoRecords.getRolesCount());
+
+        for (PurekitProtosV3Storage.Role protobufRecord : protoRecords.getRolesList()) {
+            Role role = pureModelSerializer.parseRole(protobufRecord);
+
+            if (!namesSet.contains(role.getRoleName())) {
+                throw new PureLogicException(PureLogicException.ErrorStatus.ROLE_NAME_MISMATCH);
+            }
+
+            namesSet.remove(role.getRoleName());
+
+            roles.add(role);
+        }
+
+        return roles;
     }
 
     @Override
-    public void insertRoleAssignments(Collection<RoleAssignment> roleAssignment) throws Exception {
-        throw new UnsupportedOperationException();
+    public void insertRoleAssignments(Collection<RoleAssignment> roleAssignments) throws Exception {
+        PurekitProtosV3Storage.RoleAssignments.Builder protobufBuilder = PurekitProtosV3Storage.RoleAssignments.newBuilder();
+
+        for (RoleAssignment roleAssignment: roleAssignments) {
+            protobufBuilder.addRoleAssignments(pureModelSerializer.serializeRoleAssignment(roleAssignment));
+        }
+
+        PurekitProtosV3Storage.RoleAssignments protobufRecord = protobufBuilder.build();
+
+        client.insertRoleAssignments(protobufRecord);
     }
 
     @Override
     public Iterable<RoleAssignment> selectRoleAssignments(String userId) throws Exception {
-        return new ArrayList<>();
+        PurekitProtosV3Client.GetRoleAssignments request = PurekitProtosV3Client.GetRoleAssignments.newBuilder()
+                .setUserId(userId)
+                .build();
+
+        PurekitProtosV3Storage.RoleAssignments protoRecords = client.getRoleAssignments(request);
+
+        ArrayList<RoleAssignment> roleAssignments = new ArrayList<>(protoRecords.getRoleAssignmentsCount());
+
+        for (PurekitProtosV3Storage.RoleAssignment protobufRecord : protoRecords.getRoleAssignmentsList()) {
+            RoleAssignment roleAssignment = pureModelSerializer.parseRoleAssignment(protobufRecord);
+
+            if (roleAssignment.getUserId().equals(userId)) {
+                throw new PureLogicException(PureLogicException.ErrorStatus.USER_ID_MISMATCH);
+            }
+
+            roleAssignments.add(roleAssignment);
+        }
+
+        return roleAssignments;
     }
 
     @Override
     public RoleAssignment selectRoleAssignment(String roleName, String userId) throws Exception {
-        return null;
+        PurekitProtosV3Client.GetRoleAssignment request = PurekitProtosV3Client.GetRoleAssignment.newBuilder()
+                .setUserId(userId)
+                .setRoleName(roleName)
+                .build();
+
+        PurekitProtosV3Storage.RoleAssignment protobufRecord = client.getRoleAssignment(request);
+
+        return pureModelSerializer.parseRoleAssignment(protobufRecord);
     }
 
     @Override
@@ -406,7 +469,13 @@ public class VirgilCloudPureStorage implements PureStorage {
             return;
         }
 
-        throw new UnsupportedOperationException();
+        PurekitProtosV3Client.DeleteRoleAssignments request = PurekitProtosV3Client.DeleteRoleAssignments
+                .newBuilder()
+                .addAllUserIds(userIds)
+                .setRoleName(roleName).
+                build();
+
+        client.deleteRoleAssignments(request);
     }
 
     private void sendUser(UserRecord userRecord, boolean isInsert)

@@ -5480,6 +5480,794 @@ public final class PurekitProtosV3Storage {
 
   }
 
+  public interface RolesOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:build.Roles)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>repeated .build.Role roles = 1;</code>
+     */
+    java.util.List<com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Role> 
+        getRolesList();
+    /**
+     * <code>repeated .build.Role roles = 1;</code>
+     */
+    com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Role getRoles(int index);
+    /**
+     * <code>repeated .build.Role roles = 1;</code>
+     */
+    int getRolesCount();
+    /**
+     * <code>repeated .build.Role roles = 1;</code>
+     */
+    java.util.List<? extends com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleOrBuilder> 
+        getRolesOrBuilderList();
+    /**
+     * <code>repeated .build.Role roles = 1;</code>
+     */
+    com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleOrBuilder getRolesOrBuilder(
+        int index);
+  }
+  /**
+   * Protobuf type {@code build.Roles}
+   */
+  public  static final class Roles extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:build.Roles)
+      RolesOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use Roles.newBuilder() to construct.
+    private Roles(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private Roles() {
+      roles_ = java.util.Collections.emptyList();
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new Roles();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private Roles(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 10: {
+              if (!((mutable_bitField0_ & 0x00000001) != 0)) {
+                roles_ = new java.util.ArrayList<com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Role>();
+                mutable_bitField0_ |= 0x00000001;
+              }
+              roles_.add(
+                  input.readMessage(com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Role.parser(), extensionRegistry));
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000001) != 0)) {
+          roles_ = java.util.Collections.unmodifiableList(roles_);
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.internal_static_build_Roles_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.internal_static_build_Roles_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Roles.class, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Roles.Builder.class);
+    }
+
+    public static final int ROLES_FIELD_NUMBER = 1;
+    private java.util.List<com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Role> roles_;
+    /**
+     * <code>repeated .build.Role roles = 1;</code>
+     */
+    public java.util.List<com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Role> getRolesList() {
+      return roles_;
+    }
+    /**
+     * <code>repeated .build.Role roles = 1;</code>
+     */
+    public java.util.List<? extends com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleOrBuilder> 
+        getRolesOrBuilderList() {
+      return roles_;
+    }
+    /**
+     * <code>repeated .build.Role roles = 1;</code>
+     */
+    public int getRolesCount() {
+      return roles_.size();
+    }
+    /**
+     * <code>repeated .build.Role roles = 1;</code>
+     */
+    public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Role getRoles(int index) {
+      return roles_.get(index);
+    }
+    /**
+     * <code>repeated .build.Role roles = 1;</code>
+     */
+    public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleOrBuilder getRolesOrBuilder(
+        int index) {
+      return roles_.get(index);
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      for (int i = 0; i < roles_.size(); i++) {
+        output.writeMessage(1, roles_.get(i));
+      }
+      unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      for (int i = 0; i < roles_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(1, roles_.get(i));
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Roles)) {
+        return super.equals(obj);
+      }
+      com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Roles other = (com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Roles) obj;
+
+      if (!getRolesList()
+          .equals(other.getRolesList())) return false;
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      if (getRolesCount() > 0) {
+        hash = (37 * hash) + ROLES_FIELD_NUMBER;
+        hash = (53 * hash) + getRolesList().hashCode();
+      }
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Roles parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Roles parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Roles parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Roles parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Roles parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Roles parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Roles parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Roles parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Roles parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Roles parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Roles parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Roles parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Roles prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code build.Roles}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:build.Roles)
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RolesOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.internal_static_build_Roles_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.internal_static_build_Roles_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Roles.class, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Roles.Builder.class);
+      }
+
+      // Construct using com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Roles.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+          getRolesFieldBuilder();
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        if (rolesBuilder_ == null) {
+          roles_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+        } else {
+          rolesBuilder_.clear();
+        }
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.internal_static_build_Roles_descriptor;
+      }
+
+      @java.lang.Override
+      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Roles getDefaultInstanceForType() {
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Roles.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Roles build() {
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Roles result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Roles buildPartial() {
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Roles result = new com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Roles(this);
+        int from_bitField0_ = bitField0_;
+        if (rolesBuilder_ == null) {
+          if (((bitField0_ & 0x00000001) != 0)) {
+            roles_ = java.util.Collections.unmodifiableList(roles_);
+            bitField0_ = (bitField0_ & ~0x00000001);
+          }
+          result.roles_ = roles_;
+        } else {
+          result.roles_ = rolesBuilder_.build();
+        }
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Roles) {
+          return mergeFrom((com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Roles)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Roles other) {
+        if (other == com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Roles.getDefaultInstance()) return this;
+        if (rolesBuilder_ == null) {
+          if (!other.roles_.isEmpty()) {
+            if (roles_.isEmpty()) {
+              roles_ = other.roles_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+            } else {
+              ensureRolesIsMutable();
+              roles_.addAll(other.roles_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.roles_.isEmpty()) {
+            if (rolesBuilder_.isEmpty()) {
+              rolesBuilder_.dispose();
+              rolesBuilder_ = null;
+              roles_ = other.roles_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+              rolesBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getRolesFieldBuilder() : null;
+            } else {
+              rolesBuilder_.addAllMessages(other.roles_);
+            }
+          }
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Roles parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Roles) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private java.util.List<com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Role> roles_ =
+        java.util.Collections.emptyList();
+      private void ensureRolesIsMutable() {
+        if (!((bitField0_ & 0x00000001) != 0)) {
+          roles_ = new java.util.ArrayList<com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Role>(roles_);
+          bitField0_ |= 0x00000001;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Role, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Role.Builder, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleOrBuilder> rolesBuilder_;
+
+      /**
+       * <code>repeated .build.Role roles = 1;</code>
+       */
+      public java.util.List<com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Role> getRolesList() {
+        if (rolesBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(roles_);
+        } else {
+          return rolesBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .build.Role roles = 1;</code>
+       */
+      public int getRolesCount() {
+        if (rolesBuilder_ == null) {
+          return roles_.size();
+        } else {
+          return rolesBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .build.Role roles = 1;</code>
+       */
+      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Role getRoles(int index) {
+        if (rolesBuilder_ == null) {
+          return roles_.get(index);
+        } else {
+          return rolesBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .build.Role roles = 1;</code>
+       */
+      public Builder setRoles(
+          int index, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Role value) {
+        if (rolesBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureRolesIsMutable();
+          roles_.set(index, value);
+          onChanged();
+        } else {
+          rolesBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .build.Role roles = 1;</code>
+       */
+      public Builder setRoles(
+          int index, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Role.Builder builderForValue) {
+        if (rolesBuilder_ == null) {
+          ensureRolesIsMutable();
+          roles_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          rolesBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .build.Role roles = 1;</code>
+       */
+      public Builder addRoles(com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Role value) {
+        if (rolesBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureRolesIsMutable();
+          roles_.add(value);
+          onChanged();
+        } else {
+          rolesBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .build.Role roles = 1;</code>
+       */
+      public Builder addRoles(
+          int index, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Role value) {
+        if (rolesBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureRolesIsMutable();
+          roles_.add(index, value);
+          onChanged();
+        } else {
+          rolesBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .build.Role roles = 1;</code>
+       */
+      public Builder addRoles(
+          com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Role.Builder builderForValue) {
+        if (rolesBuilder_ == null) {
+          ensureRolesIsMutable();
+          roles_.add(builderForValue.build());
+          onChanged();
+        } else {
+          rolesBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .build.Role roles = 1;</code>
+       */
+      public Builder addRoles(
+          int index, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Role.Builder builderForValue) {
+        if (rolesBuilder_ == null) {
+          ensureRolesIsMutable();
+          roles_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          rolesBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .build.Role roles = 1;</code>
+       */
+      public Builder addAllRoles(
+          java.lang.Iterable<? extends com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Role> values) {
+        if (rolesBuilder_ == null) {
+          ensureRolesIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, roles_);
+          onChanged();
+        } else {
+          rolesBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .build.Role roles = 1;</code>
+       */
+      public Builder clearRoles() {
+        if (rolesBuilder_ == null) {
+          roles_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+          onChanged();
+        } else {
+          rolesBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .build.Role roles = 1;</code>
+       */
+      public Builder removeRoles(int index) {
+        if (rolesBuilder_ == null) {
+          ensureRolesIsMutable();
+          roles_.remove(index);
+          onChanged();
+        } else {
+          rolesBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .build.Role roles = 1;</code>
+       */
+      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Role.Builder getRolesBuilder(
+          int index) {
+        return getRolesFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .build.Role roles = 1;</code>
+       */
+      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleOrBuilder getRolesOrBuilder(
+          int index) {
+        if (rolesBuilder_ == null) {
+          return roles_.get(index);  } else {
+          return rolesBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .build.Role roles = 1;</code>
+       */
+      public java.util.List<? extends com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleOrBuilder> 
+           getRolesOrBuilderList() {
+        if (rolesBuilder_ != null) {
+          return rolesBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(roles_);
+        }
+      }
+      /**
+       * <code>repeated .build.Role roles = 1;</code>
+       */
+      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Role.Builder addRolesBuilder() {
+        return getRolesFieldBuilder().addBuilder(
+            com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Role.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .build.Role roles = 1;</code>
+       */
+      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Role.Builder addRolesBuilder(
+          int index) {
+        return getRolesFieldBuilder().addBuilder(
+            index, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Role.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .build.Role roles = 1;</code>
+       */
+      public java.util.List<com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Role.Builder> 
+           getRolesBuilderList() {
+        return getRolesFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Role, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Role.Builder, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleOrBuilder> 
+          getRolesFieldBuilder() {
+        if (rolesBuilder_ == null) {
+          rolesBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Role, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Role.Builder, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleOrBuilder>(
+                  roles_,
+                  ((bitField0_ & 0x00000001) != 0),
+                  getParentForChildren(),
+                  isClean());
+          roles_ = null;
+        }
+        return rolesBuilder_;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:build.Roles)
+    }
+
+    // @@protoc_insertion_point(class_scope:build.Roles)
+    private static final com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Roles DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Roles();
+    }
+
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Roles getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<Roles>
+        PARSER = new com.google.protobuf.AbstractParser<Roles>() {
+      @java.lang.Override
+      public Roles parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new Roles(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<Roles> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<Roles> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Roles getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
   public interface RoleAssignmentSignedOrBuilder extends
       // @@protoc_insertion_point(interface_extends:build.RoleAssignmentSigned)
       com.google.protobuf.MessageOrBuilder {
@@ -6978,6 +7766,794 @@ public final class PurekitProtosV3Storage {
 
   }
 
+  public interface RoleAssignmentsOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:build.RoleAssignments)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>repeated .build.RoleAssignment role_assignments = 1;</code>
+     */
+    java.util.List<com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignment> 
+        getRoleAssignmentsList();
+    /**
+     * <code>repeated .build.RoleAssignment role_assignments = 1;</code>
+     */
+    com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignment getRoleAssignments(int index);
+    /**
+     * <code>repeated .build.RoleAssignment role_assignments = 1;</code>
+     */
+    int getRoleAssignmentsCount();
+    /**
+     * <code>repeated .build.RoleAssignment role_assignments = 1;</code>
+     */
+    java.util.List<? extends com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignmentOrBuilder> 
+        getRoleAssignmentsOrBuilderList();
+    /**
+     * <code>repeated .build.RoleAssignment role_assignments = 1;</code>
+     */
+    com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignmentOrBuilder getRoleAssignmentsOrBuilder(
+        int index);
+  }
+  /**
+   * Protobuf type {@code build.RoleAssignments}
+   */
+  public  static final class RoleAssignments extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:build.RoleAssignments)
+      RoleAssignmentsOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use RoleAssignments.newBuilder() to construct.
+    private RoleAssignments(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private RoleAssignments() {
+      roleAssignments_ = java.util.Collections.emptyList();
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new RoleAssignments();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private RoleAssignments(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 10: {
+              if (!((mutable_bitField0_ & 0x00000001) != 0)) {
+                roleAssignments_ = new java.util.ArrayList<com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignment>();
+                mutable_bitField0_ |= 0x00000001;
+              }
+              roleAssignments_.add(
+                  input.readMessage(com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignment.parser(), extensionRegistry));
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000001) != 0)) {
+          roleAssignments_ = java.util.Collections.unmodifiableList(roleAssignments_);
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.internal_static_build_RoleAssignments_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.internal_static_build_RoleAssignments_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignments.class, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignments.Builder.class);
+    }
+
+    public static final int ROLE_ASSIGNMENTS_FIELD_NUMBER = 1;
+    private java.util.List<com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignment> roleAssignments_;
+    /**
+     * <code>repeated .build.RoleAssignment role_assignments = 1;</code>
+     */
+    public java.util.List<com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignment> getRoleAssignmentsList() {
+      return roleAssignments_;
+    }
+    /**
+     * <code>repeated .build.RoleAssignment role_assignments = 1;</code>
+     */
+    public java.util.List<? extends com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignmentOrBuilder> 
+        getRoleAssignmentsOrBuilderList() {
+      return roleAssignments_;
+    }
+    /**
+     * <code>repeated .build.RoleAssignment role_assignments = 1;</code>
+     */
+    public int getRoleAssignmentsCount() {
+      return roleAssignments_.size();
+    }
+    /**
+     * <code>repeated .build.RoleAssignment role_assignments = 1;</code>
+     */
+    public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignment getRoleAssignments(int index) {
+      return roleAssignments_.get(index);
+    }
+    /**
+     * <code>repeated .build.RoleAssignment role_assignments = 1;</code>
+     */
+    public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignmentOrBuilder getRoleAssignmentsOrBuilder(
+        int index) {
+      return roleAssignments_.get(index);
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      for (int i = 0; i < roleAssignments_.size(); i++) {
+        output.writeMessage(1, roleAssignments_.get(i));
+      }
+      unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      for (int i = 0; i < roleAssignments_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(1, roleAssignments_.get(i));
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignments)) {
+        return super.equals(obj);
+      }
+      com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignments other = (com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignments) obj;
+
+      if (!getRoleAssignmentsList()
+          .equals(other.getRoleAssignmentsList())) return false;
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      if (getRoleAssignmentsCount() > 0) {
+        hash = (37 * hash) + ROLE_ASSIGNMENTS_FIELD_NUMBER;
+        hash = (53 * hash) + getRoleAssignmentsList().hashCode();
+      }
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignments parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignments parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignments parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignments parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignments parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignments parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignments parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignments parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignments parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignments parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignments parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignments parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignments prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code build.RoleAssignments}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:build.RoleAssignments)
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignmentsOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.internal_static_build_RoleAssignments_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.internal_static_build_RoleAssignments_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignments.class, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignments.Builder.class);
+      }
+
+      // Construct using com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignments.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+          getRoleAssignmentsFieldBuilder();
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        if (roleAssignmentsBuilder_ == null) {
+          roleAssignments_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+        } else {
+          roleAssignmentsBuilder_.clear();
+        }
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.internal_static_build_RoleAssignments_descriptor;
+      }
+
+      @java.lang.Override
+      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignments getDefaultInstanceForType() {
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignments.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignments build() {
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignments result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignments buildPartial() {
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignments result = new com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignments(this);
+        int from_bitField0_ = bitField0_;
+        if (roleAssignmentsBuilder_ == null) {
+          if (((bitField0_ & 0x00000001) != 0)) {
+            roleAssignments_ = java.util.Collections.unmodifiableList(roleAssignments_);
+            bitField0_ = (bitField0_ & ~0x00000001);
+          }
+          result.roleAssignments_ = roleAssignments_;
+        } else {
+          result.roleAssignments_ = roleAssignmentsBuilder_.build();
+        }
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignments) {
+          return mergeFrom((com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignments)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignments other) {
+        if (other == com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignments.getDefaultInstance()) return this;
+        if (roleAssignmentsBuilder_ == null) {
+          if (!other.roleAssignments_.isEmpty()) {
+            if (roleAssignments_.isEmpty()) {
+              roleAssignments_ = other.roleAssignments_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+            } else {
+              ensureRoleAssignmentsIsMutable();
+              roleAssignments_.addAll(other.roleAssignments_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.roleAssignments_.isEmpty()) {
+            if (roleAssignmentsBuilder_.isEmpty()) {
+              roleAssignmentsBuilder_.dispose();
+              roleAssignmentsBuilder_ = null;
+              roleAssignments_ = other.roleAssignments_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+              roleAssignmentsBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getRoleAssignmentsFieldBuilder() : null;
+            } else {
+              roleAssignmentsBuilder_.addAllMessages(other.roleAssignments_);
+            }
+          }
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignments parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignments) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private java.util.List<com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignment> roleAssignments_ =
+        java.util.Collections.emptyList();
+      private void ensureRoleAssignmentsIsMutable() {
+        if (!((bitField0_ & 0x00000001) != 0)) {
+          roleAssignments_ = new java.util.ArrayList<com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignment>(roleAssignments_);
+          bitField0_ |= 0x00000001;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignment, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignment.Builder, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignmentOrBuilder> roleAssignmentsBuilder_;
+
+      /**
+       * <code>repeated .build.RoleAssignment role_assignments = 1;</code>
+       */
+      public java.util.List<com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignment> getRoleAssignmentsList() {
+        if (roleAssignmentsBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(roleAssignments_);
+        } else {
+          return roleAssignmentsBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .build.RoleAssignment role_assignments = 1;</code>
+       */
+      public int getRoleAssignmentsCount() {
+        if (roleAssignmentsBuilder_ == null) {
+          return roleAssignments_.size();
+        } else {
+          return roleAssignmentsBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .build.RoleAssignment role_assignments = 1;</code>
+       */
+      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignment getRoleAssignments(int index) {
+        if (roleAssignmentsBuilder_ == null) {
+          return roleAssignments_.get(index);
+        } else {
+          return roleAssignmentsBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .build.RoleAssignment role_assignments = 1;</code>
+       */
+      public Builder setRoleAssignments(
+          int index, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignment value) {
+        if (roleAssignmentsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureRoleAssignmentsIsMutable();
+          roleAssignments_.set(index, value);
+          onChanged();
+        } else {
+          roleAssignmentsBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .build.RoleAssignment role_assignments = 1;</code>
+       */
+      public Builder setRoleAssignments(
+          int index, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignment.Builder builderForValue) {
+        if (roleAssignmentsBuilder_ == null) {
+          ensureRoleAssignmentsIsMutable();
+          roleAssignments_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          roleAssignmentsBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .build.RoleAssignment role_assignments = 1;</code>
+       */
+      public Builder addRoleAssignments(com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignment value) {
+        if (roleAssignmentsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureRoleAssignmentsIsMutable();
+          roleAssignments_.add(value);
+          onChanged();
+        } else {
+          roleAssignmentsBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .build.RoleAssignment role_assignments = 1;</code>
+       */
+      public Builder addRoleAssignments(
+          int index, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignment value) {
+        if (roleAssignmentsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureRoleAssignmentsIsMutable();
+          roleAssignments_.add(index, value);
+          onChanged();
+        } else {
+          roleAssignmentsBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .build.RoleAssignment role_assignments = 1;</code>
+       */
+      public Builder addRoleAssignments(
+          com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignment.Builder builderForValue) {
+        if (roleAssignmentsBuilder_ == null) {
+          ensureRoleAssignmentsIsMutable();
+          roleAssignments_.add(builderForValue.build());
+          onChanged();
+        } else {
+          roleAssignmentsBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .build.RoleAssignment role_assignments = 1;</code>
+       */
+      public Builder addRoleAssignments(
+          int index, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignment.Builder builderForValue) {
+        if (roleAssignmentsBuilder_ == null) {
+          ensureRoleAssignmentsIsMutable();
+          roleAssignments_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          roleAssignmentsBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .build.RoleAssignment role_assignments = 1;</code>
+       */
+      public Builder addAllRoleAssignments(
+          java.lang.Iterable<? extends com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignment> values) {
+        if (roleAssignmentsBuilder_ == null) {
+          ensureRoleAssignmentsIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, roleAssignments_);
+          onChanged();
+        } else {
+          roleAssignmentsBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .build.RoleAssignment role_assignments = 1;</code>
+       */
+      public Builder clearRoleAssignments() {
+        if (roleAssignmentsBuilder_ == null) {
+          roleAssignments_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+          onChanged();
+        } else {
+          roleAssignmentsBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .build.RoleAssignment role_assignments = 1;</code>
+       */
+      public Builder removeRoleAssignments(int index) {
+        if (roleAssignmentsBuilder_ == null) {
+          ensureRoleAssignmentsIsMutable();
+          roleAssignments_.remove(index);
+          onChanged();
+        } else {
+          roleAssignmentsBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .build.RoleAssignment role_assignments = 1;</code>
+       */
+      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignment.Builder getRoleAssignmentsBuilder(
+          int index) {
+        return getRoleAssignmentsFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .build.RoleAssignment role_assignments = 1;</code>
+       */
+      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignmentOrBuilder getRoleAssignmentsOrBuilder(
+          int index) {
+        if (roleAssignmentsBuilder_ == null) {
+          return roleAssignments_.get(index);  } else {
+          return roleAssignmentsBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .build.RoleAssignment role_assignments = 1;</code>
+       */
+      public java.util.List<? extends com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignmentOrBuilder> 
+           getRoleAssignmentsOrBuilderList() {
+        if (roleAssignmentsBuilder_ != null) {
+          return roleAssignmentsBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(roleAssignments_);
+        }
+      }
+      /**
+       * <code>repeated .build.RoleAssignment role_assignments = 1;</code>
+       */
+      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignment.Builder addRoleAssignmentsBuilder() {
+        return getRoleAssignmentsFieldBuilder().addBuilder(
+            com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignment.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .build.RoleAssignment role_assignments = 1;</code>
+       */
+      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignment.Builder addRoleAssignmentsBuilder(
+          int index) {
+        return getRoleAssignmentsFieldBuilder().addBuilder(
+            index, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignment.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .build.RoleAssignment role_assignments = 1;</code>
+       */
+      public java.util.List<com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignment.Builder> 
+           getRoleAssignmentsBuilderList() {
+        return getRoleAssignmentsFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignment, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignment.Builder, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignmentOrBuilder> 
+          getRoleAssignmentsFieldBuilder() {
+        if (roleAssignmentsBuilder_ == null) {
+          roleAssignmentsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignment, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignment.Builder, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignmentOrBuilder>(
+                  roleAssignments_,
+                  ((bitField0_ & 0x00000001) != 0),
+                  getParentForChildren(),
+                  isClean());
+          roleAssignments_ = null;
+        }
+        return roleAssignmentsBuilder_;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:build.RoleAssignments)
+    }
+
+    // @@protoc_insertion_point(class_scope:build.RoleAssignments)
+    private static final com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignments DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignments();
+    }
+
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignments getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<RoleAssignments>
+        PARSER = new com.google.protobuf.AbstractParser<RoleAssignments>() {
+      @java.lang.Override
+      public RoleAssignments parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new RoleAssignments(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<RoleAssignments> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<RoleAssignments> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignments getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_build_UserRecordSigned_descriptor;
   private static final 
@@ -7014,6 +8590,11 @@ public final class PurekitProtosV3Storage {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_build_Role_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_build_Roles_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_build_Roles_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_build_RoleAssignmentSigned_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
@@ -7023,6 +8604,11 @@ public final class PurekitProtosV3Storage {
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_build_RoleAssignment_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_build_RoleAssignments_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_build_RoleAssignments_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -7051,14 +8637,16 @@ public final class PurekitProtosV3Storage {
       "\001(\014\"8\n\nRoleSigned\022\017\n\007version\030\001 \001(\r\022\014\n\004na" +
       "me\030\002 \001(\t\022\013\n\003rpk\030\003 \001(\014\"?\n\004Role\022\017\n\007version" +
       "\030\001 \001(\r\022\023\n\013role_signed\030\002 \001(\014\022\021\n\tsignature" +
-      "\030\003 \001(\014\"x\n\024RoleAssignmentSigned\022\017\n\007versio" +
-      "n\030\001 \001(\r\022\021\n\trole_name\030\002 \001(\t\022\017\n\007user_id\030\003 " +
-      "\001(\t\022\025\n\rpublic_key_id\030\004 \001(\014\022\024\n\014ecrypted_r" +
-      "sk\030\005 \001(\014\"T\n\016RoleAssignment\022\017\n\007version\030\001 " +
-      "\001(\r\022\036\n\026role_assignment_signed\030\002 \001(\014\022\021\n\ts" +
-      "ignature\030\003 \001(\014BC\n)com.virgilsecurity.pur" +
-      "ekit.protobuf.buildB\026PurekitProtosV3Stor" +
-      "ageb\006proto3"
+      "\030\003 \001(\014\"#\n\005Roles\022\032\n\005roles\030\001 \003(\0132\013.build.R" +
+      "ole\"x\n\024RoleAssignmentSigned\022\017\n\007version\030\001" +
+      " \001(\r\022\021\n\trole_name\030\002 \001(\t\022\017\n\007user_id\030\003 \001(\t" +
+      "\022\025\n\rpublic_key_id\030\004 \001(\014\022\024\n\014ecrypted_rsk\030" +
+      "\005 \001(\014\"T\n\016RoleAssignment\022\017\n\007version\030\001 \001(\r" +
+      "\022\036\n\026role_assignment_signed\030\002 \001(\014\022\021\n\tsign" +
+      "ature\030\003 \001(\014\"B\n\017RoleAssignments\022/\n\020role_a" +
+      "ssignments\030\001 \003(\0132\025.build.RoleAssignmentB" +
+      "C\n)com.virgilsecurity.purekit.protobuf.b" +
+      "uildB\026PurekitProtosV3Storageb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -7106,18 +8694,30 @@ public final class PurekitProtosV3Storage {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_build_Role_descriptor,
         new java.lang.String[] { "Version", "RoleSigned", "Signature", });
-    internal_static_build_RoleAssignmentSigned_descriptor =
+    internal_static_build_Roles_descriptor =
       getDescriptor().getMessageTypes().get(7);
+    internal_static_build_Roles_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_build_Roles_descriptor,
+        new java.lang.String[] { "Roles", });
+    internal_static_build_RoleAssignmentSigned_descriptor =
+      getDescriptor().getMessageTypes().get(8);
     internal_static_build_RoleAssignmentSigned_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_build_RoleAssignmentSigned_descriptor,
         new java.lang.String[] { "Version", "RoleName", "UserId", "PublicKeyId", "EcryptedRsk", });
     internal_static_build_RoleAssignment_descriptor =
-      getDescriptor().getMessageTypes().get(8);
+      getDescriptor().getMessageTypes().get(9);
     internal_static_build_RoleAssignment_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_build_RoleAssignment_descriptor,
         new java.lang.String[] { "Version", "RoleAssignmentSigned", "Signature", });
+    internal_static_build_RoleAssignments_descriptor =
+      getDescriptor().getMessageTypes().get(10);
+    internal_static_build_RoleAssignments_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_build_RoleAssignments_descriptor,
+        new java.lang.String[] { "RoleAssignments", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

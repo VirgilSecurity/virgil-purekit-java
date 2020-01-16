@@ -64,7 +64,9 @@ public class PureLogicException extends PureException {
         ROLE_NAME_USER_ID_MISMATCH(13, "Role name and user id mismatch"),
         DUPLICATE_USER_ID(14, "Duplicate user Id"),
         INVALID_PASSWORD(15, "Invalid password"),
-        USER_HAS_NO_ACCESS_TO_DATA(16, "User has no access to data");
+        USER_HAS_NO_ACCESS_TO_DATA(16, "User has no access to data"),
+        DUPLICATE_ROLE_NAME(17, "Duplicate role name");
+
 
         private final int code;
         private final String message;

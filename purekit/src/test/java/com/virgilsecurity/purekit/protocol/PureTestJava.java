@@ -121,8 +121,8 @@ class PureTestJava {
         StorageType[] storages = new StorageType[1];
 
 //        storages[0] = StorageType.RAM;
-//        storages[1] = StorageType.VirgilCloud;
-        storages[0] = StorageType.MariaDB;
+        storages[0] = StorageType.VirgilCloud;
+//        storages[0] = StorageType.MariaDB;
 
         return storages;
     }
@@ -551,18 +551,18 @@ class PureTestJava {
                 PureSetupResult pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, null, storage);
                 Pure pure = new Pure(pureResult.getContext());
 
-                long startTime = System.currentTimeMillis();
-
-                long total = 1;
+                long total = 10;
                 for (long i = 0; i < total; i++) {
                     String userId = UUID.randomUUID().toString();
                     String password = UUID.randomUUID().toString();
 
-                    pure.registerUser(userId, password);
-                }
+                    long startTime = System.currentTimeMillis();
 
-                long finishTime = System.currentTimeMillis();
-                System.out.println("That took: " + (finishTime - startTime) + " ms");
+                    pure.registerUser(userId, password);
+
+                    long finishTime = System.currentTimeMillis();
+//                    System.out.println("That took: " + (finishTime - startTime) + " ms");
+                }
             }
         } catch (Exception e) {
             fail(e);

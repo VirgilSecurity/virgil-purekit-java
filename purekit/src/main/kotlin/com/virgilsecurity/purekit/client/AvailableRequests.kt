@@ -48,5 +48,11 @@ enum class AvailableRequests(val type: String) {
     INSERT_CELL_KEY("/cell-key"),
     UPDATE_CELL_KEY("/cell-key/%s/%s"),
     GET_CELL_KEY("/cell-key/%s/%s"),
-    DELETE_CELL_KEY("/cell-key/%s/%s")
+    DELETE_CELL_KEY("/cell-key/%s/%s"),
+    INSERT_ROLE("/roles"),
+    GET_ROLES("/get-roles"),
+    INSERT_ROLE_ASSIGNMENTS("/role-assignments"),
+    GET_ROLE_ASSIGNMENTS("/get-role-assignments"),
+    GET_ROLE_ASSIGNMENT("/get-role-assignment"),
+    DELETE_ROLE_ASSIGNMENTS("/delete-role-assignments"),
 }

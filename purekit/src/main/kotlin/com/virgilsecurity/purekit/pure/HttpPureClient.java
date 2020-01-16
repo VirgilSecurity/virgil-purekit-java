@@ -288,4 +288,75 @@ public class HttpPureClient {
             this.appToken
         );
     }
+
+    public void insertRole(PurekitProtosV3Storage.Role role)
+            throws ProtocolHttpException, ProtocolException {
+
+        client.firePost(
+                role,
+                AvailableRequests.INSERT_ROLE.getType(),
+                this.appToken
+        );
+    }
+
+    public PurekitProtosV3Storage.Roles getRoles(Collection<String> roleNames)
+            throws ProtocolHttpException, ProtocolException {
+
+        ValidateUtils.checkNull(roleNames, "roleNames");
+        if (roleNames.isEmpty()) {
+            throw new EmptyArgumentException("roleNames");
+        }
+
+        PurekitProtosV3Client.GetRoles getRoles =
+                PurekitProtosV3Client.GetRoles.newBuilder().addAllRoleNames(roleNames).build();
+
+        return client.firePost(
+                getRoles,
+                AvailableRequests.GET_ROLES.getType(),
+                this.appToken,
+                PurekitProtosV3Storage.Roles.parser()
+        );
+    }
+
+    public void insertRoleAssignments(PurekitProtosV3Storage.RoleAssignments roleAssignments)
+            throws ProtocolHttpException, ProtocolException {
+
+        client.firePost(
+                roleAssignments,
+                AvailableRequests.INSERT_ROLE_ASSIGNMENTS.getType(),
+                this.appToken
+        );
+    }
+
+    public PurekitProtosV3Storage.RoleAssignments getRoleAssignments(PurekitProtosV3Client.GetRoleAssignments request)
+            throws ProtocolHttpException, ProtocolException {
+
+        return client.firePost(
+                request,
+                AvailableRequests.GET_ROLE_ASSIGNMENTS.getType(),
+                this.appToken,
+                PurekitProtosV3Storage.RoleAssignments.parser()
+        );
+    }
+
+    public PurekitProtosV3Storage.RoleAssignment getRoleAssignment(PurekitProtosV3Client.GetRoleAssignment request)
+            throws ProtocolHttpException, ProtocolException {
+
+        return client.firePost(
+                request,
+                AvailableRequests.GET_ROLE_ASSIGNMENT.getType(),
+                this.appToken,
+                PurekitProtosV3Storage.RoleAssignment.parser()
+        );
+    }
+
+    public void deleteRoleAssignments(PurekitProtosV3Client.DeleteRoleAssignments request)
+            throws ProtocolHttpException, ProtocolException {
+
+        client.firePost(
+                request,
+                AvailableRequests.DELETE_ROLE_ASSIGNMENTS.getType(),
+                this.appToken
+        );
+    }
 }

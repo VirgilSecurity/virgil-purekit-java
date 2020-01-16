@@ -41,3 +41,21 @@ option java_outer_classname = "PurekitProtosV3Client";
 message GetUserRecords {
     repeated string user_ids = 1;
 }
+
+message GetRoles {
+    repeated string role_names = 1;
+}
+
+message GetRoleAssignments {
+    string user_id = 1;
+}
+
+message GetRoleAssignment {
+    string user_id = 1;
+    string role_name = 2;
+}
+
+message DeleteRoleAssignments {
+    string role_name = 1;
+    repeated string user_ids = 2;
+}
