@@ -2,6 +2,7 @@ package com.virgilsecurity.purekit.pure.mariadbstorage;
 
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage;
 import com.virgilsecurity.purekit.pure.PureModelSerializer;
+import com.virgilsecurity.purekit.pure.PureModelSerializerDependent;
 import com.virgilsecurity.purekit.pure.PureStorage;
 import com.virgilsecurity.purekit.pure.exception.PureLogicException;
 import com.virgilsecurity.purekit.pure.model.CellKey;
@@ -18,13 +19,23 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-public class MariaDbPureStorage implements PureStorage {
+public class MariaDbPureStorage implements PureStorage, PureModelSerializerDependent {
     private final String url;
-    private final PureModelSerializer pureModelSerializer;
 
-    public MariaDbPureStorage(String url, PureModelSerializer pureModelSerializer) {
-        this.url = url;
+    @Override
+    public PureModelSerializer getPureModelSerializer() {
+        return pureModelSerializer;
+    }
+
+    @Override
+    public void setPureModelSerializer(PureModelSerializer pureModelSerializer) {
         this.pureModelSerializer = pureModelSerializer;
+    }
+
+    private PureModelSerializer pureModelSerializer;
+
+    public MariaDbPureStorage(String url) {
+        this.url = url;
     }
 
     private Connection getConnection() throws SQLException {

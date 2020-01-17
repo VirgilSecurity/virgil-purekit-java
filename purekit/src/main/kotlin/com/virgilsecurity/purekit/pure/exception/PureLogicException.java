@@ -54,7 +54,7 @@ public class PureLogicException extends PureException {
         STORAGE_SIGNATURE_VERIFICATION_FAILED(3, "Storage signature verification has been failed"),
         KEYS_VERSION_MISMATCH(4, "Keys version mismatch"),
         UPDATE_TOKEN_VERSION_MISMATCH(5, "Update token version mismatch"),
-        AK_INVALID_LENGTH(6, "AK invalid length"),
+        NONROTABLE_MASTER_SECRET_INVALID_LENGTH(6, "Nonrotatable master secret invalid length"),
         CREDENTIALS_PARSING_ERROR(7, "Credentials parsing error"),
         USER_ID_MISMATCH(8, "User Id mismatch"),
         KEY_ID_MISMATCH(9, "Key id mismatch"),

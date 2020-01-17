@@ -7,7 +7,7 @@
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *  
+ *
  *     (1) Redistributions of source code must retain the above copyright notice, this
  *     list of conditions and the following disclaimer.
  *
@@ -31,59 +31,35 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-buildscript {
-    ext.versions = [
-            // Virgil
-            virgilCrypto   : '0.12.0',
-            sdk            : '6.0',
+package com.virgilsecurity.purekit.pure;
 
-            // Http client
-            fuel           : '2.1.0',
+import com.virgilsecurity.crypto.foundation.KeyMaterialRng;
+import com.virgilsecurity.purekit.pure.exception.PureLogicException;
+import com.virgilsecurity.sdk.crypto.VirgilCrypto;
+import com.virgilsecurity.sdk.crypto.VirgilKeyPair;
+import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
 
-            // Kotlin
-            kotlin         : '1.3.50',
-            coroutines     : '1.3.0-M2',
+public class NonrotatableSecretsGenerator {
+    private static final int NONROTATABLE_MASTER_SECRET_LENGTH = 32;
+    private static final int AK_LENGTH = 32;
 
-            // Protobuf
-            protobufVersion: '3.9.1',
+    public static NonrotatableSecrets generateSecrets(byte[] masterSecret) throws CryptoException, PureLogicException {
+        if (masterSecret.length != NONROTATABLE_MASTER_SECRET_LENGTH) {
+            throw new PureLogicException(PureLogicException.ErrorStatus.NONROTABLE_MASTER_SECRET_INVALID_LENGTH);
+        }
 
-            // Gson
-            gson           : '2.8.5',
+        KeyMaterialRng rng = new KeyMaterialRng();
 
-            // Docs
-            dokka          : '0.9.18',
+        rng.resetKeyMaterial(masterSecret);
 
-            // Tests
-            junit          : '5.5.0',
+        byte[] ak = rng.random(AK_LENGTH);
 
-    ]
-    repositories {
-        jcenter()
-        mavenCentral()
-        mavenLocal()
+        // TODO: Replace rng
+        VirgilCrypto crypto = new VirgilCrypto();
+
+        VirgilKeyPair vskp = crypto.generateKeyPair();
+        VirgilKeyPair oskp = crypto.generateKeyPair();
+
+        return new NonrotatableSecrets(ak, vskp, oskp);
     }
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin"
-        classpath "org.jetbrains.dokka:dokka-gradle-plugin:$versions.dokka"
-    }
-}
-
-allprojects {
-    repositories {
-        jcenter()
-        mavenCentral()
-        mavenLocal()
-    }
-}
-
-task clean(type: Delete) {
-    delete rootProject.buildDir
-}
-
-task installPurekit() {
-    dependsOn ':purekit-protos:publishToMavenLocal', ':purekit:publishToMavenLocal'
-}
-
-task publishPurekit() {
-    dependsOn ':purekit-protos:publish', ':purekit:publish'
 }

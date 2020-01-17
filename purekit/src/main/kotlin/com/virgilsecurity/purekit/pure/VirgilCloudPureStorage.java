@@ -55,9 +55,19 @@ import com.virgilsecurity.sdk.crypto.exceptions.VerificationException;
 /**
  * PureStorage on Virgil cloud side
  */
-public class VirgilCloudPureStorage implements PureStorage {
+public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerDependent {
 
-    private final PureModelSerializer pureModelSerializer;
+    @Override
+    public PureModelSerializer getPureModelSerializer() {
+        return pureModelSerializer;
+    }
+
+    @Override
+    public void setPureModelSerializer(PureModelSerializer pureModelSerializer) {
+        this.pureModelSerializer = pureModelSerializer;
+    }
+
+    private PureModelSerializer pureModelSerializer;
     private final HttpPureClient client;
 
     /**
@@ -66,13 +76,10 @@ public class VirgilCloudPureStorage implements PureStorage {
      * @param signingKey Key used to sign data before sending to Virgil.
      */
     public VirgilCloudPureStorage(VirgilCrypto crypto,
-                                  HttpPureClient client,
-                                  VirgilKeyPair signingKey) {
+                                  HttpPureClient client) {
         ValidateUtils.checkNull(crypto, "crypto");
         ValidateUtils.checkNull(client, "client");
-        ValidateUtils.checkNull(signingKey, "signingKey");
 
-        this.pureModelSerializer = new PureModelSerializer(crypto, signingKey);
         this.client = client;
     }
 

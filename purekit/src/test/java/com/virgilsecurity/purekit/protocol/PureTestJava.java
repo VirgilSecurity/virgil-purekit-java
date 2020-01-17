@@ -34,12 +34,10 @@ class PureTestJava {
     private static class PureSetupResult {
         private PureContext context;
         private VirgilKeyPair bupkp;
-        private VirgilKeyPair hkp;
 
-        public PureSetupResult(PureContext context, VirgilKeyPair bupkp, VirgilKeyPair hkp) {
+        public PureSetupResult(PureContext context, VirgilKeyPair bupkp) {
             this.context = context;
             this.bupkp = bupkp;
-            this.hkp = hkp;
         }
 
         public PureContext getContext() {
@@ -48,10 +46,6 @@ class PureTestJava {
 
         public VirgilKeyPair getBupkp() {
             return bupkp;
-        }
-
-        public VirgilKeyPair getHkp() {
-            return hkp;
         }
     }
 
@@ -74,35 +68,28 @@ class PureTestJava {
                                       Map<String, List<String>> externalPublicKeys,
                                       StorageType storageType) throws CryptoException, PureLogicException {
         VirgilKeyPair bupkp = this.crypto.generateKeyPair(KeyType.ED25519);
-        VirgilKeyPair hkp = this.crypto.generateKeyPair(KeyType.ED25519);
-        VirgilKeyPair oskp = this.crypto.generateKeyPair(KeyType.ED25519);
 
-        byte[] akData = this.crypto.generateRandomData(32);
-        String akString = String.format("AK.%s", Base64.getEncoder().encodeToString(akData));
+        byte[] nmsData = this.crypto.generateRandomData(32);
+        String nmsString = String.format("NM.%s", Base64.getEncoder().encodeToString(nmsData));
 
         String bupkpString = String.format("BU.%s", Base64.getEncoder().encodeToString(this.crypto.exportPublicKey(bupkp.getPublicKey())));
-        String hkpString = String.format("HB.%s", Base64.getEncoder().encodeToString(this.crypto.exportPublicKey(hkp.getPublicKey())));
-        String oskpString = String.format("OS.%s", Base64.getEncoder().encodeToString(this.crypto.exportPrivateKey(oskp.getPrivateKey())));
 
         PureContext context;
-        VirgilKeyPair signingKeyPair = this.crypto.generateKeyPair();
-        String vsString = String.format("VS.%s", Base64.getEncoder().encodeToString(this.crypto.exportPrivateKey(signingKeyPair.getPrivateKey())));
 
         switch (storageType) {
             case RAM:
-                context = PureContext.createContext(appToken, akString, bupkpString, hkpString, oskpString,
+                context = PureContext.createContext(appToken, nmsString, bupkpString,
                         new RamPureStorage(), secretKey, publicKey, externalPublicKeys, pheServerAddress);
                 break;
 
             case VirgilCloud:
-                context = PureContext.createContext(appToken, akString, bupkpString, hkpString, oskpString, vsString,
+                context = PureContext.createContext(appToken, nmsString, bupkpString,
                         secretKey, publicKey, externalPublicKeys, pheServerAddress, pureServerAddress);
                 break;
 
             case MariaDB:
-                PureModelSerializer pureModelSerializer = new PureModelSerializer(this.crypto, signingKeyPair);
-                PureStorage mariaDbPureStorage = new MariaDbPureStorage("jdbc:mariadb://localhost/puretest?user=root&password=qwerty", pureModelSerializer);
-                context = PureContext.createContext(appToken, akString, bupkpString, hkpString, oskpString,
+                PureStorage mariaDbPureStorage = new MariaDbPureStorage("jdbc:mariadb://localhost/puretest?user=root&password=qwerty");
+                context = PureContext.createContext(appToken, nmsString, bupkpString,
                         mariaDbPureStorage, secretKey, publicKey, externalPublicKeys, pheServerAddress);
                 break;
 
@@ -114,7 +101,7 @@ class PureTestJava {
             context.setUpdateToken(updateToken);
         }
 
-        return new PureSetupResult(context, bupkp, hkp);
+        return new PureSetupResult(context, bupkp);
     }
 
     private static StorageType[] createStorages() {
@@ -814,7 +801,7 @@ class PureTestJava {
 
                 UserRecord record = pure.getStorage().selectUser(userId);
 
-                byte[] pwdHashDecrypted = pure.getCrypto().decrypt(record.getEncryptedPwdHash(), pureResult.getHkp().getPrivateKey());
+                byte[] pwdHashDecrypted = pure.getCrypto().decrypt(record.getEncryptedPwdHash(), pureResult.getBupkp().getPrivateKey());
                 byte[] pwdHash = pure.getCrypto().computeHash(password.getBytes());
 
                 assertArrayEquals(pwdHash, pwdHashDecrypted);

@@ -82,7 +82,6 @@ public class Pure {
     private final PheClient previousClient;
     private final byte[] ak;
     private final VirgilPublicKey buppk;
-    private final VirgilPublicKey hpk;
     private final VirgilKeyPair oskp;
     private final HttpPheClient httpPheClient;
     private final Map<String, List<VirgilPublicKey>> externalPublicKeys;
@@ -122,10 +121,9 @@ public class Pure {
                 this.previousClient = null;
             }
 
-            this.ak = context.getAk().getPayload();
+            this.ak = context.getNonrotatableSecrets().getAk();
             this.buppk = context.getBuppk();
-            this.hpk = context.getHpk();
-            this.oskp = context.getOskp();
+            this.oskp = context.getNonrotatableSecrets().getOskp();
             this.httpPheClient = context.getPheClient();
             this.externalPublicKeys = context.getExternalPublicKeys();
         }
@@ -1025,7 +1023,7 @@ public class Pure {
 
             byte[] passwordHash = crypto.computeHash(password.getBytes(), HashAlgorithm.SHA512);
 
-            byte[] encryptedPwdHash = crypto.encrypt(passwordHash, Collections.singletonList(this.hpk));
+            byte[] encryptedPwdHash = crypto.encrypt(passwordHash, Collections.singletonList(this.buppk));
 
             PheClientEnrollAccountResult result = currentClient.enrollAccount(
                     response.getResponse().toByteArray(),
@@ -1098,7 +1096,7 @@ public class Pure {
             byte[] newEncryptedUsk = cipher.encrypt(privateKeyData, enrollResult.getAccountKey());
 
             byte[] encryptedPwdHash = crypto.encrypt(newPasswordHash,
-                    Collections.singletonList(this.hpk));
+                    Collections.singletonList(this.buppk));
 
             UserRecord newUserRecord = new UserRecord(
                 userRecord.getUserId(),
@@ -1192,10 +1190,6 @@ public class Pure {
 
     public VirgilPublicKey getBuppk() {
         return buppk;
-    }
-
-    public VirgilPublicKey getHpk() {
-        return hpk;
     }
 
     public VirgilKeyPair getOskp() {
