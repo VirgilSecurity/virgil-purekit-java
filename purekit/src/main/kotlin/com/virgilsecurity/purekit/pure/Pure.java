@@ -183,9 +183,11 @@ public class Pure {
             ValidateUtils.checkNullOrEmpty(userId, "userId");
             ValidateUtils.checkNullOrEmpty(password, "password");
 
-            byte[] phek = computePheKey(userId, password);
+            UserRecord userRecord = storage.selectUser(userId);
 
-            byte[] uskData = cipher.decrypt(storage.selectUser(userId).getEncryptedUsk(), phek);
+            byte[] phek = computePheKey(userRecord, password);
+
+            byte[] uskData = cipher.decrypt(userRecord.getEncryptedUsk(), phek);
 
             VirgilKeyPair ukp = crypto.importPrivateKey(uskData);
 
@@ -339,8 +341,6 @@ public class Pure {
         }
     }
 
-
-
     /**
      * Changes user password. All encrypted data remains accessible after this method call.
      *
@@ -369,8 +369,10 @@ public class Pure {
             ValidateUtils.checkNullOrEmpty(oldPassword, "oldPassword");
             ValidateUtils.checkNullOrEmpty(newPassword, "newPassword");
 
-            byte[] oldPhek = computePheKey(userId, oldPassword);
             UserRecord userRecord = storage.selectUser(userId);
+
+            byte[] oldPhek = computePheKey(userRecord, oldPassword);
+
             byte[] privateKeyData = cipher.decrypt(userRecord.getEncryptedUsk(), oldPhek);
 
             changeUserPassword(userRecord, privateKeyData, newPassword);
@@ -1135,12 +1137,10 @@ public class Pure {
         return keys;
     }
 
-    private byte[] computePheKey(String userId, String password) throws Exception {
+    private byte[] computePheKey(UserRecord userRecord, String password) throws Exception {
 
         try {
             byte[] passwordHash = crypto.computeHash(password.getBytes(), HashAlgorithm.SHA512);
-
-            UserRecord userRecord = storage.selectUser(userId);
 
             PheClient client = getClient(userRecord.getPheRecordVersion());
 
