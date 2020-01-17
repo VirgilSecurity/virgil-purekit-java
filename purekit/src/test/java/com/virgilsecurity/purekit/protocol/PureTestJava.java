@@ -21,7 +21,7 @@ import com.virgilsecurity.purekit.pure.model.*;
 import com.virgilsecurity.purekit.pure.ramstorage.RamPureStorage;
 import com.virgilsecurity.purekit.utils.PropertyManager;
 import com.virgilsecurity.purekit.utils.ThreadUtils;
-import com.virgilsecurity.sdk.crypto.KeyType;
+import com.virgilsecurity.sdk.crypto.KeyPairType;
 import com.virgilsecurity.sdk.crypto.VirgilCrypto;
 import com.virgilsecurity.sdk.crypto.VirgilKeyPair;
 import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
@@ -67,7 +67,7 @@ class PureTestJava {
                                       String updateToken,
                                       Map<String, List<String>> externalPublicKeys,
                                       StorageType storageType) throws CryptoException, PureLogicException {
-        VirgilKeyPair bupkp = this.crypto.generateKeyPair(KeyType.ED25519);
+        VirgilKeyPair bupkp = this.crypto.generateKeyPair(KeyPairType.ED25519);
 
         byte[] nmsData = this.crypto.generateRandomData(32);
         String nmsString = String.format("NM.%s", Base64.getEncoder().encodeToString(nmsData));

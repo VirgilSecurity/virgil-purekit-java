@@ -1,7 +1,7 @@
 package com.virgilsecurity.purekit.utils;
 
-import com.virgilsecurity.sdk.exception.EmptyArgumentException;
-import com.virgilsecurity.sdk.exception.NullArgumentException;
+import com.virgilsecurity.common.exception.EmptyArgumentException;
+import com.virgilsecurity.common.exception.NullArgumentException;
 
 /**
  * ValidateUtils class.

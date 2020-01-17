@@ -13,8 +13,8 @@ import org.junit.jupiter.api.Test;
 class NonrotatableSecretsGeneratorTest {
     private static final String nms = "6PvWsrUn/U6ggoabbXCriBk7dtV3NfT+cvqbFGG3DGU=";
     private static final String ak = "67s7EAt22cKY+M+OFFG7qBbT0f8J0ZIYlCph8rb8vJo=";
-    private static final String oskpId = "tySWEnktveE=";
-    private static final String vskpId = "Zv2gWu+5YeY=";
+    private static final String oskpId = "45IvIXkOQ7c=";
+    private static final String vskpId = "7QksLSjG56g=";
 
     @Test
     void generate_secrets__fixed_seed__should_match() throws InterruptedException {

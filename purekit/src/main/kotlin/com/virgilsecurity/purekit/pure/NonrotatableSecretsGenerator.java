@@ -54,8 +54,7 @@ public class NonrotatableSecretsGenerator {
 
         byte[] ak = rng.random(AK_LENGTH);
 
-        // TODO: Replace rng
-        VirgilCrypto crypto = new VirgilCrypto();
+        VirgilCrypto crypto = new VirgilCrypto(rng);
 
         VirgilKeyPair vskp = crypto.generateKeyPair();
         VirgilKeyPair oskp = crypto.generateKeyPair();
