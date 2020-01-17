@@ -98,7 +98,7 @@ message RoleAssignmentSigned {
     string role_name = 2;
     string user_id = 3;
     bytes public_key_id = 4;
-    bytes ecrypted_rsk = 5;
+    bytes encrypted_rsk = 5;
 }
 
 message RoleAssignment {

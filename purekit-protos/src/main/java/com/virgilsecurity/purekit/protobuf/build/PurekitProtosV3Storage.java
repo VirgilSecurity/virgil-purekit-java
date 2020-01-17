@@ -6303,9 +6303,9 @@ public final class PurekitProtosV3Storage {
     com.google.protobuf.ByteString getPublicKeyId();
 
     /**
-     * <code>bytes ecrypted_rsk = 5;</code>
+     * <code>bytes encrypted_rsk = 5;</code>
      */
-    com.google.protobuf.ByteString getEcryptedRsk();
+    com.google.protobuf.ByteString getEncryptedRsk();
   }
   /**
    * Protobuf type {@code build.RoleAssignmentSigned}
@@ -6323,7 +6323,7 @@ public final class PurekitProtosV3Storage {
       roleName_ = "";
       userId_ = "";
       publicKeyId_ = com.google.protobuf.ByteString.EMPTY;
-      ecryptedRsk_ = com.google.protobuf.ByteString.EMPTY;
+      encryptedRsk_ = com.google.protobuf.ByteString.EMPTY;
     }
 
     @java.lang.Override
@@ -6380,7 +6380,7 @@ public final class PurekitProtosV3Storage {
             }
             case 42: {
 
-              ecryptedRsk_ = input.readBytes();
+              encryptedRsk_ = input.readBytes();
               break;
             }
             default: {
@@ -6501,13 +6501,13 @@ public final class PurekitProtosV3Storage {
       return publicKeyId_;
     }
 
-    public static final int ECRYPTED_RSK_FIELD_NUMBER = 5;
-    private com.google.protobuf.ByteString ecryptedRsk_;
+    public static final int ENCRYPTED_RSK_FIELD_NUMBER = 5;
+    private com.google.protobuf.ByteString encryptedRsk_;
     /**
-     * <code>bytes ecrypted_rsk = 5;</code>
+     * <code>bytes encrypted_rsk = 5;</code>
      */
-    public com.google.protobuf.ByteString getEcryptedRsk() {
-      return ecryptedRsk_;
+    public com.google.protobuf.ByteString getEncryptedRsk() {
+      return encryptedRsk_;
     }
 
     private byte memoizedIsInitialized = -1;
@@ -6536,8 +6536,8 @@ public final class PurekitProtosV3Storage {
       if (!publicKeyId_.isEmpty()) {
         output.writeBytes(4, publicKeyId_);
       }
-      if (!ecryptedRsk_.isEmpty()) {
-        output.writeBytes(5, ecryptedRsk_);
+      if (!encryptedRsk_.isEmpty()) {
+        output.writeBytes(5, encryptedRsk_);
       }
       unknownFields.writeTo(output);
     }
@@ -6562,9 +6562,9 @@ public final class PurekitProtosV3Storage {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(4, publicKeyId_);
       }
-      if (!ecryptedRsk_.isEmpty()) {
+      if (!encryptedRsk_.isEmpty()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(5, ecryptedRsk_);
+          .computeBytesSize(5, encryptedRsk_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -6589,8 +6589,8 @@ public final class PurekitProtosV3Storage {
           .equals(other.getUserId())) return false;
       if (!getPublicKeyId()
           .equals(other.getPublicKeyId())) return false;
-      if (!getEcryptedRsk()
-          .equals(other.getEcryptedRsk())) return false;
+      if (!getEncryptedRsk()
+          .equals(other.getEncryptedRsk())) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -6610,8 +6610,8 @@ public final class PurekitProtosV3Storage {
       hash = (53 * hash) + getUserId().hashCode();
       hash = (37 * hash) + PUBLIC_KEY_ID_FIELD_NUMBER;
       hash = (53 * hash) + getPublicKeyId().hashCode();
-      hash = (37 * hash) + ECRYPTED_RSK_FIELD_NUMBER;
-      hash = (53 * hash) + getEcryptedRsk().hashCode();
+      hash = (37 * hash) + ENCRYPTED_RSK_FIELD_NUMBER;
+      hash = (53 * hash) + getEncryptedRsk().hashCode();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -6753,7 +6753,7 @@ public final class PurekitProtosV3Storage {
 
         publicKeyId_ = com.google.protobuf.ByteString.EMPTY;
 
-        ecryptedRsk_ = com.google.protobuf.ByteString.EMPTY;
+        encryptedRsk_ = com.google.protobuf.ByteString.EMPTY;
 
         return this;
       }
@@ -6785,7 +6785,7 @@ public final class PurekitProtosV3Storage {
         result.roleName_ = roleName_;
         result.userId_ = userId_;
         result.publicKeyId_ = publicKeyId_;
-        result.ecryptedRsk_ = ecryptedRsk_;
+        result.encryptedRsk_ = encryptedRsk_;
         onBuilt();
         return result;
       }
@@ -6848,8 +6848,8 @@ public final class PurekitProtosV3Storage {
         if (other.getPublicKeyId() != com.google.protobuf.ByteString.EMPTY) {
           setPublicKeyId(other.getPublicKeyId());
         }
-        if (other.getEcryptedRsk() != com.google.protobuf.ByteString.EMPTY) {
-          setEcryptedRsk(other.getEcryptedRsk());
+        if (other.getEncryptedRsk() != com.google.protobuf.ByteString.EMPTY) {
+          setEncryptedRsk(other.getEncryptedRsk());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -7073,31 +7073,31 @@ public final class PurekitProtosV3Storage {
         return this;
       }
 
-      private com.google.protobuf.ByteString ecryptedRsk_ = com.google.protobuf.ByteString.EMPTY;
+      private com.google.protobuf.ByteString encryptedRsk_ = com.google.protobuf.ByteString.EMPTY;
       /**
-       * <code>bytes ecrypted_rsk = 5;</code>
+       * <code>bytes encrypted_rsk = 5;</code>
        */
-      public com.google.protobuf.ByteString getEcryptedRsk() {
-        return ecryptedRsk_;
+      public com.google.protobuf.ByteString getEncryptedRsk() {
+        return encryptedRsk_;
       }
       /**
-       * <code>bytes ecrypted_rsk = 5;</code>
+       * <code>bytes encrypted_rsk = 5;</code>
        */
-      public Builder setEcryptedRsk(com.google.protobuf.ByteString value) {
+      public Builder setEncryptedRsk(com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
   
-        ecryptedRsk_ = value;
+        encryptedRsk_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>bytes ecrypted_rsk = 5;</code>
+       * <code>bytes encrypted_rsk = 5;</code>
        */
-      public Builder clearEcryptedRsk() {
+      public Builder clearEncryptedRsk() {
         
-        ecryptedRsk_ = getDefaultInstance().getEcryptedRsk();
+        encryptedRsk_ = getDefaultInstance().getEncryptedRsk();
         onChanged();
         return this;
       }
@@ -8638,15 +8638,15 @@ public final class PurekitProtosV3Storage {
       "me\030\002 \001(\t\022\013\n\003rpk\030\003 \001(\014\"?\n\004Role\022\017\n\007version" +
       "\030\001 \001(\r\022\023\n\013role_signed\030\002 \001(\014\022\021\n\tsignature" +
       "\030\003 \001(\014\"#\n\005Roles\022\032\n\005roles\030\001 \003(\0132\013.build.R" +
-      "ole\"x\n\024RoleAssignmentSigned\022\017\n\007version\030\001" +
+      "ole\"y\n\024RoleAssignmentSigned\022\017\n\007version\030\001" +
       " \001(\r\022\021\n\trole_name\030\002 \001(\t\022\017\n\007user_id\030\003 \001(\t" +
-      "\022\025\n\rpublic_key_id\030\004 \001(\014\022\024\n\014ecrypted_rsk\030" +
-      "\005 \001(\014\"T\n\016RoleAssignment\022\017\n\007version\030\001 \001(\r" +
-      "\022\036\n\026role_assignment_signed\030\002 \001(\014\022\021\n\tsign" +
-      "ature\030\003 \001(\014\"B\n\017RoleAssignments\022/\n\020role_a" +
-      "ssignments\030\001 \003(\0132\025.build.RoleAssignmentB" +
-      "C\n)com.virgilsecurity.purekit.protobuf.b" +
-      "uildB\026PurekitProtosV3Storageb\006proto3"
+      "\022\025\n\rpublic_key_id\030\004 \001(\014\022\025\n\rencrypted_rsk" +
+      "\030\005 \001(\014\"T\n\016RoleAssignment\022\017\n\007version\030\001 \001(" +
+      "\r\022\036\n\026role_assignment_signed\030\002 \001(\014\022\021\n\tsig" +
+      "nature\030\003 \001(\014\"B\n\017RoleAssignments\022/\n\020role_" +
+      "assignments\030\001 \003(\0132\025.build.RoleAssignment" +
+      "BC\n)com.virgilsecurity.purekit.protobuf." +
+      "buildB\026PurekitProtosV3Storageb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -8705,7 +8705,7 @@ public final class PurekitProtosV3Storage {
     internal_static_build_RoleAssignmentSigned_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_build_RoleAssignmentSigned_descriptor,
-        new java.lang.String[] { "Version", "RoleName", "UserId", "PublicKeyId", "EcryptedRsk", });
+        new java.lang.String[] { "Version", "RoleName", "UserId", "PublicKeyId", "EncryptedRsk", });
     internal_static_build_RoleAssignment_descriptor =
       getDescriptor().getMessageTypes().get(9);
     internal_static_build_RoleAssignment_fieldAccessorTable = new

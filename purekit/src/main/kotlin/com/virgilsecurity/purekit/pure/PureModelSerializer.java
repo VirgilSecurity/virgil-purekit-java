@@ -199,7 +199,7 @@ public class PureModelSerializer {
                 .setVersion(PureModelSerializer.CURRENT_ROLE_ASSIGNMENT_SIGNED_VERSION)
                 .setRoleName(roleAssignment.getRoleName())
                 .setUserId(roleAssignment.getUserId())
-                .setEcryptedRsk(ByteString.copyFrom(roleAssignment.getEncryptedRsk()))
+                .setEncryptedRsk(ByteString.copyFrom(roleAssignment.getEncryptedRsk()))
                 .setPublicKeyId(ByteString.copyFrom(roleAssignment.getPublicKeyId()))
                 .build()
                 .toByteArray();
@@ -232,6 +232,6 @@ public class PureModelSerializer {
                 PurekitProtosV3Storage.RoleAssignmentSigned.parseFrom(protobufRecord.getRoleAssignmentSigned());
 
         return new RoleAssignment(roleAssignmentSigned.getRoleName(), roleAssignmentSigned.getUserId(),
-                roleAssignmentSigned.getPublicKeyId().toByteArray(), roleAssignmentSigned.getEcryptedRsk().toByteArray());
+                roleAssignmentSigned.getPublicKeyId().toByteArray(), roleAssignmentSigned.getEncryptedRsk().toByteArray());
     }
 }
