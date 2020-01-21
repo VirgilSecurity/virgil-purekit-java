@@ -61,9 +61,12 @@ class PureTestJava {
 
     private PureSetupResult setupPure(String pheServerAddress,
                                       String pureServerAddress,
+                                      String kmsServerAddress,
                                       String appToken,
-                                      String publicKey,
-                                      String secretKey,
+                                      String phePublicKey,
+                                      String pheSecretKey,
+                                      String kmsPublicKey,
+                                      String kmsSecretKey,
                                       String updateToken,
                                       Map<String, List<String>> externalPublicKeys,
                                       StorageType storageType) throws CryptoException, PureLogicException {
@@ -79,18 +82,21 @@ class PureTestJava {
         switch (storageType) {
             case RAM:
                 context = PureContext.createContext(appToken, nmsString, bupkpString,
-                        new RamPureStorage(), secretKey, publicKey, externalPublicKeys, pheServerAddress);
+                        new RamPureStorage(), pheSecretKey, phePublicKey, kmsSecretKey, kmsPublicKey, externalPublicKeys,
+                        pheServerAddress, kmsServerAddress);
                 break;
 
             case VirgilCloud:
                 context = PureContext.createContext(appToken, nmsString, bupkpString,
-                        secretKey, publicKey, externalPublicKeys, pheServerAddress, pureServerAddress);
+                        pheSecretKey, phePublicKey, kmsSecretKey, kmsPublicKey, externalPublicKeys,
+                        pheServerAddress, pureServerAddress, kmsServerAddress);
                 break;
 
             case MariaDB:
                 PureStorage mariaDbPureStorage = new MariaDbPureStorage("jdbc:mariadb://localhost/puretest?user=root&password=qwerty");
                 context = PureContext.createContext(appToken, nmsString, bupkpString,
-                        mariaDbPureStorage, secretKey, publicKey, externalPublicKeys, pheServerAddress);
+                        mariaDbPureStorage, pheSecretKey, phePublicKey, kmsSecretKey, kmsPublicKey, externalPublicKeys,
+                        pheServerAddress, kmsServerAddress);
                 break;
 
             default:
@@ -117,9 +123,12 @@ class PureTestJava {
     @ParameterizedTest @MethodSource("testArgumentsNoToken")
     void registration__new_user__should_succeed(String pheServerAddress,
                                                 String pureServerAddress,
+                                                String kmsServerAddress,
                                                 String appToken,
-                                                String publicKey,
-                                                String secretKey) throws InterruptedException {
+                                                String phePublicKey,
+                                                String pheSecretKey,
+                                                String kmsPublicKey,
+                                                String kmsSecretKey) throws InterruptedException {
         ThreadUtils.pause();
 
         try {
@@ -127,7 +136,7 @@ class PureTestJava {
 
             StorageType[] storages = createStorages();
             for (StorageType storage: storages) {
-                pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, null, storage);
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, phePublicKey, pheSecretKey, kmsPublicKey, kmsSecretKey, null, null, storage);
                 Pure pure = new Pure(pureResult.getContext());
 
                 String userId = UUID.randomUUID().toString();
@@ -142,17 +151,20 @@ class PureTestJava {
 
     @ParameterizedTest @MethodSource("testArgumentsNoToken")
     void authentication__new_user__should_succeed(String pheServerAddress,
-                                                  String pureServerAddress,
-                                                  String appToken,
-                                                  String publicKey,
-                                                  String secretKey) throws InterruptedException {
+                                                String pureServerAddress,
+                                                String kmsServerAddress,
+                                                String appToken,
+                                                String phePublicKey,
+                                                String pheSecretKey,
+                                                String kmsPublicKey,
+                                                String kmsSecretKey) throws InterruptedException {
         ThreadUtils.pause();
 
         try {
             PureSetupResult pureResult;
             StorageType[] storages = createStorages();
             for (StorageType storage: storages) {
-                pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, null, storage);
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, phePublicKey, pheSecretKey, kmsPublicKey, kmsSecretKey, null, null, storage);
                 Pure pure = new Pure(pureResult.getContext());
 
                 String userId = UUID.randomUUID().toString();
@@ -180,16 +192,19 @@ class PureTestJava {
     @ParameterizedTest @MethodSource("testArgumentsNoToken")
     void encryption__random_data__should_match(String pheServerAddress,
                                                String pureServerAddress,
+                                               String kmsServerAddress,
                                                String appToken,
-                                               String publicKey,
-                                               String secretKey) throws InterruptedException {
+                                               String phePublicKey,
+                                               String pheSecretKey,
+                                               String kmsPublicKey,
+                                               String kmsSecretKey) throws InterruptedException {
         ThreadUtils.pause();
 
         try {
             PureSetupResult pureResult;
             StorageType[] storages = createStorages();
             for (StorageType storage: storages) {
-                pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, null, storage);
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, phePublicKey, pheSecretKey, kmsPublicKey, kmsSecretKey, null, null, storage);
                 Pure pure = new Pure(pureResult.getContext());
 
                 String userId = UUID.randomUUID().toString();
@@ -215,16 +230,19 @@ class PureTestJava {
     @ParameterizedTest @MethodSource("testArgumentsNoToken")
     void sharing__2_users__should_decrypt(String pheServerAddress,
                                           String pureServerAddress,
+                                          String kmsServerAddress,
                                           String appToken,
-                                          String publicKey,
-                                          String secretKey) throws InterruptedException {
+                                          String phePublicKey,
+                                          String pheSecretKey,
+                                          String kmsPublicKey,
+                                          String kmsSecretKey) throws InterruptedException {
         ThreadUtils.pause();
 
         try {
             PureSetupResult pureResult;
             StorageType[] storages = createStorages();
             for (StorageType storage: storages) {
-                pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, null, storage);
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, phePublicKey, pheSecretKey, kmsPublicKey, kmsSecretKey, null, null, storage);
                 Pure pure = new Pure(pureResult.getContext());
 
                 String userId1 = UUID.randomUUID().toString();
@@ -258,16 +276,19 @@ class PureTestJava {
     @ParameterizedTest @MethodSource("testArgumentsNoToken")
     void sharing__revoke_access__should_not_decrypt(String pheServerAddress,
                                                     String pureServerAddress,
+                                                    String kmsServerAddress,
                                                     String appToken,
-                                                    String publicKey,
-                                                    String secretKey) throws InterruptedException {
+                                                    String phePublicKey,
+                                                    String pheSecretKey,
+                                                    String kmsPublicKey,
+                                                    String kmsSecretKey) throws InterruptedException {
         ThreadUtils.pause();
 
         try {
             PureSetupResult pureResult;
             StorageType[] storages = createStorages();
             for (StorageType storage: storages) {
-                pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, null, storage);
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, phePublicKey, pheSecretKey, kmsPublicKey, kmsSecretKey, null, null, storage);
                 Pure pure = new Pure(pureResult.getContext());
 
                 String userId1 = UUID.randomUUID().toString();
@@ -302,16 +323,19 @@ class PureTestJava {
     @ParameterizedTest @MethodSource("testArgumentsNoToken")
     void grant__change_password__should_not_decrypt(String pheServerAddress,
                                                     String pureServerAddress,
+                                                    String kmsServerAddress,
                                                     String appToken,
-                                                    String publicKey,
-                                                    String secretKey) throws InterruptedException {
+                                                    String phePublicKey,
+                                                    String pheSecretKey,
+                                                    String kmsPublicKey,
+                                                    String kmsSecretKey) throws InterruptedException {
         ThreadUtils.pause();
 
         try {
             PureSetupResult pureResult;
             StorageType[] storages = createStorages();
             for (StorageType storage: storages) {
-                pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, null, storage);
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, phePublicKey, pheSecretKey, kmsPublicKey, kmsSecretKey, null, null, storage);
                 Pure pure = new Pure(pureResult.getContext());
 
                 String userId = UUID.randomUUID().toString();
@@ -346,16 +370,19 @@ class PureTestJava {
     @ParameterizedTest @MethodSource("testArgumentsNoToken")
     void grant__admin_access__should_decrypt(String pheServerAddress,
                                              String pureServerAddress,
+                                             String kmsServerAddress,
                                              String appToken,
-                                             String publicKey,
-                                             String secretKey) throws InterruptedException {
+                                             String phePublicKey,
+                                             String pheSecretKey,
+                                             String kmsPublicKey,
+                                             String kmsSecretKey) throws InterruptedException {
         ThreadUtils.pause();
 
         try {
             PureSetupResult pureResult;
             StorageType[] storages = createStorages();
             for (StorageType storage: storages) {
-                pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, null, storage);
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, phePublicKey, pheSecretKey, kmsPublicKey, kmsSecretKey, null, null, storage);
                 Pure pure = new Pure(pureResult.getContext());
 
                 String userId = UUID.randomUUID().toString();
@@ -383,16 +410,19 @@ class PureTestJava {
     @ParameterizedTest @MethodSource("testArgumentsNoToken")
     void reset_pwd__new_user__should_not_decrypt(String pheServerAddress,
                                                  String pureServerAddress,
+                                                 String kmsServerAddress,
                                                  String appToken,
-                                                 String publicKey,
-                                                 String secretKey) throws InterruptedException {
+                                                 String phePublicKey,
+                                                 String pheSecretKey,
+                                                 String kmsPublicKey,
+                                                 String kmsSecretKey) throws InterruptedException {
         ThreadUtils.pause();
 
         try {
             PureSetupResult pureResult;
             StorageType[] storages = createStorages();
             for (StorageType storage: storages) {
-                pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, null, storage);
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, phePublicKey, pheSecretKey, kmsPublicKey, kmsSecretKey, null, null, storage);
                 Pure pure = new Pure(pureResult.getContext());
 
                 String userId = UUID.randomUUID().toString();
@@ -425,16 +455,19 @@ class PureTestJava {
     @ParameterizedTest @MethodSource("testArgumentsNoToken")
     void restore_pwd__new_user__should_decrypt(String pheServerAddress,
                                                String pureServerAddress,
+                                               String kmsServerAddress,
                                                String appToken,
-                                               String publicKey,
-                                               String secretKey) throws InterruptedException {
+                                               String phePublicKey,
+                                               String pheSecretKey,
+                                               String kmsPublicKey,
+                                               String kmsSecretKey) throws InterruptedException {
         ThreadUtils.pause();
 
         try {
             PureSetupResult pureResult;
             StorageType[] storages = createStorages();
             for (StorageType storage: storages) {
-                pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, null, storage);
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, phePublicKey, pheSecretKey, kmsPublicKey, kmsSecretKey, null, null, storage);
                 Pure pure = new Pure(pureResult.getContext());
 
                 String userId = UUID.randomUUID().toString();
@@ -467,10 +500,14 @@ class PureTestJava {
     @ParameterizedTest @MethodSource("testArguments")
     void rotation__local_storage__should_rotate(String pheServerAddress,
                                                 String pureServerAddress,
+                                                String kmsServerAddress,
                                                 String appToken,
-                                                String publicKey,
-                                                String secretKey,
-                                                String updateToken) throws InterruptedException {
+                                                String phePublicKey,
+                                                String pheSecretKey,
+                                                String pheUpdateToken,
+                                                String kmsPublicKey,
+                                                String kmsSecretKey,
+                                                String kmsUpdateToken) throws InterruptedException {
         ThreadUtils.pause();
 
         try {
@@ -486,7 +523,7 @@ class PureTestJava {
                 PureStorage pureStorage;
 
                 {
-                    PureSetupResult pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, null, storage);
+                    PureSetupResult pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, phePublicKey, pheSecretKey, kmsPublicKey, kmsSecretKey, null, null, storage);
                     Pure pure = new Pure(pureResult.getContext());
                     pureStorage = pure.getStorage();
 
@@ -504,7 +541,7 @@ class PureTestJava {
                     }
                 }
 
-                PureSetupResult pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, updateToken, null, storage);
+                PureSetupResult pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, phePublicKey, pheSecretKey, kmsPublicKey, kmsSecretKey, pheUpdateToken, null, storage);
                 pureResult.getContext().setStorage(pureStorage);
                 Pure pure = new Pure(pureResult.getContext());
 
@@ -519,56 +556,22 @@ class PureTestJava {
         }
     }
 
-    @ParameterizedTest @MethodSource("testArguments")
-    void performance(String pheServerAddress,
-                     String pureServerAddress,
-                     String appToken,
-                     String publicKey,
-                     String secretKey,
-                     String updateToken) throws InterruptedException {
-        ThreadUtils.pause();
-
-        try {
-            StorageType[] storages = createStorages();
-            for (StorageType storage: storages) {
-                if (storage == StorageType.VirgilCloud) {
-                    continue;
-                }
-
-                PureSetupResult pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, null, storage);
-                Pure pure = new Pure(pureResult.getContext());
-
-                long total = 10;
-                for (long i = 0; i < total; i++) {
-                    String userId = UUID.randomUUID().toString();
-                    String password = UUID.randomUUID().toString();
-
-                    long startTime = System.currentTimeMillis();
-
-                    pure.registerUser(userId, password);
-
-                    long finishTime = System.currentTimeMillis();
-//                    System.out.println("That took: " + (finishTime - startTime) + " ms");
-                }
-            }
-        } catch (Exception e) {
-            fail(e);
-        }
-    }
-
     @ParameterizedTest @MethodSource("testArgumentsNoToken")
     void encryption__additional_keys__should_decrypt(String pheServerAddress,
                                                      String pureServerAddress,
+                                                     String kmsServerAddress,
                                                      String appToken,
-                                                     String publicKey,
-                                                     String secretKey) throws InterruptedException {
+                                                     String phePublicKey,
+                                                     String pheSecretKey,
+                                                     String kmsPublicKey,
+                                                     String kmsSecretKey) throws InterruptedException {
         ThreadUtils.pause();
 
         try {
             PureSetupResult pureResult;
             StorageType[] storages = createStorages();
             for (StorageType storage: storages) {
-                pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, null, storage);
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, phePublicKey, pheSecretKey, kmsPublicKey, kmsSecretKey, null, null, storage);
                 Pure pure = new Pure(pureResult.getContext());
 
                 String userId1 = UUID.randomUUID().toString();
@@ -608,9 +611,12 @@ class PureTestJava {
     @ParameterizedTest @MethodSource("testArgumentsNoToken")
     void encryption__external_keys__should_decrypt(String pheServerAddress,
                                                    String pureServerAddress,
+                                                   String kmsServerAddress,
                                                    String appToken,
-                                                   String publicKey,
-                                                   String secretKey) throws InterruptedException {
+                                                   String phePublicKey,
+                                                   String pheSecretKey,
+                                                   String kmsPublicKey,
+                                                   String kmsSecretKey) throws InterruptedException {
         ThreadUtils.pause();
 
         try {
@@ -622,7 +628,7 @@ class PureTestJava {
                 String publicKeyBase64 = Base64.getEncoder().encodeToString(crypto.exportPublicKey(keyPair.getPublicKey()));
                 Map<String, List<String>> externalPublicKeys = Collections.singletonMap(dataId, Collections.singletonList(publicKeyBase64));
 
-                pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, externalPublicKeys, storage);
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, phePublicKey, pheSecretKey, kmsPublicKey, kmsSecretKey,null, externalPublicKeys, storage);
 
                 Pure pure = new Pure(pureResult.getContext());
 
@@ -647,16 +653,19 @@ class PureTestJava {
     @ParameterizedTest @MethodSource("testArgumentsNoToken")
     void delete_user__cascade__should_delete_user_and_keys(String pheServerAddress,
                                                            String pureServerAddress,
+                                                           String kmsServerAddress,
                                                            String appToken,
-                                                           String publicKey,
-                                                           String secretKey) throws InterruptedException {
+                                                           String phePublicKey,
+                                                           String pheSecretKey,
+                                                           String kmsPublicKey,
+                                                           String kmsSecretKey) throws InterruptedException {
         ThreadUtils.pause();
 
         try {
             PureSetupResult pureResult;
             StorageType[] storages = createStorages();
             for (StorageType storage: storages) {
-                pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, null, storage);
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, phePublicKey, pheSecretKey, kmsPublicKey, kmsSecretKey, null, null, storage);
                 Pure pure = new Pure(pureResult.getContext());
 
                 String userId = UUID.randomUUID().toString();
@@ -693,9 +702,12 @@ class PureTestJava {
     @ParameterizedTest @MethodSource("testArgumentsNoToken")
     void delete_user__no_cascade__should_delete_user(String pheServerAddress,
                                                      String pureServerAddress,
+                                                     String kmsServerAddress,
                                                      String appToken,
-                                                     String publicKey,
-                                                     String secretKey) throws InterruptedException {
+                                                     String phePublicKey,
+                                                     String pheSecretKey,
+                                                     String kmsPublicKey,
+                                                     String kmsSecretKey) throws InterruptedException {
         ThreadUtils.pause();
 
         try {
@@ -707,7 +719,7 @@ class PureTestJava {
                     continue;
                 }
 
-                pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, null, storage);
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, phePublicKey, pheSecretKey, kmsPublicKey, kmsSecretKey, null, null, storage);
                 Pure pure = new Pure(pureResult.getContext());
 
                 String userId = UUID.randomUUID().toString();
@@ -742,16 +754,19 @@ class PureTestJava {
     @ParameterizedTest @MethodSource("testArgumentsNoToken")
     void delete_key__new_key__should_delete(String pheServerAddress,
                                             String pureServerAddress,
+                                            String kmsServerAddress,
                                             String appToken,
-                                            String publicKey,
-                                            String secretKey) throws InterruptedException {
+                                            String phePublicKey,
+                                            String pheSecretKey,
+                                            String kmsPublicKey,
+                                            String kmsSecretKey) throws InterruptedException {
         ThreadUtils.pause();
 
         try {
             PureSetupResult pureResult;
             StorageType[] storages = createStorages();
             for (StorageType storage: storages) {
-                pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, null, storage);
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, phePublicKey, pheSecretKey, kmsPublicKey, kmsSecretKey, null, null, storage);
                 Pure pure = new Pure(pureResult.getContext());
 
                 String userId = UUID.randomUUID().toString();
@@ -782,16 +797,19 @@ class PureTestJava {
     @ParameterizedTest @MethodSource("testArgumentsNoToken")
     void registration__new_user__backups_pwd_hash(String pheServerAddress,
                                                   String pureServerAddress,
+                                                  String kmsServerAddress,
                                                   String appToken,
-                                                  String publicKey,
-                                                  String secretKey) throws InterruptedException {
+                                                  String phePublicKey,
+                                                  String pheSecretKey,
+                                                  String kmsPublicKey,
+                                                  String kmsSecretKey) throws InterruptedException {
         ThreadUtils.pause();
 
         try {
             PureSetupResult pureResult;
             StorageType[] storages = createStorages();
             for (StorageType storage: storages) {
-                pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, null, storage);
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, phePublicKey, pheSecretKey, kmsPublicKey, kmsSecretKey, null, null, storage);
                 Pure pure = new Pure(pureResult.getContext());
 
                 String userId = UUID.randomUUID().toString();
@@ -814,21 +832,23 @@ class PureTestJava {
     @ParameterizedTest @MethodSource("testArgumentsNoToken")
     void encryption__roles__should_decrypt(String pheServerAddress,
                                            String pureServerAddress,
+                                           String kmsServerAddress,
                                            String appToken,
-                                           String publicKey,
-                                           String secretKey) throws InterruptedException {
+                                           String phePublicKey,
+                                           String pheSecretKey,
+                                           String kmsPublicKey,
+                                           String kmsSecretKey) throws InterruptedException {
         ThreadUtils.pause();
 
         try {
             PureSetupResult pureResult;
             StorageType[] storages = createStorages();
             for (StorageType storage: storages) {
-                // TODO: Remove
                 if (storage == StorageType.VirgilCloud) {
                     continue;
                 }
 
-                pureResult = this.setupPure(pheServerAddress, pureServerAddress, appToken, publicKey, secretKey, null, null, storage);
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, phePublicKey, pheSecretKey, kmsPublicKey, kmsSecretKey, null, null, storage);
                 Pure pure = new Pure(pureResult.getContext());
 
                 String userId1 = UUID.randomUUID().toString();
@@ -870,9 +890,12 @@ class PureTestJava {
         return Stream.of(
             Arguments.of(PropertyManager.getPheServiceAddress(),
                          PropertyManager.getPureServerAddress(),
+                         PropertyManager.getKmsServerAddress(),
                          PropertyManager.getAppToken(),
-                         PropertyManager.getPublicKeyNew(),
-                         PropertyManager.getSecretKeyNew())
+                         PropertyManager.getPhePublicKeyNew(),
+                         PropertyManager.getPheSecretKeyNew(),
+                         PropertyManager.getKmsPublicKeyNew(),
+                         PropertyManager.getKmsSecretKeyNew())
         );
     }
 
@@ -880,10 +903,14 @@ class PureTestJava {
         return Stream.of(
             Arguments.of(PropertyManager.getPheServiceAddress(),
                          PropertyManager.getPureServerAddress(),
+                         PropertyManager.getKmsServerAddress(),
                          PropertyManager.getAppToken(),
-                         PropertyManager.getPublicKeyOld(),
-                         PropertyManager.getSecretKeyOld(),
-                         PropertyManager.getUpdateToken())
+                         PropertyManager.getPhePublicKeyOld(),
+                         PropertyManager.getPheSecretKeyOld(),
+                         PropertyManager.getPheUpdateToken(),
+                         PropertyManager.getKmsPublicKeyOld(),
+                         PropertyManager.getKmsSecretKeyOld(),
+                         PropertyManager.getKmsUpdateToken())
         );
     }
 }

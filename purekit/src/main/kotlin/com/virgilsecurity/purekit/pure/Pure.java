@@ -103,20 +103,20 @@ public class Pure {
             this.currentClient = new PheClient();
             this.currentClient.setOperationRandom(this.crypto.getRng());
             this.currentClient.setRandom(this.crypto.getRng());
-            this.currentClient.setKeys(context.getAppSecretKey().getPayload(),
-                    context.getServicePublicKey().getPayload());
+            this.currentClient.setKeys(context.getPheSecretKey().getPayload(),
+                    context.getPhePublicKey().getPayload());
 
             if (context.getUpdateToken() != null) {
-                this.currentVersion = context.getServicePublicKey().getVersion() + 1;
+                this.currentVersion = context.getPhePublicKey().getVersion() + 1;
                 this.updateToken = context.getUpdateToken().getPayload();
                 this.previousClient = new PheClient();
                 this.previousClient.setOperationRandom(this.crypto.getRng());
                 this.previousClient.setRandom(this.crypto.getRng());
-                this.previousClient.setKeys(context.getAppSecretKey().getPayload(),
-                        context.getServicePublicKey().getPayload());
+                this.previousClient.setKeys(context.getPheSecretKey().getPayload(),
+                        context.getPhePublicKey().getPayload());
                 this.currentClient.rotateKeys(context.getUpdateToken().getPayload());
             } else {
-                this.currentVersion = context.getServicePublicKey().getVersion();
+                this.currentVersion = context.getPhePublicKey().getVersion();
                 this.updateToken = null;
                 this.previousClient = null;
             }

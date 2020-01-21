@@ -53,9 +53,9 @@ object ProtocolUtils {
      */
     @JvmOverloads @JvmStatic fun initProtocol(serverAddress: String? = PropertyManager.pheServiceAddress,
                                               appToken: String = PropertyManager.appToken,
-                                              publicKey: String = PropertyManager.publicKeyNew,
-                                              secretKey: String = PropertyManager.secretKeyNew,
-                                              updateToken: String = PropertyManager.updateToken): Protocol {
+                                              publicKey: String = PropertyManager.phePublicKeyNew,
+                                              secretKey: String = PropertyManager.pheSecretKeyNew,
+                                              updateToken: String = PropertyManager.pheUpdateToken): Protocol {
 
         val context = ProtocolContext.create(
                 appToken,

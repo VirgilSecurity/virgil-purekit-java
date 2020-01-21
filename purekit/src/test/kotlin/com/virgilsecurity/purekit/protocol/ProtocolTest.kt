@@ -374,25 +374,25 @@ class ProtocolTest {
         @JvmStatic fun testArgumentsNoToken() = listOf(
                 Arguments.of(PropertyManager.pheServiceAddress,
                              PropertyManager.appToken,
-                             PropertyManager.publicKeyNew,
-                             PropertyManager.secretKeyNew)
+                             PropertyManager.phePublicKeyNew,
+                             PropertyManager.pheSecretKeyNew)
         )
 
         @JvmStatic fun testArguments() = listOf(
                 Arguments.of(PropertyManager.pheServiceAddress,
                              PropertyManager.appToken,
-                             PropertyManager.publicKeyOld,
-                             PropertyManager.secretKeyOld,
-                             PropertyManager.updateToken)
+                             PropertyManager.phePublicKeyOld,
+                             PropertyManager.pheSecretKeyOld,
+                             PropertyManager.pheUpdateToken)
         )
 
         @JvmStatic fun testArgumentsWithWrongKey() = listOf(
                 Arguments.of(PropertyManager.pheServiceAddress,
                              PropertyManager.appToken,
-                             PropertyManager.publicKeyOld,
-                             PropertyManager.publicKeyWrong,
-                             PropertyManager.secretKeyOld,
-                             PropertyManager.updateToken)
+                             PropertyManager.phePublicKeyOld,
+                             PropertyManager.phePublicKeyWrong,
+                             PropertyManager.pheSecretKeyOld,
+                             PropertyManager.pheUpdateToken)
         )
     }
 }

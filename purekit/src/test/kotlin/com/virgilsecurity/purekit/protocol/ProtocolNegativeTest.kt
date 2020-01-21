@@ -112,7 +112,7 @@ class ProtocolNegativeTest {
         var failed = false
         runBlocking {
             try {
-                RecordUpdater.updateEnrollmentRecord(ByteArray(0), PropertyManager.updateToken).await()
+                RecordUpdater.updateEnrollmentRecord(ByteArray(0), PropertyManager.pheUpdateToken).await()
             } catch (e: IllegalArgumentException) {
                 failed = true
             }
@@ -124,7 +124,7 @@ class ProtocolNegativeTest {
         runBlocking {
             try {
                 RecordUpdater.updateEnrollmentRecord(Random.nextBytes(RANDOM_BYTES_SIZE),
-                                                     PropertyManager.updateToken).await()
+                                                     PropertyManager.pheUpdateToken).await()
             } catch (t: Throwable) {
                 assertTrue(t is InvalidProtobufTypeException)
             }

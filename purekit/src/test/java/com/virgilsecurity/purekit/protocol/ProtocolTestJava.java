@@ -132,8 +132,8 @@ class ProtocolTestJava {
         return Stream.of(
                 Arguments.of(PropertyManager.getPheServiceAddress(),
                              PropertyManager.getAppToken(),
-                             PropertyManager.getPublicKeyNew(),
-                             PropertyManager.getSecretKeyNew())
+                             PropertyManager.getPhePublicKeyNew(),
+                             PropertyManager.getPheSecretKeyNew())
         );
     }
 
@@ -141,9 +141,9 @@ class ProtocolTestJava {
         return Stream.of(
                 Arguments.of(PropertyManager.getPheServiceAddress(),
                              PropertyManager.getAppToken(),
-                             PropertyManager.getPublicKeyOld(),
-                             PropertyManager.getSecretKeyOld(),
-                             PropertyManager.getUpdateToken())
+                             PropertyManager.getPhePublicKeyOld(),
+                             PropertyManager.getPheSecretKeyOld(),
+                             PropertyManager.getPheUpdateToken())
         );
     }
 }
