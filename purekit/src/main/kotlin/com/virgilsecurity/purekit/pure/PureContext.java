@@ -85,8 +85,21 @@ public class PureContext {
     private final NonrotatableSecrets nonrotatableSecrets;
     private PureStorage storage;
     private final HttpPheClient pheClient;
+
+    public HttpKmsClient getKmsClient() {
+        return kmsClient;
+    }
+
+    private final HttpKmsClient kmsClient;
     private final Map<String, List<VirgilPublicKey>> externalPublicKeys;
-    private Credentials updateToken;
+
+    private Credentials pheUpdateToken;
+
+    public Credentials getKmsUpdateToken() {
+        return kmsUpdateToken;
+    }
+
+    private Credentials kmsUpdateToken;
 
     private PureContext(VirgilCrypto crypto,
                         String appToken,
@@ -115,6 +128,7 @@ public class PureContext {
         this.kmsSecretKey = PureContext.parseCredentials(KMS_SECRET_KEY_PREFIX, kmsSecretKey, true);
         this.kmsPublicKey = PureContext.parseCredentials(KMS_PUBLIC_KEY_PREFIX, kmsPublicKey, true);
         this.pheClient = new HttpPheClient(appToken, pheServiceAddress);
+        this.kmsClient = new HttpKmsClient(appToken, kmsServiceAddress);
 
         if (storage instanceof PureModelSerializerDependent) {
             PureModelSerializerDependent dependent = (PureModelSerializerDependent)storage;
@@ -346,17 +360,25 @@ public class PureContext {
      *
      * @return PureStorage.
      */
-    public Credentials getUpdateToken() {
-        return updateToken;
+    public Credentials getPheUpdateToken() {
+        return pheUpdateToken;
     }
 
     /**
      * Sets Update token.
      */
-    public void setUpdateToken(String updateToken) throws PureLogicException {
-        this.updateToken = PureContext.parseCredentials("UT", updateToken, true);
+    public void setPheUpdateToken(String pheUpdateToken) throws PureLogicException {
+        this.pheUpdateToken = PureContext.parseCredentials("UT", pheUpdateToken, true);
 
-        if (this.updateToken.getVersion() != this.phePublicKey.getVersion() + 1) {
+        if (this.pheUpdateToken.getVersion() != this.phePublicKey.getVersion() + 1) {
+            throw new PureLogicException(PureLogicException.ErrorStatus.UPDATE_TOKEN_VERSION_MISMATCH);
+        }
+    }
+
+    public void setKmsUpdateToken(String kmsUpdateToken) throws PureLogicException {
+        this.kmsUpdateToken = PureContext.parseCredentials("KT", kmsUpdateToken, true);
+
+        if (this.kmsUpdateToken.getVersion() != this.kmsPublicKey.getVersion() + 1) {
             throw new PureLogicException(PureLogicException.ErrorStatus.UPDATE_TOKEN_VERSION_MISMATCH);
         }
     }

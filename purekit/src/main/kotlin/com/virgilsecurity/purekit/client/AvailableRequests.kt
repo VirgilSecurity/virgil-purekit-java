@@ -37,9 +37,11 @@ package com.virgilsecurity.purekit.client
  * Enum of available requests
  */
 enum class AvailableRequests(val type: String) {
+    // PHE
     ENROLL("/enroll"),
     VERIFY_PASSWORD("/verify-password"),
 
+    // PURE
     INSERT_USER("/user"),
     UPDATE_USER("/user/%s"),
     GET_USER("/user/%s"),
@@ -55,4 +57,7 @@ enum class AvailableRequests(val type: String) {
     GET_ROLE_ASSIGNMENTS("/get-role-assignments"),
     GET_ROLE_ASSIGNMENT("/get-role-assignment"),
     DELETE_ROLE_ASSIGNMENTS("/delete-role-assignments"),
+
+    // KMS
+    DECRYPT_REQUEST("/decrypt"),
 }

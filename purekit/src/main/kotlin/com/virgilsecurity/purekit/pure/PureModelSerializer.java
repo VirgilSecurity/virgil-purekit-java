@@ -57,6 +57,8 @@ public class PureModelSerializer {
                 .setEncryptedUsk(ByteString.copyFrom(userRecord.getEncryptedUsk()))
                 .setEncryptedUskBackup(ByteString.copyFrom(userRecord.getEncryptedUskBackup()))
                 .setEncryptedPwdHash(ByteString.copyFrom(userRecord.getEncryptedPwdHash()))
+                .setPasswordResetWrap(ByteString.copyFrom(userRecord.getPasswordResetWrap()))
+                .setPasswordResetBlob(ByteString.copyFrom(userRecord.getPasswordResetBlob()))
                 .build()
                 .toByteArray();
 
@@ -106,7 +108,9 @@ public class PureModelSerializer {
                 recordSigned.getUpk().toByteArray(),
                 recordSigned.getEncryptedUsk().toByteArray(),
                 recordSigned.getEncryptedUskBackup().toByteArray(),
-                recordSigned.getEncryptedPwdHash().toByteArray());
+                recordSigned.getEncryptedPwdHash().toByteArray(),
+                recordSigned.getPasswordResetWrap().toByteArray(),
+                recordSigned.getPasswordResetBlob().toByteArray());
     }
 
     public PurekitProtosV3Storage.CellKey serializeCellKey(CellKey cellKey) throws SigningException {

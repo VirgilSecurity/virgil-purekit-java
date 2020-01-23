@@ -59,3 +59,13 @@ message DeleteRoleAssignments {
     string role_name = 1;
     repeated string user_ids = 2;
 }
+
+message DecryptRequest {
+    uint32 version = 1;
+    string alias = 2;
+    bytes request = 3;
+}
+
+message DecryptResponse {
+    bytes response = 1;
+}

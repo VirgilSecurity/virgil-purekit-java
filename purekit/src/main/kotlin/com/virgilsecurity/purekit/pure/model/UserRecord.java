@@ -45,6 +45,8 @@ public class UserRecord {
     private final byte[] encryptedUsk;
     private final byte[] encryptedUskBackup;
     private final byte[] encryptedPwdHash;
+    private final byte[] passwordResetWrap;
+    private final byte[] passwordResetBlob;
 
     /**
      * Instantiates UserRecord.
@@ -58,7 +60,8 @@ public class UserRecord {
      * @param encryptedPwdHash Encrypted for backup user password hash.
      */
     public UserRecord(String userId, byte[] pheRecord, int pheRecordVersion, byte[] upk,
-                      byte[] encryptedUsk, byte[] encryptedUskBackup, byte[] encryptedPwdHash) {
+                      byte[] encryptedUsk, byte[] encryptedUskBackup, byte[] encryptedPwdHash,
+                      byte[] passwordResetWrap, byte[] passwordResetBlob) {
         this.userId = userId;
         this.pheRecord = pheRecord;
         this.pheRecordVersion = pheRecordVersion;
@@ -66,6 +69,8 @@ public class UserRecord {
         this.encryptedUsk = encryptedUsk;
         this.encryptedUskBackup = encryptedUskBackup;
         this.encryptedPwdHash = encryptedPwdHash;
+        this.passwordResetWrap = passwordResetWrap;
+        this.passwordResetBlob = passwordResetBlob;
     }
 
     /**
@@ -129,5 +134,13 @@ public class UserRecord {
      */
     public byte[] getEncryptedPwdHash() {
         return encryptedPwdHash;
+    }
+
+    public byte[] getPasswordResetWrap() {
+        return passwordResetWrap;
+    }
+
+    public byte[] getPasswordResetBlob() {
+        return passwordResetBlob;
     }
 }

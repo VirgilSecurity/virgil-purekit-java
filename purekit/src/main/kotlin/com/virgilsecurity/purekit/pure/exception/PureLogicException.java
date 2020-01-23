@@ -65,7 +65,8 @@ public class PureLogicException extends PureException {
         DUPLICATE_USER_ID(14, "Duplicate user Id"),
         INVALID_PASSWORD(15, "Invalid password"),
         USER_HAS_NO_ACCESS_TO_DATA(16, "User has no access to data"),
-        DUPLICATE_ROLE_NAME(17, "Duplicate role name");
+        DUPLICATE_ROLE_NAME(17, "Duplicate role name"),
+        UPDATE_TOKENS_MISMATCH(18, "KMS and PHE rotation should be simultaneous");
 
 
         private final int code;

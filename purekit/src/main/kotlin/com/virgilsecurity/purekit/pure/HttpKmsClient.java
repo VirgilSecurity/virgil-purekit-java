@@ -5,6 +5,7 @@ import com.virgilsecurity.purekit.client.HttpClientProtobuf;
 import com.virgilsecurity.purekit.data.ProtocolException;
 import com.virgilsecurity.purekit.data.ProtocolHttpException;
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtos;
+import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client;
 import com.virgilsecurity.purekit.utils.ValidateUtils;
 
 import java.util.LinkedHashMap;
@@ -33,28 +34,15 @@ public class HttpKmsClient {
         this.client = new HttpClientProtobuf(serviceAddress);
     }
 
-    public PurekitProtos.EnrollmentResponse enrollAccount(PurekitProtos.EnrollmentRequest request)
+    public PurekitProtosV3Client.DecryptResponse decrypt(PurekitProtosV3Client.DecryptRequest request)
             throws ProtocolException, ProtocolHttpException {
 
         return client.firePost(
                 request,
-                AvailableRequests.ENROLL.getType(),
+                AvailableRequests.DECRYPT_REQUEST.getType(),
                 new LinkedHashMap<>(),
                 this.appToken,
-                PurekitProtos.EnrollmentResponse.parser()
-        );
-    }
-
-    public PurekitProtos.VerifyPasswordResponse verifyPassword(
-            PurekitProtos.VerifyPasswordRequest request
-    ) throws ProtocolException, ProtocolHttpException {
-
-        return client.firePost(
-                request,
-                AvailableRequests.VERIFY_PASSWORD.getType(),
-                new LinkedHashMap<>(),
-                this.appToken,
-                PurekitProtos.VerifyPasswordResponse.parser()
+                PurekitProtosV3Client.DecryptResponse.parser()
         );
     }
 }

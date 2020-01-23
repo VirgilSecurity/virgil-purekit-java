@@ -448,7 +448,7 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
         for (PurekitProtosV3Storage.RoleAssignment protobufRecord : protoRecords.getRoleAssignmentsList()) {
             RoleAssignment roleAssignment = pureModelSerializer.parseRoleAssignment(protobufRecord);
 
-            if (roleAssignment.getUserId().equals(userId)) {
+            if (!roleAssignment.getUserId().equals(userId)) {
                 throw new PureLogicException(PureLogicException.ErrorStatus.USER_ID_MISMATCH);
             }
 
