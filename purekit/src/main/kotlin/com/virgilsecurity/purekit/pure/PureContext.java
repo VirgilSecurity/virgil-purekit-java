@@ -52,16 +52,22 @@ import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
 public class PureContext {
 
     static class Credentials {
-        private byte[] payload;
+        private byte[] payload1;
+        private byte[] payload2;
         private int version;
 
-        private Credentials(byte[] payload, int version) {
-            this.payload = payload;
+        private Credentials(byte[] payload1, byte[] payload2, int version) {
+            this.payload1 = payload1;
+            this.payload2 = payload2;
             this.version = version;
         }
 
-        byte[] getPayload() {
-            return payload;
+        byte[] getPayload1() {
+            return payload1;
+        }
+
+        byte[] getPayload2() {
+            return payload1;
         }
 
         int getVersion() {
@@ -71,17 +77,13 @@ public class PureContext {
 
     private static final String NMS_PREFIX = "NM";
     private static final String BUPPK_PREFIX = "BU";
-    private static final String PHE_SECRET_KEY_PREFIX = "SK";
-    private static final String PHE_PUBLIC_KEY_PREFIX = "PK";
-    private static final String KMS_SECRET_KEY_PREFIX = "KS";
-    private static final String KMS_PUBLIC_KEY_PREFIX = "KP";
+    private static final String SECRET_KEY_PREFIX = "SK";
+    private static final String PUBLIC_KEY_PREFIX = "PK";
 
     private final VirgilCrypto crypto;
     private final VirgilPublicKey buppk;
-    private final Credentials pheSecretKey;
-    private final Credentials phePublicKey;
-    private final Credentials kmsSecretKey;
-    private final Credentials kmsPublicKey;
+    private final Credentials secretKey;
+    private final Credentials publicKey;
     private final NonrotatableSecrets nonrotatableSecrets;
     private PureStorage storage;
     private final HttpPheClient pheClient;
@@ -93,22 +95,14 @@ public class PureContext {
     private final HttpKmsClient kmsClient;
     private final Map<String, List<VirgilPublicKey>> externalPublicKeys;
 
-    private Credentials pheUpdateToken;
-
-    public Credentials getKmsUpdateToken() {
-        return kmsUpdateToken;
-    }
-
-    private Credentials kmsUpdateToken;
+    private Credentials updateToken;
 
     private PureContext(VirgilCrypto crypto,
                         String appToken,
                         String nms,
                         String buppk,
-                        String pheSecretKey,
-                        String phePublicKey,
-                        String kmsSecretKey,
-                        String kmsPublicKey,
+                        String secretKey,
+                        String publicKey,
                         PureStorage storage,
                         Map<String, List<String>> externalPublicKeys,
                         String pheServiceAddress,
@@ -117,16 +111,14 @@ public class PureContext {
 
         this.crypto = crypto;
 
-        Credentials nmsCred = PureContext.parseCredentials(NMS_PREFIX, nms, false);
-        this.nonrotatableSecrets = NonrotatableSecretsGenerator.generateSecrets(nmsCred.getPayload());
+        Credentials nmsCred = PureContext.parseCredentials(NMS_PREFIX, nms, false, false);
+        this.nonrotatableSecrets = NonrotatableSecretsGenerator.generateSecrets(nmsCred.getPayload1());
 
-        byte[] buppkData = PureContext.parseCredentials(BUPPK_PREFIX, buppk, false).getPayload();
+        byte[] buppkData = PureContext.parseCredentials(BUPPK_PREFIX, buppk, false, false).getPayload1();
         this.buppk = crypto.importPublicKey(buppkData);
 
-        this.pheSecretKey = PureContext.parseCredentials(PHE_SECRET_KEY_PREFIX, pheSecretKey, true);
-        this.phePublicKey = PureContext.parseCredentials(PHE_PUBLIC_KEY_PREFIX, phePublicKey, true);
-        this.kmsSecretKey = PureContext.parseCredentials(KMS_SECRET_KEY_PREFIX, kmsSecretKey, true);
-        this.kmsPublicKey = PureContext.parseCredentials(KMS_PUBLIC_KEY_PREFIX, kmsPublicKey, true);
+        this.secretKey = PureContext.parseCredentials(SECRET_KEY_PREFIX, secretKey, true, true);
+        this.publicKey = PureContext.parseCredentials(PUBLIC_KEY_PREFIX, publicKey, true, true);
         this.pheClient = new HttpPheClient(appToken, pheServiceAddress);
         this.kmsClient = new HttpKmsClient(appToken, kmsServiceAddress);
 
@@ -146,9 +138,9 @@ public class PureContext {
                 ArrayList<VirgilPublicKey> publicKeys = new ArrayList<>(publicKeysBase64.size());
 
                 for (String publicKeyBase64 : publicKeysBase64) {
-                    VirgilPublicKey publicKey =
+                    VirgilPublicKey pubKey =
                         crypto.importPublicKey(Base64.decode(publicKeyBase64.getBytes()));
-                    publicKeys.add(publicKey);
+                    publicKeys.add(pubKey);
                 }
 
                 this.externalPublicKeys.put(key, publicKeys);
@@ -157,9 +149,7 @@ public class PureContext {
             this.externalPublicKeys = new HashMap<>();
         }
 
-        if (this.pheSecretKey.getVersion() != this.phePublicKey.getVersion()
-            || this.kmsSecretKey.getVersion() != this.kmsPublicKey.getVersion()
-            || this.phePublicKey.getVersion() != this.kmsPublicKey.getVersion()) {
+        if (this.secretKey.getVersion() != this.publicKey.getVersion()) {
             throw new PureLogicException(PureLogicException.ErrorStatus.KEYS_VERSION_MISMATCH);
         }
     }
@@ -180,14 +170,12 @@ public class PureContext {
                                             String bu,
                                             String sk,
                                             String pk,
-                                            String ks,
-                                            String kp,
                                             Map<String, List<String>> externalPublicKeys)
         throws CryptoException, PureLogicException {
 
         return PureContext.createContext(
             appToken,
-            nms, bu, sk, pk, ks, kp,
+            nms, bu, sk, pk,
             externalPublicKeys,
             HttpPheClient.SERVICE_ADDRESS,
             HttpPureClient.SERVICE_ADDRESS,
@@ -213,8 +201,6 @@ public class PureContext {
                                             String bu,
                                             String sk,
                                             String pk,
-                                            String ks,
-                                            String kp,
                                             Map<String, List<String>> externalPublicKeys,
                                             String pheServiceAddress,
                                             String pureServiceAddress,
@@ -229,7 +215,7 @@ public class PureContext {
         return new PureContext(
             crypto,
             appToken,
-            nms, bu, sk, pk, ks, kp,
+            nms, bu, sk, pk,
             storage,
             externalPublicKeys,
             pheServiceAddress,
@@ -253,10 +239,8 @@ public class PureContext {
                                             String nms,
                                             String bu,
                                             PureStorage storage,
-                                            String pheSecretKey,
-                                            String phePublicKey,
-                                            String kmsSecretKey,
-                                            String kmsPublicKey,
+                                            String secretKey,
+                                            String publicKey,
                                             Map<String, List<String>> externalPublicKeys)
         throws CryptoException, PureLogicException {
 
@@ -264,10 +248,8 @@ public class PureContext {
             appToken,
             nms, bu,
             storage,
-            pheSecretKey,
-            phePublicKey,
-            kmsSecretKey,
-            kmsPublicKey,
+            secretKey,
+            publicKey,
             externalPublicKeys,
             HttpPheClient.SERVICE_ADDRESS,
             HttpKmsClient.SERVICE_ADDRESS
@@ -291,10 +273,8 @@ public class PureContext {
                                             String nms,
                                             String bu,
                                             PureStorage storage,
-                                            String pheSecretKey,
-                                            String phePublicKey,
-                                            String kmsSecretKey,
-                                            String kmsPublicKey,
+                                            String secretKey,
+                                            String publicKey,
                                             Map<String, List<String>> externalPublicKeys,
                                             String pheServiceAddress,
                                             String kmsServiceAddress)
@@ -303,10 +283,8 @@ public class PureContext {
         return new PureContext(
             new VirgilCrypto(),
             appToken, nms, bu,
-            pheSecretKey,
-            phePublicKey,
-            kmsSecretKey,
-            kmsPublicKey,
+            secretKey,
+            publicKey,
             storage,
             externalPublicKeys,
             pheServiceAddress,
@@ -316,13 +294,16 @@ public class PureContext {
 
     private static Credentials parseCredentials(String prefix,
                                                 String credentials,
-                                                boolean isVersioned) throws PureLogicException {
+                                                boolean isVersioned,
+                                                boolean isTwofold) throws PureLogicException {
         ValidateUtils.checkNullOrEmpty(prefix, "prefix");
         ValidateUtils.checkNullOrEmpty(credentials, "credentials");
 
         String[] parts = credentials.split("\\.");
 
-        if (parts.length != (isVersioned ? 3 : 2)) {
+        int numberOfParts = 2 + (isTwofold ? 1 : 0) + (isVersioned ? 1 : 0);
+
+        if (parts.length != numberOfParts) {
             throw new PureLogicException(PureLogicException.ErrorStatus.CREDENTIALS_PARSING_ERROR);
         }
 
@@ -341,9 +322,18 @@ public class PureContext {
             version = 0;
         }
 
-        byte[] payload = Base64.decode(parts[index].getBytes());
+        byte[] payload1 = Base64.decode(parts[index].getBytes());
+        byte[] payload2;
 
-        return new Credentials(payload, version);
+        if (isTwofold) {
+            index++;
+            payload2 = Base64.decode(parts[index].getBytes());
+        }
+        else {
+            payload2 = new byte[0];
+        }
+
+        return new Credentials(payload1, payload2, version);
     }
 
     /**
@@ -360,25 +350,17 @@ public class PureContext {
      *
      * @return PureStorage.
      */
-    public Credentials getPheUpdateToken() {
-        return pheUpdateToken;
+    public Credentials getUpdateToken() {
+        return updateToken;
     }
 
     /**
      * Sets Update token.
      */
-    public void setPheUpdateToken(String pheUpdateToken) throws PureLogicException {
-        this.pheUpdateToken = PureContext.parseCredentials("UT", pheUpdateToken, true);
+    public void setUpdateToken(String updateToken) throws PureLogicException {
+        this.updateToken = PureContext.parseCredentials("UT", updateToken, true, true);
 
-        if (this.pheUpdateToken.getVersion() != this.phePublicKey.getVersion() + 1) {
-            throw new PureLogicException(PureLogicException.ErrorStatus.UPDATE_TOKEN_VERSION_MISMATCH);
-        }
-    }
-
-    public void setKmsUpdateToken(String kmsUpdateToken) throws PureLogicException {
-        this.kmsUpdateToken = PureContext.parseCredentials("KT", kmsUpdateToken, true);
-
-        if (this.kmsUpdateToken.getVersion() != this.kmsPublicKey.getVersion() + 1) {
+        if (this.updateToken.getVersion() != this.publicKey.getVersion() + 1) {
             throw new PureLogicException(PureLogicException.ErrorStatus.UPDATE_TOKEN_VERSION_MISMATCH);
         }
     }
@@ -401,8 +383,8 @@ public class PureContext {
      *
      * @return App secret key.
      */
-    public Credentials getPheSecretKey() {
-        return pheSecretKey;
+    public Credentials getSecretKey() {
+        return secretKey;
     }
 
     /**
@@ -410,16 +392,8 @@ public class PureContext {
      *
      * @return Service public key.
      */
-    public Credentials getPhePublicKey() {
-        return phePublicKey;
-    }
-
-    public Credentials getKmsSecretKey() {
-        return kmsSecretKey;
-    }
-
-    public Credentials getKmsPublicKey() {
-        return kmsPublicKey;
+    public Credentials getPublicKey() {
+        return publicKey;
     }
 
     /**

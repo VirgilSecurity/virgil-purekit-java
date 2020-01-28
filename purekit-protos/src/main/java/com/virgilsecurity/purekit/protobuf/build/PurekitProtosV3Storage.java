@@ -64,12 +64,7 @@ public final class PurekitProtosV3Storage {
     com.google.protobuf.ByteString getEncryptedPwdHash();
 
     /**
-     * <code>bytes password_reset_wrap = 9;</code>
-     */
-    com.google.protobuf.ByteString getPasswordResetWrap();
-
-    /**
-     * <code>bytes password_reset_blob = 10;</code>
+     * <code>bytes password_reset_blob = 9;</code>
      */
     com.google.protobuf.ByteString getPasswordResetBlob();
   }
@@ -93,7 +88,6 @@ public final class PurekitProtosV3Storage {
       encryptedUsk_ = com.google.protobuf.ByteString.EMPTY;
       encryptedUskBackup_ = com.google.protobuf.ByteString.EMPTY;
       encryptedPwdHash_ = com.google.protobuf.ByteString.EMPTY;
-      passwordResetWrap_ = com.google.protobuf.ByteString.EMPTY;
       passwordResetBlob_ = com.google.protobuf.ByteString.EMPTY;
     }
 
@@ -169,11 +163,6 @@ public final class PurekitProtosV3Storage {
               break;
             }
             case 74: {
-
-              passwordResetWrap_ = input.readBytes();
-              break;
-            }
-            case 82: {
 
               passwordResetBlob_ = input.readBytes();
               break;
@@ -307,19 +296,10 @@ public final class PurekitProtosV3Storage {
       return encryptedPwdHash_;
     }
 
-    public static final int PASSWORD_RESET_WRAP_FIELD_NUMBER = 9;
-    private com.google.protobuf.ByteString passwordResetWrap_;
-    /**
-     * <code>bytes password_reset_wrap = 9;</code>
-     */
-    public com.google.protobuf.ByteString getPasswordResetWrap() {
-      return passwordResetWrap_;
-    }
-
-    public static final int PASSWORD_RESET_BLOB_FIELD_NUMBER = 10;
+    public static final int PASSWORD_RESET_BLOB_FIELD_NUMBER = 9;
     private com.google.protobuf.ByteString passwordResetBlob_;
     /**
-     * <code>bytes password_reset_blob = 10;</code>
+     * <code>bytes password_reset_blob = 9;</code>
      */
     public com.google.protobuf.ByteString getPasswordResetBlob() {
       return passwordResetBlob_;
@@ -363,11 +343,8 @@ public final class PurekitProtosV3Storage {
       if (!encryptedPwdHash_.isEmpty()) {
         output.writeBytes(8, encryptedPwdHash_);
       }
-      if (!passwordResetWrap_.isEmpty()) {
-        output.writeBytes(9, passwordResetWrap_);
-      }
       if (!passwordResetBlob_.isEmpty()) {
-        output.writeBytes(10, passwordResetBlob_);
+        output.writeBytes(9, passwordResetBlob_);
       }
       unknownFields.writeTo(output);
     }
@@ -409,13 +386,9 @@ public final class PurekitProtosV3Storage {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(8, encryptedPwdHash_);
       }
-      if (!passwordResetWrap_.isEmpty()) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(9, passwordResetWrap_);
-      }
       if (!passwordResetBlob_.isEmpty()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(10, passwordResetBlob_);
+          .computeBytesSize(9, passwordResetBlob_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -448,8 +421,6 @@ public final class PurekitProtosV3Storage {
           .equals(other.getEncryptedUskBackup())) return false;
       if (!getEncryptedPwdHash()
           .equals(other.getEncryptedPwdHash())) return false;
-      if (!getPasswordResetWrap()
-          .equals(other.getPasswordResetWrap())) return false;
       if (!getPasswordResetBlob()
           .equals(other.getPasswordResetBlob())) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
@@ -479,8 +450,6 @@ public final class PurekitProtosV3Storage {
       hash = (53 * hash) + getEncryptedUskBackup().hashCode();
       hash = (37 * hash) + ENCRYPTED_PWD_HASH_FIELD_NUMBER;
       hash = (53 * hash) + getEncryptedPwdHash().hashCode();
-      hash = (37 * hash) + PASSWORD_RESET_WRAP_FIELD_NUMBER;
-      hash = (53 * hash) + getPasswordResetWrap().hashCode();
       hash = (37 * hash) + PASSWORD_RESET_BLOB_FIELD_NUMBER;
       hash = (53 * hash) + getPasswordResetBlob().hashCode();
       hash = (29 * hash) + unknownFields.hashCode();
@@ -632,8 +601,6 @@ public final class PurekitProtosV3Storage {
 
         encryptedPwdHash_ = com.google.protobuf.ByteString.EMPTY;
 
-        passwordResetWrap_ = com.google.protobuf.ByteString.EMPTY;
-
         passwordResetBlob_ = com.google.protobuf.ByteString.EMPTY;
 
         return this;
@@ -670,7 +637,6 @@ public final class PurekitProtosV3Storage {
         result.encryptedUsk_ = encryptedUsk_;
         result.encryptedUskBackup_ = encryptedUskBackup_;
         result.encryptedPwdHash_ = encryptedPwdHash_;
-        result.passwordResetWrap_ = passwordResetWrap_;
         result.passwordResetBlob_ = passwordResetBlob_;
         onBuilt();
         return result;
@@ -744,9 +710,6 @@ public final class PurekitProtosV3Storage {
         }
         if (other.getEncryptedPwdHash() != com.google.protobuf.ByteString.EMPTY) {
           setEncryptedPwdHash(other.getEncryptedPwdHash());
-        }
-        if (other.getPasswordResetWrap() != com.google.protobuf.ByteString.EMPTY) {
-          setPasswordResetWrap(other.getPasswordResetWrap());
         }
         if (other.getPasswordResetBlob() != com.google.protobuf.ByteString.EMPTY) {
           setPasswordResetBlob(other.getPasswordResetBlob());
@@ -1049,44 +1012,15 @@ public final class PurekitProtosV3Storage {
         return this;
       }
 
-      private com.google.protobuf.ByteString passwordResetWrap_ = com.google.protobuf.ByteString.EMPTY;
-      /**
-       * <code>bytes password_reset_wrap = 9;</code>
-       */
-      public com.google.protobuf.ByteString getPasswordResetWrap() {
-        return passwordResetWrap_;
-      }
-      /**
-       * <code>bytes password_reset_wrap = 9;</code>
-       */
-      public Builder setPasswordResetWrap(com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        passwordResetWrap_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>bytes password_reset_wrap = 9;</code>
-       */
-      public Builder clearPasswordResetWrap() {
-        
-        passwordResetWrap_ = getDefaultInstance().getPasswordResetWrap();
-        onChanged();
-        return this;
-      }
-
       private com.google.protobuf.ByteString passwordResetBlob_ = com.google.protobuf.ByteString.EMPTY;
       /**
-       * <code>bytes password_reset_blob = 10;</code>
+       * <code>bytes password_reset_blob = 9;</code>
        */
       public com.google.protobuf.ByteString getPasswordResetBlob() {
         return passwordResetBlob_;
       }
       /**
-       * <code>bytes password_reset_blob = 10;</code>
+       * <code>bytes password_reset_blob = 9;</code>
        */
       public Builder setPasswordResetBlob(com.google.protobuf.ByteString value) {
         if (value == null) {
@@ -1098,7 +1032,7 @@ public final class PurekitProtosV3Storage {
         return this;
       }
       /**
-       * <code>bytes password_reset_blob = 10;</code>
+       * <code>bytes password_reset_blob = 9;</code>
        */
       public Builder clearPasswordResetBlob() {
         
@@ -1192,6 +1126,11 @@ public final class PurekitProtosV3Storage {
      * <code>uint32 phe_record_version = 6;</code>
      */
     int getPheRecordVersion();
+
+    /**
+     * <code>bytes password_reset_wrap = 7;</code>
+     */
+    com.google.protobuf.ByteString getPasswordResetWrap();
   }
   /**
    * Protobuf type {@code build.UserRecord}
@@ -1210,6 +1149,7 @@ public final class PurekitProtosV3Storage {
       signature_ = com.google.protobuf.ByteString.EMPTY;
       pheRecordT0_ = com.google.protobuf.ByteString.EMPTY;
       pheRecordT1_ = com.google.protobuf.ByteString.EMPTY;
+      passwordResetWrap_ = com.google.protobuf.ByteString.EMPTY;
     }
 
     @java.lang.Override
@@ -1270,6 +1210,11 @@ public final class PurekitProtosV3Storage {
             case 48: {
 
               pheRecordVersion_ = input.readUInt32();
+              break;
+            }
+            case 58: {
+
+              passwordResetWrap_ = input.readBytes();
               break;
             }
             default: {
@@ -1358,6 +1303,15 @@ public final class PurekitProtosV3Storage {
       return pheRecordVersion_;
     }
 
+    public static final int PASSWORD_RESET_WRAP_FIELD_NUMBER = 7;
+    private com.google.protobuf.ByteString passwordResetWrap_;
+    /**
+     * <code>bytes password_reset_wrap = 7;</code>
+     */
+    public com.google.protobuf.ByteString getPasswordResetWrap() {
+      return passwordResetWrap_;
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -1389,6 +1343,9 @@ public final class PurekitProtosV3Storage {
       }
       if (pheRecordVersion_ != 0) {
         output.writeUInt32(6, pheRecordVersion_);
+      }
+      if (!passwordResetWrap_.isEmpty()) {
+        output.writeBytes(7, passwordResetWrap_);
       }
       unknownFields.writeTo(output);
     }
@@ -1423,6 +1380,10 @@ public final class PurekitProtosV3Storage {
         size += com.google.protobuf.CodedOutputStream
           .computeUInt32Size(6, pheRecordVersion_);
       }
+      if (!passwordResetWrap_.isEmpty()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(7, passwordResetWrap_);
+      }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
       return size;
@@ -1450,6 +1411,8 @@ public final class PurekitProtosV3Storage {
           .equals(other.getPheRecordT1())) return false;
       if (getPheRecordVersion()
           != other.getPheRecordVersion()) return false;
+      if (!getPasswordResetWrap()
+          .equals(other.getPasswordResetWrap())) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -1473,6 +1436,8 @@ public final class PurekitProtosV3Storage {
       hash = (53 * hash) + getPheRecordT1().hashCode();
       hash = (37 * hash) + PHE_RECORD_VERSION_FIELD_NUMBER;
       hash = (53 * hash) + getPheRecordVersion();
+      hash = (37 * hash) + PASSWORD_RESET_WRAP_FIELD_NUMBER;
+      hash = (53 * hash) + getPasswordResetWrap().hashCode();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -1618,6 +1583,8 @@ public final class PurekitProtosV3Storage {
 
         pheRecordVersion_ = 0;
 
+        passwordResetWrap_ = com.google.protobuf.ByteString.EMPTY;
+
         return this;
       }
 
@@ -1650,6 +1617,7 @@ public final class PurekitProtosV3Storage {
         result.pheRecordT0_ = pheRecordT0_;
         result.pheRecordT1_ = pheRecordT1_;
         result.pheRecordVersion_ = pheRecordVersion_;
+        result.passwordResetWrap_ = passwordResetWrap_;
         onBuilt();
         return result;
       }
@@ -1715,6 +1683,9 @@ public final class PurekitProtosV3Storage {
         }
         if (other.getPheRecordVersion() != 0) {
           setPheRecordVersion(other.getPheRecordVersion());
+        }
+        if (other.getPasswordResetWrap() != com.google.protobuf.ByteString.EMPTY) {
+          setPasswordResetWrap(other.getPasswordResetWrap());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -1909,6 +1880,35 @@ public final class PurekitProtosV3Storage {
       public Builder clearPheRecordVersion() {
         
         pheRecordVersion_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private com.google.protobuf.ByteString passwordResetWrap_ = com.google.protobuf.ByteString.EMPTY;
+      /**
+       * <code>bytes password_reset_wrap = 7;</code>
+       */
+      public com.google.protobuf.ByteString getPasswordResetWrap() {
+        return passwordResetWrap_;
+      }
+      /**
+       * <code>bytes password_reset_wrap = 7;</code>
+       */
+      public Builder setPasswordResetWrap(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        passwordResetWrap_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>bytes password_reset_wrap = 7;</code>
+       */
+      public Builder clearPasswordResetWrap() {
+        
+        passwordResetWrap_ = getDefaultInstance().getPasswordResetWrap();
         onChanged();
         return this;
       }
@@ -8750,17 +8750,17 @@ public final class PurekitProtosV3Storage {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\027purekitV3_storage.proto\022\005build\"\372\001\n\020Use" +
+      "\n\027purekitV3_storage.proto\022\005build\"\335\001\n\020Use" +
       "rRecordSigned\022\017\n\007version\030\001 \001(\r\022\017\n\007user_i" +
       "d\030\002 \001(\t\022\025\n\rphe_record_ns\030\003 \001(\014\022\025\n\rphe_re" +
       "cord_nc\030\004 \001(\014\022\013\n\003upk\030\005 \001(\014\022\025\n\rencrypted_" +
       "usk\030\006 \001(\014\022\034\n\024encrypted_usk_backup\030\007 \001(\014\022" +
       "\032\n\022encrypted_pwd_hash\030\010 \001(\014\022\033\n\023password_" +
-      "reset_wrap\030\t \001(\014\022\033\n\023password_reset_blob\030" +
-      "\n \001(\014\"\226\001\n\nUserRecord\022\017\n\007version\030\001 \001(\r\022\032\n" +
-      "\022user_record_signed\030\002 \001(\014\022\021\n\tsignature\030\003" +
-      " \001(\014\022\025\n\rphe_record_t0\030\004 \001(\014\022\025\n\rphe_recor" +
-      "d_t1\030\005 \001(\014\022\032\n\022phe_record_version\030\006 \001(\r\"6" +
+      "reset_blob\030\t \001(\014\"\263\001\n\nUserRecord\022\017\n\007versi" +
+      "on\030\001 \001(\r\022\032\n\022user_record_signed\030\002 \001(\014\022\021\n\t" +
+      "signature\030\003 \001(\014\022\025\n\rphe_record_t0\030\004 \001(\014\022\025" +
+      "\n\rphe_record_t1\030\005 \001(\014\022\032\n\022phe_record_vers" +
+      "ion\030\006 \001(\r\022\033\n\023password_reset_wrap\030\007 \001(\014\"6" +
       "\n\013UserRecords\022\'\n\014user_records\030\001 \003(\0132\021.bu" +
       "ild.UserRecord\"\204\001\n\rCellKeySigned\022\017\n\007vers" +
       "ion\030\001 \001(\r\022\016\n\006userId\030\002 \001(\t\022\016\n\006dataId\030\003 \001(" +
@@ -8791,13 +8791,13 @@ public final class PurekitProtosV3Storage {
     internal_static_build_UserRecordSigned_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_build_UserRecordSigned_descriptor,
-        new java.lang.String[] { "Version", "UserId", "PheRecordNs", "PheRecordNc", "Upk", "EncryptedUsk", "EncryptedUskBackup", "EncryptedPwdHash", "PasswordResetWrap", "PasswordResetBlob", });
+        new java.lang.String[] { "Version", "UserId", "PheRecordNs", "PheRecordNc", "Upk", "EncryptedUsk", "EncryptedUskBackup", "EncryptedPwdHash", "PasswordResetBlob", });
     internal_static_build_UserRecord_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_build_UserRecord_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_build_UserRecord_descriptor,
-        new java.lang.String[] { "Version", "UserRecordSigned", "Signature", "PheRecordT0", "PheRecordT1", "PheRecordVersion", });
+        new java.lang.String[] { "Version", "UserRecordSigned", "Signature", "PheRecordT0", "PheRecordT1", "PheRecordVersion", "PasswordResetWrap", });
     internal_static_build_UserRecords_descriptor =
       getDescriptor().getMessageTypes().get(2);
     internal_static_build_UserRecords_fieldAccessorTable = new

@@ -64,7 +64,7 @@ class ProtocolContextNegativeTest {
             ProtocolContext.create(
                     PropertyManager.appToken,
                     WRONG_CRED,
-                    PropertyManager.pheSecretKeyNew,
+                    PropertyManager.secretKeyNew,
                     ""
             )
         }
@@ -74,7 +74,7 @@ class ProtocolContextNegativeTest {
         assertThrows<IllegalArgumentException> {
             ProtocolContext.create(
                     PropertyManager.appToken,
-                    PropertyManager.phePublicKeyNew,
+                    PropertyManager.publicKeyNew,
                     WRONG_CRED,
                     ""
             )
@@ -85,8 +85,8 @@ class ProtocolContextNegativeTest {
         assertThrows<IllegalArgumentException> {
             ProtocolContext.create(
                     PropertyManager.appToken,
-                    PropertyManager.phePublicKeyNew,
-                    PropertyManager.pheSecretKeyNew,
+                    PropertyManager.publicKeyNew,
+                    PropertyManager.secretKeyNew,
                     WRONG_CRED
             )
         }

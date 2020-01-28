@@ -71,8 +71,8 @@ class ProtocolContextTest {
     @Test fun context_with_wrong_update_token() {
         assertThrows<IllegalArgumentException> {
             ProtocolContext.create(PropertyManager.appToken,
-                                   PropertyManager.phePublicKeyOld,
-                                   PropertyManager.pheSecretKeyOld,
+                                   PropertyManager.publicKeyOld,
+                                   PropertyManager.secretKeyOld,
                                    updateToken3()
             )
         }
@@ -82,21 +82,21 @@ class ProtocolContextTest {
      * Mocks update token 3 using update token 2.
      */
     private fun updateToken3() =
-        PropertyManager.pheUpdateToken.split(".").toList().let { "${it[0]}.3.${it[2]}" }
+        PropertyManager.updateToken.split(".").toList().let { "${it[0]}.3.${it[2]}" }
 
     companion object {
 
         @JvmStatic fun testArgumentsNoToken() = listOf(
                 Arguments.of(PropertyManager.appToken,
-                             PropertyManager.phePublicKeyNew,
-                             PropertyManager.pheSecretKeyNew)
+                             PropertyManager.publicKeyNew,
+                             PropertyManager.secretKeyNew)
         )
 
         @JvmStatic fun testArguments() = listOf(
                 Arguments.of(PropertyManager.appToken,
-                             PropertyManager.phePublicKeyOld,
-                             PropertyManager.pheSecretKeyOld,
-                             PropertyManager.pheUpdateToken)
+                             PropertyManager.publicKeyOld,
+                             PropertyManager.secretKeyOld,
+                             PropertyManager.updateToken)
         )
     }
 }

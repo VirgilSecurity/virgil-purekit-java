@@ -57,7 +57,6 @@ public class PureModelSerializer {
                 .setEncryptedUsk(ByteString.copyFrom(userRecord.getEncryptedUsk()))
                 .setEncryptedUskBackup(ByteString.copyFrom(userRecord.getEncryptedUskBackup()))
                 .setEncryptedPwdHash(ByteString.copyFrom(userRecord.getEncryptedPwdHash()))
-                .setPasswordResetWrap(ByteString.copyFrom(userRecord.getPasswordResetWrap()))
                 .setPasswordResetBlob(ByteString.copyFrom(userRecord.getPasswordResetBlob()))
                 .build()
                 .toByteArray();
@@ -73,6 +72,7 @@ public class PureModelSerializer {
                 .setPheRecordT0(enrollmentRecord.getT0())
                 .setPheRecordT1(enrollmentRecord.getT1())
                 .setPheRecordVersion(userRecord.getPheRecordVersion())
+                .setPasswordResetWrap(ByteString.copyFrom(userRecord.getPasswordResetWrap()))
                 .build();
     }
 
@@ -109,7 +109,7 @@ public class PureModelSerializer {
                 recordSigned.getEncryptedUsk().toByteArray(),
                 recordSigned.getEncryptedUskBackup().toByteArray(),
                 recordSigned.getEncryptedPwdHash().toByteArray(),
-                recordSigned.getPasswordResetWrap().toByteArray(),
+                protobufRecord.getPasswordResetWrap().toByteArray(),
                 recordSigned.getPasswordResetBlob().toByteArray());
     }
 

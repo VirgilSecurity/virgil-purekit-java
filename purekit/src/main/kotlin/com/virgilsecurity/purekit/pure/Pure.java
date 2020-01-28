@@ -64,25 +64,17 @@ import static com.virgilsecurity.crypto.foundation.FoundationException.ERROR_KEY
  * Main class for interactions with PureKit
  */
 public class Pure {
-    public static final String RECOVER_PWD_ALIAS = "RESET_PWD";
-
+    private final int currentVersion;
     private final VirgilCrypto crypto;
     private final PureCrypto pureCrypto;
     private final PheCipher cipher;
     private final PureStorage storage;
-    private final int currentVersion;
-    private final PheClient currentPheClient;
-    private final UokmsClient currentKmsClient;
-    private final byte[] pheUpdateToken;
-    private final byte[] kmsUpdateToken;
-    private final PheClient previousPheClient;
-    private final UokmsClient previousKmsClient;
     private final byte[] ak;
     private final VirgilPublicKey buppk;
     private final VirgilKeyPair oskp;
-    private final HttpPheClient httpPheClient;
-    private final HttpKmsClient httpKmsClient;
     private final Map<String, List<VirgilPublicKey>> externalPublicKeys;
+    private final PheManager pheManager;
+    private final KmsManager kmsManager;
 
     private final static int currentGrantVersion = 1;
 
@@ -98,55 +90,19 @@ public class Pure {
             this.cipher = new PheCipher();
             this.cipher.setRandom(this.crypto.getRng());
             this.storage = context.getStorage();
-            this.currentPheClient = new PheClient();
-            this.currentPheClient.setOperationRandom(this.crypto.getRng());
-            this.currentPheClient.setRandom(this.crypto.getRng());
-            this.currentPheClient.setKeys(context.getPheSecretKey().getPayload(),
-                    context.getPhePublicKey().getPayload());
-
-            this.currentKmsClient = new UokmsClient();
-            this.currentKmsClient.setOperationRandom(this.crypto.getRng());
-            this.currentKmsClient.setRandom(this.crypto.getRng());
-            this.currentKmsClient.setKeys(context.getKmsSecretKey().getPayload(),
-                    context.getKmsPublicKey().getPayload());
-
-            if (context.getPheUpdateToken() != null) {
-                if (context.getKmsUpdateToken() == null) {
-                    throw new PureLogicException(PureLogicException.ErrorStatus.UPDATE_TOKENS_MISMATCH);
-                }
-                this.currentVersion = context.getPhePublicKey().getVersion() + 1;
-                this.pheUpdateToken = context.getPheUpdateToken().getPayload();
-                this.previousPheClient = new PheClient();
-                this.previousPheClient.setOperationRandom(this.crypto.getRng());
-                this.previousPheClient.setRandom(this.crypto.getRng());
-                this.previousPheClient.setKeys(context.getPheSecretKey().getPayload(),
-                        context.getPhePublicKey().getPayload());
-                this.currentPheClient.rotateKeys(context.getPheUpdateToken().getPayload());
-
-                this.kmsUpdateToken = context.getKmsUpdateToken().getPayload();
-                this.previousKmsClient = new UokmsClient();
-                this.previousKmsClient.setOperationRandom(this.crypto.getRng());
-                this.previousKmsClient.setRandom(this.crypto.getRng());
-                this.previousKmsClient.setKeys(context.getKmsSecretKey().getPayload(),
-                        context.getKmsPublicKey().getPayload());
-                this.currentKmsClient.rotateKeys(context.getKmsUpdateToken().getPayload());
-            } else {
-                if (context.getKmsUpdateToken() != null) {
-                    throw new PureLogicException(PureLogicException.ErrorStatus.UPDATE_TOKENS_MISMATCH);
-                }
-                this.currentVersion = context.getPhePublicKey().getVersion();
-                this.pheUpdateToken = null;
-                this.kmsUpdateToken = null;
-                this.previousPheClient = null;
-                this.previousKmsClient = null;
-            }
-
             this.ak = context.getNonrotatableSecrets().getAk();
             this.buppk = context.getBuppk();
             this.oskp = context.getNonrotatableSecrets().getOskp();
-            this.httpPheClient = context.getPheClient();
-            this.httpKmsClient = context.getKmsClient();
             this.externalPublicKeys = context.getExternalPublicKeys();
+            this.pheManager = new PheManager(context);
+            this.kmsManager = new KmsManager(context);
+
+            if (context.getUpdateToken() != null) {
+                this.currentVersion = context.getPublicKey().getVersion() + 1;
+            }
+            else {
+                this.currentVersion = context.getPublicKey().getVersion();
+            }
         }
         catch (PheException e) {
             throw new PureCryptoException(e);
@@ -204,7 +160,7 @@ public class Pure {
 
             UserRecord userRecord = storage.selectUser(userId);
 
-            byte[] phek = computePheKey(userRecord, password);
+            byte[] phek = pheManager.computePheKey(userRecord, password);
 
             byte[] uskData = cipher.decrypt(userRecord.getEncryptedUsk(), phek);
 
@@ -226,7 +182,7 @@ public class Pure {
 
             byte[] headerBytes = header.toByteArray();
 
-            byte[] encryptedPhek = cipher.authEncrypt(phek, headerBytes, this.ak);
+            byte[] encryptedPhek = cipher.authEncrypt(phek, headerBytes, ak);
 
             PurekitProtosV3Grant.EncryptedGrant encryptedGrantData =
                     PurekitProtosV3Grant.EncryptedGrant.newBuilder()
@@ -333,7 +289,7 @@ public class Pure {
 
             byte[] phek = cipher.authDecrypt(encryptedData.toByteArray(),
                     encryptedGrant.getHeader().toByteArray(),
-                    this.ak);
+                    ak);
 
             PurekitProtosV3Grant.EncryptedGrantHeader header =
                     PurekitProtosV3Grant.EncryptedGrantHeader.parseFrom(encryptedGrant.getHeader());
@@ -390,7 +346,7 @@ public class Pure {
 
             UserRecord userRecord = storage.selectUser(userId);
 
-            byte[] oldPhek = computePheKey(userRecord, oldPassword);
+            byte[] oldPhek = pheManager.computePheKey(userRecord, oldPassword);
 
             byte[] privateKeyData = cipher.decrypt(userRecord.getEncryptedUsk(), oldPhek);
 
@@ -434,33 +390,14 @@ public class Pure {
     }
 
     public void recoverUser(String userId, String newPassword) throws Exception {
-        // TODO: Refactor
         ValidateUtils.checkNullOrEmpty(userId, "userId");
         ValidateUtils.checkNullOrEmpty(newPassword, "newPassword");
 
         UserRecord userRecord = storage.selectUser(userId);
 
-        UokmsClient kmsClient = getKmsClient(userRecord.getPheRecordVersion());
+        byte[] pwdHash = kmsManager.recoverPwd(userRecord);
 
-        UokmsClientGenerateDecryptRequestResult uokmsClientGenerateDecryptRequestResult = kmsClient.generateDecryptRequest(userRecord.getPasswordResetWrap());
-
-        PurekitProtosV3Client.DecryptRequest decryptRequest = PurekitProtosV3Client.DecryptRequest.newBuilder()
-                .setVersion(userRecord.getPheRecordVersion())
-                .setAlias(RECOVER_PWD_ALIAS)
-                .setRequest(ByteString.copyFrom(uokmsClientGenerateDecryptRequestResult.getDecryptRequest()))
-                .build();
-
-        PurekitProtosV3Client.DecryptResponse decryptResponse = httpKmsClient.decrypt(decryptRequest);
-
-        byte[] derivedSecret = kmsClient.processDecryptResponse(userRecord.getPasswordResetWrap(),
-                uokmsClientGenerateDecryptRequestResult.getDecryptRequest(),
-                decryptResponse.getResponse().toByteArray(),
-                uokmsClientGenerateDecryptRequestResult.getDeblindFactor(),
-                44 /* FIXME */);
-
-        byte[] pwdHash = recoverPwd(derivedSecret, userRecord.getPasswordResetBlob());
-
-        byte[] oldPhek = computePheKey(userRecord, pwdHash);
+        byte[] oldPhek = pheManager.computePheKey(userRecord, pwdHash);
 
         byte[] privateKeyData = cipher.decrypt(userRecord.getEncryptedUsk(), oldPhek);
 
@@ -522,38 +459,26 @@ public class Pure {
      * {@link com.virgilsecurity.sdk.crypto.VirgilCrypto#generateSignature} method's doc.
      */
     public long performRotation() throws Exception {
-
-        ValidateUtils.checkNull(this.pheUpdateToken, "pheUpdateToken");
-        ValidateUtils.checkNull(this.kmsUpdateToken, "kmsUpdateToken");
-
-        if (this.currentVersion <= 1) {
+        if (currentVersion <= 1) {
             return 0;
         }
 
         long rotations = 0;
 
-        PheClient pheClient = getPheClient(this.currentVersion - 1);
-
-        UokmsWrapRotation kmsRotation = new UokmsWrapRotation();
-        kmsRotation.setOperationRandom(this.crypto.getRng());
-        kmsRotation.setUpdateToken(this.kmsUpdateToken);
-
         while (true) {
-            Iterable<UserRecord> userRecords = storage.selectUsers(this.currentVersion - 1);
+            Iterable<UserRecord> userRecords = storage.selectUsers(currentVersion - 1);
             ArrayList<UserRecord> newUserRecords = new ArrayList<>();
 
             for (UserRecord userRecord: userRecords) {
-                assert userRecord.getPheRecordVersion() == this.currentVersion - 1;
+                assert userRecord.getPheRecordVersion() == currentVersion - 1;
 
-                byte[] newRecord = pheClient.updateEnrollmentRecord(userRecord.getPheRecord(),
-                                                                    this.pheUpdateToken);
-
-                byte[] newWrap = kmsRotation.updateWrap(userRecord.getPasswordResetWrap());
+                byte[] newRecord = pheManager.performRotation(userRecord.getPheRecord());
+                byte[] newWrap = kmsManager.performRotation(userRecord.getPasswordResetWrap());
 
                 UserRecord newUserRecord = new UserRecord(
                     userRecord.getUserId(),
                     newRecord,
-                    this.currentVersion,
+                    currentVersion,
                     userRecord.getUpk(),
                     userRecord.getEncryptedUsk(),
                     userRecord.getEncryptedUskBackup(),
@@ -565,7 +490,7 @@ public class Pure {
                 newUserRecords.add(newUserRecord);
             }
 
-            storage.updateUsers(newUserRecords, this.currentVersion - 1);
+            storage.updateUsers(newUserRecords, currentVersion - 1);
 
             if (newUserRecords.isEmpty()) {
                 break;
@@ -1074,78 +999,19 @@ public class Pure {
         storage.deleteRoleAssignments(roleName, userIds);
     }
 
-    private static class PwdResetData {
-        public PwdResetData(byte[] wrap, byte[] blob) {
-            this.wrap = wrap;
-            this.blob = blob;
-        }
-
-        private final byte[] wrap;
-
-        public byte[] getWrap() {
-            return wrap;
-        }
-
-        public byte[] getBlob() {
-            return blob;
-        }
-
-        private final byte[] blob;
-    }
-
-    private byte[] recoverPwd(byte[] derivedSecret, byte[] pwdBlob) {
-        // TODO: Refactor
-        Aes256Gcm aes256Gcm = new Aes256Gcm();
-
-        aes256Gcm.setKey(Arrays.copyOfRange(derivedSecret, 0, aes256Gcm.getKeyLen()));
-        aes256Gcm.setNonce(Arrays.copyOfRange(derivedSecret, aes256Gcm.getKeyLen(), aes256Gcm.getKeyLen() + aes256Gcm.getNonceLen()));
-
-        return aes256Gcm.authDecrypt(pwdBlob, new byte[0], new byte[0]);
-    }
-
-    private PwdResetData generatePwdResetData(byte[] passwordHash) {
-        // TODO: Refactor
-        Aes256Gcm aes256Gcm = new Aes256Gcm();
-        UokmsClientGenerateEncryptWrapResult kmsResult = currentKmsClient.generateEncryptWrap(aes256Gcm.getKeyLen() + aes256Gcm.getNonceLen());
-
-        byte[] derivedSecret = kmsResult.getEncryptionKey();
-
-        aes256Gcm.setKey(Arrays.copyOfRange(derivedSecret, 0, aes256Gcm.getKeyLen()));
-        aes256Gcm.setNonce(Arrays.copyOfRange(derivedSecret, aes256Gcm.getKeyLen(), aes256Gcm.getKeyLen() + aes256Gcm.getNonceLen()));
-
-        AuthEncryptAuthEncryptResult authEncryptAuthEncryptResult = aes256Gcm.authEncrypt(passwordHash, new byte[0]);
-
-        byte[] resetPwdBlob = new byte[authEncryptAuthEncryptResult.getOut().length + authEncryptAuthEncryptResult.getTag().length];
-
-        System.arraycopy(authEncryptAuthEncryptResult.getOut(), 0, resetPwdBlob, 0, authEncryptAuthEncryptResult.getOut().length);
-        System.arraycopy(authEncryptAuthEncryptResult.getTag(), 0, resetPwdBlob, authEncryptAuthEncryptResult.getOut().length, authEncryptAuthEncryptResult.getTag().length);
-
-        return new PwdResetData(kmsResult.getWrap(), resetPwdBlob);
-    }
-
     private void registerUser(String userId, String password, boolean isUserNew) throws Exception {
 
         try {
             ValidateUtils.checkNullOrEmpty(userId, "userId");
             ValidateUtils.checkNullOrEmpty(password, "password");
 
-            PurekitProtos.EnrollmentRequest request = PurekitProtos.EnrollmentRequest
-                    .newBuilder()
-                    .setVersion(this.currentVersion)
-                    .build();
-
-            PurekitProtos.EnrollmentResponse response = httpPheClient.enrollAccount(request);
-
             byte[] passwordHash = crypto.computeHash(password.getBytes(), HashAlgorithm.SHA512);
 
-            byte[] encryptedPwdHash = crypto.encrypt(passwordHash, Collections.singletonList(this.buppk));
+            byte[] encryptedPwdHash = crypto.encrypt(passwordHash, Collections.singletonList(buppk));
 
-            PwdResetData pwdResetData = generatePwdResetData(passwordHash);
+            KmsManager.PwdResetData pwdResetData = kmsManager.generatePwdResetData(passwordHash);
 
-            PheClientEnrollAccountResult pheResult = currentPheClient.enrollAccount(
-                    response.getResponse().toByteArray(),
-                    passwordHash
-            );
+            PheClientEnrollAccountResult pheResult = pheManager.getEnrollment(passwordHash);
 
             VirgilKeyPair ukp = crypto.generateKeyPair();
 
@@ -1153,14 +1019,14 @@ public class Pure {
 
             byte[] encryptedUsk = cipher.encrypt(uskData, pheResult.getAccountKey());
 
-            byte[] encryptedUskBackup = crypto.encrypt(uskData, Collections.singletonList(this.buppk));
+            byte[] encryptedUskBackup = crypto.encrypt(uskData, Collections.singletonList(buppk));
 
             byte[] publicKey = crypto.exportPublicKey(ukp.getPublicKey());
 
             UserRecord userRecord = new UserRecord(
                 userId,
                 pheResult.getEnrollmentRecord(),
-                this.currentVersion,
+                currentVersion,
                 publicKey,
                 encryptedUsk,
                 encryptedUskBackup,
@@ -1180,26 +1046,6 @@ public class Pure {
         }
     }
 
-    private PheClient getPheClient(int pheVersion) throws NullPointerException {
-        if (this.currentVersion == pheVersion) {
-            return this.currentPheClient;
-        } else if (this.currentVersion == pheVersion + 1) {
-            return this.previousPheClient;
-        } else {
-            throw new NullPointerException("pheClient");
-        }
-    }
-
-    private UokmsClient getKmsClient(int kmsVersion) throws NullPointerException {
-        if (this.currentVersion == kmsVersion) {
-            return this.currentKmsClient;
-        } else if (this.currentVersion == kmsVersion + 1) {
-            return this.previousKmsClient;
-        } else {
-            throw new NullPointerException("kmsClient");
-        }
-    }
-
     private void changeUserPassword(UserRecord userRecord,
                                     byte[] privateKeyData,
                                     String newPassword)
@@ -1211,28 +1057,19 @@ public class Pure {
             byte[] newPasswordHash = crypto.computeHash(newPassword.getBytes(),
                     HashAlgorithm.SHA512);
 
-            PurekitProtos.EnrollmentRequest enrollRequest = PurekitProtos.EnrollmentRequest
-                    .newBuilder()
-                    .setVersion(this.currentVersion)
-                    .build();
-            PurekitProtos.EnrollmentResponse enrollResponse =
-                httpPheClient.enrollAccount(enrollRequest);
+            PheClientEnrollAccountResult enrollResult = pheManager.getEnrollment(newPasswordHash);
 
-            PheClientEnrollAccountResult enrollResult =
-                    currentPheClient.enrollAccount(enrollResponse.getResponse().toByteArray(),
-                            newPasswordHash);
-
-            PwdResetData pwdResetData = generatePwdResetData(newPasswordHash);
+            KmsManager.PwdResetData pwdResetData = kmsManager.generatePwdResetData(newPasswordHash);
 
             byte[] newEncryptedUsk = cipher.encrypt(privateKeyData, enrollResult.getAccountKey());
 
             byte[] encryptedPwdHash = crypto.encrypt(newPasswordHash,
-                    Collections.singletonList(this.buppk));
+                    Collections.singletonList(buppk));
 
             UserRecord newUserRecord = new UserRecord(
                 userRecord.getUserId(),
                 enrollResult.getEnrollmentRecord(),
-                this.currentVersion,
+                currentVersion,
                 userRecord.getUpk(),
                 newEncryptedUsk,
                 userRecord.getEncryptedUskBackup(),
@@ -1266,61 +1103,12 @@ public class Pure {
         return keys;
     }
 
-    private byte[] computePheKey(UserRecord userRecord, String password) throws Exception {
-        byte[] passwordHash = crypto.computeHash(password.getBytes(), HashAlgorithm.SHA512);
-
-        return computePheKey(userRecord, passwordHash);
-    }
-
-    private byte[] computePheKey(UserRecord userRecord, byte[] passwordHash) throws Exception {
-
-        try {
-            PheClient client = getPheClient(userRecord.getPheRecordVersion());
-
-            byte[] pheVerifyRequest = client.createVerifyPasswordRequest(passwordHash,
-                    userRecord.getPheRecord());
-
-            PurekitProtos.VerifyPasswordRequest request = PurekitProtos.VerifyPasswordRequest
-                    .newBuilder()
-                    .setVersion(userRecord.getPheRecordVersion())
-                    .setRequest(ByteString.copyFrom(pheVerifyRequest))
-                    .build();
-
-            PurekitProtos.VerifyPasswordResponse response = httpPheClient.verifyPassword(request);
-
-            byte[] phek = client.checkResponseAndDecrypt(passwordHash,
-                    userRecord.getPheRecord(),
-                    response.getResponse().toByteArray());
-
-            if (phek.length == 0) {
-                throw new PureLogicException(PureLogicException.ErrorStatus.INVALID_PASSWORD);
-            }
-
-            return phek;
-        }
-        catch (PheException e) {
-            throw new PureCryptoException(e);
-        }
-    }
-
     public VirgilCrypto getCrypto() {
         return crypto;
     }
 
     public PureStorage getStorage() {
         return storage;
-    }
-
-    public int getCurrentVersion() {
-        return currentVersion;
-    }
-
-    public byte[] getPheUpdateToken() {
-        return pheUpdateToken;
-    }
-
-    public byte[] getKmsUpdateToken() {
-        return kmsUpdateToken;
     }
 
     public byte[] getAk() {

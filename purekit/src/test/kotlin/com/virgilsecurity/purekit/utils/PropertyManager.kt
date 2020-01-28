@@ -40,17 +40,12 @@ class PropertyManager {
 
     companion object {
         private const val APP_TOKEN = "APP_TOKEN"
-        private const val PHE_PUBLIC_KEY_OLD = "PHE_PUBLIC_KEY_OLD"
-        private const val PHE_SECRET_KEY_OLD = "PHE_SECRET_KEY_OLD"
-        private const val KMS_PUBLIC_KEY_OLD = "KMS_PUBLIC_KEY_OLD"
-        private const val KMS_SECRET_KEY_OLD = "KMS_SECRET_KEY_OLD"
-        private const val PHE_PUBLIC_KEY_NEW = "PHE_PUBLIC_KEY_NEW"
-        private const val PHE_SECRET_KEY_NEW = "PHE_SECRET_KEY_NEW"
-        private const val KMS_PUBLIC_KEY_NEW = "KMS_PUBLIC_KEY_NEW"
-        private const val KMS_SECRET_KEY_NEW = "KMS_SECRET_KEY_NEW"
-        private const val PHE_PUBLIC_KEY_WRONG = "PHE_PUBLIC_KEY_WRONG"
-        private const val PHE_UPDATE_TOKEN = "PHE_UPDATE_TOKEN"
-        private const val KMS_UPDATE_TOKEN = "KMS_UPDATE_TOKEN"
+        private const val PUBLIC_KEY_OLD = "PUBLIC_KEY_OLD"
+        private const val SECRET_KEY_OLD = "SECRET_KEY_OLD"
+        private const val PUBLIC_KEY_NEW = "PUBLIC_KEY_NEW"
+        private const val SECRET_KEY_NEW = "SECRET_KEY_NEW"
+        private const val PUBLIC_KEY_WRONG = "PUBLIC_KEY_WRONG"
+        private const val UPDATE_TOKEN = "UPDATE_TOKEN"
         private const val PHE_SERVER_ADDRESS = "PHE_SERVER_ADDRESS"
         private const val PURE_SERVER_ADDRESS = "PURE_SERVER_ADDRESS"
         private const val KMS_SERVER_ADDRESS = "KMS_SERVER_ADDRESS"
@@ -58,17 +53,12 @@ class PropertyManager {
         private const val ENVIRONMENT_PARAMETER = "environment"
 
         @JvmStatic val appToken: String by lazy { envPropertyReader.getProperty(APP_TOKEN) }
-        @JvmStatic val phePublicKeyOld: String by lazy { envPropertyReader.getProperty(PHE_PUBLIC_KEY_OLD) }
-        @JvmStatic val pheSecretKeyOld: String by lazy { envPropertyReader.getProperty(PHE_SECRET_KEY_OLD) }
-        @JvmStatic val kmsPublicKeyOld: String by lazy { envPropertyReader.getProperty(KMS_PUBLIC_KEY_OLD) }
-        @JvmStatic val kmsSecretKeyOld: String by lazy { envPropertyReader.getProperty(KMS_SECRET_KEY_OLD) }
-        @JvmStatic val phePublicKeyNew: String by lazy { envPropertyReader.getProperty(PHE_PUBLIC_KEY_NEW) }
-        @JvmStatic val pheSecretKeyNew: String by lazy { envPropertyReader.getProperty(PHE_SECRET_KEY_NEW) }
-        @JvmStatic val kmsPublicKeyNew: String by lazy { envPropertyReader.getProperty(KMS_PUBLIC_KEY_NEW) }
-        @JvmStatic val kmsSecretKeyNew: String by lazy { envPropertyReader.getProperty(KMS_SECRET_KEY_NEW) }
-        @JvmStatic val phePublicKeyWrong: String by lazy { envPropertyReader.getProperty(PHE_PUBLIC_KEY_WRONG) }
-        @JvmStatic val pheUpdateToken: String by lazy { envPropertyReader.getProperty(PHE_UPDATE_TOKEN) }
-        @JvmStatic val kmsUpdateToken: String by lazy { envPropertyReader.getProperty(KMS_UPDATE_TOKEN) }
+        @JvmStatic val publicKeyOld: String by lazy { envPropertyReader.getProperty(PUBLIC_KEY_OLD) }
+        @JvmStatic val secretKeyOld: String by lazy { envPropertyReader.getProperty(SECRET_KEY_OLD) }
+        @JvmStatic val publicKeyNew: String by lazy { envPropertyReader.getProperty(PUBLIC_KEY_NEW) }
+        @JvmStatic val secretKeyNew: String by lazy { envPropertyReader.getProperty(SECRET_KEY_NEW) }
+        @JvmStatic val publicKeyWrong: String by lazy { envPropertyReader.getProperty(PUBLIC_KEY_WRONG) }
+        @JvmStatic val updateToken: String by lazy { envPropertyReader.getProperty(UPDATE_TOKEN) }
         @JvmStatic val pheServiceAddress: String by lazy { envPropertyReader.getProperty(PHE_SERVER_ADDRESS) }
         @JvmStatic val pureServerAddress: String by lazy { envPropertyReader.getProperty(PURE_SERVER_ADDRESS) }
         @JvmStatic val kmsServerAddress: String by lazy { envPropertyReader.getProperty(KMS_SERVER_ADDRESS) }

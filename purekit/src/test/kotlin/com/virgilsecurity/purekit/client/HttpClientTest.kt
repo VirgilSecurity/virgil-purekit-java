@@ -50,7 +50,7 @@ class HttpClientTest {
         val httpClient = HttpClientProtobuf(PropertyManager.pheServiceAddress)
 
         val version = parseVersionAndContent(
-                PropertyManager.phePublicKeyNew,
+                PropertyManager.publicKeyNew,
                 PREFIX_PUBLIC_KEY,
                 KEY_PUBLIC_KEY
         ).first
