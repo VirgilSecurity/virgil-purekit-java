@@ -68,14 +68,14 @@ class PheManager {
     byte[] computePheKey(UserRecord userRecord, byte[] passwordHash) throws Exception {
 
         try {
-            PheClient client = getPheClient(userRecord.getPheRecordVersion());
+            PheClient client = getPheClient(userRecord.getRecordVersion());
 
             byte[] pheVerifyRequest = client.createVerifyPasswordRequest(passwordHash,
                     userRecord.getPheRecord());
 
             PurekitProtos.VerifyPasswordRequest request = PurekitProtos.VerifyPasswordRequest
                     .newBuilder()
-                    .setVersion(userRecord.getPheRecordVersion())
+                    .setVersion(userRecord.getRecordVersion())
                     .setRequest(ByteString.copyFrom(pheVerifyRequest))
                     .build();
 

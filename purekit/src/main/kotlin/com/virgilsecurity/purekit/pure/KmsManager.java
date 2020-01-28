@@ -1,8 +1,6 @@
 package com.virgilsecurity.purekit.pure;
 
 import com.google.protobuf.ByteString;
-import com.virgilsecurity.crypto.foundation.Aes256Gcm;
-import com.virgilsecurity.crypto.foundation.AuthEncryptAuthEncryptResult;
 import com.virgilsecurity.crypto.phe.UokmsClient;
 import com.virgilsecurity.crypto.phe.UokmsClientGenerateDecryptRequestResult;
 import com.virgilsecurity.crypto.phe.UokmsClientGenerateEncryptWrapResult;
@@ -10,27 +8,25 @@ import com.virgilsecurity.crypto.phe.UokmsWrapRotation;
 import com.virgilsecurity.purekit.data.ProtocolException;
 import com.virgilsecurity.purekit.data.ProtocolHttpException;
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client;
+import com.virgilsecurity.purekit.pure.exception.PureCryptoException;
 import com.virgilsecurity.purekit.pure.model.UserRecord;
 import com.virgilsecurity.purekit.utils.ValidateUtils;
-import com.virgilsecurity.sdk.crypto.VirgilCrypto;
-
-import java.util.Arrays;
 
 class KmsManager {
     public static final String RECOVER_PWD_ALIAS = "RECOVERY_PASSWORD";
 
     private final int currentVersion;
-    private final VirgilCrypto crypto;
+    private final PureCrypto pureCrypto;
     private final UokmsClient currentClient;
     private final UokmsClient previousClient;
     private final HttpKmsClient httpClient;
     private final UokmsWrapRotation kmsRotation;
 
     public KmsManager(PureContext context) {
-        this.crypto = context.getCrypto();
+        this.pureCrypto = new PureCrypto(context.getCrypto());
         this.currentClient = new UokmsClient();
-        this.currentClient.setOperationRandom(this.crypto.getRng());
-        this.currentClient.setRandom(this.crypto.getRng());
+        this.currentClient.setOperationRandom(context.getCrypto().getRng());
+        this.currentClient.setRandom(context.getCrypto().getRng());
         this.currentClient.setKeys(context.getSecretKey().getPayload2(),
                 context.getPublicKey().getPayload2());
 
@@ -38,11 +34,11 @@ class KmsManager {
             this.currentVersion = context.getPublicKey().getVersion() + 1;
             byte[] updateToken = context.getUpdateToken().getPayload2();
             this.kmsRotation = new UokmsWrapRotation();
-            this.kmsRotation.setOperationRandom(this.crypto.getRng());
+            this.kmsRotation.setOperationRandom(context.getCrypto().getRng());
             this.kmsRotation.setUpdateToken(updateToken);
             this.previousClient = new UokmsClient();
-            this.previousClient.setOperationRandom(this.crypto.getRng());
-            this.previousClient.setRandom(this.crypto.getRng());
+            this.previousClient.setOperationRandom(context.getCrypto().getRng());
+            this.previousClient.setRandom(context.getCrypto().getRng());
             this.previousClient.setKeys(context.getSecretKey().getPayload2(),
                     context.getPublicKey().getPayload2());
             this.currentClient.rotateKeys(context.getUpdateToken().getPayload2());
@@ -65,24 +61,24 @@ class KmsManager {
         }
     }
 
-    private byte[] deriveSecret(UserRecord userRecord) throws ProtocolHttpException, ProtocolException {
-        UokmsClient kmsClient = getKmsClient(userRecord.getPheRecordVersion());
+    private byte[] recoverSecret(UserRecord userRecord) throws ProtocolHttpException, ProtocolException {
+        UokmsClient kmsClient = getKmsClient(userRecord.getRecordVersion());
 
-        UokmsClientGenerateDecryptRequestResult uokmsClientGenerateDecryptRequestResult = kmsClient.generateDecryptRequest(userRecord.getPasswordResetWrap());
+        UokmsClientGenerateDecryptRequestResult uokmsClientGenerateDecryptRequestResult = kmsClient.generateDecryptRequest(userRecord.getPasswordRecoveryWrap());
 
         PurekitProtosV3Client.DecryptRequest decryptRequest = PurekitProtosV3Client.DecryptRequest.newBuilder()
-                .setVersion(userRecord.getPheRecordVersion())
+                .setVersion(userRecord.getRecordVersion())
                 .setAlias(RECOVER_PWD_ALIAS)
                 .setRequest(ByteString.copyFrom(uokmsClientGenerateDecryptRequestResult.getDecryptRequest()))
                 .build();
 
         PurekitProtosV3Client.DecryptResponse decryptResponse = httpClient.decrypt(decryptRequest);
 
-        return kmsClient.processDecryptResponse(userRecord.getPasswordResetWrap(),
+        return kmsClient.processDecryptResponse(userRecord.getPasswordRecoveryWrap(),
                 uokmsClientGenerateDecryptRequestResult.getDecryptRequest(),
                 decryptResponse.getResponse().toByteArray(),
                 uokmsClientGenerateDecryptRequestResult.getDeblindFactor(),
-                44 /* FIXME */);
+                PureCrypto.DERIVED_SECRET_LENGTH);
     }
 
     byte[] performRotation(byte[] wrap) {
@@ -91,8 +87,8 @@ class KmsManager {
         return kmsRotation.updateWrap(wrap);
     }
 
-    static class PwdResetData {
-        public PwdResetData(byte[] wrap, byte[] blob) {
+    static class PwdRecoveryData {
+        public PwdRecoveryData(byte[] wrap, byte[] blob) {
             this.wrap = wrap;
             this.blob = blob;
         }
@@ -110,33 +106,19 @@ class KmsManager {
         private final byte[] blob;
     }
 
-    byte[] recoverPwd(UserRecord userRecord) throws ProtocolException, ProtocolHttpException {
-        byte[] derivedSecret = deriveSecret(userRecord);
+    byte[] recoverPwd(UserRecord userRecord) throws ProtocolException, ProtocolHttpException, PureCryptoException {
+        byte[] derivedSecret = recoverSecret(userRecord);
 
-        Aes256Gcm aes256Gcm = new Aes256Gcm();
-
-        aes256Gcm.setKey(Arrays.copyOfRange(derivedSecret, 0, aes256Gcm.getKeyLen()));
-        aes256Gcm.setNonce(Arrays.copyOfRange(derivedSecret, aes256Gcm.getKeyLen(), aes256Gcm.getKeyLen() + aes256Gcm.getNonceLen()));
-
-        return aes256Gcm.authDecrypt(userRecord.getPasswordResetBlob(), new byte[0], new byte[0]);
+        return pureCrypto.decryptSymmetric(userRecord.getPasswordRecoveryBlob(), derivedSecret);
     }
 
-    PwdResetData generatePwdResetData(byte[] passwordHash) {
-        Aes256Gcm aes256Gcm = new Aes256Gcm();
-        UokmsClientGenerateEncryptWrapResult kmsResult = currentClient.generateEncryptWrap(aes256Gcm.getKeyLen() + aes256Gcm.getNonceLen());
+    PwdRecoveryData generatePwdReсoveryData(byte[] passwordHash) throws PureCryptoException {
+        UokmsClientGenerateEncryptWrapResult kmsResult = currentClient.generateEncryptWrap(PureCrypto.DERIVED_SECRET_LENGTH);
 
         byte[] derivedSecret = kmsResult.getEncryptionKey();
 
-        aes256Gcm.setKey(Arrays.copyOfRange(derivedSecret, 0, aes256Gcm.getKeyLen()));
-        aes256Gcm.setNonce(Arrays.copyOfRange(derivedSecret, aes256Gcm.getKeyLen(), aes256Gcm.getKeyLen() + aes256Gcm.getNonceLen()));
+        byte[] resetPwdBlob = pureCrypto.encryptSymmetric(passwordHash, derivedSecret);
 
-        AuthEncryptAuthEncryptResult authEncryptAuthEncryptResult = aes256Gcm.authEncrypt(passwordHash, new byte[0]);
-
-        byte[] resetPwdBlob = new byte[authEncryptAuthEncryptResult.getOut().length + authEncryptAuthEncryptResult.getTag().length];
-
-        System.arraycopy(authEncryptAuthEncryptResult.getOut(), 0, resetPwdBlob, 0, authEncryptAuthEncryptResult.getOut().length);
-        System.arraycopy(authEncryptAuthEncryptResult.getTag(), 0, resetPwdBlob, authEncryptAuthEncryptResult.getOut().length, authEncryptAuthEncryptResult.getTag().length);
-
-        return new PwdResetData(kmsResult.getWrap(), resetPwdBlob);
+        return new PwdRecoveryData(kmsResult.getWrap(), resetPwdBlob);
     }
 }

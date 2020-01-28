@@ -9,12 +9,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.*;
-import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import com.virgilsecurity.purekit.pure.*;
 import com.virgilsecurity.purekit.pure.exception.PureCryptoException;
-import com.virgilsecurity.purekit.pure.exception.PureException;
 import com.virgilsecurity.purekit.pure.exception.PureLogicException;
 import com.virgilsecurity.purekit.pure.mariadbstorage.MariaDbPureStorage;
 import com.virgilsecurity.purekit.pure.model.*;
@@ -499,6 +497,9 @@ class PureTestJava {
 
                 PureStorage pureStorage;
 
+                String firstUserId = null;
+                String firstUserPwd = null;
+
                 {
                     PureSetupResult pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKey, secretKey,  null,null, storage);
                     Pure pure = new Pure(pureResult.getContext());
@@ -515,19 +516,42 @@ class PureTestJava {
                         String password = UUID.randomUUID().toString();
 
                         pure.registerUser(userId, password);
+
+                        if (i == 0) {
+                            firstUserId = userId;
+                            firstUserPwd = password;
+                        }
                     }
                 }
 
-                // TODO: Check pwd reset
                 PureSetupResult pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKey, secretKey, updateToken,null, storage);
                 pureResult.getContext().setStorage(pureStorage);
                 Pure pure = new Pure(pureResult.getContext());
+
+                String dataId = UUID.randomUUID().toString();
+                byte[] text = UUID.randomUUID().toString().getBytes();
+
+                byte[] blob = pure.encrypt(firstUserId, dataId, text);
 
                 long rotated = pure.performRotation();
 
                 assertEquals(total, rotated);
 
-                // TODO: Check auth and decryption works
+                AuthResult authResult = pure.authenticateUser(firstUserId, firstUserPwd);
+
+                byte[] decrypted = pure.decrypt(authResult.getGrant(), firstUserId, dataId, blob);
+
+                assertArrayEquals(text, decrypted);
+
+                String newPwd = UUID.randomUUID().toString();
+
+                pure.recoverUser(firstUserId, newPwd);
+
+                AuthResult authResult2 = pure.authenticateUser(firstUserId, newPwd);
+
+                byte[] decrypted2 = pure.decrypt(authResult2.getGrant(), firstUserId, dataId, blob);
+
+                assertArrayEquals(text, decrypted2);
             }
         } catch (Exception e) {
             fail(e);
@@ -785,7 +809,7 @@ class PureTestJava {
 
                 UserRecord record = pure.getStorage().selectUser(userId);
 
-                byte[] pwdHashDecrypted = pure.getCrypto().decrypt(record.getEncryptedPwdHash(), pureResult.getBupkp().getPrivateKey());
+                byte[] pwdHashDecrypted = pure.getCrypto().decrypt(record.getBackupPwdHash(), pureResult.getBupkp().getPrivateKey());
                 byte[] pwdHash = pure.getCrypto().computeHash(password.getBytes());
 
                 assertArrayEquals(pwdHash, pwdHashDecrypted);
@@ -813,18 +837,22 @@ class PureTestJava {
 
                 String userId1 = UUID.randomUUID().toString();
                 String userId2 = UUID.randomUUID().toString();
+                String userId3 = UUID.randomUUID().toString();
                 String password1 = UUID.randomUUID().toString();
                 String password2 = UUID.randomUUID().toString();
+                String password3 = UUID.randomUUID().toString();
                 String dataId = UUID.randomUUID().toString();
                 String roleName = UUID.randomUUID().toString();
 
                 pure.registerUser(userId1, password1);
                 pure.registerUser(userId2, password2);
+                pure.registerUser(userId3, password3);
 
                 byte[] text = UUID.randomUUID().toString().getBytes();
 
                 AuthResult authResult1 = pure.authenticateUser(userId1, password1);
                 AuthResult authResult2 = pure.authenticateUser(userId2, password2);
+                AuthResult authResult3 = pure.authenticateUser(userId3, password3);
 
                 Set<String> userIds = new HashSet<>();
 
@@ -835,11 +863,32 @@ class PureTestJava {
 
                 byte[] cipherText = pure.encrypt(userId1, dataId, Collections.emptySet(), Collections.singleton(roleName), Collections.emptyList(), text);
 
-                byte[] plainText1 = pure.decrypt(authResult1.getGrant(), null, dataId, cipherText);
-                byte[] plainText2 = pure.decrypt(authResult2.getGrant(), userId1, dataId, cipherText);
+                byte[] plainText11 = pure.decrypt(authResult1.getGrant(), null, dataId, cipherText);
+                byte[] plainText21 = pure.decrypt(authResult2.getGrant(), userId1, dataId, cipherText);
 
-                assertArrayEquals(text, plainText1);
-                assertArrayEquals(text, plainText2);
+                PureLogicException e = assertThrows(PureLogicException.class, () -> {
+                    pure.decrypt(authResult3.getGrant(), userId1, dataId, cipherText);
+                });
+
+                assertEquals(e.getErrorStatus(), PureLogicException.ErrorStatus.INVALID_PASSWORD);
+
+                assertArrayEquals(text, plainText11);
+                assertArrayEquals(text, plainText21);
+
+                pure.unassignRole(roleName, Collections.singleton(userId1));
+                pure.assignRole(roleName, authResult2.getGrant(), Collections.singleton(userId3));
+
+                e = assertThrows(PureLogicException.class, () -> {
+                    pure.decrypt(authResult1.getGrant(), null, dataId, cipherText);
+                });
+
+                assertEquals(e.getErrorStatus(), PureLogicException.ErrorStatus.INVALID_PASSWORD);
+
+                byte[] plainText22 = pure.decrypt(authResult2.getGrant(), userId1, dataId, cipherText);
+                byte[] plainText32 = pure.decrypt(authResult3.getGrant(), userId1, dataId, cipherText);
+
+                assertArrayEquals(text, plainText22);
+                assertArrayEquals(text, plainText32);
             }
         } catch (Exception e) {
             fail(e);
@@ -866,9 +915,12 @@ class PureTestJava {
                 String password1 = UUID.randomUUID().toString();
                 String password2 = UUID.randomUUID().toString();
 
-                // TODO: Check encryption
                 pure.registerUser(userId, password1);
 
+                String dataId = UUID.randomUUID().toString();
+                byte[] text = UUID.randomUUID().toString().getBytes();
+
+                byte[] blob = pure.encrypt(userId, dataId, text);
 
                 pure.recoverUser(userId, password2);
 
@@ -878,8 +930,11 @@ class PureTestJava {
 
                 assertEquals(e.getErrorStatus(), PureLogicException.ErrorStatus.INVALID_PASSWORD);
 
-                AuthResult grant = pure.authenticateUser(userId, password2);
-                assertNotNull(grant);
+                AuthResult authResult = pure.authenticateUser(userId, password2);
+                assertNotNull(authResult);
+
+                byte[] decrypted = pure.decrypt(authResult.getGrant(), userId, dataId, blob);
+                assertArrayEquals(text, decrypted);
             }
         } catch (Exception e) {
             fail(e);

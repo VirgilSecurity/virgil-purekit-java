@@ -38,14 +38,10 @@ import java.util.*;
 
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
-import com.virgilsecurity.crypto.foundation.Aes256Gcm;
-import com.virgilsecurity.crypto.foundation.AuthEncryptAuthEncryptResult;
 import com.virgilsecurity.crypto.foundation.Base64;
 import com.virgilsecurity.crypto.phe.*;
 import com.virgilsecurity.purekit.data.ProtocolException;
 import com.virgilsecurity.purekit.data.ProtocolHttpException;
-import com.virgilsecurity.purekit.protobuf.build.PurekitProtos;
-import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client;
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Grant;
 import com.virgilsecurity.purekit.pure.exception.PureCryptoException;
 import com.virgilsecurity.purekit.pure.exception.PureLogicException;
@@ -110,7 +106,7 @@ public class Pure {
     }
 
     /**
-     * Register new user.
+     * Registers new user.
      *
      * @param userId User Id.
      * @param password Password.
@@ -238,7 +234,7 @@ public class Pure {
      * successfully. Represents a regular HTTP exception with code and message.
      * @throws PureLogicException Please, see {@link PureStorage#selectUser(String)} PureLogicException doc.
      * @throws CryptoException Please, see {@link VirgilCrypto#decrypt},
-     * {@link VirgilCrypto#importPrivateKey}, {@link VirgilCrypto#verifySignature} methods'
+     * {@link VirgilCrypto#importPrivateKey}, {@link VirgilCrypto#veriffySignature} methods'
      * CryptoException doc.
      * @throws InvalidProtocolBufferException If a PurekitProtosV3Storage.UserRecord received from
      * a server cannot be parsed as a Protobuf message.
@@ -250,7 +246,7 @@ public class Pure {
 
         UserRecord userRecord = storage.selectUser(userId);
 
-        byte[] usk = crypto.decrypt(userRecord.getEncryptedUskBackup(), bupsk);
+        byte[] usk = crypto.authDecrypt(userRecord.getEncryptedUskBackup(), bupsk, oskp.getPublicKey());
 
         VirgilKeyPair upk = crypto.importPrivateKey(usk);
 
@@ -320,7 +316,6 @@ public class Pure {
      * Changes user password. All encrypted data remains accessible after this method call.
      *
      * @param userId UserId.
-     *
      * @param oldPassword Old password.
      * @param newPassword New password.
      *
@@ -389,6 +384,20 @@ public class Pure {
         changeUserPassword(userRecord, privateKeyData, newPassword);
     }
 
+    /**
+     * Recovers user in case he doesn't remember his password
+     *
+     * Note: this method is under server-side rate-limiting, which prevents adversary from decrypting database.
+     *
+     * @param userId userId
+     * @param newPassword new password
+     *
+     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
+     * successfully.
+     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
+     * successfully. Represents a regular HTTP exception with code and message.
+     * @throws PureLogicException Please, see {@link PureStorage#selectUser(String)} PureLogicException doc.
+     */
     public void recoverUser(String userId, String newPassword) throws Exception {
         ValidateUtils.checkNullOrEmpty(userId, "userId");
         ValidateUtils.checkNullOrEmpty(newPassword, "newPassword");
@@ -444,7 +453,7 @@ public class Pure {
     }
 
     /**
-     * Performs PHE records rotation for all users with old phe version.
+     * Performs PHE and KMS records rotation for all users with old version.
      * Pure should be initialized with UpdateToken for this operation.
      *
      * @return Number of rotated records.
@@ -470,10 +479,10 @@ public class Pure {
             ArrayList<UserRecord> newUserRecords = new ArrayList<>();
 
             for (UserRecord userRecord: userRecords) {
-                assert userRecord.getPheRecordVersion() == currentVersion - 1;
+                assert userRecord.getRecordVersion() == currentVersion - 1;
 
                 byte[] newRecord = pheManager.performRotation(userRecord.getPheRecord());
-                byte[] newWrap = kmsManager.performRotation(userRecord.getPasswordResetWrap());
+                byte[] newWrap = kmsManager.performRotation(userRecord.getPasswordRecoveryWrap());
 
                 UserRecord newUserRecord = new UserRecord(
                     userRecord.getUserId(),
@@ -482,9 +491,9 @@ public class Pure {
                     userRecord.getUpk(),
                     userRecord.getEncryptedUsk(),
                     userRecord.getEncryptedUskBackup(),
-                    userRecord.getEncryptedPwdHash(),
+                    userRecord.getBackupPwdHash(),
                     newWrap,
-                    userRecord.getPasswordResetBlob()
+                    userRecord.getPasswordRecoveryBlob()
                 );
 
                 newUserRecords.add(newUserRecord);
@@ -647,8 +656,7 @@ public class Pure {
             cpk = crypto.importPublicKey(cellKey1.getCpk());
         }
 
-        // TODO: Replace crypto.encrypt everywhere
-        return crypto.encrypt(plainText, Collections.singletonList(cpk));
+        return crypto.authEncrypt(plainText, oskp.getPrivateKey(), Collections.singletonList(cpk));
     }
 
     /**
@@ -717,7 +725,7 @@ public class Pure {
 
                 if (publicKeysIds.contains(publicKeyId)) {
                     // FIXME: Refactor
-                    byte[] rskData = crypto.decrypt(roleAssignment.getEncryptedRsk(), grant.getUkp().getPrivateKey());
+                    byte[] rskData = crypto.authDecrypt(roleAssignment.getEncryptedRsk(), grant.getUkp().getPrivateKey(), oskp.getPublicKey());
 
                     VirgilKeyPair rkp = crypto.importPrivateKey(rskData);
 
@@ -733,7 +741,7 @@ public class Pure {
 
         VirgilKeyPair ckp = crypto.importPrivateKey(csk);
 
-        return crypto.decrypt(cipherText, ckp.getPrivateKey());
+        return crypto.authDecrypt(cipherText, ckp.getPrivateKey(), oskp.getPublicKey());
     }
 
     /**
@@ -768,7 +776,6 @@ public class Pure {
         // TODO: Delete copy&paste
 
         ValidateUtils.checkNull(privateKey, "privateKey");
-
         ValidateUtils.checkNullOrEmpty(dataId, "dataId");
         ValidateUtils.checkNullOrEmpty(ownerUserId, "ownerUserId");
 
@@ -785,7 +792,7 @@ public class Pure {
 
         VirgilKeyPair ckp = crypto.importPrivateKey(csk);
 
-        return crypto.decrypt(cipherText, ckp.getPrivateKey());
+        return crypto.authDecrypt(cipherText, ckp.getPrivateKey(), oskp.getPublicKey());
     }
 
     /**
@@ -959,6 +966,17 @@ public class Pure {
         storage.deleteCellKey(userId, dataId);
     }
 
+    /**
+     * Creates role
+     *
+     * @param roleName role name
+     * @param userIds user ids that belong to role
+     *
+     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
+     * successfully.
+     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
+     * successfully. Represents a regular HTTP exception with code and message.
+     */
     public void createRole(String roleName, Set<String> userIds) throws Exception {
         VirgilKeyPair rkp = crypto.generateKeyPair();
         byte[] rpkData = crypto.exportPublicKey(rkp.getPublicKey());
@@ -971,10 +989,21 @@ public class Pure {
         assignRole(roleName, rkp.getPublicKey().getIdentifier(), rskData, userIds);
     }
 
+    /**
+     * Assigns users to role
+     *
+     * @param roleToAssign role name
+     * @param grant grant of one of users, that are already assigned to this role
+     * @param userIds user ids of users who will be assigned to this role
+     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
+     * successfully.
+     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
+     * successfully. Represents a regular HTTP exception with code and message.
+     */
     public void assignRole(String roleToAssign, PureGrant grant, Set<String> userIds) throws Exception {
         RoleAssignment roleAssignment = storage.selectRoleAssignment(roleToAssign, grant.getUserId());
 
-        byte[] rskData = crypto.decrypt(roleAssignment.getEncryptedRsk(), grant.getUkp().getPrivateKey());
+        byte[] rskData = crypto.authDecrypt(roleAssignment.getEncryptedRsk(), grant.getUkp().getPrivateKey(), oskp.getPublicKey());
 
         assignRole(roleToAssign, roleAssignment.getPublicKeyId(), rskData, userIds);
     }
@@ -987,7 +1016,7 @@ public class Pure {
         for (UserRecord userRecord: userRecords) {
             VirgilPublicKey upk = crypto.importPublicKey(userRecord.getUpk());
 
-            byte[] encryptedRsk = crypto.encrypt(rskData, upk);
+            byte[] encryptedRsk = crypto.authEncrypt(rskData, oskp.getPrivateKey(), upk);
 
             roleAssignments.add(new RoleAssignment(roleName, userRecord.getUserId(), publicKeyId, encryptedRsk));
         }
@@ -995,7 +1024,17 @@ public class Pure {
         storage.insertRoleAssignments(roleAssignments);
     }
 
-    public void deassignRole(String roleName, Set<String> userIds) throws Exception {
+    /**
+     * Unassigns users from role
+     *
+     * @param roleName role name
+     * @param userIds user ids
+     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
+     * successfully.
+     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
+     * successfully. Represents a regular HTTP exception with code and message.
+     */
+    public void unassignRole(String roleName, Set<String> userIds) throws Exception {
         storage.deleteRoleAssignments(roleName, userIds);
     }
 
@@ -1007,9 +1046,9 @@ public class Pure {
 
             byte[] passwordHash = crypto.computeHash(password.getBytes(), HashAlgorithm.SHA512);
 
-            byte[] encryptedPwdHash = crypto.encrypt(passwordHash, Collections.singletonList(buppk));
+            byte[] encryptedPwdHash = crypto.authEncrypt(passwordHash, oskp.getPrivateKey(), Collections.singletonList(buppk));
 
-            KmsManager.PwdResetData pwdResetData = kmsManager.generatePwdResetData(passwordHash);
+            KmsManager.PwdRecoveryData pwdRecoveryData = kmsManager.generatePwdReсoveryData(passwordHash);
 
             PheClientEnrollAccountResult pheResult = pheManager.getEnrollment(passwordHash);
 
@@ -1019,7 +1058,7 @@ public class Pure {
 
             byte[] encryptedUsk = cipher.encrypt(uskData, pheResult.getAccountKey());
 
-            byte[] encryptedUskBackup = crypto.encrypt(uskData, Collections.singletonList(buppk));
+            byte[] encryptedUskBackup = crypto.authEncrypt(uskData, oskp.getPrivateKey(), Collections.singletonList(buppk));
 
             byte[] publicKey = crypto.exportPublicKey(ukp.getPublicKey());
 
@@ -1031,8 +1070,8 @@ public class Pure {
                 encryptedUsk,
                 encryptedUskBackup,
                 encryptedPwdHash,
-                pwdResetData.getWrap(),
-                pwdResetData.getBlob()
+                pwdRecoveryData.getWrap(),
+                pwdRecoveryData.getBlob()
             );
 
             if (isUserNew) {
@@ -1059,11 +1098,11 @@ public class Pure {
 
             PheClientEnrollAccountResult enrollResult = pheManager.getEnrollment(newPasswordHash);
 
-            KmsManager.PwdResetData pwdResetData = kmsManager.generatePwdResetData(newPasswordHash);
+            KmsManager.PwdRecoveryData pwdRecoveryData = kmsManager.generatePwdReсoveryData(newPasswordHash);
 
             byte[] newEncryptedUsk = cipher.encrypt(privateKeyData, enrollResult.getAccountKey());
 
-            byte[] encryptedPwdHash = crypto.encrypt(newPasswordHash,
+            byte[] encryptedPwdHash = crypto.authEncrypt(newPasswordHash, oskp.getPrivateKey(),
                     Collections.singletonList(buppk));
 
             UserRecord newUserRecord = new UserRecord(
@@ -1074,8 +1113,8 @@ public class Pure {
                 newEncryptedUsk,
                 userRecord.getEncryptedUskBackup(),
                 encryptedPwdHash,
-                pwdResetData.getWrap(),
-                pwdResetData.getBlob()
+                pwdRecoveryData.getWrap(),
+                pwdRecoveryData.getBlob()
             );
 
             storage.updateUser(newUserRecord);
@@ -1103,26 +1142,58 @@ public class Pure {
         return keys;
     }
 
+    /**
+     *
+     * @return current records version
+     */
+    public int getCurrentVersion() {
+        return currentVersion;
+    }
+
+    /**
+     *
+     * @return VirgilCrypto isntance
+     */
     public VirgilCrypto getCrypto() {
         return crypto;
     }
 
+    /**
+     *
+     * @return PureStorage instance
+     */
     public PureStorage getStorage() {
         return storage;
     }
 
+    /**
+     *
+     * @return Auth key
+     */
     public byte[] getAk() {
         return ak;
     }
 
+    /**
+     *
+     * @return Backup public key
+     */
     public VirgilPublicKey getBuppk() {
         return buppk;
     }
 
+    /**
+     *
+     * @return Signing key pair
+     */
     public VirgilKeyPair getOskp() {
         return oskp;
     }
 
+    /**
+     *
+     * @return External public keys
+     */
     public Map<String, List<VirgilPublicKey>> getExternalPublicKeys() {
         return externalPublicKeys;
     }

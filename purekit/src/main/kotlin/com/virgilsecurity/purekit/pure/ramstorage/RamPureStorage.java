@@ -70,7 +70,7 @@ public class RamPureStorage implements PureStorage {
     }
 
     public static Predicate<UserRecord> isNotVersion(Integer version) {
-        return p -> p.getPheRecordVersion() != version;
+        return p -> p.getRecordVersion() != version;
     }
 
     @Override

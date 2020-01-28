@@ -56,8 +56,8 @@ public class PureModelSerializer {
                 .setUpk(ByteString.copyFrom(userRecord.getUpk()))
                 .setEncryptedUsk(ByteString.copyFrom(userRecord.getEncryptedUsk()))
                 .setEncryptedUskBackup(ByteString.copyFrom(userRecord.getEncryptedUskBackup()))
-                .setEncryptedPwdHash(ByteString.copyFrom(userRecord.getEncryptedPwdHash()))
-                .setPasswordResetBlob(ByteString.copyFrom(userRecord.getPasswordResetBlob()))
+                .setBackupPwdHash(ByteString.copyFrom(userRecord.getBackupPwdHash()))
+                .setPasswordRecoveryBlob(ByteString.copyFrom(userRecord.getPasswordRecoveryBlob()))
                 .build()
                 .toByteArray();
 
@@ -71,8 +71,8 @@ public class PureModelSerializer {
                 .setSignature(ByteString.copyFrom(signature))
                 .setPheRecordT0(enrollmentRecord.getT0())
                 .setPheRecordT1(enrollmentRecord.getT1())
-                .setPheRecordVersion(userRecord.getPheRecordVersion())
-                .setPasswordResetWrap(ByteString.copyFrom(userRecord.getPasswordResetWrap()))
+                .setRecordVersion(userRecord.getRecordVersion())
+                .setPasswordRecoveryWrap(ByteString.copyFrom(userRecord.getPasswordRecoveryWrap()))
                 .build();
     }
 
@@ -104,13 +104,13 @@ public class PureModelSerializer {
 
         return new UserRecord(recordSigned.getUserId(),
                 pheRecord,
-                protobufRecord.getPheRecordVersion(),
+                protobufRecord.getRecordVersion(),
                 recordSigned.getUpk().toByteArray(),
                 recordSigned.getEncryptedUsk().toByteArray(),
                 recordSigned.getEncryptedUskBackup().toByteArray(),
-                recordSigned.getEncryptedPwdHash().toByteArray(),
-                protobufRecord.getPasswordResetWrap().toByteArray(),
-                recordSigned.getPasswordResetBlob().toByteArray());
+                recordSigned.getBackupPwdHash().toByteArray(),
+                protobufRecord.getPasswordRecoveryWrap().toByteArray(),
+                recordSigned.getPasswordRecoveryBlob().toByteArray());
     }
 
     public PurekitProtosV3Storage.CellKey serializeCellKey(CellKey cellKey) throws SigningException {

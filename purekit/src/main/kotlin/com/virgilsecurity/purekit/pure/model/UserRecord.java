@@ -40,37 +40,37 @@ public class UserRecord {
 
     private final String userId;
     private final byte[] pheRecord;
-    private final int pheRecordVersion;
+    private final int recordVersion;
     private final byte[] upk;
     private final byte[] encryptedUsk;
     private final byte[] encryptedUskBackup;
-    private final byte[] encryptedPwdHash;
-    private final byte[] passwordResetWrap;
-    private final byte[] passwordResetBlob;
+    private final byte[] backupPwdHash;
+    private final byte[] passwordRecoveryWrap;
+    private final byte[] passwordRecoveryBlob;
 
     /**
      * Instantiates UserRecord.
      *
      * @param userId User Id.
      * @param pheRecord PHE record.
-     * @param pheRecordVersion Phe record version.
+     * @param recordVersion Phe record version.
      * @param upk User public key.
      * @param encryptedUsk Encrypted user secret key.
      * @param encryptedUskBackup Encrypted for backup user secret key.
-     * @param encryptedPwdHash Encrypted for backup user password hash.
+     * @param backupPwdHash Encrypted for backup user password hash.
      */
-    public UserRecord(String userId, byte[] pheRecord, int pheRecordVersion, byte[] upk,
-                      byte[] encryptedUsk, byte[] encryptedUskBackup, byte[] encryptedPwdHash,
-                      byte[] passwordResetWrap, byte[] passwordResetBlob) {
+    public UserRecord(String userId, byte[] pheRecord, int recordVersion, byte[] upk,
+                      byte[] encryptedUsk, byte[] encryptedUskBackup, byte[] backupPwdHash,
+                      byte[] passwordRecoveryWrap, byte[] passwordRecoveryBlob) {
         this.userId = userId;
         this.pheRecord = pheRecord;
-        this.pheRecordVersion = pheRecordVersion;
+        this.recordVersion = recordVersion;
         this.upk = upk;
         this.encryptedUsk = encryptedUsk;
         this.encryptedUskBackup = encryptedUskBackup;
-        this.encryptedPwdHash = encryptedPwdHash;
-        this.passwordResetWrap = passwordResetWrap;
-        this.passwordResetBlob = passwordResetBlob;
+        this.backupPwdHash = backupPwdHash;
+        this.passwordRecoveryWrap = passwordRecoveryWrap;
+        this.passwordRecoveryBlob = passwordRecoveryBlob;
     }
 
     /**
@@ -96,8 +96,8 @@ public class UserRecord {
      *
      * @return PHE record version.
      */
-    public int getPheRecordVersion() {
-        return pheRecordVersion;
+    public int getRecordVersion() {
+        return recordVersion;
     }
 
     /**
@@ -132,15 +132,15 @@ public class UserRecord {
      *
      * @return Encrypted for backup user password hash.
      */
-    public byte[] getEncryptedPwdHash() {
-        return encryptedPwdHash;
+    public byte[] getBackupPwdHash() {
+        return backupPwdHash;
     }
 
-    public byte[] getPasswordResetWrap() {
-        return passwordResetWrap;
+    public byte[] getPasswordRecoveryWrap() {
+        return passwordRecoveryWrap;
     }
 
-    public byte[] getPasswordResetBlob() {
-        return passwordResetBlob;
+    public byte[] getPasswordRecoveryBlob() {
+        return passwordRecoveryBlob;
     }
 }

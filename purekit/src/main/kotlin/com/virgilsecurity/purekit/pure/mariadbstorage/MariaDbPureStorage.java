@@ -54,7 +54,7 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
                     "VALUES (?, ?, ?);")) {
 
                 stmt.setString(1, userRecord.getUserId());
-                stmt.setInt(2, userRecord.getPheRecordVersion());
+                stmt.setInt(2, userRecord.getRecordVersion());
                 stmt.setBytes(3, protobuf.toByteArray());
 
                 stmt.executeUpdate();
@@ -72,7 +72,7 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
                     "protobuf=? " +
                     "WHERE user_id=?;")) {
 
-                stmt.setInt(1, userRecord.getPheRecordVersion());
+                stmt.setInt(1, userRecord.getRecordVersion());
                 stmt.setBytes(2, protobuf.toByteArray());
                 stmt.setString(3, userRecord.getUserId());
 
@@ -93,7 +93,7 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
                 for (UserRecord userRecord: userRecords) {
                     PurekitProtosV3Storage.UserRecord protobuf = pureModelSerializer.serializeUserRecord(userRecord);
 
-                    stmt.setInt(1, userRecord.getPheRecordVersion());
+                    stmt.setInt(1, userRecord.getRecordVersion());
                     stmt.setBytes(2, protobuf.toByteArray());
                     stmt.setString(3, userRecord.getUserId());
                     stmt.setInt(4, previousPheVersion);
@@ -202,7 +202,7 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
                     while (rs.next()) {
                         UserRecord userRecord = parseUserRecord(rs);
 
-                        if (pheRecordVersion != userRecord.getPheRecordVersion()) {
+                        if (pheRecordVersion != userRecord.getRecordVersion()) {
                             throw new PureLogicException(PureLogicException.ErrorStatus.PHE_VERSION_MISMATCH);
                         }
 

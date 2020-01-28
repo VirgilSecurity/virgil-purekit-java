@@ -206,6 +206,36 @@ class PureCrypto {
         }
     }
 
+    static final int DERIVED_SECRET_LENGTH = 44;
+
+    byte[] encryptSymmetric(byte[] blob, byte[] secret) throws PureCryptoException {
+        try (Aes256Gcm aes256Gcm = new Aes256Gcm()) {
+
+            aes256Gcm.setKey(Arrays.copyOfRange(secret, 0, aes256Gcm.getKeyLen()));
+            aes256Gcm.setNonce(Arrays.copyOfRange(secret, aes256Gcm.getKeyLen(), aes256Gcm.getKeyLen() + aes256Gcm.getNonceLen()));
+
+            AuthEncryptAuthEncryptResult authEncryptAuthEncryptResult = aes256Gcm.authEncrypt(blob, new byte[0]);
+
+            return concat(authEncryptAuthEncryptResult.getTag(), authEncryptAuthEncryptResult.getOut());
+        }
+        catch (FoundationException e) {
+            throw new PureCryptoException(e);
+        }
+    }
+
+    byte[] decryptSymmetric(byte[] encryptedBlob, byte[] secret) throws PureCryptoException {
+        try (Aes256Gcm aes256Gcm = new Aes256Gcm()) {
+
+            aes256Gcm.setKey(Arrays.copyOfRange(secret, 0, aes256Gcm.getKeyLen()));
+            aes256Gcm.setNonce(Arrays.copyOfRange(secret, aes256Gcm.getKeyLen(), aes256Gcm.getKeyLen() + aes256Gcm.getNonceLen()));
+
+            return aes256Gcm.authDecrypt(encryptedBlob, new byte[0], new byte[0]);
+        }
+        catch (FoundationException e) {
+            throw new PureCryptoException(e);
+        }
+    }
+
     private byte[] concat(byte[] body1, byte[] body2) {
         byte[] body = new byte[body1.length + body2.length];
         System.arraycopy(body1, 0, body, 0, body1.length);
