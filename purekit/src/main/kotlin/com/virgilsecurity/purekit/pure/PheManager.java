@@ -3,6 +3,7 @@ package com.virgilsecurity.purekit.pure;
 import com.google.protobuf.ByteString;
 import com.virgilsecurity.crypto.phe.PheClient;
 import com.virgilsecurity.crypto.phe.PheClientEnrollAccountResult;
+import com.virgilsecurity.crypto.phe.PheClientRotateKeysResult;
 import com.virgilsecurity.crypto.phe.PheException;
 import com.virgilsecurity.purekit.data.ProtocolException;
 import com.virgilsecurity.purekit.data.ProtocolHttpException;
@@ -28,8 +29,6 @@ class PheManager {
         this.currentClient = new PheClient();
         this.currentClient.setOperationRandom(this.crypto.getRng());
         this.currentClient.setRandom(this.crypto.getRng());
-        this.currentClient.setKeys(context.getSecretKey().getPayload1(),
-                context.getPublicKey().getPayload1());
 
         if (context.getUpdateToken() != null) {
             this.currentVersion = context.getPublicKey().getVersion() + 1;
@@ -39,10 +38,16 @@ class PheManager {
             this.previousClient.setRandom(this.crypto.getRng());
             this.previousClient.setKeys(context.getSecretKey().getPayload1(),
                     context.getPublicKey().getPayload1());
-            this.currentClient.rotateKeys(context.getUpdateToken().getPayload1());
+
+            PheClientRotateKeysResult rotateKeysResult = this.previousClient.rotateKeys(context.getUpdateToken().getPayload1());
+
+            this.currentClient.setKeys(rotateKeysResult.getNewClientPrivateKey(),
+                    rotateKeysResult.getNewServerPublicKey());
         } else {
             this.currentVersion = context.getPublicKey().getVersion();
             this.updateToken = null;
+            this.currentClient.setKeys(context.getSecretKey().getPayload1(),
+                    context.getPublicKey().getPayload1());
             this.previousClient = null;
         }
 

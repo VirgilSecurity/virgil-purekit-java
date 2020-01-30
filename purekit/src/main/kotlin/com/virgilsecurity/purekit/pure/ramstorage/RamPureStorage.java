@@ -100,14 +100,12 @@ public class RamPureStorage implements PureStorage {
 
     @Override
     public Collection<UserRecord> selectUsers(int pheRecordVersion) {
-        Collection<UserRecord> records = this.users.values();
+        ArrayList<UserRecord> records = new ArrayList<>(this.users.values());
         records.removeIf(isNotVersion(pheRecordVersion));
-
-        List<UserRecord> list = new ArrayList<>(records);
 
         int limit = 10;
 
-        return list.subList(0, Math.min(limit, list.size()));
+        return records.subList(0, Math.min(limit, records.size()));
     }
 
     @Override
