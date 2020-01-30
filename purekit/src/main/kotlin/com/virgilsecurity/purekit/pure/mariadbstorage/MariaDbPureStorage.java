@@ -5,10 +5,7 @@ import com.virgilsecurity.purekit.pure.PureModelSerializer;
 import com.virgilsecurity.purekit.pure.PureModelSerializerDependent;
 import com.virgilsecurity.purekit.pure.PureStorage;
 import com.virgilsecurity.purekit.pure.exception.PureLogicException;
-import com.virgilsecurity.purekit.pure.model.CellKey;
-import com.virgilsecurity.purekit.pure.model.Role;
-import com.virgilsecurity.purekit.pure.model.RoleAssignment;
-import com.virgilsecurity.purekit.pure.model.UserRecord;
+import com.virgilsecurity.purekit.pure.model.*;
 
 import com.virgilsecurity.sdk.crypto.exceptions.VerificationException;
 
@@ -16,6 +13,7 @@ import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -512,6 +510,21 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
                 stmt.executeUpdate();
             }
         }
+    }
+
+    @Override
+    public void insertGrantKey(GrantKey grantKey) throws Exception {
+        throw new NullPointerException();
+    }
+
+    @Override
+    public GrantKey selectGrantKey(String userId, byte[] keyId) throws Exception {
+        throw new NullPointerException();
+    }
+
+    @Override
+    public void deleteGrantKey(String userId, byte[] keyId) throws Exception {
+        throw new NullPointerException();
     }
 
     public void dropTables() throws SQLException {

@@ -42,11 +42,11 @@ import com.virgilsecurity.sdk.crypto.VirgilKeyPair;
  * PureGrant class.
  */
 public class PureGrant {
-
     private final VirgilKeyPair ukp;
     private final String userId;
     private final String sessionId;
     private final Date creationDate;
+    private final Date expirationDate;
 
     /**
      * Instantiates PureGrant.
@@ -56,19 +56,17 @@ public class PureGrant {
      * @param sessionId Session Id (optional).
      * @param creationDate Creation date.
      */
-    public PureGrant(VirgilKeyPair ukp,
-                     String userId,
-                     String sessionId,
-                     Date creationDate) {
+    public PureGrant(VirgilKeyPair ukp, String userId, String sessionId, Date creationDate, Date expirationDate) {
         ValidateUtils.checkNull(ukp, "ukp");
-        ValidateUtils.checkNull(creationDate, "creationDate");
-
         ValidateUtils.checkNullOrEmpty(userId, "userId");
+        ValidateUtils.checkNull(creationDate, "creationDate");
+        ValidateUtils.checkNull(expirationDate, "expirationDate");
 
         this.ukp = ukp;
         this.userId = userId;
         this.sessionId = sessionId;
         this.creationDate = creationDate;
+        this.expirationDate = expirationDate;
     }
 
     /**
@@ -105,5 +103,9 @@ public class PureGrant {
      */
     public String getUserId() {
         return userId;
+    }
+
+    public Date getExpirationDate() {
+        return expirationDate;
     }
 }

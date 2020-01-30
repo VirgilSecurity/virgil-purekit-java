@@ -39,9 +39,10 @@ option java_package = "com.virgilsecurity.purekit.protobuf.build";
 option java_outer_classname = "PurekitProtosV3Grant";
 
 message EncryptedGrantHeader {
-    uint32 creation_date = 1;
-    string user_id = 2;
-    string session_id = 3;
+    string user_id = 1;
+    string session_id = 2;
+    uint32 creation_date = 3;
+    uint32 expiration_date = 4;
 }
 
 message EncryptedGrant {

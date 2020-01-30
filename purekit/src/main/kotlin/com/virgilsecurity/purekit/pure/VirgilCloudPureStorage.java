@@ -485,6 +485,21 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
         client.deleteRoleAssignments(request);
     }
 
+    @Override
+    public void insertGrantKey(GrantKey grantKey) throws Exception {
+        throw new NullPointerException();
+    }
+
+    @Override
+    public GrantKey selectGrantKey(String userId, byte[] keyId) throws Exception {
+        throw new NullPointerException();
+    }
+
+    @Override
+    public void deleteGrantKey(String userId, byte[] keyId) throws Exception {
+        throw new NullPointerException();
+    }
+
     private void sendUser(UserRecord userRecord, boolean isInsert)
         throws ProtocolException, ProtocolHttpException, InvalidProtocolBufferException,
         SigningException {

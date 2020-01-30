@@ -34,6 +34,7 @@
 package com.virgilsecurity.purekit.pure;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.Set;
 
 import com.virgilsecurity.purekit.pure.exception.PureLogicException;
@@ -149,4 +150,10 @@ public interface PureStorage {
     RoleAssignment selectRoleAssignment(String roleName, String userId) throws Exception;
 
     void deleteRoleAssignments(String roleName, Set<String> userIds) throws Exception;
+
+    void insertGrantKey(GrantKey grantKey) throws Exception;
+
+    GrantKey selectGrantKey(String userId, byte[] keyId) throws Exception;
+
+    void deleteGrantKey(String userId, byte[] keyId) throws Exception;
 }

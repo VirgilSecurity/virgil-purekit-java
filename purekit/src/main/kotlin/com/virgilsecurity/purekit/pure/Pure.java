@@ -162,12 +162,17 @@ public class Pure {
 
             VirgilKeyPair ukp = crypto.importPrivateKey(uskData);
 
-            PureGrant grant = new PureGrant(ukp, userId, sessionId, new Date());
+            Date creationDate = new Date();
+            // FIXME
+            Date expirationDate = new Date();
 
-            int timestamp = (int) (grant.getCreationDate().getTime() / 1000);
+            PureGrant grant = new PureGrant(ukp, userId, sessionId, creationDate, expirationDate);
+
+            // FIXME
             PurekitProtosV3Grant.EncryptedGrantHeader.Builder headerBuilder =
                     PurekitProtosV3Grant.EncryptedGrantHeader.newBuilder()
-                            .setCreationDate(timestamp)
+                            .setCreationDate((int) (grant.getCreationDate().getTime() / 1000))
+                            .setExpirationDate((int) (grant.getExpirationDate().getTime() / 1000))
                             .setUserId(grant.getUserId());
 
             if (sessionId != null) {
@@ -250,7 +255,11 @@ public class Pure {
 
         VirgilKeyPair upk = crypto.importPrivateKey(usk);
 
-        return new PureGrant(upk, userId, null, new Date());
+        Date creationDate = new Date();
+        // FIXME
+        Date expirationDate = new Date();
+
+        return new PureGrant(upk, userId, null, creationDate, expirationDate);
     }
 
     /**
@@ -305,7 +314,8 @@ public class Pure {
             return new PureGrant(ukp,
                     header.getUserId(),
                     sessionId,
-                    new Date((long) header.getCreationDate() * 1000));
+                    new Date((long) header.getCreationDate() * 1000),
+                    new Date((long) header.getExpirationDate() * 1000));
         }
         catch (PheException e) {
             throw new PureCryptoException(e);

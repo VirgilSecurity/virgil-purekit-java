@@ -19,29 +19,34 @@ public final class PurekitProtosV3Grant {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>uint32 creation_date = 1;</code>
-     */
-    int getCreationDate();
-
-    /**
-     * <code>string user_id = 2;</code>
+     * <code>string user_id = 1;</code>
      */
     java.lang.String getUserId();
     /**
-     * <code>string user_id = 2;</code>
+     * <code>string user_id = 1;</code>
      */
     com.google.protobuf.ByteString
         getUserIdBytes();
 
     /**
-     * <code>string session_id = 3;</code>
+     * <code>string session_id = 2;</code>
      */
     java.lang.String getSessionId();
     /**
-     * <code>string session_id = 3;</code>
+     * <code>string session_id = 2;</code>
      */
     com.google.protobuf.ByteString
         getSessionIdBytes();
+
+    /**
+     * <code>uint32 creation_date = 3;</code>
+     */
+    int getCreationDate();
+
+    /**
+     * <code>uint32 expiration_date = 4;</code>
+     */
+    int getExpirationDate();
   }
   /**
    * Protobuf type {@code build.EncryptedGrantHeader}
@@ -90,21 +95,26 @@ public final class PurekitProtosV3Grant {
             case 0:
               done = true;
               break;
-            case 8: {
-
-              creationDate_ = input.readUInt32();
-              break;
-            }
-            case 18: {
+            case 10: {
               java.lang.String s = input.readStringRequireUtf8();
 
               userId_ = s;
               break;
             }
-            case 26: {
+            case 18: {
               java.lang.String s = input.readStringRequireUtf8();
 
               sessionId_ = s;
+              break;
+            }
+            case 24: {
+
+              creationDate_ = input.readUInt32();
+              break;
+            }
+            case 32: {
+
+              expirationDate_ = input.readUInt32();
               break;
             }
             default: {
@@ -139,19 +149,10 @@ public final class PurekitProtosV3Grant {
               com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Grant.EncryptedGrantHeader.class, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Grant.EncryptedGrantHeader.Builder.class);
     }
 
-    public static final int CREATION_DATE_FIELD_NUMBER = 1;
-    private int creationDate_;
-    /**
-     * <code>uint32 creation_date = 1;</code>
-     */
-    public int getCreationDate() {
-      return creationDate_;
-    }
-
-    public static final int USER_ID_FIELD_NUMBER = 2;
+    public static final int USER_ID_FIELD_NUMBER = 1;
     private volatile java.lang.Object userId_;
     /**
-     * <code>string user_id = 2;</code>
+     * <code>string user_id = 1;</code>
      */
     public java.lang.String getUserId() {
       java.lang.Object ref = userId_;
@@ -166,7 +167,7 @@ public final class PurekitProtosV3Grant {
       }
     }
     /**
-     * <code>string user_id = 2;</code>
+     * <code>string user_id = 1;</code>
      */
     public com.google.protobuf.ByteString
         getUserIdBytes() {
@@ -182,10 +183,10 @@ public final class PurekitProtosV3Grant {
       }
     }
 
-    public static final int SESSION_ID_FIELD_NUMBER = 3;
+    public static final int SESSION_ID_FIELD_NUMBER = 2;
     private volatile java.lang.Object sessionId_;
     /**
-     * <code>string session_id = 3;</code>
+     * <code>string session_id = 2;</code>
      */
     public java.lang.String getSessionId() {
       java.lang.Object ref = sessionId_;
@@ -200,7 +201,7 @@ public final class PurekitProtosV3Grant {
       }
     }
     /**
-     * <code>string session_id = 3;</code>
+     * <code>string session_id = 2;</code>
      */
     public com.google.protobuf.ByteString
         getSessionIdBytes() {
@@ -214,6 +215,24 @@ public final class PurekitProtosV3Grant {
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
+    }
+
+    public static final int CREATION_DATE_FIELD_NUMBER = 3;
+    private int creationDate_;
+    /**
+     * <code>uint32 creation_date = 3;</code>
+     */
+    public int getCreationDate() {
+      return creationDate_;
+    }
+
+    public static final int EXPIRATION_DATE_FIELD_NUMBER = 4;
+    private int expirationDate_;
+    /**
+     * <code>uint32 expiration_date = 4;</code>
+     */
+    public int getExpirationDate() {
+      return expirationDate_;
     }
 
     private byte memoizedIsInitialized = -1;
@@ -230,14 +249,17 @@ public final class PurekitProtosV3Grant {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (creationDate_ != 0) {
-        output.writeUInt32(1, creationDate_);
-      }
       if (!getUserIdBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, userId_);
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, userId_);
       }
       if (!getSessionIdBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, sessionId_);
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, sessionId_);
+      }
+      if (creationDate_ != 0) {
+        output.writeUInt32(3, creationDate_);
+      }
+      if (expirationDate_ != 0) {
+        output.writeUInt32(4, expirationDate_);
       }
       unknownFields.writeTo(output);
     }
@@ -248,15 +270,19 @@ public final class PurekitProtosV3Grant {
       if (size != -1) return size;
 
       size = 0;
-      if (creationDate_ != 0) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeUInt32Size(1, creationDate_);
-      }
       if (!getUserIdBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, userId_);
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, userId_);
       }
       if (!getSessionIdBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, sessionId_);
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, sessionId_);
+      }
+      if (creationDate_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeUInt32Size(3, creationDate_);
+      }
+      if (expirationDate_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeUInt32Size(4, expirationDate_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -273,12 +299,14 @@ public final class PurekitProtosV3Grant {
       }
       com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Grant.EncryptedGrantHeader other = (com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Grant.EncryptedGrantHeader) obj;
 
-      if (getCreationDate()
-          != other.getCreationDate()) return false;
       if (!getUserId()
           .equals(other.getUserId())) return false;
       if (!getSessionId()
           .equals(other.getSessionId())) return false;
+      if (getCreationDate()
+          != other.getCreationDate()) return false;
+      if (getExpirationDate()
+          != other.getExpirationDate()) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -290,12 +318,14 @@ public final class PurekitProtosV3Grant {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + CREATION_DATE_FIELD_NUMBER;
-      hash = (53 * hash) + getCreationDate();
       hash = (37 * hash) + USER_ID_FIELD_NUMBER;
       hash = (53 * hash) + getUserId().hashCode();
       hash = (37 * hash) + SESSION_ID_FIELD_NUMBER;
       hash = (53 * hash) + getSessionId().hashCode();
+      hash = (37 * hash) + CREATION_DATE_FIELD_NUMBER;
+      hash = (53 * hash) + getCreationDate();
+      hash = (37 * hash) + EXPIRATION_DATE_FIELD_NUMBER;
+      hash = (53 * hash) + getExpirationDate();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -429,11 +459,13 @@ public final class PurekitProtosV3Grant {
       @java.lang.Override
       public Builder clear() {
         super.clear();
-        creationDate_ = 0;
-
         userId_ = "";
 
         sessionId_ = "";
+
+        creationDate_ = 0;
+
+        expirationDate_ = 0;
 
         return this;
       }
@@ -461,9 +493,10 @@ public final class PurekitProtosV3Grant {
       @java.lang.Override
       public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Grant.EncryptedGrantHeader buildPartial() {
         com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Grant.EncryptedGrantHeader result = new com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Grant.EncryptedGrantHeader(this);
-        result.creationDate_ = creationDate_;
         result.userId_ = userId_;
         result.sessionId_ = sessionId_;
+        result.creationDate_ = creationDate_;
+        result.expirationDate_ = expirationDate_;
         onBuilt();
         return result;
       }
@@ -512,9 +545,6 @@ public final class PurekitProtosV3Grant {
 
       public Builder mergeFrom(com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Grant.EncryptedGrantHeader other) {
         if (other == com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Grant.EncryptedGrantHeader.getDefaultInstance()) return this;
-        if (other.getCreationDate() != 0) {
-          setCreationDate(other.getCreationDate());
-        }
         if (!other.getUserId().isEmpty()) {
           userId_ = other.userId_;
           onChanged();
@@ -522,6 +552,12 @@ public final class PurekitProtosV3Grant {
         if (!other.getSessionId().isEmpty()) {
           sessionId_ = other.sessionId_;
           onChanged();
+        }
+        if (other.getCreationDate() != 0) {
+          setCreationDate(other.getCreationDate());
+        }
+        if (other.getExpirationDate() != 0) {
+          setExpirationDate(other.getExpirationDate());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -552,35 +588,9 @@ public final class PurekitProtosV3Grant {
         return this;
       }
 
-      private int creationDate_ ;
-      /**
-       * <code>uint32 creation_date = 1;</code>
-       */
-      public int getCreationDate() {
-        return creationDate_;
-      }
-      /**
-       * <code>uint32 creation_date = 1;</code>
-       */
-      public Builder setCreationDate(int value) {
-        
-        creationDate_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>uint32 creation_date = 1;</code>
-       */
-      public Builder clearCreationDate() {
-        
-        creationDate_ = 0;
-        onChanged();
-        return this;
-      }
-
       private java.lang.Object userId_ = "";
       /**
-       * <code>string user_id = 2;</code>
+       * <code>string user_id = 1;</code>
        */
       public java.lang.String getUserId() {
         java.lang.Object ref = userId_;
@@ -595,7 +605,7 @@ public final class PurekitProtosV3Grant {
         }
       }
       /**
-       * <code>string user_id = 2;</code>
+       * <code>string user_id = 1;</code>
        */
       public com.google.protobuf.ByteString
           getUserIdBytes() {
@@ -611,7 +621,7 @@ public final class PurekitProtosV3Grant {
         }
       }
       /**
-       * <code>string user_id = 2;</code>
+       * <code>string user_id = 1;</code>
        */
       public Builder setUserId(
           java.lang.String value) {
@@ -624,7 +634,7 @@ public final class PurekitProtosV3Grant {
         return this;
       }
       /**
-       * <code>string user_id = 2;</code>
+       * <code>string user_id = 1;</code>
        */
       public Builder clearUserId() {
         
@@ -633,7 +643,7 @@ public final class PurekitProtosV3Grant {
         return this;
       }
       /**
-       * <code>string user_id = 2;</code>
+       * <code>string user_id = 1;</code>
        */
       public Builder setUserIdBytes(
           com.google.protobuf.ByteString value) {
@@ -649,7 +659,7 @@ public final class PurekitProtosV3Grant {
 
       private java.lang.Object sessionId_ = "";
       /**
-       * <code>string session_id = 3;</code>
+       * <code>string session_id = 2;</code>
        */
       public java.lang.String getSessionId() {
         java.lang.Object ref = sessionId_;
@@ -664,7 +674,7 @@ public final class PurekitProtosV3Grant {
         }
       }
       /**
-       * <code>string session_id = 3;</code>
+       * <code>string session_id = 2;</code>
        */
       public com.google.protobuf.ByteString
           getSessionIdBytes() {
@@ -680,7 +690,7 @@ public final class PurekitProtosV3Grant {
         }
       }
       /**
-       * <code>string session_id = 3;</code>
+       * <code>string session_id = 2;</code>
        */
       public Builder setSessionId(
           java.lang.String value) {
@@ -693,7 +703,7 @@ public final class PurekitProtosV3Grant {
         return this;
       }
       /**
-       * <code>string session_id = 3;</code>
+       * <code>string session_id = 2;</code>
        */
       public Builder clearSessionId() {
         
@@ -702,7 +712,7 @@ public final class PurekitProtosV3Grant {
         return this;
       }
       /**
-       * <code>string session_id = 3;</code>
+       * <code>string session_id = 2;</code>
        */
       public Builder setSessionIdBytes(
           com.google.protobuf.ByteString value) {
@@ -712,6 +722,58 @@ public final class PurekitProtosV3Grant {
   checkByteStringIsUtf8(value);
         
         sessionId_ = value;
+        onChanged();
+        return this;
+      }
+
+      private int creationDate_ ;
+      /**
+       * <code>uint32 creation_date = 3;</code>
+       */
+      public int getCreationDate() {
+        return creationDate_;
+      }
+      /**
+       * <code>uint32 creation_date = 3;</code>
+       */
+      public Builder setCreationDate(int value) {
+        
+        creationDate_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>uint32 creation_date = 3;</code>
+       */
+      public Builder clearCreationDate() {
+        
+        creationDate_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private int expirationDate_ ;
+      /**
+       * <code>uint32 expiration_date = 4;</code>
+       */
+      public int getExpirationDate() {
+        return expirationDate_;
+      }
+      /**
+       * <code>uint32 expiration_date = 4;</code>
+       */
+      public Builder setExpirationDate(int value) {
+        
+        expirationDate_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>uint32 expiration_date = 4;</code>
+       */
+      public Builder clearExpirationDate() {
+        
+        expirationDate_ = 0;
         onChanged();
         return this;
       }
@@ -1399,13 +1461,14 @@ public final class PurekitProtosV3Grant {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\025purekitV3_grant.proto\022\005build\"R\n\024Encryp" +
-      "tedGrantHeader\022\025\n\rcreation_date\030\001 \001(\r\022\017\n" +
-      "\007user_id\030\002 \001(\t\022\022\n\nsession_id\030\003 \001(\t\"I\n\016En" +
-      "cryptedGrant\022\017\n\007version\030\001 \001(\r\022\026\n\016encrypt" +
-      "ed_phek\030\002 \001(\014\022\016\n\006header\030\003 \001(\014BA\n)com.vir" +
-      "gilsecurity.purekit.protobuf.buildB\024Pure" +
-      "kitProtosV3Grantb\006proto3"
+      "\n\025purekitV3_grant.proto\022\005build\"k\n\024Encryp" +
+      "tedGrantHeader\022\017\n\007user_id\030\001 \001(\t\022\022\n\nsessi" +
+      "on_id\030\002 \001(\t\022\025\n\rcreation_date\030\003 \001(\r\022\027\n\017ex" +
+      "piration_date\030\004 \001(\r\"I\n\016EncryptedGrant\022\017\n" +
+      "\007version\030\001 \001(\r\022\026\n\016encrypted_phek\030\002 \001(\014\022\016" +
+      "\n\006header\030\003 \001(\014BA\n)com.virgilsecurity.pur" +
+      "ekit.protobuf.buildB\024PurekitProtosV3Gran" +
+      "tb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -1416,7 +1479,7 @@ public final class PurekitProtosV3Grant {
     internal_static_build_EncryptedGrantHeader_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_build_EncryptedGrantHeader_descriptor,
-        new java.lang.String[] { "CreationDate", "UserId", "SessionId", });
+        new java.lang.String[] { "UserId", "SessionId", "CreationDate", "ExpirationDate", });
     internal_static_build_EncryptedGrant_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_build_EncryptedGrant_fieldAccessorTable = new

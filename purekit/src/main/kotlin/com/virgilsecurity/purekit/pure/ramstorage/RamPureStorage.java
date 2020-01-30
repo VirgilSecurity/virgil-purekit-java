@@ -3,25 +3,50 @@ package com.virgilsecurity.purekit.pure.ramstorage;
 import com.virgilsecurity.purekit.pure.PureStorage;
 import com.virgilsecurity.purekit.pure.exception.PureException;
 import com.virgilsecurity.purekit.pure.exception.PureLogicException;
-import com.virgilsecurity.purekit.pure.model.CellKey;
-import com.virgilsecurity.purekit.pure.model.Role;
-import com.virgilsecurity.purekit.pure.model.RoleAssignment;
-import com.virgilsecurity.purekit.pure.model.UserRecord;
+import com.virgilsecurity.purekit.pure.model.*;
+import sun.awt.image.ImageWatched;
 
 import java.util.*;
 import java.util.function.Predicate;
+
+import static com.virgilsecurity.purekit.pure.exception.PureLogicException.ErrorStatus.GRANT_KEY_NOT_FOUND_IN_STORAGE;
 
 public class RamPureStorage implements PureStorage {
     private HashMap<String, UserRecord> users;
     private HashMap<String, HashMap<String, CellKey>> keys;
     private HashMap<String, Role> roles;
     private HashMap<String, HashMap<String, RoleAssignment>> roleAssignments;
+    private HashMap<String, HashMap<String, GrantKey>> grantKeys;
+
+    public static int GRANT_KEYS_CLEAN_INTERVAL = 5000;
 
     public RamPureStorage() {
         this.users = new HashMap<>();
         this.keys = new HashMap<>();
         this.roles = new HashMap<>();
         this.roleAssignments = new HashMap<>();
+        this.grantKeys = new HashMap<>();
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(new CleanGrantKeys(this), 0, GRANT_KEYS_CLEAN_INTERVAL);
+    }
+
+    static class CleanGrantKeys extends TimerTask {
+
+        private final RamPureStorage storage;
+
+        public CleanGrantKeys(RamPureStorage storage) {
+            this.storage = storage;
+        }
+
+        @Override
+        public void run() {
+            Date currentDate = new Date();
+
+            for (Map.Entry<String, HashMap<String, GrantKey>> userGrantKeys: storage.grantKeys.entrySet()) {
+                // TODO: Test
+                userGrantKeys.getValue().entrySet().removeIf(entry -> entry.getValue().getExpirationDate().before(currentDate));
+            }
+        }
     }
 
     @Override
@@ -208,5 +233,38 @@ public class RamPureStorage implements PureStorage {
         for (String userId: userIds) {
             map.remove(userId);
         }
+
+        this.roleAssignments.put(roleName, map);
+    }
+
+    @Override
+    public void insertGrantKey(GrantKey grantKey) throws Exception {
+        HashMap<String, GrantKey> keys = this.grantKeys.getOrDefault(grantKey.getUserId(), new HashMap<>());
+
+        keys.put(Base64.getEncoder().encodeToString(grantKey.getKeyId()), grantKey);
+
+        this.grantKeys.put(grantKey.getUserId(), keys);
+    }
+
+    @Override
+    public GrantKey selectGrantKey(String userId, byte[] keyId) throws Exception {
+        HashMap<String, GrantKey> keys = this.grantKeys.get(userId);
+
+        GrantKey key = keys.get(Base64.getEncoder().encodeToString(keyId));
+
+        if (key == null || key.getExpirationDate().before(new Date())) {
+            throw new PureLogicException(PureLogicException.ErrorStatus.GRANT_KEY_NOT_FOUND_IN_STORAGE);
+        }
+
+        return key;
+    }
+
+    @Override
+    public void deleteGrantKey(String userId, byte[] keyId) throws Exception {
+        HashMap<String, GrantKey> keys = this.grantKeys.get(userId);
+
+        keys.remove(Base64.getEncoder().encodeToString(keyId));
+
+        grantKeys.put(userId, keys);
     }
 }
