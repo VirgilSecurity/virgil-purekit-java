@@ -216,7 +216,7 @@ class PureCrypto {
 
             AuthEncryptAuthEncryptResult authEncryptAuthEncryptResult = aes256Gcm.authEncrypt(blob, new byte[0]);
 
-            return concat(authEncryptAuthEncryptResult.getTag(), authEncryptAuthEncryptResult.getOut());
+            return concat(authEncryptAuthEncryptResult.getOut(), authEncryptAuthEncryptResult.getTag());
         }
         catch (FoundationException e) {
             throw new PureCryptoException(e);

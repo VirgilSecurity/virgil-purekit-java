@@ -67,7 +67,7 @@ public class PureContext {
         }
 
         byte[] getPayload2() {
-            return payload1;
+            return payload2;
         }
 
         int getVersion() {

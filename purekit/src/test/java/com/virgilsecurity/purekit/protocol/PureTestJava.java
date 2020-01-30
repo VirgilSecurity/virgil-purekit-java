@@ -30,12 +30,14 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 class PureTestJava {
     private static class PureSetupResult {
-        private PureContext context;
-        private VirgilKeyPair bupkp;
+        private final PureContext context;
+        private final VirgilKeyPair bupkp;
+        private final byte[] nmsData;
 
-        public PureSetupResult(PureContext context, VirgilKeyPair bupkp) {
+        public PureSetupResult(PureContext context, VirgilKeyPair bupkp, byte[] nmsData) {
             this.context = context;
             this.bupkp = bupkp;
+            this.nmsData = nmsData;
         }
 
         public PureContext getContext() {
@@ -44,6 +46,10 @@ class PureTestJava {
 
         public VirgilKeyPair getBupkp() {
             return bupkp;
+        }
+
+        public byte[] getNmsData() {
+            return nmsData;
         }
     }
 
@@ -66,9 +72,26 @@ class PureTestJava {
                                       String updateToken,
                                       Map<String, List<String>> externalPublicKeys,
                                       StorageType storageType) throws CryptoException, PureLogicException {
+        return setupPure(null, pheServerAddress, pureServerAddress, kmsServerAddress, appToken,
+                publicKey, secretKey, updateToken, externalPublicKeys, storageType);
+    }
+    private PureSetupResult setupPure(byte[] nms,
+                                      String pheServerAddress,
+                                      String pureServerAddress,
+                                      String kmsServerAddress,
+                                      String appToken,
+                                      String publicKey,
+                                      String secretKey,
+                                      String updateToken,
+                                      Map<String, List<String>> externalPublicKeys,
+                                      StorageType storageType) throws CryptoException, PureLogicException {
         VirgilKeyPair bupkp = this.crypto.generateKeyPair(KeyPairType.ED25519);
 
-        byte[] nmsData = this.crypto.generateRandomData(32);
+        byte[] nmsData = nms;
+
+        if (nmsData == null) {
+            nmsData = this.crypto.generateRandomData(32);
+        }
         String nmsString = String.format("NM.%s", Base64.getEncoder().encodeToString(nmsData));
 
         String bupkpString = String.format("BU.%s", Base64.getEncoder().encodeToString(this.crypto.exportPublicKey(bupkp.getPublicKey())));
@@ -103,14 +126,14 @@ class PureTestJava {
             context.setUpdateToken(updateToken);
         }
 
-        return new PureSetupResult(context, bupkp);
+        return new PureSetupResult(context, bupkp, nmsData);
     }
 
     private static StorageType[] createStorages() {
         StorageType[] storages = new StorageType[1];
 
-        storages[0] = StorageType.RAM;
-//        storages[0] = StorageType.VirgilCloud;
+//        storages[0] = StorageType.RAM;
+        storages[0] = StorageType.VirgilCloud;
 //        storages[0] = StorageType.MariaDB;
 
         return storages;
@@ -299,7 +322,7 @@ class PureTestJava {
                     pure.decrypt(authResult2.getGrant(), userId1, dataId, cipherText);
                 });
 
-                assertEquals(e.getErrorStatus(), PureLogicException.ErrorStatus.USER_HAS_NO_ACCESS_TO_DATA);
+                assertEquals(PureLogicException.ErrorStatus.USER_HAS_NO_ACCESS_TO_DATA, e.getErrorStatus());
             }
         } catch (Exception e) {
             fail(e);
@@ -344,7 +367,7 @@ class PureTestJava {
                     pure.decryptGrantFromUser(authResult1.getEncryptedGrant());
                 });
 
-                assertEquals(ex.getPheException().getStatusCode(), ERROR_AES_FAILED);
+                assertEquals(ERROR_AES_FAILED, ex.getPheException().getStatusCode());
             }
         } catch (Exception e) {
             fail(e);
@@ -425,7 +448,7 @@ class PureTestJava {
                     pure.decrypt(authResult.getGrant(), null, dataId, cipherText);
                 });
 
-                assertEquals(e.getErrorStatus(), PureLogicException.ErrorStatus.USER_HAS_NO_ACCESS_TO_DATA);
+                assertEquals(PureLogicException.ErrorStatus.USER_HAS_NO_ACCESS_TO_DATA, e.getErrorStatus());
             }
         } catch (Exception e) {
             fail(e);
@@ -480,9 +503,11 @@ class PureTestJava {
                                                 String pureServerAddress,
                                                 String kmsServerAddress,
                                                 String appToken,
-                                                String publicKey,
-                                                String secretKey,
-                                                String updateToken) throws InterruptedException {
+                                                String publicKeyOld,
+                                                String secretKeyOld,
+                                                String updateToken,
+                                                String publicKeyNew,
+                                                String secretKeyNew) throws InterruptedException {
         ThreadUtils.pause();
 
         try {
@@ -499,11 +524,18 @@ class PureTestJava {
 
                 String firstUserId = null;
                 String firstUserPwd = null;
+                String dataId = UUID.randomUUID().toString();
+                byte[] text = UUID.randomUUID().toString().getBytes();
+                String newPwd = UUID.randomUUID().toString();
+
+                byte[] blob;
+                byte[] nms;
 
                 {
-                    PureSetupResult pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKey, secretKey,  null,null, storage);
+                    PureSetupResult pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKeyOld, secretKeyOld,  null,null, storage);
                     Pure pure = new Pure(pureResult.getContext());
                     pureStorage = pure.getStorage();
+                    nms = pureResult.getNmsData();
 
                     if (storage == StorageType.MariaDB) {
                         MariaDbPureStorage mariaDbPureStorage = (MariaDbPureStorage)pure.getStorage();
@@ -524,34 +556,59 @@ class PureTestJava {
                     }
                 }
 
-                PureSetupResult pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKey, secretKey, updateToken,null, storage);
-                pureResult.getContext().setStorage(pureStorage);
-                Pure pure = new Pure(pureResult.getContext());
+                {
+                    PureSetupResult pureResult = this.setupPure(nms, pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKeyOld, secretKeyOld, updateToken, null, storage);
+                    pureResult.getContext().setStorage(pureStorage);
+                    Pure pure = new Pure(pureResult.getContext());
 
-                String dataId = UUID.randomUUID().toString();
-                byte[] text = UUID.randomUUID().toString().getBytes();
+                    blob = pure.encrypt(firstUserId, dataId, text);
 
-                byte[] blob = pure.encrypt(firstUserId, dataId, text);
+                    long rotated = pure.performRotation();
 
-                long rotated = pure.performRotation();
+                    assertEquals(total, rotated);
+                }
 
-                assertEquals(total, rotated);
+                {
+                    PureSetupResult pureResult = this.setupPure(nms, pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKeyNew, secretKeyNew, null, null, storage);
+                    pureResult.getContext().setStorage(pureStorage);
+                    Pure pure = new Pure(pureResult.getContext());
 
-                AuthResult authResult = pure.authenticateUser(firstUserId, firstUserPwd);
+                    AuthResult authResult = pure.authenticateUser(firstUserId, firstUserPwd);
 
-                byte[] decrypted = pure.decrypt(authResult.getGrant(), firstUserId, dataId, blob);
+                    byte[] decrypted = pure.decrypt(authResult.getGrant(), firstUserId, dataId, blob);
 
-                assertArrayEquals(text, decrypted);
+                    assertArrayEquals(text, decrypted);
 
-                String newPwd = UUID.randomUUID().toString();
+                    pure.recoverUser(firstUserId, newPwd);
 
-                pure.recoverUser(firstUserId, newPwd);
+                    AuthResult authResult2 = pure.authenticateUser(firstUserId, newPwd);
 
-                AuthResult authResult2 = pure.authenticateUser(firstUserId, newPwd);
+                    byte[] decrypted2 = pure.decrypt(authResult2.getGrant(), firstUserId, dataId, blob);
 
-                byte[] decrypted2 = pure.decrypt(authResult2.getGrant(), firstUserId, dataId, blob);
+                    assertArrayEquals(text, decrypted2);
+                }
 
-                assertArrayEquals(text, decrypted2);
+                {
+                    PureSetupResult pureResult = this.setupPure(nms, pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKeyOld, secretKeyOld, updateToken, null, storage);
+                    pureResult.getContext().setStorage(pureStorage);
+                    Pure pure = new Pure(pureResult.getContext());
+
+                    AuthResult authResult = pure.authenticateUser(firstUserId, newPwd);
+
+                    byte[] decrypted = pure.decrypt(authResult.getGrant(), firstUserId, dataId, blob);
+
+                    assertArrayEquals(text, decrypted);
+
+                    String newPwd2 = UUID.randomUUID().toString();
+
+                    pure.recoverUser(firstUserId, newPwd2);
+
+                    AuthResult authResult2 = pure.authenticateUser(firstUserId, newPwd2);
+
+                    byte[] decrypted2 = pure.decrypt(authResult2.getGrant(), firstUserId, dataId, blob);
+
+                    assertArrayEquals(text, decrypted2);
+                }
             }
         } catch (Exception e) {
             fail(e);
@@ -865,30 +922,35 @@ class PureTestJava {
 
                 byte[] plainText11 = pure.decrypt(authResult1.getGrant(), null, dataId, cipherText);
                 byte[] plainText21 = pure.decrypt(authResult2.getGrant(), userId1, dataId, cipherText);
+                assertArrayEquals(text, plainText11);
+                assertArrayEquals(text, plainText21);
 
                 PureLogicException e = assertThrows(PureLogicException.class, () -> {
                     pure.decrypt(authResult3.getGrant(), userId1, dataId, cipherText);
                 });
 
-                assertEquals(e.getErrorStatus(), PureLogicException.ErrorStatus.INVALID_PASSWORD);
+                assertEquals(PureLogicException.ErrorStatus.USER_HAS_NO_ACCESS_TO_DATA, e.getErrorStatus());
 
-                assertArrayEquals(text, plainText11);
-                assertArrayEquals(text, plainText21);
-
-                pure.unassignRole(roleName, Collections.singleton(userId1));
                 pure.assignRole(roleName, authResult2.getGrant(), Collections.singleton(userId3));
+                pure.unassignRole(roleName, Collections.singleton(userId1));
+                pure.unassignRole(roleName, Collections.singleton(userId2));
 
-                e = assertThrows(PureLogicException.class, () -> {
-                    pure.decrypt(authResult1.getGrant(), null, dataId, cipherText);
-                });
-
-                assertEquals(e.getErrorStatus(), PureLogicException.ErrorStatus.INVALID_PASSWORD);
-
-                byte[] plainText22 = pure.decrypt(authResult2.getGrant(), userId1, dataId, cipherText);
+                byte[] plainText12 = pure.decrypt(authResult1.getGrant(), null, dataId, cipherText);
                 byte[] plainText32 = pure.decrypt(authResult3.getGrant(), userId1, dataId, cipherText);
 
-                assertArrayEquals(text, plainText22);
+                assertArrayEquals(text, plainText12);
                 assertArrayEquals(text, plainText32);
+
+                e = assertThrows(PureLogicException.class, () -> {
+                    pure.decrypt(authResult2.getGrant(), userId1, dataId, cipherText);
+                });
+
+                assertEquals(PureLogicException.ErrorStatus.USER_HAS_NO_ACCESS_TO_DATA, e.getErrorStatus());
+
+                pure.assignRole(roleName, authResult3.getGrant(), Collections.singleton(userId2));
+
+                byte[] plainText23 = pure.decrypt(authResult2.getGrant(), userId1, dataId, cipherText);
+                assertArrayEquals(text, plainText23);
             }
         } catch (Exception e) {
             fail(e);
@@ -928,7 +990,7 @@ class PureTestJava {
                     pure.authenticateUser(userId, password1);
                 });
 
-                assertEquals(e.getErrorStatus(), PureLogicException.ErrorStatus.INVALID_PASSWORD);
+                assertEquals(PureLogicException.ErrorStatus.INVALID_PASSWORD, e.getErrorStatus());
 
                 AuthResult authResult = pure.authenticateUser(userId, password2);
                 assertNotNull(authResult);
@@ -960,7 +1022,9 @@ class PureTestJava {
                          PropertyManager.getAppToken(),
                          PropertyManager.getPublicKeyOld(),
                          PropertyManager.getSecretKeyOld(),
-                         PropertyManager.getUpdateToken())
+                         PropertyManager.getUpdateToken(),
+                         PropertyManager.getPublicKeyNew(),
+                         PropertyManager.getSecretKeyNew())
         );
     }
 }

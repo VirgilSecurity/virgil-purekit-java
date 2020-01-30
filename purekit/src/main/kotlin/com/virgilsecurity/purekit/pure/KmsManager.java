@@ -1,10 +1,7 @@
 package com.virgilsecurity.purekit.pure;
 
 import com.google.protobuf.ByteString;
-import com.virgilsecurity.crypto.phe.UokmsClient;
-import com.virgilsecurity.crypto.phe.UokmsClientGenerateDecryptRequestResult;
-import com.virgilsecurity.crypto.phe.UokmsClientGenerateEncryptWrapResult;
-import com.virgilsecurity.crypto.phe.UokmsWrapRotation;
+import com.virgilsecurity.crypto.phe.*;
 import com.virgilsecurity.purekit.data.ProtocolException;
 import com.virgilsecurity.purekit.data.ProtocolHttpException;
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client;
@@ -27,8 +24,6 @@ class KmsManager {
         this.currentClient = new UokmsClient();
         this.currentClient.setOperationRandom(context.getCrypto().getRng());
         this.currentClient.setRandom(context.getCrypto().getRng());
-        this.currentClient.setKeys(context.getSecretKey().getPayload2(),
-                context.getPublicKey().getPayload2());
 
         if (context.getUpdateToken() != null) {
             this.currentVersion = context.getPublicKey().getVersion() + 1;
@@ -41,11 +36,15 @@ class KmsManager {
             this.previousClient.setRandom(context.getCrypto().getRng());
             this.previousClient.setKeys(context.getSecretKey().getPayload2(),
                     context.getPublicKey().getPayload2());
-            this.currentClient.rotateKeys(context.getUpdateToken().getPayload2());
+
+            UokmsClientRotateKeysResult rotateKeysResult = this.previousClient.rotateKeys(context.getUpdateToken().getPayload2());
+            this.currentClient.setKeys(rotateKeysResult.getNewClientPrivateKey(), rotateKeysResult.getNewServerPublicKey());
         } else {
             this.currentVersion = context.getPublicKey().getVersion();
             this.kmsRotation = null;
             this.previousClient = null;
+            this.currentClient.setKeys(context.getSecretKey().getPayload2(),
+                    context.getPublicKey().getPayload2());
         }
 
         this.httpClient = context.getKmsClient();
