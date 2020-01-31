@@ -40,7 +40,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.virgilsecurity.crypto.foundation.*;
+import com.virgilsecurity.crypto.phe.PheCipher;
 import com.virgilsecurity.purekit.pure.exception.PureCryptoException;
+import com.virgilsecurity.sdk.crypto.HashAlgorithm;
 import com.virgilsecurity.sdk.crypto.VirgilCrypto;
 import com.virgilsecurity.sdk.crypto.VirgilPrivateKey;
 import com.virgilsecurity.sdk.crypto.VirgilPublicKey;
@@ -48,14 +50,17 @@ import com.virgilsecurity.sdk.crypto.VirgilPublicKey;
 class PureCrypto {
 
     private final VirgilCrypto crypto;
+    private final PheCipher pheCipher;
 
     PureCrypto(VirgilCrypto crypto) {
         this.crypto = crypto;
+        this.pheCipher = new PheCipher();
+        this.pheCipher.setRandom(crypto.getRng());
     }
 
-    PureCryptoData encrypt(byte[] plainTextData,
-                           VirgilPrivateKey signingKey,
-                           Collection<VirgilPublicKey> recipients)
+    PureCryptoData encryptCellKey(byte[] plainTextData,
+                                  VirgilPrivateKey signingKey,
+                                  Collection<VirgilPublicKey> recipients)
             throws PureCryptoException {
 
         try (Aes256Gcm aesGcm = new Aes256Gcm();
@@ -88,7 +93,7 @@ class PureCrypto {
         }
     }
 
-    byte[] decrypt(PureCryptoData data, VirgilPublicKey verifyingKey, VirgilPrivateKey privateKey)
+    byte[] decryptCellKey(PureCryptoData data, VirgilPublicKey verifyingKey, VirgilPrivateKey privateKey)
         throws PureCryptoException {
 
         try (RecipientCipher cipher = new RecipientCipher()) {
@@ -131,9 +136,9 @@ class PureCrypto {
         }
     }
 
-    byte[] addRecipients(byte[] cms,
-                         VirgilPrivateKey privateKey,
-                         Collection<VirgilPublicKey> publicKeys)
+    byte[] addRecipientsToCellKey(byte[] cms,
+                                  VirgilPrivateKey privateKey,
+                                  Collection<VirgilPublicKey> publicKeys)
         throws PureCryptoException {
 
         try (MessageInfoEditor infoEditor = new MessageInfoEditor()) {
@@ -153,7 +158,7 @@ class PureCrypto {
         }
     }
 
-    byte[] deleteRecipients(byte[] cms, Collection<VirgilPublicKey> publicKeys)
+    byte[] deleteRecipientsFromCellKey(byte[] cms, Collection<VirgilPublicKey> publicKeys)
         throws PureCryptoException {
 
         try (MessageInfoEditor infoEditor = new MessageInfoEditor()) {
@@ -173,7 +178,7 @@ class PureCrypto {
     }
 
     // FIXME: Should be replaced with Set<byte[]> but such set doesn't work properly
-    Set<ByteBuffer> extractPublicKeysIds(byte[] cms) throws PureCryptoException {
+    Set<ByteBuffer> extractPublicKeysIdsFromCellKey(byte[] cms) throws PureCryptoException {
         HashSet<ByteBuffer> publicKeysIds = new HashSet<>();
 
         try (MessageInfoDerSerializer messageInfoSerializer = new MessageInfoDerSerializer()) {
@@ -208,13 +213,21 @@ class PureCrypto {
 
     static final int DERIVED_SECRET_LENGTH = 44;
 
-    byte[] encryptSymmetric(byte[] blob, byte[] secret) throws PureCryptoException {
+    byte[] generateSymmetricOneTimeKey() {
+        return crypto.generateRandomData(DERIVED_SECRET_LENGTH);
+    }
+
+    byte[] computeSymmetricKeyId(byte[] key) {
+        return crypto.computeHash(key, HashAlgorithm.SHA512);
+    }
+
+    byte[] encryptSymmetricOneTimeKey(byte[] plainText, byte[] ad, byte[] key) throws PureCryptoException {
         try (Aes256Gcm aes256Gcm = new Aes256Gcm()) {
 
-            aes256Gcm.setKey(Arrays.copyOfRange(secret, 0, aes256Gcm.getKeyLen()));
-            aes256Gcm.setNonce(Arrays.copyOfRange(secret, aes256Gcm.getKeyLen(), aes256Gcm.getKeyLen() + aes256Gcm.getNonceLen()));
+            aes256Gcm.setKey(Arrays.copyOfRange(key, 0, aes256Gcm.getKeyLen()));
+            aes256Gcm.setNonce(Arrays.copyOfRange(key, aes256Gcm.getKeyLen(), aes256Gcm.getKeyLen() + aes256Gcm.getNonceLen()));
 
-            AuthEncryptAuthEncryptResult authEncryptAuthEncryptResult = aes256Gcm.authEncrypt(blob, new byte[0]);
+            AuthEncryptAuthEncryptResult authEncryptAuthEncryptResult = aes256Gcm.authEncrypt(plainText, ad);
 
             return concat(authEncryptAuthEncryptResult.getOut(), authEncryptAuthEncryptResult.getTag());
         }
@@ -223,17 +236,25 @@ class PureCrypto {
         }
     }
 
-    byte[] decryptSymmetric(byte[] encryptedBlob, byte[] secret) throws PureCryptoException {
+    byte[] decryptSymmetricOneTimeKey(byte[] cipherText, byte[] ad, byte[] key) throws PureCryptoException {
         try (Aes256Gcm aes256Gcm = new Aes256Gcm()) {
 
-            aes256Gcm.setKey(Arrays.copyOfRange(secret, 0, aes256Gcm.getKeyLen()));
-            aes256Gcm.setNonce(Arrays.copyOfRange(secret, aes256Gcm.getKeyLen(), aes256Gcm.getKeyLen() + aes256Gcm.getNonceLen()));
+            aes256Gcm.setKey(Arrays.copyOfRange(key, 0, aes256Gcm.getKeyLen()));
+            aes256Gcm.setNonce(Arrays.copyOfRange(key, aes256Gcm.getKeyLen(), aes256Gcm.getKeyLen() + aes256Gcm.getNonceLen()));
 
-            return aes256Gcm.authDecrypt(encryptedBlob, new byte[0], new byte[0]);
+            return aes256Gcm.authDecrypt(cipherText, ad, new byte[0]);
         }
         catch (FoundationException e) {
             throw new PureCryptoException(e);
         }
+    }
+
+    byte[] encryptSymmetricNewNonce(byte[] plainText, byte[] ad, byte[] key) {
+        return pheCipher.authEncrypt(plainText, ad, key);
+    }
+
+    byte[] decryptSymmetricNewNonce(byte[] cipherText, byte[] ad, byte[] key) {
+        return pheCipher.authDecrypt(cipherText, ad, key);
     }
 
     private byte[] concat(byte[] body1, byte[] body2) {

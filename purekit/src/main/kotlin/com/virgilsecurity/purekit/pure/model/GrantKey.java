@@ -9,12 +9,12 @@ public class GrantKey {
     private final Date creationDate;
     private final Date expirationDate;
 
-    public GrantKey(String userId, byte[] keyId, byte[] encryptedGrantKey, Date expirationDate, Date creationDate) {
+    public GrantKey(String userId, byte[] keyId, byte[] encryptedGrantKey, Date creationDate, Date expirationDate) {
         this.userId = userId;
         this.keyId = keyId;
         this.encryptedGrantKey = encryptedGrantKey;
-        this.expirationDate = expirationDate;
         this.creationDate = creationDate;
+        this.expirationDate = expirationDate;
     }
 
     public String getUserId() {

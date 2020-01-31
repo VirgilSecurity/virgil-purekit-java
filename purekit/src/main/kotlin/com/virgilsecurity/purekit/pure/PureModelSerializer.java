@@ -5,15 +5,14 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Crypto;
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage;
 import com.virgilsecurity.purekit.pure.exception.PureLogicException;
-import com.virgilsecurity.purekit.pure.model.CellKey;
-import com.virgilsecurity.purekit.pure.model.Role;
-import com.virgilsecurity.purekit.pure.model.RoleAssignment;
-import com.virgilsecurity.purekit.pure.model.UserRecord;
+import com.virgilsecurity.purekit.pure.model.*;
 import com.virgilsecurity.purekit.utils.ValidateUtils;
 import com.virgilsecurity.sdk.crypto.VirgilCrypto;
 import com.virgilsecurity.sdk.crypto.VirgilKeyPair;
 import com.virgilsecurity.sdk.crypto.exceptions.SigningException;
 import com.virgilsecurity.sdk.crypto.exceptions.VerificationException;
+
+import java.util.Date;
 
 public class PureModelSerializer {
     private static final int CURRENT_USER_VERSION = 1;
@@ -24,6 +23,8 @@ public class PureModelSerializer {
     private static final int CURRENT_ROLE_SIGNED_VERSION = 1;
     private static final int CURRENT_ROLE_ASSIGNMENT_VERSION = 1;
     private static final int CURRENT_ROLE_ASSIGNMENT_SIGNED_VERSION = 1;
+    private static final int CURRENT_GRANT_KEY_VERSION = 1;
+    private static final int CURRENT_GRANT_KEY_SIGNED_VERSION = 1;
 
 
     private final VirgilCrypto crypto;
@@ -237,5 +238,49 @@ public class PureModelSerializer {
 
         return new RoleAssignment(roleAssignmentSigned.getRoleName(), roleAssignmentSigned.getUserId(),
                 roleAssignmentSigned.getPublicKeyId().toByteArray(), roleAssignmentSigned.getEncryptedRsk().toByteArray());
+    }
+
+    public PurekitProtosV3Storage.GrantKey serializeGrantKey(GrantKey grantKey) throws SigningException {
+        byte[] grantKeySigned = PurekitProtosV3Storage.GrantKeySigned
+                .newBuilder()
+                .setVersion(PureModelSerializer.CURRENT_GRANT_KEY_SIGNED_VERSION)
+                .setUserId(grantKey.getUserId())
+                .setKeyId(ByteString.copyFrom(grantKey.getKeyId()))
+                .setEncryptedGrantKey(ByteString.copyFrom(grantKey.getEncryptedGrantKey()))
+                .setCreationDate((int) (grantKey.getCreationDate().getTime() / 1000))
+                .setExpirationDate((int) (grantKey.getExpirationDate().getTime() / 1000))
+                .build()
+                .toByteArray();
+
+        byte[] signature = crypto.generateSignature(grantKeySigned, this.signingKey.getPrivateKey());
+
+        return PurekitProtosV3Storage.GrantKey
+                .newBuilder()
+                .setVersion(PureModelSerializer.CURRENT_GRANT_KEY_VERSION)
+                .setGrantKeySigned(ByteString.copyFrom(grantKeySigned))
+                .setSignature(ByteString.copyFrom(signature))
+                .build();
+    }
+
+    public GrantKey parseGrantKey(PurekitProtosV3Storage.GrantKey protobufRecord) throws VerificationException, PureLogicException, InvalidProtocolBufferException {
+        boolean verified = crypto.verifySignature(
+                protobufRecord.getSignature().toByteArray(),
+                protobufRecord.getGrantKeySigned().toByteArray(),
+                this.signingKey.getPublicKey()
+        );
+
+        if (!verified) {
+            throw new PureLogicException(
+                    PureLogicException.ErrorStatus.STORAGE_SIGNATURE_VERIFICATION_FAILED
+            );
+        }
+
+        PurekitProtosV3Storage.GrantKeySigned grantKeySigned =
+                PurekitProtosV3Storage.GrantKeySigned.parseFrom(protobufRecord.getGrantKeySigned());
+
+        return new GrantKey(grantKeySigned.getUserId(), grantKeySigned.getKeyId().toByteArray(),
+                grantKeySigned.getEncryptedGrantKey().toByteArray(),
+                new Date(grantKeySigned.getCreationDate() * 1000),
+                new Date(grantKeySigned.getExpirationDate() * 1000));
     }
 }

@@ -250,7 +250,8 @@ public class RamPureStorage implements PureStorage {
 
         GrantKey key = keys.get(Base64.getEncoder().encodeToString(keyId));
 
-        if (key == null || key.getExpirationDate().before(new Date())) {
+        Date currentDate = new Date();
+        if (key == null || key.getExpirationDate().before(currentDate)) {
             throw new PureLogicException(PureLogicException.ErrorStatus.GRANT_KEY_NOT_FOUND_IN_STORAGE);
         }
 

@@ -312,7 +312,7 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
         CellKey cellKey = pureModelSerializer.parseCellKey(protobufRecord);
 
         if (!userId.equals(cellKey.getUserId()) || !dataId.equals(cellKey.getDataId())) {
-            throw new PureLogicException(PureLogicException.ErrorStatus.KEY_ID_MISMATCH);
+            throw new PureLogicException(PureLogicException.ErrorStatus.CELL_KEY_ID_MISMATCH);
         }
 
         return cellKey;

@@ -41,8 +41,9 @@ option java_outer_classname = "PurekitProtosV3Grant";
 message EncryptedGrantHeader {
     string user_id = 1;
     string session_id = 2;
-    uint32 creation_date = 3;
-    uint32 expiration_date = 4;
+    bytes key_id = 3;
+    uint32 creation_date = 4;
+    uint32 expiration_date = 5;
 }
 
 message EncryptedGrant {

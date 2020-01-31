@@ -9,13 +9,11 @@ import com.virgilsecurity.purekit.pure.model.*;
 
 import com.virgilsecurity.sdk.crypto.exceptions.VerificationException;
 
+import javax.swing.plaf.nimbus.State;
 import java.io.IOException;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.*;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 public class MariaDbPureStorage implements PureStorage, PureModelSerializerDependent {
     private final String url;
@@ -251,7 +249,7 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
                         CellKey cellKey = parseCellKey(rs);
 
                         if (!userId.equals(cellKey.getUserId()) || !dataId.equals(cellKey.getDataId())) {
-                            throw new PureLogicException(PureLogicException.ErrorStatus.KEY_ID_MISMATCH);
+                            throw new PureLogicException(PureLogicException.ErrorStatus.CELL_KEY_ID_MISMATCH);
                         }
 
                         return cellKey;
@@ -514,28 +512,88 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
 
     @Override
     public void insertGrantKey(GrantKey grantKey) throws Exception {
-        throw new NullPointerException();
-    }
+        PurekitProtosV3Storage.GrantKey protobuf = pureModelSerializer.serializeGrantKey(grantKey);
 
-    @Override
-    public GrantKey selectGrantKey(String userId, byte[] keyId) throws Exception {
-        throw new NullPointerException();
-    }
-
-    @Override
-    public void deleteGrantKey(String userId, byte[] keyId) throws Exception {
-        throw new NullPointerException();
-    }
-
-    public void dropTables() throws SQLException {
         try (Connection conn = getConnection()) {
-            try (Statement stmt = conn.createStatement()) {
-                stmt.executeUpdate("DROP TABLE IF EXISTS virgil_role_assignments, virgil_roles, virgil_keys, virgil_users;");
+            try (PreparedStatement stmt = conn.prepareStatement("INSERT INTO virgil_grant_keys (" +
+                    "user_id," +
+                    "key_id," +
+                    "expiration_date," +
+                    "protobuf) " +
+                    "VALUES (?, ?, ?, ?);")) {
+
+                Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+                stmt.setString(1, grantKey.getUserId());
+                stmt.setBytes(2, grantKey.getKeyId());
+                stmt.setTimestamp(3, new Timestamp(grantKey.getExpirationDate().getTime()), cal);
+                stmt.setBytes(4, protobuf.toByteArray());
+
+                stmt.executeUpdate();
             }
         }
     }
 
-    public void createTables() throws SQLException {
+    @Override
+    public GrantKey selectGrantKey(String userId, byte[] keyId) throws Exception {
+        try (Connection conn = getConnection()) {
+            try (PreparedStatement stmt = conn.prepareStatement("SELECT protobuf " +
+                    "FROM virgil_grant_keys " +
+                    "WHERE user_id=? AND key_id=?;")) {
+
+                stmt.setString(1, userId);
+                stmt.setBytes(2, keyId);
+
+                try (ResultSet rs = stmt.executeQuery()) {
+                    if (rs.next()) {
+                        GrantKey grantKey = parseGrantKey(rs);
+                        if (!userId.equals(grantKey.getUserId())) {
+                            throw new PureLogicException(PureLogicException.ErrorStatus.USER_ID_MISMATCH);
+                        }
+                        if (!Arrays.equals(keyId, grantKey.getKeyId())) {
+                            throw new PureLogicException(PureLogicException.ErrorStatus.GRANT_KEY_ID_MISMATCH);
+                        }
+
+                        return grantKey;
+                    }
+                    else {
+                        throw new PureLogicException(PureLogicException.ErrorStatus.GRANT_KEY_NOT_FOUND_IN_STORAGE);
+                    }
+                }
+            }
+        }
+    }
+
+    private GrantKey parseGrantKey(ResultSet rs) throws SQLException, IOException, PureLogicException, VerificationException {
+        PurekitProtosV3Storage.GrantKey protobuf =
+                PurekitProtosV3Storage.GrantKey.parseFrom(rs.getBinaryStream(1));
+
+        return pureModelSerializer.parseGrantKey(protobuf);
+    }
+
+    @Override
+    public void deleteGrantKey(String userId, byte[] keyId) throws Exception {
+        try (Connection conn = getConnection()) {
+            try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM virgil_grant_keys WHERE user_id = ? AND key_id = ?;")) {
+                stmt.setString(1, userId);
+                stmt.setBytes(2, keyId);
+
+                stmt.executeUpdate();
+            }
+        }
+    }
+
+    public void cleanDb() throws SQLException {
+        try (Connection conn = getConnection()) {
+            try (Statement stmt = conn.createStatement()) {
+                stmt.executeUpdate("DROP TABLE IF EXISTS virgil_grant_keys, virgil_role_assignments, virgil_roles, virgil_keys, virgil_users;");
+            }
+            try (Statement stmt = conn.createStatement()) {
+                stmt.executeUpdate("DROP EVENT IF EXISTS delete_expired_grant_keys;");
+            }
+        }
+    }
+
+    public void initDb(int cleanGrantKeysIntervalSeconds) throws SQLException {
         try (Connection conn = getConnection()) {
             try (Statement stmt = conn.createStatement()) {
                 stmt.executeUpdate("CREATE TABLE virgil_users (\n" +
@@ -581,6 +639,28 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
                         "    UNIQUE INDEX user_id_role_name_index(user_id, role_name),\n" +
                         "    protobuf VARBINARY(1024) NOT NULL\n" +
                         ");");
+            }
+            try (Statement stmt = conn.createStatement()) {
+                stmt.executeUpdate("CREATE TABLE virgil_grant_keys (\n" +
+                        "    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,\n" +
+                        "    user_id CHAR(36) NOT NULL,\n" +
+                        "    FOREIGN KEY (user_id)\n" +
+                        "        REFERENCES virgil_users(user_id)\n" +
+                        "        ON DELETE CASCADE,\n" +
+                        "    key_id BINARY(64) NOT NULL,\n" +
+                        "    expiration_date TIMESTAMP NOT NULL,\n" +
+                        "    protobuf VARBINARY(1024) NOT NULL\n" +
+                        ");");
+            }
+            try (Statement stmt = conn.createStatement()) {
+                stmt.executeUpdate("SET @@global.event_scheduler = 1;");
+            }
+            try (PreparedStatement stmt = conn.prepareStatement("CREATE EVENT delete_expired_grant_keys ON SCHEDULE EVERY ? SECOND\n" +
+                                             "DO\n" +
+                                             "    DELETE FROM virgil_grant_keys WHERE expiration_date < CURRENT_TIMESTAMP;")) {
+                stmt.setInt(1, cleanGrantKeysIntervalSeconds);
+
+                stmt.executeUpdate();
             }
         }
     }

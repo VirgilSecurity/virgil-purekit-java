@@ -108,15 +108,15 @@ class KmsManager {
     byte[] recoverPwd(UserRecord userRecord) throws ProtocolException, ProtocolHttpException, PureCryptoException {
         byte[] derivedSecret = recoverSecret(userRecord);
 
-        return pureCrypto.decryptSymmetric(userRecord.getPasswordRecoveryBlob(), derivedSecret);
+        return pureCrypto.decryptSymmetricOneTimeKey(userRecord.getPasswordRecoveryBlob(), new byte[0], derivedSecret);
     }
 
-    PwdRecoveryData generatePwdReсoveryData(byte[] passwordHash) throws PureCryptoException {
+    PwdRecoveryData generatePwdRecoveryData(byte[] passwordHash) throws PureCryptoException {
         UokmsClientGenerateEncryptWrapResult kmsResult = currentClient.generateEncryptWrap(PureCrypto.DERIVED_SECRET_LENGTH);
 
         byte[] derivedSecret = kmsResult.getEncryptionKey();
 
-        byte[] resetPwdBlob = pureCrypto.encryptSymmetric(passwordHash, derivedSecret);
+        byte[] resetPwdBlob = pureCrypto.encryptSymmetricOneTimeKey(passwordHash, new byte[0], derivedSecret);
 
         return new PwdRecoveryData(kmsResult.getWrap(), resetPwdBlob);
     }

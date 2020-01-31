@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -71,10 +72,11 @@ class PureTestJava {
                                       String secretKey,
                                       String updateToken,
                                       Map<String, List<String>> externalPublicKeys,
-                                      StorageType storageType) throws CryptoException, PureLogicException {
+                                      StorageType storageType) throws CryptoException, PureLogicException, SQLException {
         return setupPure(null, pheServerAddress, pureServerAddress, kmsServerAddress, appToken,
-                publicKey, secretKey, updateToken, externalPublicKeys, storageType);
+                publicKey, secretKey, updateToken, externalPublicKeys, storageType, false);
     }
+
     private PureSetupResult setupPure(byte[] nms,
                                       String pheServerAddress,
                                       String pureServerAddress,
@@ -84,7 +86,8 @@ class PureTestJava {
                                       String secretKey,
                                       String updateToken,
                                       Map<String, List<String>> externalPublicKeys,
-                                      StorageType storageType) throws CryptoException, PureLogicException {
+                                      StorageType storageType,
+                                      boolean skipClean) throws CryptoException, PureLogicException, SQLException {
         VirgilKeyPair bupkp = this.crypto.generateKeyPair(KeyPairType.ED25519);
 
         byte[] nmsData = nms;
@@ -112,7 +115,11 @@ class PureTestJava {
                 break;
 
             case MariaDB:
-                PureStorage mariaDbPureStorage = new MariaDbPureStorage("jdbc:mariadb://localhost/puretest?user=root&password=qwerty");
+                MariaDbPureStorage mariaDbPureStorage = new MariaDbPureStorage("jdbc:mariadb://localhost/puretest?user=root&password=qwerty");
+                if (!skipClean) {
+                    mariaDbPureStorage.cleanDb();
+                    mariaDbPureStorage.initDb(1);
+                }
                 context = PureContext.createContext(appToken, nmsString, bupkpString,
                         mariaDbPureStorage, secretKey, publicKey, externalPublicKeys,
                         pheServerAddress, kmsServerAddress);
@@ -133,8 +140,8 @@ class PureTestJava {
         StorageType[] storages = new StorageType[1];
 
 //        storages[0] = StorageType.RAM;
-        storages[0] = StorageType.VirgilCloud;
-//        storages[0] = StorageType.MariaDB;
+//        storages[0] = StorageType.VirgilCloud;
+        storages[0] = StorageType.MariaDB;
 
         return storages;
     }
@@ -375,6 +382,54 @@ class PureTestJava {
     }
 
     @ParameterizedTest @MethodSource("testArgumentsNoToken")
+    void grant__expire__should_not_decrypt(String pheServerAddress,
+                                           String pureServerAddress,
+                                           String kmsServerAddress,
+                                           String appToken,
+                                           String publicKey,
+                                           String secretKey) throws InterruptedException {
+        ThreadUtils.pause();
+
+        try {
+            PureSetupResult pureResult;
+            StorageType[] storages = createStorages();
+            for (StorageType storage: storages) {
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKey, secretKey, null, null, storage);
+                Pure pure = new Pure(pureResult.getContext());
+
+                String userId = UUID.randomUUID().toString();
+                String password = UUID.randomUUID().toString();
+
+                pure.registerUser(userId, password);
+
+                Date currentDate = new Date();
+
+                AuthResult authResult = pure.authenticateUser(userId, password, 5);
+
+                PureGrant grant1 = pure.decryptGrantFromUser(authResult.getEncryptedGrant());
+
+                assertNotNull(grant1);
+
+                Thread.sleep(authResult.getGrant().getExpirationDate().getTime() - currentDate.getTime() - 1000);
+
+                PureGrant grant2 = pure.decryptGrantFromUser(authResult.getEncryptedGrant());
+
+                assertNotNull(grant2);
+
+                Thread.sleep( 2000);
+
+                PureLogicException ex = assertThrows(PureLogicException.class, () -> {
+                    pure.decryptGrantFromUser(authResult.getEncryptedGrant());
+                });
+
+                assertEquals(PureLogicException.ErrorStatus.GRANT_KEY_NOT_FOUND_IN_STORAGE, ex.getErrorStatus());
+            }
+        } catch (Exception e) {
+            fail(e);
+        }
+    }
+
+    @ParameterizedTest @MethodSource("testArgumentsNoToken")
     void grant__admin_access__should_decrypt(String pheServerAddress,
                                              String pureServerAddress,
                                              String kmsServerAddress,
@@ -537,12 +592,6 @@ class PureTestJava {
                     pureStorage = pure.getStorage();
                     nms = pureResult.getNmsData();
 
-                    if (storage == StorageType.MariaDB) {
-                        MariaDbPureStorage mariaDbPureStorage = (MariaDbPureStorage)pure.getStorage();
-                        mariaDbPureStorage.dropTables();
-                        mariaDbPureStorage.createTables();
-                    }
-
                     for (long i = 0; i < total; i++) {
                         String userId = UUID.randomUUID().toString();
                         String password = UUID.randomUUID().toString();
@@ -557,7 +606,7 @@ class PureTestJava {
                 }
 
                 {
-                    PureSetupResult pureResult = this.setupPure(nms, pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKeyOld, secretKeyOld, updateToken, null, storage);
+                    PureSetupResult pureResult = this.setupPure(nms, pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKeyOld, secretKeyOld, updateToken, null, storage, true);
                     pureResult.getContext().setStorage(pureStorage);
                     Pure pure = new Pure(pureResult.getContext());
 
@@ -569,7 +618,7 @@ class PureTestJava {
                 }
 
                 {
-                    PureSetupResult pureResult = this.setupPure(nms, pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKeyNew, secretKeyNew, null, null, storage);
+                    PureSetupResult pureResult = this.setupPure(nms, pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKeyNew, secretKeyNew, null, null, storage, true);
                     pureResult.getContext().setStorage(pureStorage);
                     Pure pure = new Pure(pureResult.getContext());
 
@@ -589,7 +638,7 @@ class PureTestJava {
                 }
 
                 {
-                    PureSetupResult pureResult = this.setupPure(nms, pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKeyOld, secretKeyOld, updateToken, null, storage);
+                    PureSetupResult pureResult = this.setupPure(nms, pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKeyOld, secretKeyOld, updateToken, null, storage, true);
                     pureResult.getContext().setStorage(pureStorage);
                     Pure pure = new Pure(pureResult.getContext());
 

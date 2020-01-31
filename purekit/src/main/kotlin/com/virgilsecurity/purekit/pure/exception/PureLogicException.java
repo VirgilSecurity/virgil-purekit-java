@@ -57,7 +57,7 @@ public class PureLogicException extends PureException {
         NONROTABLE_MASTER_SECRET_INVALID_LENGTH(6, "Nonrotatable master secret invalid length"),
         CREDENTIALS_PARSING_ERROR(7, "Credentials parsing error"),
         USER_ID_MISMATCH(8, "User Id mismatch"),
-        KEY_ID_MISMATCH(9, "Key id mismatch"),
+        CELL_KEY_ID_MISMATCH(9, "Cell key id mismatch"),
         PHE_VERSION_MISMATCH(10, "PHE version mismatch"),
         ROLE_NAME_MISMATCH(11, "Role name mismatch"),
         ROLE_USER_ID_MISMATCH(12, "Role user id mismatch"),
@@ -66,7 +66,8 @@ public class PureLogicException extends PureException {
         INVALID_PASSWORD(15, "Invalid password"),
         USER_HAS_NO_ACCESS_TO_DATA(16, "User has no access to data"),
         DUPLICATE_ROLE_NAME(17, "Duplicate role name"),
-        GRANT_KEY_NOT_FOUND_IN_STORAGE(18, "Grant key has not been found in the storage");
+        GRANT_KEY_NOT_FOUND_IN_STORAGE(18, "Grant key has not been found in the storage"),
+        GRANT_KEY_ID_MISMATCH(19, "Grant key id mismatch");
 
 
         private final int code;

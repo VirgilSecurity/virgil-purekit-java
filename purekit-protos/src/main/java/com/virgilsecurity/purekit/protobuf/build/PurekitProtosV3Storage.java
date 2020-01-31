@@ -8686,6 +8686,1491 @@ public final class PurekitProtosV3Storage {
 
   }
 
+  public interface GrantKeySignedOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:build.GrantKeySigned)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>uint32 version = 1;</code>
+     */
+    int getVersion();
+
+    /**
+     * <code>string user_id = 2;</code>
+     */
+    java.lang.String getUserId();
+    /**
+     * <code>string user_id = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getUserIdBytes();
+
+    /**
+     * <code>bytes key_id = 3;</code>
+     */
+    com.google.protobuf.ByteString getKeyId();
+
+    /**
+     * <code>bytes encrypted_grant_key = 4;</code>
+     */
+    com.google.protobuf.ByteString getEncryptedGrantKey();
+
+    /**
+     * <code>uint32 creation_date = 5;</code>
+     */
+    int getCreationDate();
+
+    /**
+     * <code>uint32 expiration_date = 6;</code>
+     */
+    int getExpirationDate();
+  }
+  /**
+   * Protobuf type {@code build.GrantKeySigned}
+   */
+  public  static final class GrantKeySigned extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:build.GrantKeySigned)
+      GrantKeySignedOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use GrantKeySigned.newBuilder() to construct.
+    private GrantKeySigned(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private GrantKeySigned() {
+      userId_ = "";
+      keyId_ = com.google.protobuf.ByteString.EMPTY;
+      encryptedGrantKey_ = com.google.protobuf.ByteString.EMPTY;
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new GrantKeySigned();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private GrantKeySigned(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 8: {
+
+              version_ = input.readUInt32();
+              break;
+            }
+            case 18: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              userId_ = s;
+              break;
+            }
+            case 26: {
+
+              keyId_ = input.readBytes();
+              break;
+            }
+            case 34: {
+
+              encryptedGrantKey_ = input.readBytes();
+              break;
+            }
+            case 40: {
+
+              creationDate_ = input.readUInt32();
+              break;
+            }
+            case 48: {
+
+              expirationDate_ = input.readUInt32();
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.internal_static_build_GrantKeySigned_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.internal_static_build_GrantKeySigned_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKeySigned.class, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKeySigned.Builder.class);
+    }
+
+    public static final int VERSION_FIELD_NUMBER = 1;
+    private int version_;
+    /**
+     * <code>uint32 version = 1;</code>
+     */
+    public int getVersion() {
+      return version_;
+    }
+
+    public static final int USER_ID_FIELD_NUMBER = 2;
+    private volatile java.lang.Object userId_;
+    /**
+     * <code>string user_id = 2;</code>
+     */
+    public java.lang.String getUserId() {
+      java.lang.Object ref = userId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        userId_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string user_id = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getUserIdBytes() {
+      java.lang.Object ref = userId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        userId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int KEY_ID_FIELD_NUMBER = 3;
+    private com.google.protobuf.ByteString keyId_;
+    /**
+     * <code>bytes key_id = 3;</code>
+     */
+    public com.google.protobuf.ByteString getKeyId() {
+      return keyId_;
+    }
+
+    public static final int ENCRYPTED_GRANT_KEY_FIELD_NUMBER = 4;
+    private com.google.protobuf.ByteString encryptedGrantKey_;
+    /**
+     * <code>bytes encrypted_grant_key = 4;</code>
+     */
+    public com.google.protobuf.ByteString getEncryptedGrantKey() {
+      return encryptedGrantKey_;
+    }
+
+    public static final int CREATION_DATE_FIELD_NUMBER = 5;
+    private int creationDate_;
+    /**
+     * <code>uint32 creation_date = 5;</code>
+     */
+    public int getCreationDate() {
+      return creationDate_;
+    }
+
+    public static final int EXPIRATION_DATE_FIELD_NUMBER = 6;
+    private int expirationDate_;
+    /**
+     * <code>uint32 expiration_date = 6;</code>
+     */
+    public int getExpirationDate() {
+      return expirationDate_;
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (version_ != 0) {
+        output.writeUInt32(1, version_);
+      }
+      if (!getUserIdBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, userId_);
+      }
+      if (!keyId_.isEmpty()) {
+        output.writeBytes(3, keyId_);
+      }
+      if (!encryptedGrantKey_.isEmpty()) {
+        output.writeBytes(4, encryptedGrantKey_);
+      }
+      if (creationDate_ != 0) {
+        output.writeUInt32(5, creationDate_);
+      }
+      if (expirationDate_ != 0) {
+        output.writeUInt32(6, expirationDate_);
+      }
+      unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (version_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeUInt32Size(1, version_);
+      }
+      if (!getUserIdBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, userId_);
+      }
+      if (!keyId_.isEmpty()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(3, keyId_);
+      }
+      if (!encryptedGrantKey_.isEmpty()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(4, encryptedGrantKey_);
+      }
+      if (creationDate_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeUInt32Size(5, creationDate_);
+      }
+      if (expirationDate_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeUInt32Size(6, expirationDate_);
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKeySigned)) {
+        return super.equals(obj);
+      }
+      com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKeySigned other = (com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKeySigned) obj;
+
+      if (getVersion()
+          != other.getVersion()) return false;
+      if (!getUserId()
+          .equals(other.getUserId())) return false;
+      if (!getKeyId()
+          .equals(other.getKeyId())) return false;
+      if (!getEncryptedGrantKey()
+          .equals(other.getEncryptedGrantKey())) return false;
+      if (getCreationDate()
+          != other.getCreationDate()) return false;
+      if (getExpirationDate()
+          != other.getExpirationDate()) return false;
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + VERSION_FIELD_NUMBER;
+      hash = (53 * hash) + getVersion();
+      hash = (37 * hash) + USER_ID_FIELD_NUMBER;
+      hash = (53 * hash) + getUserId().hashCode();
+      hash = (37 * hash) + KEY_ID_FIELD_NUMBER;
+      hash = (53 * hash) + getKeyId().hashCode();
+      hash = (37 * hash) + ENCRYPTED_GRANT_KEY_FIELD_NUMBER;
+      hash = (53 * hash) + getEncryptedGrantKey().hashCode();
+      hash = (37 * hash) + CREATION_DATE_FIELD_NUMBER;
+      hash = (53 * hash) + getCreationDate();
+      hash = (37 * hash) + EXPIRATION_DATE_FIELD_NUMBER;
+      hash = (53 * hash) + getExpirationDate();
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKeySigned parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKeySigned parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKeySigned parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKeySigned parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKeySigned parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKeySigned parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKeySigned parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKeySigned parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKeySigned parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKeySigned parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKeySigned parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKeySigned parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKeySigned prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code build.GrantKeySigned}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:build.GrantKeySigned)
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKeySignedOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.internal_static_build_GrantKeySigned_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.internal_static_build_GrantKeySigned_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKeySigned.class, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKeySigned.Builder.class);
+      }
+
+      // Construct using com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKeySigned.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        version_ = 0;
+
+        userId_ = "";
+
+        keyId_ = com.google.protobuf.ByteString.EMPTY;
+
+        encryptedGrantKey_ = com.google.protobuf.ByteString.EMPTY;
+
+        creationDate_ = 0;
+
+        expirationDate_ = 0;
+
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.internal_static_build_GrantKeySigned_descriptor;
+      }
+
+      @java.lang.Override
+      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKeySigned getDefaultInstanceForType() {
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKeySigned.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKeySigned build() {
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKeySigned result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKeySigned buildPartial() {
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKeySigned result = new com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKeySigned(this);
+        result.version_ = version_;
+        result.userId_ = userId_;
+        result.keyId_ = keyId_;
+        result.encryptedGrantKey_ = encryptedGrantKey_;
+        result.creationDate_ = creationDate_;
+        result.expirationDate_ = expirationDate_;
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKeySigned) {
+          return mergeFrom((com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKeySigned)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKeySigned other) {
+        if (other == com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKeySigned.getDefaultInstance()) return this;
+        if (other.getVersion() != 0) {
+          setVersion(other.getVersion());
+        }
+        if (!other.getUserId().isEmpty()) {
+          userId_ = other.userId_;
+          onChanged();
+        }
+        if (other.getKeyId() != com.google.protobuf.ByteString.EMPTY) {
+          setKeyId(other.getKeyId());
+        }
+        if (other.getEncryptedGrantKey() != com.google.protobuf.ByteString.EMPTY) {
+          setEncryptedGrantKey(other.getEncryptedGrantKey());
+        }
+        if (other.getCreationDate() != 0) {
+          setCreationDate(other.getCreationDate());
+        }
+        if (other.getExpirationDate() != 0) {
+          setExpirationDate(other.getExpirationDate());
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKeySigned parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKeySigned) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+
+      private int version_ ;
+      /**
+       * <code>uint32 version = 1;</code>
+       */
+      public int getVersion() {
+        return version_;
+      }
+      /**
+       * <code>uint32 version = 1;</code>
+       */
+      public Builder setVersion(int value) {
+        
+        version_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>uint32 version = 1;</code>
+       */
+      public Builder clearVersion() {
+        
+        version_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object userId_ = "";
+      /**
+       * <code>string user_id = 2;</code>
+       */
+      public java.lang.String getUserId() {
+        java.lang.Object ref = userId_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          userId_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string user_id = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getUserIdBytes() {
+        java.lang.Object ref = userId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          userId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string user_id = 2;</code>
+       */
+      public Builder setUserId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        userId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string user_id = 2;</code>
+       */
+      public Builder clearUserId() {
+        
+        userId_ = getDefaultInstance().getUserId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string user_id = 2;</code>
+       */
+      public Builder setUserIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        userId_ = value;
+        onChanged();
+        return this;
+      }
+
+      private com.google.protobuf.ByteString keyId_ = com.google.protobuf.ByteString.EMPTY;
+      /**
+       * <code>bytes key_id = 3;</code>
+       */
+      public com.google.protobuf.ByteString getKeyId() {
+        return keyId_;
+      }
+      /**
+       * <code>bytes key_id = 3;</code>
+       */
+      public Builder setKeyId(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        keyId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>bytes key_id = 3;</code>
+       */
+      public Builder clearKeyId() {
+        
+        keyId_ = getDefaultInstance().getKeyId();
+        onChanged();
+        return this;
+      }
+
+      private com.google.protobuf.ByteString encryptedGrantKey_ = com.google.protobuf.ByteString.EMPTY;
+      /**
+       * <code>bytes encrypted_grant_key = 4;</code>
+       */
+      public com.google.protobuf.ByteString getEncryptedGrantKey() {
+        return encryptedGrantKey_;
+      }
+      /**
+       * <code>bytes encrypted_grant_key = 4;</code>
+       */
+      public Builder setEncryptedGrantKey(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        encryptedGrantKey_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>bytes encrypted_grant_key = 4;</code>
+       */
+      public Builder clearEncryptedGrantKey() {
+        
+        encryptedGrantKey_ = getDefaultInstance().getEncryptedGrantKey();
+        onChanged();
+        return this;
+      }
+
+      private int creationDate_ ;
+      /**
+       * <code>uint32 creation_date = 5;</code>
+       */
+      public int getCreationDate() {
+        return creationDate_;
+      }
+      /**
+       * <code>uint32 creation_date = 5;</code>
+       */
+      public Builder setCreationDate(int value) {
+        
+        creationDate_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>uint32 creation_date = 5;</code>
+       */
+      public Builder clearCreationDate() {
+        
+        creationDate_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private int expirationDate_ ;
+      /**
+       * <code>uint32 expiration_date = 6;</code>
+       */
+      public int getExpirationDate() {
+        return expirationDate_;
+      }
+      /**
+       * <code>uint32 expiration_date = 6;</code>
+       */
+      public Builder setExpirationDate(int value) {
+        
+        expirationDate_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>uint32 expiration_date = 6;</code>
+       */
+      public Builder clearExpirationDate() {
+        
+        expirationDate_ = 0;
+        onChanged();
+        return this;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:build.GrantKeySigned)
+    }
+
+    // @@protoc_insertion_point(class_scope:build.GrantKeySigned)
+    private static final com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKeySigned DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKeySigned();
+    }
+
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKeySigned getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<GrantKeySigned>
+        PARSER = new com.google.protobuf.AbstractParser<GrantKeySigned>() {
+      @java.lang.Override
+      public GrantKeySigned parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new GrantKeySigned(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<GrantKeySigned> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<GrantKeySigned> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKeySigned getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface GrantKeyOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:build.GrantKey)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>uint32 version = 1;</code>
+     */
+    int getVersion();
+
+    /**
+     * <code>bytes grant_key_signed = 2;</code>
+     */
+    com.google.protobuf.ByteString getGrantKeySigned();
+
+    /**
+     * <code>bytes signature = 3;</code>
+     */
+    com.google.protobuf.ByteString getSignature();
+  }
+  /**
+   * Protobuf type {@code build.GrantKey}
+   */
+  public  static final class GrantKey extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:build.GrantKey)
+      GrantKeyOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use GrantKey.newBuilder() to construct.
+    private GrantKey(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private GrantKey() {
+      grantKeySigned_ = com.google.protobuf.ByteString.EMPTY;
+      signature_ = com.google.protobuf.ByteString.EMPTY;
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new GrantKey();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private GrantKey(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 8: {
+
+              version_ = input.readUInt32();
+              break;
+            }
+            case 18: {
+
+              grantKeySigned_ = input.readBytes();
+              break;
+            }
+            case 26: {
+
+              signature_ = input.readBytes();
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.internal_static_build_GrantKey_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.internal_static_build_GrantKey_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKey.class, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKey.Builder.class);
+    }
+
+    public static final int VERSION_FIELD_NUMBER = 1;
+    private int version_;
+    /**
+     * <code>uint32 version = 1;</code>
+     */
+    public int getVersion() {
+      return version_;
+    }
+
+    public static final int GRANT_KEY_SIGNED_FIELD_NUMBER = 2;
+    private com.google.protobuf.ByteString grantKeySigned_;
+    /**
+     * <code>bytes grant_key_signed = 2;</code>
+     */
+    public com.google.protobuf.ByteString getGrantKeySigned() {
+      return grantKeySigned_;
+    }
+
+    public static final int SIGNATURE_FIELD_NUMBER = 3;
+    private com.google.protobuf.ByteString signature_;
+    /**
+     * <code>bytes signature = 3;</code>
+     */
+    public com.google.protobuf.ByteString getSignature() {
+      return signature_;
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (version_ != 0) {
+        output.writeUInt32(1, version_);
+      }
+      if (!grantKeySigned_.isEmpty()) {
+        output.writeBytes(2, grantKeySigned_);
+      }
+      if (!signature_.isEmpty()) {
+        output.writeBytes(3, signature_);
+      }
+      unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (version_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeUInt32Size(1, version_);
+      }
+      if (!grantKeySigned_.isEmpty()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(2, grantKeySigned_);
+      }
+      if (!signature_.isEmpty()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(3, signature_);
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKey)) {
+        return super.equals(obj);
+      }
+      com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKey other = (com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKey) obj;
+
+      if (getVersion()
+          != other.getVersion()) return false;
+      if (!getGrantKeySigned()
+          .equals(other.getGrantKeySigned())) return false;
+      if (!getSignature()
+          .equals(other.getSignature())) return false;
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + VERSION_FIELD_NUMBER;
+      hash = (53 * hash) + getVersion();
+      hash = (37 * hash) + GRANT_KEY_SIGNED_FIELD_NUMBER;
+      hash = (53 * hash) + getGrantKeySigned().hashCode();
+      hash = (37 * hash) + SIGNATURE_FIELD_NUMBER;
+      hash = (53 * hash) + getSignature().hashCode();
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKey parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKey parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKey parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKey parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKey parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKey parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKey parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKey parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKey parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKey parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKey parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKey parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKey prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code build.GrantKey}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:build.GrantKey)
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKeyOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.internal_static_build_GrantKey_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.internal_static_build_GrantKey_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKey.class, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKey.Builder.class);
+      }
+
+      // Construct using com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKey.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        version_ = 0;
+
+        grantKeySigned_ = com.google.protobuf.ByteString.EMPTY;
+
+        signature_ = com.google.protobuf.ByteString.EMPTY;
+
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.internal_static_build_GrantKey_descriptor;
+      }
+
+      @java.lang.Override
+      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKey getDefaultInstanceForType() {
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKey.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKey build() {
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKey result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKey buildPartial() {
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKey result = new com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKey(this);
+        result.version_ = version_;
+        result.grantKeySigned_ = grantKeySigned_;
+        result.signature_ = signature_;
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKey) {
+          return mergeFrom((com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKey)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKey other) {
+        if (other == com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKey.getDefaultInstance()) return this;
+        if (other.getVersion() != 0) {
+          setVersion(other.getVersion());
+        }
+        if (other.getGrantKeySigned() != com.google.protobuf.ByteString.EMPTY) {
+          setGrantKeySigned(other.getGrantKeySigned());
+        }
+        if (other.getSignature() != com.google.protobuf.ByteString.EMPTY) {
+          setSignature(other.getSignature());
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKey parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKey) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+
+      private int version_ ;
+      /**
+       * <code>uint32 version = 1;</code>
+       */
+      public int getVersion() {
+        return version_;
+      }
+      /**
+       * <code>uint32 version = 1;</code>
+       */
+      public Builder setVersion(int value) {
+        
+        version_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>uint32 version = 1;</code>
+       */
+      public Builder clearVersion() {
+        
+        version_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private com.google.protobuf.ByteString grantKeySigned_ = com.google.protobuf.ByteString.EMPTY;
+      /**
+       * <code>bytes grant_key_signed = 2;</code>
+       */
+      public com.google.protobuf.ByteString getGrantKeySigned() {
+        return grantKeySigned_;
+      }
+      /**
+       * <code>bytes grant_key_signed = 2;</code>
+       */
+      public Builder setGrantKeySigned(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        grantKeySigned_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>bytes grant_key_signed = 2;</code>
+       */
+      public Builder clearGrantKeySigned() {
+        
+        grantKeySigned_ = getDefaultInstance().getGrantKeySigned();
+        onChanged();
+        return this;
+      }
+
+      private com.google.protobuf.ByteString signature_ = com.google.protobuf.ByteString.EMPTY;
+      /**
+       * <code>bytes signature = 3;</code>
+       */
+      public com.google.protobuf.ByteString getSignature() {
+        return signature_;
+      }
+      /**
+       * <code>bytes signature = 3;</code>
+       */
+      public Builder setSignature(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        signature_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>bytes signature = 3;</code>
+       */
+      public Builder clearSignature() {
+        
+        signature_ = getDefaultInstance().getSignature();
+        onChanged();
+        return this;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:build.GrantKey)
+    }
+
+    // @@protoc_insertion_point(class_scope:build.GrantKey)
+    private static final com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKey DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKey();
+    }
+
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKey getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<GrantKey>
+        PARSER = new com.google.protobuf.AbstractParser<GrantKey>() {
+      @java.lang.Override
+      public GrantKey parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new GrantKey(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<GrantKey> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<GrantKey> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKey getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_build_UserRecordSigned_descriptor;
   private static final 
@@ -8741,6 +10226,16 @@ public final class PurekitProtosV3Storage {
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_build_RoleAssignments_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_build_GrantKeySigned_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_build_GrantKeySigned_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_build_GrantKey_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_build_GrantKey_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -8778,9 +10273,14 @@ public final class PurekitProtosV3Storage {
       "t\022\017\n\007version\030\001 \001(\r\022\036\n\026role_assignment_si" +
       "gned\030\002 \001(\014\022\021\n\tsignature\030\003 \001(\014\"B\n\017RoleAss" +
       "ignments\022/\n\020role_assignments\030\001 \003(\0132\025.bui" +
-      "ld.RoleAssignmentBC\n)com.virgilsecurity." +
-      "purekit.protobuf.buildB\026PurekitProtosV3S" +
-      "torageb\006proto3"
+      "ld.RoleAssignment\"\217\001\n\016GrantKeySigned\022\017\n\007" +
+      "version\030\001 \001(\r\022\017\n\007user_id\030\002 \001(\t\022\016\n\006key_id" +
+      "\030\003 \001(\014\022\033\n\023encrypted_grant_key\030\004 \001(\014\022\025\n\rc" +
+      "reation_date\030\005 \001(\r\022\027\n\017expiration_date\030\006 " +
+      "\001(\r\"H\n\010GrantKey\022\017\n\007version\030\001 \001(\r\022\030\n\020gran" +
+      "t_key_signed\030\002 \001(\014\022\021\n\tsignature\030\003 \001(\014BC\n" +
+      ")com.virgilsecurity.purekit.protobuf.bui" +
+      "ldB\026PurekitProtosV3Storageb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -8852,6 +10352,18 @@ public final class PurekitProtosV3Storage {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_build_RoleAssignments_descriptor,
         new java.lang.String[] { "RoleAssignments", });
+    internal_static_build_GrantKeySigned_descriptor =
+      getDescriptor().getMessageTypes().get(11);
+    internal_static_build_GrantKeySigned_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_build_GrantKeySigned_descriptor,
+        new java.lang.String[] { "Version", "UserId", "KeyId", "EncryptedGrantKey", "CreationDate", "ExpirationDate", });
+    internal_static_build_GrantKey_descriptor =
+      getDescriptor().getMessageTypes().get(12);
+    internal_static_build_GrantKey_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_build_GrantKey_descriptor,
+        new java.lang.String[] { "Version", "GrantKeySigned", "Signature", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)
