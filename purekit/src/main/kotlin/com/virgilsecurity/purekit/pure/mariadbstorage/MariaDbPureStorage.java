@@ -642,14 +642,15 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
             }
             try (Statement stmt = conn.createStatement()) {
                 stmt.executeUpdate("CREATE TABLE virgil_grant_keys (\n" +
-                        "    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,\n" +
-                        "    user_id CHAR(36) NOT NULL,\n" +
-                        "    FOREIGN KEY (user_id)\n" +
-                        "        REFERENCES virgil_users(user_id)\n" +
-                        "        ON DELETE CASCADE,\n" +
-                        "    key_id BINARY(64) NOT NULL,\n" +
-                        "    expiration_date TIMESTAMP NOT NULL,\n" +
-                        "    protobuf VARBINARY(1024) NOT NULL\n" +
+                        "\tuser_id CHAR(36) NOT NULL,\n" +
+                        "\tFOREIGN KEY (user_id)\n" +
+                        "\t\tREFERENCES virgil_users(user_id)\n" +
+                        "\t\tON DELETE CASCADE,\n" +
+                        "\tkey_id BINARY(64) NOT NULL,\n" +
+                        "\texpiration_date TIMESTAMP NOT NULL,\n" +
+                        "\t\tINDEX expiration_date_index(expiration_date),\n" +
+                        "\tprotobuf VARBINARY(1024) NOT NULL,\n" +
+                        "\tPRIMARY KEY(user_id, key_id)\n" +
                         ");");
             }
             try (Statement stmt = conn.createStatement()) {
