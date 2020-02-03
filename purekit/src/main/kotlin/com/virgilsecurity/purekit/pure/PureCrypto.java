@@ -34,33 +34,35 @@
 package com.virgilsecurity.purekit.pure;
 
 import java.nio.ByteBuffer;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import com.virgilsecurity.crypto.foundation.*;
 import com.virgilsecurity.crypto.phe.PheCipher;
+import com.virgilsecurity.crypto.phe.PheException;
 import com.virgilsecurity.purekit.pure.exception.PureCryptoException;
-import com.virgilsecurity.sdk.crypto.HashAlgorithm;
-import com.virgilsecurity.sdk.crypto.VirgilCrypto;
-import com.virgilsecurity.sdk.crypto.VirgilPrivateKey;
-import com.virgilsecurity.sdk.crypto.VirgilPublicKey;
+import com.virgilsecurity.sdk.crypto.*;
+import com.virgilsecurity.sdk.crypto.exceptions.*;
 
 class PureCrypto {
 
     private final VirgilCrypto crypto;
     private final PheCipher pheCipher;
 
-    PureCrypto(VirgilCrypto crypto) {
+    PureCrypto(VirgilCrypto crypto) throws PureCryptoException {
         this.crypto = crypto;
-        this.pheCipher = new PheCipher();
-        this.pheCipher.setRandom(crypto.getRng());
+
+        try {
+            this.pheCipher = new PheCipher();
+            this.pheCipher.setRandom(crypto.getRng());
+        }
+        catch (PheException e) {
+            throw new PureCryptoException(e);
+        }
     }
 
     PureCryptoData encryptCellKey(byte[] plainTextData,
-                                  VirgilPrivateKey signingKey,
-                                  Collection<VirgilPublicKey> recipients)
+                                  Collection<VirgilPublicKey> recipients,
+                                  VirgilPrivateKey signingKey)
             throws PureCryptoException {
 
         try (Aes256Gcm aesGcm = new Aes256Gcm();
@@ -93,7 +95,7 @@ class PureCrypto {
         }
     }
 
-    byte[] decryptCellKey(PureCryptoData data, VirgilPublicKey verifyingKey, VirgilPrivateKey privateKey)
+    byte[] decryptCellKey(PureCryptoData data, VirgilPrivateKey privateKey, VirgilPublicKey verifyingKey)
         throws PureCryptoException {
 
         try (RecipientCipher cipher = new RecipientCipher()) {
@@ -249,12 +251,22 @@ class PureCrypto {
         }
     }
 
-    byte[] encryptSymmetricNewNonce(byte[] plainText, byte[] ad, byte[] key) {
-        return pheCipher.authEncrypt(plainText, ad, key);
+    byte[] encryptSymmetricNewNonce(byte[] plainText, byte[] ad, byte[] key) throws PureCryptoException {
+        try {
+            return pheCipher.authEncrypt(plainText, ad, key);
+        }
+        catch (PheException e) {
+            throw new PureCryptoException(e);
+        }
     }
 
-    byte[] decryptSymmetricNewNonce(byte[] cipherText, byte[] ad, byte[] key) {
-        return pheCipher.authDecrypt(cipherText, ad, key);
+    byte[] decryptSymmetricNewNonce(byte[] cipherText, byte[] ad, byte[] key) throws PureCryptoException {
+        try {
+            return pheCipher.authDecrypt(cipherText, ad, key);
+        }
+        catch (PheException e) {
+            throw new PureCryptoException(e);
+        }
     }
 
     private byte[] concat(byte[] body1, byte[] body2) {
@@ -263,5 +275,61 @@ class PureCrypto {
         System.arraycopy(body2, 0, body, body1.length, body2.length);
 
         return body;
+    }
+
+    VirgilKeyPair generateUserKey() throws CryptoException {
+        return crypto.generateKeyPair(KeyPairType.ED25519);
+    }
+
+    VirgilKeyPair generateRoleKey() throws CryptoException {
+        return crypto.generateKeyPair(KeyPairType.ED25519);
+    }
+
+    VirgilKeyPair generateCellKey() throws CryptoException {
+        return crypto.generateKeyPair(KeyPairType.ED25519);
+    }
+
+    VirgilKeyPair importPrivateKey(byte[] privateKey) throws CryptoException {
+        return crypto.importPrivateKey(privateKey);
+    }
+
+    VirgilPublicKey importPublicKey(byte[] publicKey) throws CryptoException {
+        return crypto.importPublicKey(publicKey);
+    }
+
+    byte[] exportPublicKey(VirgilPublicKey publicKey) throws CryptoException {
+        return crypto.exportPublicKey(publicKey);
+    }
+
+    byte[] exportPrivateKey(VirgilPrivateKey privateKey) throws CryptoException {
+        return crypto.exportPrivateKey(privateKey);
+    }
+
+    byte[] encryptForBackup(byte[] plainText, VirgilPublicKey publicKey, VirgilPrivateKey privateKey) throws EncryptionException, SigningException {
+        return crypto.authEncrypt(plainText, privateKey, publicKey);
+    }
+
+    byte[] decryptBackup(byte[] cipherText, VirgilPrivateKey privateKey, VirgilPublicKey publicKey) throws VerificationException, DecryptionException {
+        return crypto.authDecrypt(cipherText, privateKey, publicKey);
+    }
+
+    byte[] encryptData(byte[] plainText, List<VirgilPublicKey> publicKeys, VirgilPrivateKey privateKey) throws EncryptionException, SigningException {
+        return crypto.authEncrypt(plainText, privateKey, publicKeys);
+    }
+
+    byte[] decryptData(byte[] cipherText, VirgilPrivateKey privateKey, VirgilPublicKey publicKey) throws VerificationException, DecryptionException {
+        return crypto.authDecrypt(cipherText, privateKey, publicKey);
+    }
+
+    byte[] encryptRolePrivateKey(byte[] plainText, VirgilPublicKey publicKey, VirgilPrivateKey privateKey) throws EncryptionException, SigningException {
+        return crypto.authEncrypt(plainText, privateKey, publicKey);
+    }
+
+    byte[] decryptRolePrivateKey(byte[] plainText, VirgilPrivateKey privateKey, VirgilPublicKey publicKey) throws VerificationException, DecryptionException {
+        return crypto.authDecrypt(plainText, privateKey, publicKey);
+    }
+
+    byte[] computePasswordHash(String password) {
+        return crypto.computeHash(password.getBytes(), HashAlgorithm.SHA512);
     }
 }

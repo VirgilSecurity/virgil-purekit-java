@@ -34,14 +34,13 @@
 package com.virgilsecurity.purekit.pure;
 
 import java.nio.ByteBuffer;
-import java.time.Duration;
 import java.util.*;
 
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
-import com.virgilsecurity.crypto.foundation.Base64;
-import com.virgilsecurity.crypto.foundation.Sha512;
-import com.virgilsecurity.crypto.phe.*;
+import com.virgilsecurity.common.util.Base64;
+import com.virgilsecurity.crypto.foundation.FoundationException;
+import com.virgilsecurity.crypto.phe.PheClientEnrollAccountResult;
 import com.virgilsecurity.purekit.data.ProtocolException;
 import com.virgilsecurity.purekit.data.ProtocolHttpException;
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Grant;
@@ -49,16 +48,11 @@ import com.virgilsecurity.purekit.pure.exception.PureCryptoException;
 import com.virgilsecurity.purekit.pure.exception.PureLogicException;
 import com.virgilsecurity.purekit.pure.model.*;
 import com.virgilsecurity.purekit.utils.ValidateUtils;
-import com.virgilsecurity.sdk.crypto.HashAlgorithm;
 import com.virgilsecurity.sdk.crypto.VirgilCrypto;
 import com.virgilsecurity.sdk.crypto.VirgilKeyPair;
 import com.virgilsecurity.sdk.crypto.VirgilPrivateKey;
 import com.virgilsecurity.sdk.crypto.VirgilPublicKey;
 import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
-
-import javax.swing.*;
-
-import static com.virgilsecurity.crypto.foundation.FoundationException.ERROR_KEY_RECIPIENT_IS_NOT_FOUND;
 
 /**
  * Main class for interactions with PureKit
@@ -66,7 +60,6 @@ import static com.virgilsecurity.crypto.foundation.FoundationException.ERROR_KEY
 public class Pure {
     public static final long DEFAULT_GRANT_TTL = 60 * 60; // 1 hour
     private final int currentVersion;
-    private final VirgilCrypto crypto;
     private final PureCrypto pureCrypto;
     private final PureStorage storage;
     private final byte[] ak;
@@ -83,27 +76,21 @@ public class Pure {
      *
      * @param context PureContext.
      */
-    public Pure(PureContext context) throws PureCryptoException, PureLogicException {
-        try {
-            this.crypto = context.getCrypto();
-            this.pureCrypto = new PureCrypto(this.crypto);
-            this.storage = context.getStorage();
-            this.ak = context.getNonrotatableSecrets().getAk();
-            this.buppk = context.getBuppk();
-            this.oskp = context.getNonrotatableSecrets().getOskp();
-            this.externalPublicKeys = context.getExternalPublicKeys();
-            this.pheManager = new PheManager(context);
-            this.kmsManager = new KmsManager(context);
+    public Pure(PureContext context) throws PureCryptoException {
+        this.pureCrypto = new PureCrypto(context.getCrypto());
+        this.storage = context.getStorage();
+        this.ak = context.getNonrotatableSecrets().getAk();
+        this.buppk = context.getBuppk();
+        this.oskp = context.getNonrotatableSecrets().getOskp();
+        this.externalPublicKeys = context.getExternalPublicKeys();
+        this.pheManager = new PheManager(context);
+        this.kmsManager = new KmsManager(context);
 
-            if (context.getUpdateToken() != null) {
-                this.currentVersion = context.getPublicKey().getVersion() + 1;
-            }
-            else {
-                this.currentVersion = context.getPublicKey().getVersion();
-            }
+        if (context.getUpdateToken() != null) {
+            this.currentVersion = context.getPublicKey().getVersion() + 1;
         }
-        catch (PheException e) {
-            throw new PureCryptoException(e);
+        else {
+            this.currentVersion = context.getPublicKey().getVersion();
         }
     }
 
@@ -152,64 +139,58 @@ public class Pure {
     public AuthResult authenticateUser(String userId, String password, String sessionId, long ttl)
         throws Exception {
 
-        try {
-            ValidateUtils.checkNullOrEmpty(userId, "userId");
-            ValidateUtils.checkNullOrEmpty(password, "password");
+        ValidateUtils.checkNullOrEmpty(userId, "userId");
+        ValidateUtils.checkNullOrEmpty(password, "password");
 
-            UserRecord userRecord = storage.selectUser(userId);
+        UserRecord userRecord = storage.selectUser(userId);
 
-            byte[] phek = pheManager.computePheKey(userRecord, password);
+        byte[] phek = pheManager.computePheKey(userRecord, password);
 
-            byte[] uskData = pureCrypto.decryptSymmetricNewNonce(userRecord.getEncryptedUsk(), new byte[0], phek);
+        byte[] uskData = pureCrypto.decryptSymmetricNewNonce(userRecord.getEncryptedUsk(), new byte[0], phek);
 
-            VirgilKeyPair ukp = crypto.importPrivateKey(uskData);
+        VirgilKeyPair ukp = pureCrypto.importPrivateKey(uskData);
 
-            Date creationDate = new Date();
-            Date expirationDate = new Date(creationDate.getTime() + ttl * 1000);
+        Date creationDate = new Date();
+        Date expirationDate = new Date(creationDate.getTime() + ttl * 1000);
 
-            PureGrant grant = new PureGrant(ukp, userId, sessionId, creationDate, expirationDate);
+        PureGrant grant = new PureGrant(ukp, userId, sessionId, creationDate, expirationDate);
 
-            byte[] grantKeyRaw = pureCrypto.generateSymmetricOneTimeKey();
-            byte[] keyId = pureCrypto.computeSymmetricKeyId(grantKeyRaw);
+        byte[] grantKeyRaw = pureCrypto.generateSymmetricOneTimeKey();
+        byte[] keyId = pureCrypto.computeSymmetricKeyId(grantKeyRaw);
 
-            // FIXME
-            PurekitProtosV3Grant.EncryptedGrantHeader.Builder headerBuilder =
-                    PurekitProtosV3Grant.EncryptedGrantHeader.newBuilder()
-                            .setCreationDate((int) (grant.getCreationDate().getTime() / 1000))
-                            .setExpirationDate((int) (grant.getExpirationDate().getTime() / 1000))
-                            .setUserId(grant.getUserId())
-                            .setKeyId(ByteString.copyFrom(keyId));
+        PurekitProtosV3Grant.EncryptedGrantHeader.Builder headerBuilder =
+                PurekitProtosV3Grant.EncryptedGrantHeader.newBuilder()
+                        .setCreationDate((int) (grant.getCreationDate().getTime() / 1000))
+                        .setExpirationDate((int) (grant.getExpirationDate().getTime() / 1000))
+                        .setUserId(grant.getUserId())
+                        .setKeyId(ByteString.copyFrom(keyId));
 
-            if (sessionId != null) {
-                headerBuilder.setSessionId(sessionId);
-            }
-
-            PurekitProtosV3Grant.EncryptedGrantHeader header = headerBuilder.build();
-
-            byte[] headerBytes = header.toByteArray();
-
-            byte[] encryptedGrantKey = pureCrypto.encryptSymmetricNewNonce(grantKeyRaw, new byte[0], ak);
-
-            GrantKey grantKey = new GrantKey(userId, keyId, encryptedGrantKey, creationDate, expirationDate);
-
-            storage.insertGrantKey(grantKey);
-
-            byte[] encryptedPhek = pureCrypto.encryptSymmetricOneTimeKey(phek, headerBytes, grantKeyRaw);
-
-            PurekitProtosV3Grant.EncryptedGrant encryptedGrantData =
-                    PurekitProtosV3Grant.EncryptedGrant.newBuilder()
-                            .setVersion(Pure.currentGrantVersion)
-                            .setHeader(ByteString.copyFrom(headerBytes))
-                            .setEncryptedPhek(ByteString.copyFrom(encryptedPhek))
-                            .build();
-
-            String encryptedGrant = new String(Base64.encode(encryptedGrantData.toByteArray()));
-
-            return new AuthResult(grant, encryptedGrant);
+        if (sessionId != null) {
+            headerBuilder.setSessionId(sessionId);
         }
-        catch (PheException e) {
-            throw new PureCryptoException(e);
-        }
+
+        PurekitProtosV3Grant.EncryptedGrantHeader header = headerBuilder.build();
+
+        byte[] headerBytes = header.toByteArray();
+
+        byte[] encryptedGrantKey = pureCrypto.encryptSymmetricNewNonce(grantKeyRaw, new byte[0], ak);
+
+        GrantKey grantKey = new GrantKey(userId, keyId, encryptedGrantKey, creationDate, expirationDate);
+
+        storage.insertGrantKey(grantKey);
+
+        byte[] encryptedPhek = pureCrypto.encryptSymmetricOneTimeKey(phek, headerBytes, grantKeyRaw);
+
+        PurekitProtosV3Grant.EncryptedGrant encryptedGrantData =
+                PurekitProtosV3Grant.EncryptedGrant.newBuilder()
+                        .setVersion(Pure.currentGrantVersion)
+                        .setHeader(ByteString.copyFrom(headerBytes))
+                        .setEncryptedPhek(ByteString.copyFrom(encryptedPhek))
+                        .build();
+
+        String encryptedGrant = Base64.encode(encryptedGrantData.toByteArray());
+
+        return new AuthResult(grant, encryptedGrant);
     }
 
     /**
@@ -265,22 +246,27 @@ public class Pure {
      * @throws InvalidProtocolBufferException If a PurekitProtosV3Storage.UserRecord received from
      * a server cannot be parsed as a Protobuf message.
      */
-    public PureGrant createUserGrantAsAdmin(String userId, VirgilPrivateKey bupsk)
+    public PureGrant createUserGrantAsAdmin(String userId, VirgilPrivateKey bupsk, long ttl)
         throws Exception {
 
         ValidateUtils.checkNullOrEmpty(userId, "userId");
+        ValidateUtils.checkNull(bupsk, "bupsk");
 
         UserRecord userRecord = storage.selectUser(userId);
 
-        byte[] usk = crypto.authDecrypt(userRecord.getEncryptedUskBackup(), bupsk, oskp.getPublicKey());
+        byte[] usk = pureCrypto.decryptBackup(userRecord.getEncryptedUskBackup(), bupsk, oskp.getPublicKey());
 
-        VirgilKeyPair upk = crypto.importPrivateKey(usk);
+        VirgilKeyPair upk = pureCrypto.importPrivateKey(usk);
 
         Date creationDate = new Date();
-        // FIXME
-        Date expirationDate = new Date();
+        Date expirationDate = new Date(creationDate.getTime() + ttl * 1000);
 
         return new PureGrant(upk, userId, null, creationDate, expirationDate);
+    }
+
+    public PureGrant createUserGrantAsAdmin(String userId, VirgilPrivateKey bupsk)
+            throws Exception {
+        return createUserGrantAsAdmin(userId, bupsk, DEFAULT_GRANT_TTL);
     }
 
     /**
@@ -303,48 +289,43 @@ public class Pure {
      */
     public PureGrant decryptGrantFromUser(String encryptedGrantString) throws Exception {
 
-        try {
-            ValidateUtils.checkNullOrEmpty(encryptedGrantString, "encryptedGrantString");
+        ValidateUtils.checkNullOrEmpty(encryptedGrantString, "encryptedGrantString");
 
-            byte[] encryptedGrantData = Base64.decode(encryptedGrantString.getBytes());
+        byte[] encryptedGrantData = Base64.decode(encryptedGrantString.getBytes());
 
-            PurekitProtosV3Grant.EncryptedGrant encryptedGrant =
-                    PurekitProtosV3Grant.EncryptedGrant.parseFrom(encryptedGrantData);
+        PurekitProtosV3Grant.EncryptedGrant encryptedGrant =
+                PurekitProtosV3Grant.EncryptedGrant.parseFrom(encryptedGrantData);
 
-            ByteString encryptedData = encryptedGrant.getEncryptedPhek();
+        ByteString encryptedData = encryptedGrant.getEncryptedPhek();
 
-            PurekitProtosV3Grant.EncryptedGrantHeader header =
-                    PurekitProtosV3Grant.EncryptedGrantHeader.parseFrom(encryptedGrant.getHeader());
+        PurekitProtosV3Grant.EncryptedGrantHeader header =
+                PurekitProtosV3Grant.EncryptedGrantHeader.parseFrom(encryptedGrant.getHeader());
 
-            GrantKey grantKey = storage.selectGrantKey(header.getUserId(), header.getKeyId().toByteArray());
+        GrantKey grantKey = storage.selectGrantKey(header.getUserId(), header.getKeyId().toByteArray());
 
-            byte[] grantKeyRaw = pureCrypto.decryptSymmetricNewNonce(grantKey.getEncryptedGrantKey(), new byte[0], ak);
+        byte[] grantKeyRaw = pureCrypto.decryptSymmetricNewNonce(grantKey.getEncryptedGrantKey(), new byte[0], ak);
 
-            byte[] phek = pureCrypto.decryptSymmetricOneTimeKey(encryptedData.toByteArray(),
-                    encryptedGrant.getHeader().toByteArray(),
-                    grantKeyRaw);
+        byte[] phek = pureCrypto.decryptSymmetricOneTimeKey(encryptedData.toByteArray(),
+                encryptedGrant.getHeader().toByteArray(),
+                grantKeyRaw);
 
-            UserRecord userRecord = storage.selectUser(header.getUserId());
+        UserRecord userRecord = storage.selectUser(header.getUserId());
 
-            byte[] usk = pureCrypto.decryptSymmetricNewNonce(userRecord.getEncryptedUsk(), new byte[0], phek);
+        byte[] usk = pureCrypto.decryptSymmetricNewNonce(userRecord.getEncryptedUsk(), new byte[0], phek);
 
-            VirgilKeyPair ukp = crypto.importPrivateKey(usk);
+        VirgilKeyPair ukp = pureCrypto.importPrivateKey(usk);
 
-            String sessionId = header.getSessionId();
+        String sessionId = header.getSessionId();
 
-            if (sessionId.isEmpty()) {
-                sessionId = null;
-            }
-
-            return new PureGrant(ukp,
-                    header.getUserId(),
-                    sessionId,
-                    new Date((long) header.getCreationDate() * 1000),
-                    new Date((long) header.getExpirationDate() * 1000));
+        if (sessionId.isEmpty()) {
+            sessionId = null;
         }
-        catch (PheException e) {
-            throw new PureCryptoException(e);
-        }
+
+        return new PureGrant(ukp,
+                header.getUserId(),
+                sessionId,
+                new Date((long) header.getCreationDate() * 1000),
+                new Date((long) header.getExpirationDate() * 1000));
     }
 
     /**
@@ -369,22 +350,17 @@ public class Pure {
     public void changeUserPassword(String userId, String oldPassword, String newPassword)
         throws Exception {
 
-        try {
-            ValidateUtils.checkNullOrEmpty(userId, "userId");
-            ValidateUtils.checkNullOrEmpty(oldPassword, "oldPassword");
-            ValidateUtils.checkNullOrEmpty(newPassword, "newPassword");
+        ValidateUtils.checkNullOrEmpty(userId, "userId");
+        ValidateUtils.checkNullOrEmpty(oldPassword, "oldPassword");
+        ValidateUtils.checkNullOrEmpty(newPassword, "newPassword");
 
-            UserRecord userRecord = storage.selectUser(userId);
+        UserRecord userRecord = storage.selectUser(userId);
 
-            byte[] oldPhek = pheManager.computePheKey(userRecord, oldPassword);
+        byte[] oldPhek = pheManager.computePheKey(userRecord, oldPassword);
 
-            byte[] privateKeyData = pureCrypto.decryptSymmetricNewNonce(userRecord.getEncryptedUsk(), new byte[0], oldPhek);
+        byte[] privateKeyData = pureCrypto.decryptSymmetricNewNonce(userRecord.getEncryptedUsk(), new byte[0], oldPhek);
 
-            changeUserPassword(userRecord, privateKeyData, newPassword);
-        }
-        catch (PheException e) {
-            throw new PureCryptoException(e);
-        }
+        changeUserPassword(userRecord, privateKeyData, newPassword);
     }
 
     /**
@@ -409,12 +385,11 @@ public class Pure {
     public void changeUserPassword(PureGrant grant, String newPassword) throws Exception {
 
         ValidateUtils.checkNull(grant, "grant");
-
         ValidateUtils.checkNullOrEmpty(newPassword, "newPassword");
 
         UserRecord userRecord = storage.selectUser(grant.getUserId());
 
-        byte[] privateKeyData = crypto.exportPrivateKey(grant.getUkp().getPrivateKey());
+        byte[] privateKeyData = pureCrypto.exportPrivateKey(grant.getUkp().getPrivateKey());
 
         changeUserPassword(userRecord, privateKeyData, newPassword);
     }
@@ -649,14 +624,14 @@ public class Pure {
                 Iterable<UserRecord> userRecords = storage.selectUsers(userIds);
 
                 for (UserRecord record : userRecords) {
-                    VirgilPublicKey otherUpk = crypto.importPublicKey(record.getUpk());
+                    VirgilPublicKey otherUpk = pureCrypto.importPublicKey(record.getUpk());
                     recipientList.add(otherUpk);
                 }
 
                 Iterable<Role> roles = storage.selectRoles(roleNames);
 
                 for (Role role: roles) {
-                    VirgilPublicKey rpk = crypto.importPublicKey(role.getRpk());
+                    VirgilPublicKey rpk = pureCrypto.importPublicKey(role.getRpk());
                     recipientList.add(rpk);
                 }
 
@@ -666,11 +641,11 @@ public class Pure {
                     recipientList.addAll(externalPublicKeys);
                 }
 
-                VirgilKeyPair ckp = crypto.generateKeyPair();
-                byte[] cpkData = crypto.exportPublicKey(ckp.getPublicKey());
-                byte[] cskData = crypto.exportPrivateKey(ckp.getPrivateKey());
+                VirgilKeyPair ckp = pureCrypto.generateCellKey();
+                byte[] cpkData = pureCrypto.exportPublicKey(ckp.getPublicKey());
+                byte[] cskData = pureCrypto.exportPrivateKey(ckp.getPrivateKey());
 
-                PureCryptoData encryptedCskData = pureCrypto.encryptCellKey(cskData, oskp.getPrivateKey(), recipientList);
+                PureCryptoData encryptedCskData = pureCrypto.encryptCellKey(cskData, recipientList, oskp.getPrivateKey());
 
                 CellKey cellKey = new CellKey(userId, dataId, cpkData, encryptedCskData.getCms(), encryptedCskData.getBody());
 
@@ -685,13 +660,13 @@ public class Pure {
 
                 CellKey cellKey2 = storage.selectCellKey(userId, dataId);
 
-                cpk = crypto.importPublicKey(cellKey2.getCpk());
+                cpk = pureCrypto.importPublicKey(cellKey2.getCpk());
             }
         } else {
-            cpk = crypto.importPublicKey(cellKey1.getCpk());
+            cpk = pureCrypto.importPublicKey(cellKey1.getCpk());
         }
 
-        return crypto.authEncrypt(plainText, oskp.getPrivateKey(), Collections.singletonList(cpk));
+        return pureCrypto.encryptData(plainText, Collections.singletonList(cpk), oskp.getPrivateKey());
     }
 
     /**
@@ -722,7 +697,6 @@ public class Pure {
 
         ValidateUtils.checkNull(grant, "grant");
         ValidateUtils.checkNull(cipherText, "cipherText");
-
         ValidateUtils.checkNullOrEmpty(dataId, "dataId");
 
         String userId = ownerUserId;
@@ -743,10 +717,10 @@ public class Pure {
         byte[] csk = null;
 
         try {
-            csk = pureCrypto.decryptCellKey(pureCryptoData, oskp.getPublicKey(), grant.getUkp().getPrivateKey());
+            csk = pureCrypto.decryptCellKey(pureCryptoData, grant.getUkp().getPrivateKey(), oskp.getPublicKey());
         }
         catch (PureCryptoException e) {
-            if (e.getFoundationException() == null || e.getFoundationException().getStatusCode() != ERROR_KEY_RECIPIENT_IS_NOT_FOUND) {
+            if (e.getFoundationException() == null || e.getFoundationException().getStatusCode() != FoundationException.ERROR_KEY_RECIPIENT_IS_NOT_FOUND) {
                 throw e;
             }
 
@@ -759,12 +733,11 @@ public class Pure {
                 ByteBuffer publicKeyId = ByteBuffer.wrap(roleAssignment.getPublicKeyId());
 
                 if (publicKeysIds.contains(publicKeyId)) {
-                    // FIXME: Refactor
-                    byte[] rskData = crypto.authDecrypt(roleAssignment.getEncryptedRsk(), grant.getUkp().getPrivateKey(), oskp.getPublicKey());
+                    byte[] rskData = pureCrypto.decryptRolePrivateKey(roleAssignment.getEncryptedRsk(), grant.getUkp().getPrivateKey(), oskp.getPublicKey());
 
-                    VirgilKeyPair rkp = crypto.importPrivateKey(rskData);
+                    VirgilKeyPair rkp = pureCrypto.importPrivateKey(rskData);
 
-                    csk = pureCrypto.decryptCellKey(pureCryptoData, oskp.getPublicKey(), rkp.getPrivateKey());
+                    csk = pureCrypto.decryptCellKey(pureCryptoData, rkp.getPrivateKey(), oskp.getPublicKey());
                     break;
                 }
             }
@@ -774,9 +747,9 @@ public class Pure {
             }
         }
 
-        VirgilKeyPair ckp = crypto.importPrivateKey(csk);
+        VirgilKeyPair ckp = pureCrypto.importPrivateKey(csk);
 
-        return crypto.authDecrypt(cipherText, ckp.getPrivateKey(), oskp.getPublicKey());
+        return pureCrypto.decryptData(cipherText, ckp.getPrivateKey(), oskp.getPublicKey());
     }
 
     /**
@@ -803,9 +776,9 @@ public class Pure {
      * as a Protobuf message.
      */
     public byte[] decrypt(VirgilPrivateKey privateKey,
-                           String ownerUserId,
-                           String dataId,
-                           byte[] cipherText)
+                          String ownerUserId,
+                          String dataId,
+                          byte[] cipherText)
             throws Exception {
 
         // TODO: Delete copy&paste
@@ -823,11 +796,11 @@ public class Pure {
         PureCryptoData pureCryptoData = new PureCryptoData(cellKey.getEncryptedCskCms(),
                 cellKey.getEncryptedCskBody());
 
-        byte[] csk = pureCrypto.decryptCellKey(pureCryptoData, oskp.getPublicKey(), privateKey);
+        byte[] csk = pureCrypto.decryptCellKey(pureCryptoData, privateKey, oskp.getPublicKey());
 
-        VirgilKeyPair ckp = crypto.importPrivateKey(csk);
+        VirgilKeyPair ckp = pureCrypto.importPrivateKey(csk);
 
-        return crypto.authDecrypt(cipherText, ckp.getPrivateKey(), oskp.getPublicKey());
+        return pureCrypto.decryptData(cipherText, ckp.getPrivateKey(), oskp.getPublicKey());
     }
 
     /**
@@ -1013,9 +986,9 @@ public class Pure {
      * successfully. Represents a regular HTTP exception with code and message.
      */
     public void createRole(String roleName, Set<String> userIds) throws Exception {
-        VirgilKeyPair rkp = crypto.generateKeyPair();
-        byte[] rpkData = crypto.exportPublicKey(rkp.getPublicKey());
-        byte[] rskData = crypto.exportPrivateKey(rkp.getPrivateKey());
+        VirgilKeyPair rkp = pureCrypto.generateRoleKey();
+        byte[] rpkData = pureCrypto.exportPublicKey(rkp.getPublicKey());
+        byte[] rskData = pureCrypto.exportPrivateKey(rkp.getPrivateKey());
 
         Role role = new Role(roleName, rpkData);
 
@@ -1038,7 +1011,7 @@ public class Pure {
     public void assignRole(String roleToAssign, PureGrant grant, Set<String> userIds) throws Exception {
         RoleAssignment roleAssignment = storage.selectRoleAssignment(roleToAssign, grant.getUserId());
 
-        byte[] rskData = crypto.authDecrypt(roleAssignment.getEncryptedRsk(), grant.getUkp().getPrivateKey(), oskp.getPublicKey());
+        byte[] rskData = pureCrypto.decryptRolePrivateKey(roleAssignment.getEncryptedRsk(), grant.getUkp().getPrivateKey(), oskp.getPublicKey());
 
         assignRole(roleToAssign, roleAssignment.getPublicKeyId(), rskData, userIds);
     }
@@ -1049,9 +1022,9 @@ public class Pure {
         ArrayList<RoleAssignment> roleAssignments = new ArrayList<>(userIds.size());
 
         for (UserRecord userRecord: userRecords) {
-            VirgilPublicKey upk = crypto.importPublicKey(userRecord.getUpk());
+            VirgilPublicKey upk = pureCrypto.importPublicKey(userRecord.getUpk());
 
-            byte[] encryptedRsk = crypto.authEncrypt(rskData, oskp.getPrivateKey(), upk);
+            byte[] encryptedRsk = pureCrypto.encryptRolePrivateKey(rskData, upk, oskp.getPrivateKey());
 
             roleAssignments.add(new RoleAssignment(roleName, userRecord.getUserId(), publicKeyId, encryptedRsk));
         }
@@ -1074,49 +1047,43 @@ public class Pure {
     }
 
     private void registerUser(String userId, String password, boolean isUserNew) throws Exception {
+        ValidateUtils.checkNullOrEmpty(userId, "userId");
+        ValidateUtils.checkNullOrEmpty(password, "password");
 
-        try {
-            ValidateUtils.checkNullOrEmpty(userId, "userId");
-            ValidateUtils.checkNullOrEmpty(password, "password");
+        byte[] passwordHash = pureCrypto.computePasswordHash(password);
 
-            byte[] passwordHash = crypto.computeHash(password.getBytes(), HashAlgorithm.SHA512);
+        byte[] encryptedPwdHash = pureCrypto.encryptForBackup(passwordHash, buppk, oskp.getPrivateKey());
 
-            byte[] encryptedPwdHash = crypto.authEncrypt(passwordHash, oskp.getPrivateKey(), Collections.singletonList(buppk));
+        KmsManager.PwdRecoveryData pwdRecoveryData = kmsManager.generatePwdRecoveryData(passwordHash);
 
-            KmsManager.PwdRecoveryData pwdRecoveryData = kmsManager.generatePwdRecoveryData(passwordHash);
+        PheClientEnrollAccountResult pheResult = pheManager.getEnrollment(passwordHash);
 
-            PheClientEnrollAccountResult pheResult = pheManager.getEnrollment(passwordHash);
+        VirgilKeyPair ukp = pureCrypto.generateUserKey();
 
-            VirgilKeyPair ukp = crypto.generateKeyPair();
+        byte[] uskData = pureCrypto.exportPrivateKey(ukp.getPrivateKey());
 
-            byte[] uskData = crypto.exportPrivateKey(ukp.getPrivateKey());
+        byte[] encryptedUsk = pureCrypto.encryptSymmetricNewNonce(uskData, new byte[0], pheResult.getAccountKey());
 
-            byte[] encryptedUsk = pureCrypto.encryptSymmetricNewNonce(uskData, new byte[0], pheResult.getAccountKey());
+        byte[] encryptedUskBackup = pureCrypto.encryptForBackup(uskData, buppk, oskp.getPrivateKey());
 
-            byte[] encryptedUskBackup = crypto.authEncrypt(uskData, oskp.getPrivateKey(), Collections.singletonList(buppk));
+        byte[] publicKey = pureCrypto.exportPublicKey(ukp.getPublicKey());
 
-            byte[] publicKey = crypto.exportPublicKey(ukp.getPublicKey());
+        UserRecord userRecord = new UserRecord(
+            userId,
+            pheResult.getEnrollmentRecord(),
+            currentVersion,
+            publicKey,
+            encryptedUsk,
+            encryptedUskBackup,
+            encryptedPwdHash,
+            pwdRecoveryData.getWrap(),
+            pwdRecoveryData.getBlob()
+        );
 
-            UserRecord userRecord = new UserRecord(
-                userId,
-                pheResult.getEnrollmentRecord(),
-                currentVersion,
-                publicKey,
-                encryptedUsk,
-                encryptedUskBackup,
-                encryptedPwdHash,
-                pwdRecoveryData.getWrap(),
-                pwdRecoveryData.getBlob()
-            );
-
-            if (isUserNew) {
-                storage.insertUser(userRecord);
-            } else {
-                storage.updateUser(userRecord);
-            }
-        }
-        catch (PheException e) {
-            throw new PureCryptoException(e);
+        if (isUserNew) {
+            storage.insertUser(userRecord);
+        } else {
+            storage.updateUser(userRecord);
         }
     }
 
@@ -1125,38 +1092,31 @@ public class Pure {
                                     String newPassword)
         throws Exception {
 
-        try {
-            ValidateUtils.checkNullOrEmpty(newPassword, "newPassword");
+        ValidateUtils.checkNullOrEmpty(newPassword, "newPassword");
 
-            byte[] newPasswordHash = crypto.computeHash(newPassword.getBytes(),
-                    HashAlgorithm.SHA512);
+        byte[] newPasswordHash = pureCrypto.computePasswordHash(newPassword);
 
-            PheClientEnrollAccountResult enrollResult = pheManager.getEnrollment(newPasswordHash);
+        PheClientEnrollAccountResult enrollResult = pheManager.getEnrollment(newPasswordHash);
 
-            KmsManager.PwdRecoveryData pwdRecoveryData = kmsManager.generatePwdRecoveryData(newPasswordHash);
+        KmsManager.PwdRecoveryData pwdRecoveryData = kmsManager.generatePwdRecoveryData(newPasswordHash);
 
-            byte[] newEncryptedUsk = pureCrypto.encryptSymmetricNewNonce(privateKeyData, new byte[0], enrollResult.getAccountKey());
+        byte[] newEncryptedUsk = pureCrypto.encryptSymmetricNewNonce(privateKeyData, new byte[0], enrollResult.getAccountKey());
 
-            byte[] encryptedPwdHash = crypto.authEncrypt(newPasswordHash, oskp.getPrivateKey(),
-                    Collections.singletonList(buppk));
+        byte[] encryptedPwdHash = pureCrypto.encryptForBackup(newPasswordHash, buppk, oskp.getPrivateKey());
 
-            UserRecord newUserRecord = new UserRecord(
-                userRecord.getUserId(),
-                enrollResult.getEnrollmentRecord(),
-                currentVersion,
-                userRecord.getUpk(),
-                newEncryptedUsk,
-                userRecord.getEncryptedUskBackup(),
-                encryptedPwdHash,
-                pwdRecoveryData.getWrap(),
-                pwdRecoveryData.getBlob()
-            );
+        UserRecord newUserRecord = new UserRecord(
+            userRecord.getUserId(),
+            enrollResult.getEnrollmentRecord(),
+            currentVersion,
+            userRecord.getUpk(),
+            newEncryptedUsk,
+            userRecord.getEncryptedUskBackup(),
+            encryptedPwdHash,
+            pwdRecoveryData.getWrap(),
+            pwdRecoveryData.getBlob()
+        );
 
-            storage.updateUser(newUserRecord);
-        }
-        catch (PheException e) {
-            throw new PureCryptoException(e);
-        }
+        storage.updateUser(newUserRecord);
     }
 
     private ArrayList<VirgilPublicKey> keysWithOthers(Collection<VirgilPublicKey> publicKeys,
@@ -1169,7 +1129,7 @@ public class Pure {
 
         for (UserRecord record : otherUserRecords) {
             VirgilPublicKey otherUpk;
-            otherUpk = crypto.importPublicKey(record.getUpk());
+            otherUpk = pureCrypto.importPublicKey(record.getUpk());
 
             keys.add(otherUpk);
         }
@@ -1183,14 +1143,6 @@ public class Pure {
      */
     public int getCurrentVersion() {
         return currentVersion;
-    }
-
-    /**
-     *
-     * @return VirgilCrypto isntance
-     */
-    public VirgilCrypto getCrypto() {
-        return crypto;
     }
 
     /**

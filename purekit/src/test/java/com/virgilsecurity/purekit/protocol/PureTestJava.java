@@ -693,7 +693,7 @@ class PureTestJava {
                 AuthResult authResult1 = pure.authenticateUser(userId1, password1);
                 AuthResult authResult2 = pure.authenticateUser(userId2, password2);
 
-                VirgilKeyPair keyPair = pure.getCrypto().generateKeyPair();
+                VirgilKeyPair keyPair = pureResult.getContext().getCrypto().generateKeyPair();
 
                 byte[] cipherText = pure.encrypt(userId1, dataId, Collections.singleton(userId2), Collections.emptySet(), Collections.singletonList(keyPair.getPublicKey()), text);
 
@@ -915,8 +915,8 @@ class PureTestJava {
 
                 UserRecord record = pure.getStorage().selectUser(userId);
 
-                byte[] pwdHashDecrypted = pure.getCrypto().decrypt(record.getBackupPwdHash(), pureResult.getBupkp().getPrivateKey());
-                byte[] pwdHash = pure.getCrypto().computeHash(password.getBytes());
+                byte[] pwdHashDecrypted = pureResult.getContext().getCrypto().decrypt(record.getBackupPwdHash(), pureResult.getBupkp().getPrivateKey());
+                byte[] pwdHash = pureResult.getContext().getCrypto().computeHash(password.getBytes());
 
                 assertArrayEquals(pwdHash, pwdHashDecrypted);
             }

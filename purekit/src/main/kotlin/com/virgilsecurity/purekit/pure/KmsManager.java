@@ -19,35 +19,40 @@ class KmsManager {
     private final HttpKmsClient httpClient;
     private final UokmsWrapRotation kmsRotation;
 
-    public KmsManager(PureContext context) {
-        this.pureCrypto = new PureCrypto(context.getCrypto());
-        this.currentClient = new UokmsClient();
-        this.currentClient.setOperationRandom(context.getCrypto().getRng());
-        this.currentClient.setRandom(context.getCrypto().getRng());
+    public KmsManager(PureContext context) throws PureCryptoException {
+        try {
+            this.pureCrypto = new PureCrypto(context.getCrypto());
+            this.currentClient = new UokmsClient();
+            this.currentClient.setOperationRandom(context.getCrypto().getRng());
+            this.currentClient.setRandom(context.getCrypto().getRng());
 
-        if (context.getUpdateToken() != null) {
-            this.currentVersion = context.getPublicKey().getVersion() + 1;
-            byte[] updateToken = context.getUpdateToken().getPayload2();
-            this.kmsRotation = new UokmsWrapRotation();
-            this.kmsRotation.setOperationRandom(context.getCrypto().getRng());
-            this.kmsRotation.setUpdateToken(updateToken);
-            this.previousClient = new UokmsClient();
-            this.previousClient.setOperationRandom(context.getCrypto().getRng());
-            this.previousClient.setRandom(context.getCrypto().getRng());
-            this.previousClient.setKeys(context.getSecretKey().getPayload2(),
-                    context.getPublicKey().getPayload2());
+            if (context.getUpdateToken() != null) {
+                this.currentVersion = context.getPublicKey().getVersion() + 1;
+                byte[] updateToken = context.getUpdateToken().getPayload2();
+                this.kmsRotation = new UokmsWrapRotation();
+                this.kmsRotation.setOperationRandom(context.getCrypto().getRng());
+                this.kmsRotation.setUpdateToken(updateToken);
+                this.previousClient = new UokmsClient();
+                this.previousClient.setOperationRandom(context.getCrypto().getRng());
+                this.previousClient.setRandom(context.getCrypto().getRng());
+                this.previousClient.setKeys(context.getSecretKey().getPayload2(),
+                        context.getPublicKey().getPayload2());
 
-            UokmsClientRotateKeysResult rotateKeysResult = this.previousClient.rotateKeys(context.getUpdateToken().getPayload2());
-            this.currentClient.setKeys(rotateKeysResult.getNewClientPrivateKey(), rotateKeysResult.getNewServerPublicKey());
-        } else {
-            this.currentVersion = context.getPublicKey().getVersion();
-            this.kmsRotation = null;
-            this.previousClient = null;
-            this.currentClient.setKeys(context.getSecretKey().getPayload2(),
-                    context.getPublicKey().getPayload2());
+                UokmsClientRotateKeysResult rotateKeysResult = this.previousClient.rotateKeys(context.getUpdateToken().getPayload2());
+                this.currentClient.setKeys(rotateKeysResult.getNewClientPrivateKey(), rotateKeysResult.getNewServerPublicKey());
+            } else {
+                this.currentVersion = context.getPublicKey().getVersion();
+                this.kmsRotation = null;
+                this.previousClient = null;
+                this.currentClient.setKeys(context.getSecretKey().getPayload2(),
+                        context.getPublicKey().getPayload2());
+            }
+
+            this.httpClient = context.getKmsClient();
         }
-
-        this.httpClient = context.getKmsClient();
+        catch (PheException e) {
+            throw new PureCryptoException(e);
+        }
     }
 
     private UokmsClient getKmsClient(int kmsVersion) throws NullPointerException {
@@ -60,39 +65,54 @@ class KmsManager {
         }
     }
 
-    private byte[] recoverSecret(UserRecord userRecord) throws ProtocolHttpException, ProtocolException {
-        UokmsClient kmsClient = getKmsClient(userRecord.getRecordVersion());
+    private byte[] recoverSecret(UserRecord userRecord) throws ProtocolHttpException, ProtocolException, PureCryptoException {
+        try {
+            UokmsClient kmsClient = getKmsClient(userRecord.getRecordVersion());
 
-        UokmsClientGenerateDecryptRequestResult uokmsClientGenerateDecryptRequestResult = kmsClient.generateDecryptRequest(userRecord.getPasswordRecoveryWrap());
+            UokmsClientGenerateDecryptRequestResult uokmsClientGenerateDecryptRequestResult = kmsClient.generateDecryptRequest(userRecord.getPasswordRecoveryWrap());
 
-        PurekitProtosV3Client.DecryptRequest decryptRequest = PurekitProtosV3Client.DecryptRequest.newBuilder()
-                .setVersion(userRecord.getRecordVersion())
-                .setAlias(RECOVER_PWD_ALIAS)
-                .setRequest(ByteString.copyFrom(uokmsClientGenerateDecryptRequestResult.getDecryptRequest()))
-                .build();
+            PurekitProtosV3Client.DecryptRequest decryptRequest = PurekitProtosV3Client.DecryptRequest.newBuilder()
+                    .setVersion(userRecord.getRecordVersion())
+                    .setAlias(RECOVER_PWD_ALIAS)
+                    .setRequest(ByteString.copyFrom(uokmsClientGenerateDecryptRequestResult.getDecryptRequest()))
+                    .build();
 
-        PurekitProtosV3Client.DecryptResponse decryptResponse = httpClient.decrypt(decryptRequest);
+            PurekitProtosV3Client.DecryptResponse decryptResponse = httpClient.decrypt(decryptRequest);
 
-        return kmsClient.processDecryptResponse(userRecord.getPasswordRecoveryWrap(),
-                uokmsClientGenerateDecryptRequestResult.getDecryptRequest(),
-                decryptResponse.getResponse().toByteArray(),
-                uokmsClientGenerateDecryptRequestResult.getDeblindFactor(),
-                PureCrypto.DERIVED_SECRET_LENGTH);
+            return kmsClient.processDecryptResponse(userRecord.getPasswordRecoveryWrap(),
+                    uokmsClientGenerateDecryptRequestResult.getDecryptRequest(),
+                    decryptResponse.getResponse().toByteArray(),
+                    uokmsClientGenerateDecryptRequestResult.getDeblindFactor(),
+                    PureCrypto.DERIVED_SECRET_LENGTH);
+        }
+        catch (PheException e) {
+            throw new PureCryptoException(e);
+        }
     }
 
-    byte[] performRotation(byte[] wrap) {
-        ValidateUtils.checkNull(kmsRotation, "kmsUpdateToken");
+    byte[] performRotation(byte[] wrap) throws PureCryptoException {
+        try {
+            ValidateUtils.checkNull(kmsRotation, "kmsUpdateToken");
+            ValidateUtils.checkNull(wrap, "wrap");
 
-        return kmsRotation.updateWrap(wrap);
+            return kmsRotation.updateWrap(wrap);
+        }
+        catch (PheException e) {
+            throw new PureCryptoException(e);
+        }
     }
 
     static class PwdRecoveryData {
+        private final byte[] wrap;
+        private final byte[] blob;
+
         public PwdRecoveryData(byte[] wrap, byte[] blob) {
+            ValidateUtils.checkNull(wrap, "wrap");
+            ValidateUtils.checkNull(blob, "blob");
+
             this.wrap = wrap;
             this.blob = blob;
         }
-
-        private final byte[] wrap;
 
         public byte[] getWrap() {
             return wrap;
@@ -101,8 +121,6 @@ class KmsManager {
         public byte[] getBlob() {
             return blob;
         }
-
-        private final byte[] blob;
     }
 
     byte[] recoverPwd(UserRecord userRecord) throws ProtocolException, ProtocolHttpException, PureCryptoException {
@@ -112,12 +130,17 @@ class KmsManager {
     }
 
     PwdRecoveryData generatePwdRecoveryData(byte[] passwordHash) throws PureCryptoException {
-        UokmsClientGenerateEncryptWrapResult kmsResult = currentClient.generateEncryptWrap(PureCrypto.DERIVED_SECRET_LENGTH);
+        try {
+            UokmsClientGenerateEncryptWrapResult kmsResult = currentClient.generateEncryptWrap(PureCrypto.DERIVED_SECRET_LENGTH);
 
-        byte[] derivedSecret = kmsResult.getEncryptionKey();
+            byte[] derivedSecret = kmsResult.getEncryptionKey();
 
-        byte[] resetPwdBlob = pureCrypto.encryptSymmetricOneTimeKey(passwordHash, new byte[0], derivedSecret);
+            byte[] resetPwdBlob = pureCrypto.encryptSymmetricOneTimeKey(passwordHash, new byte[0], derivedSecret);
 
-        return new PwdRecoveryData(kmsResult.getWrap(), resetPwdBlob);
+            return new PwdRecoveryData(kmsResult.getWrap(), resetPwdBlob);
+        }
+        catch (PheException e) {
+            throw new PureCryptoException(e);
+        }
     }
 }
