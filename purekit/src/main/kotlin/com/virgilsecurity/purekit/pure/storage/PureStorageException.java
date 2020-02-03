@@ -31,29 +31,30 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.purekit.pure.exception;
+package com.virgilsecurity.purekit.pure.storage;
 
-/**
- * PHE service error codes.
- */
-public enum ServiceErrorCode {
-    USER_NOT_FOUND(50003),
-    CELL_KEY_NOT_FOUND(50004),
-    CELL_KEY_ALREADY_EXISTS(50006),
-    UNDEFINED(0);
+import com.virgilsecurity.purekit.pure.exception.PureException;
 
-    private final int code;
-
-    ServiceErrorCode(int code) {
-        this.code = code;
+public class PureStorageException extends PureException {
+    public PureStorageException() {
     }
 
-    /**
-     * Error code number.
-     *
-     * @return Error code number.
-     */
-    public int getCode() {
-        return code;
+    public PureStorageException(String errorMessage) {
+        super(errorMessage);
+    }
+
+    public PureStorageException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public PureStorageException(Throwable cause) {
+        super(cause);
+    }
+
+    public PureStorageException(String message,
+                                Throwable cause,
+                                boolean enableSuppression,
+                                boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
     }
 }

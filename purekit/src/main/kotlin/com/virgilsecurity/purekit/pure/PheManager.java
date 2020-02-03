@@ -1,7 +1,6 @@
 package com.virgilsecurity.purekit.pure;
 
 import com.google.protobuf.ByteString;
-import com.virgilsecurity.crypto.foundation.FoundationException;
 import com.virgilsecurity.crypto.phe.PheClient;
 import com.virgilsecurity.crypto.phe.PheClientEnrollAccountResult;
 import com.virgilsecurity.crypto.phe.PheClientRotateKeysResult;
@@ -9,7 +8,10 @@ import com.virgilsecurity.crypto.phe.PheException;
 import com.virgilsecurity.purekit.data.ProtocolException;
 import com.virgilsecurity.purekit.data.ProtocolHttpException;
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtos;
+import com.virgilsecurity.purekit.pure.client.HttpPheClient;
+import com.virgilsecurity.purekit.pure.exception.PheClientException;
 import com.virgilsecurity.purekit.pure.exception.PureCryptoException;
+import com.virgilsecurity.purekit.pure.exception.PureException;
 import com.virgilsecurity.purekit.pure.exception.PureLogicException;
 import com.virgilsecurity.purekit.pure.model.UserRecord;
 import com.virgilsecurity.purekit.utils.ValidateUtils;
@@ -70,13 +72,13 @@ class PheManager {
         }
     }
 
-    byte[] computePheKey(UserRecord userRecord, String password) throws ProtocolException, PureLogicException, PureCryptoException, ProtocolHttpException {
+    byte[] computePheKey(UserRecord userRecord, String password) throws PureException {
         byte[] passwordHash = crypto.computeHash(password.getBytes(), HashAlgorithm.SHA512);
 
         return computePheKey(userRecord, passwordHash);
     }
 
-    byte[] computePheKey(UserRecord userRecord, byte[] passwordHash) throws PureLogicException, PureCryptoException, ProtocolHttpException, ProtocolException {
+    byte[] computePheKey(UserRecord userRecord, byte[] passwordHash) throws PureException {
 
         try {
             PheClient client = getPheClient(userRecord.getRecordVersion());
@@ -104,6 +106,10 @@ class PheManager {
         }
         catch (PheException e) {
             throw new PureCryptoException(e);
+        } catch (ProtocolException e) {
+            throw new PheClientException(e);
+        } catch (ProtocolHttpException e) {
+            throw new PheClientException(e);
         }
     }
 
@@ -118,13 +124,20 @@ class PheManager {
         }
     }
 
-    PheClientEnrollAccountResult getEnrollment(byte[] passwordHash) throws ProtocolHttpException, ProtocolException, PureCryptoException {
+    PheClientEnrollAccountResult getEnrollment(byte[] passwordHash) throws PureException {
         PurekitProtos.EnrollmentRequest request = PurekitProtos.EnrollmentRequest
                 .newBuilder()
                 .setVersion(currentVersion)
                 .build();
 
-        PurekitProtos.EnrollmentResponse response = httpClient.enrollAccount(request);
+        PurekitProtos.EnrollmentResponse response = null;
+        try {
+            response = httpClient.enrollAccount(request);
+        } catch (ProtocolException e) {
+            throw new PheClientException(e);
+        } catch (ProtocolHttpException e) {
+            throw new PheClientException(e);
+        }
 
         try {
             return currentClient.enrollAccount(

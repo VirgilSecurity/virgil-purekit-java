@@ -1,15 +1,42 @@
-package com.virgilsecurity.purekit.pure.ramstorage;
+/*
+ * Copyright (c) 2015-2019, Virgil Security, Inc.
+ *
+ * Lead Maintainer: Virgil Security Inc. <support@virgilsecurity.com>
+ *
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ *     (1) Redistributions of source code must retain the above copyright notice, this
+ *     list of conditions and the following disclaimer.
+ *
+ *     (2) Redistributions in binary form must reproduce the above copyright notice,
+ *     this list of conditions and the following disclaimer in the documentation
+ *     and/or other materials provided with the distribution.
+ *
+ *     (3) Neither the name of virgil nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 
-import com.virgilsecurity.purekit.pure.PureStorage;
-import com.virgilsecurity.purekit.pure.exception.PureException;
-import com.virgilsecurity.purekit.pure.exception.PureLogicException;
+package com.virgilsecurity.purekit.pure.storage;
+
 import com.virgilsecurity.purekit.pure.model.*;
-import sun.awt.image.ImageWatched;
 
 import java.util.*;
 import java.util.function.Predicate;
-
-import static com.virgilsecurity.purekit.pure.exception.PureLogicException.ErrorStatus.GRANT_KEY_NOT_FOUND_IN_STORAGE;
 
 public class RamPureStorage implements PureStorage {
     private HashMap<String, UserRecord> users;
@@ -18,7 +45,7 @@ public class RamPureStorage implements PureStorage {
     private HashMap<String, HashMap<String, RoleAssignment>> roleAssignments;
     private HashMap<String, HashMap<String, GrantKey>> grantKeys;
 
-    public static int GRANT_KEYS_CLEAN_INTERVAL = 5000;
+    public static int GRANT_KEYS_CLEAN_INTERVAL = 20000;
 
     public RamPureStorage() {
         this.users = new HashMap<>();
@@ -67,11 +94,11 @@ public class RamPureStorage implements PureStorage {
     }
 
     @Override
-    public UserRecord selectUser(String userId) throws PureException {
+    public UserRecord selectUser(String userId) throws PureStorageException {
         UserRecord userRecord = this.users.get(userId);
 
         if (userRecord == null) {
-            throw new PureLogicException(PureLogicException.ErrorStatus.USER_NOT_FOUND_IN_STORAGE);
+            throw new PureStorageGenericException(PureStorageGenericException.ErrorStatus.USER_NOT_FOUND_IN_STORAGE);
         }
 
         return userRecord;
@@ -131,22 +158,22 @@ public class RamPureStorage implements PureStorage {
     }
 
     @Override
-    public void insertCellKey(CellKey cellKey) throws PureException {
+    public void insertCellKey(CellKey cellKey) throws PureStorageException {
         HashMap<String, CellKey> map = this.keys.getOrDefault(cellKey.getUserId(), new HashMap<>());
 
         if (map.putIfAbsent(cellKey.getDataId(), cellKey) != null) {
-            throw new PureLogicException(PureLogicException.ErrorStatus.CELL_KEY_ALREADY_EXISTS_IN_STORAGE);
+            throw new PureStorageGenericException(PureStorageGenericException.ErrorStatus.CELL_KEY_ALREADY_EXISTS_IN_STORAGE);
         }
 
         this.keys.put(cellKey.getUserId(), map);
     }
 
     @Override
-    public void updateCellKey(CellKey cellKey) throws PureException {
+    public void updateCellKey(CellKey cellKey) throws PureStorageException {
         HashMap<String, CellKey> map = this.keys.get(cellKey.getUserId());
 
         if (!map.containsKey(cellKey.getDataId())) {
-            throw new PureLogicException(PureLogicException.ErrorStatus.CELL_KEY_ALREADY_EXISTS_IN_STORAGE);
+            throw new PureStorageGenericException(PureStorageGenericException.ErrorStatus.CELL_KEY_ALREADY_EXISTS_IN_STORAGE);
         }
 
         map.put(cellKey.getDataId(), cellKey);
@@ -166,12 +193,12 @@ public class RamPureStorage implements PureStorage {
     }
 
     @Override
-    public void insertRole(Role role) throws Exception {
+    public void insertRole(Role role) {
         this.roles.put(role.getRoleName(), role);
     }
 
     @Override
-    public Iterable<Role> selectRoles(Set<String> roleNames) throws Exception {
+    public Iterable<Role> selectRoles(Set<String> roleNames) {
 
         ArrayList<Role> roles = new ArrayList<>(roleNames.size());
 
@@ -189,7 +216,7 @@ public class RamPureStorage implements PureStorage {
     }
 
     @Override
-    public void insertRoleAssignments(Collection<RoleAssignment> roleAssignments) throws Exception {
+    public void insertRoleAssignments(Collection<RoleAssignment> roleAssignments) {
 
         for (RoleAssignment roleAssignment: roleAssignments) {
             HashMap<String, RoleAssignment> map = this.roleAssignments.getOrDefault(roleAssignment.getRoleName(), new HashMap<>());
@@ -201,7 +228,7 @@ public class RamPureStorage implements PureStorage {
     }
 
     @Override
-    public Iterable<RoleAssignment> selectRoleAssignments(String userId) throws Exception {
+    public Iterable<RoleAssignment> selectRoleAssignments(String userId) {
         Set<String> roleNames = this.roleAssignments.keySet();
         ArrayList<RoleAssignment> assignments = new ArrayList<>();
 
@@ -218,13 +245,13 @@ public class RamPureStorage implements PureStorage {
     }
 
     @Override
-    public RoleAssignment selectRoleAssignment(String roleName, String userId) throws Exception {
+    public RoleAssignment selectRoleAssignment(String roleName, String userId) {
 
         return this.roleAssignments.get(roleName).get(userId);
     }
 
     @Override
-    public void deleteRoleAssignments(String roleName, Set<String> userIds) throws Exception {
+    public void deleteRoleAssignments(String roleName, Set<String> userIds) {
 
         HashMap<String, RoleAssignment> map = this.roleAssignments.getOrDefault(roleName, new HashMap<>());
 
@@ -236,7 +263,7 @@ public class RamPureStorage implements PureStorage {
     }
 
     @Override
-    public void insertGrantKey(GrantKey grantKey) throws Exception {
+    public void insertGrantKey(GrantKey grantKey) {
         HashMap<String, GrantKey> keys = this.grantKeys.getOrDefault(grantKey.getUserId(), new HashMap<>());
 
         keys.put(Base64.getEncoder().encodeToString(grantKey.getKeyId()), grantKey);
@@ -245,21 +272,21 @@ public class RamPureStorage implements PureStorage {
     }
 
     @Override
-    public GrantKey selectGrantKey(String userId, byte[] keyId) throws Exception {
+    public GrantKey selectGrantKey(String userId, byte[] keyId) throws PureStorageException {
         HashMap<String, GrantKey> keys = this.grantKeys.get(userId);
 
         GrantKey key = keys.get(Base64.getEncoder().encodeToString(keyId));
 
         Date currentDate = new Date();
         if (key == null || key.getExpirationDate().before(currentDate)) {
-            throw new PureLogicException(PureLogicException.ErrorStatus.GRANT_KEY_NOT_FOUND_IN_STORAGE);
+            throw new PureStorageGenericException(PureStorageGenericException.ErrorStatus.GRANT_KEY_NOT_FOUND_IN_STORAGE);
         }
 
         return key;
     }
 
     @Override
-    public void deleteGrantKey(String userId, byte[] keyId) throws Exception {
+    public void deleteGrantKey(String userId, byte[] keyId) {
         HashMap<String, GrantKey> keys = this.grantKeys.get(userId);
 
         keys.remove(Base64.getEncoder().encodeToString(keyId));

@@ -13,11 +13,14 @@ import java.util.*;
 import java.util.stream.Stream;
 
 import com.virgilsecurity.purekit.pure.*;
+import com.virgilsecurity.purekit.pure.storage.PureStorageCellKeyNotFoundException;
 import com.virgilsecurity.purekit.pure.exception.PureCryptoException;
 import com.virgilsecurity.purekit.pure.exception.PureLogicException;
-import com.virgilsecurity.purekit.pure.mariadbstorage.MariaDbPureStorage;
+import com.virgilsecurity.purekit.pure.storage.PureStorageGenericException;
+import com.virgilsecurity.purekit.pure.storage.MariaDbPureStorage;
 import com.virgilsecurity.purekit.pure.model.*;
-import com.virgilsecurity.purekit.pure.ramstorage.RamPureStorage;
+import com.virgilsecurity.purekit.pure.storage.PureStorage;
+import com.virgilsecurity.purekit.pure.storage.RamPureStorage;
 import com.virgilsecurity.purekit.utils.PropertyManager;
 import com.virgilsecurity.purekit.utils.ThreadUtils;
 import com.virgilsecurity.sdk.crypto.KeyPairType;
@@ -118,7 +121,7 @@ class PureTestJava {
                 MariaDbPureStorage mariaDbPureStorage = new MariaDbPureStorage("jdbc:mariadb://localhost/puretest?user=root&password=qwerty");
                 if (!skipClean) {
                     mariaDbPureStorage.cleanDb();
-                    mariaDbPureStorage.initDb(1);
+                    mariaDbPureStorage.initDb(20);
                 }
                 context = PureContext.createContext(appToken, nmsString, bupkpString,
                         mariaDbPureStorage, secretKey, publicKey, externalPublicKeys,
@@ -402,15 +405,13 @@ class PureTestJava {
 
                 pure.registerUser(userId, password);
 
-                Date currentDate = new Date();
-
                 AuthResult authResult = pure.authenticateUser(userId, password, 5);
 
                 PureGrant grant1 = pure.decryptGrantFromUser(authResult.getEncryptedGrant());
 
                 assertNotNull(grant1);
 
-                Thread.sleep(authResult.getGrant().getExpirationDate().getTime() - currentDate.getTime() - 1000);
+                Thread.sleep(4000);
 
                 PureGrant grant2 = pure.decryptGrantFromUser(authResult.getEncryptedGrant());
 
@@ -418,11 +419,19 @@ class PureTestJava {
 
                 Thread.sleep( 2000);
 
-                PureLogicException ex = assertThrows(PureLogicException.class, () -> {
+                PureLogicException ex1 = assertThrows(PureLogicException.class, () -> {
                     pure.decryptGrantFromUser(authResult.getEncryptedGrant());
                 });
 
-                assertEquals(PureLogicException.ErrorStatus.GRANT_KEY_NOT_FOUND_IN_STORAGE, ex.getErrorStatus());
+                assertEquals(PureLogicException.ErrorStatus.GRANT_IS_EXPIRED, ex1.getErrorStatus());
+
+                Thread.sleep(20000);
+
+                PureStorageGenericException ex2 = assertThrows(PureStorageGenericException.class, () -> {
+                    pure.decryptGrantFromUser(authResult.getEncryptedGrant());
+                });
+
+                assertEquals(PureStorageGenericException.ErrorStatus.GRANT_KEY_NOT_FOUND_IN_STORAGE, ex2.getErrorStatus());
             }
         } catch (Exception e) {
             fail(e);
@@ -784,17 +793,15 @@ class PureTestJava {
 
                 pure.deleteUser(userId, true);
 
-                PureLogicException e1 = assertThrows(PureLogicException.class, () -> {
+                PureStorageGenericException e1 = assertThrows(PureStorageGenericException.class, () -> {
                     pure.authenticateUser(userId, password);
                 });
 
-                assertEquals(PureLogicException.ErrorStatus.USER_NOT_FOUND_IN_STORAGE, e1.getErrorStatus());
+                assertEquals(PureStorageGenericException.ErrorStatus.USER_NOT_FOUND_IN_STORAGE, e1.getErrorStatus());
 
-                PureLogicException e2 = assertThrows(PureLogicException.class, () -> {
+                assertThrows(PureStorageCellKeyNotFoundException.class, () -> {
                     pure.decrypt(authResult1.getGrant(), null, dataId, cipherText);
                 });
-
-                assertEquals(PureLogicException.ErrorStatus.CELL_KEY_NOT_FOUND_IN_STORAGE, e2.getErrorStatus());
             }
         } catch (Exception e) {
             fail(e);
@@ -836,11 +843,11 @@ class PureTestJava {
 
                 pure.deleteUser(userId, false);
 
-                PureLogicException e = assertThrows(PureLogicException.class, () -> {
+                PureStorageGenericException e = assertThrows(PureStorageGenericException.class, () -> {
                     pure.authenticateUser(userId, password);
                 });
 
-                assertEquals(PureLogicException.ErrorStatus.USER_NOT_FOUND_IN_STORAGE, e.getErrorStatus());
+                assertEquals(PureStorageGenericException.ErrorStatus.USER_NOT_FOUND_IN_STORAGE, e.getErrorStatus());
 
                 byte[] plainText = pure.decrypt(authResult1.getGrant(), null, dataId, cipherText);
 
@@ -881,11 +888,9 @@ class PureTestJava {
 
                 pure.deleteKey(userId, dataId);
 
-                PureLogicException e = assertThrows(PureLogicException.class, () -> {
+                PureStorageCellKeyNotFoundException e = assertThrows(PureStorageCellKeyNotFoundException.class, () -> {
                     pure.decrypt(authResult1.getGrant(), null, dataId, cipherText);
                 });
-
-                assertEquals(PureLogicException.ErrorStatus.CELL_KEY_NOT_FOUND_IN_STORAGE, e.getErrorStatus());
             }
         } catch (Exception e) {
             fail(e);

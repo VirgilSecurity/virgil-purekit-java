@@ -35,9 +35,10 @@ package com.virgilsecurity.purekit.pure.exception;
 
 import com.virgilsecurity.crypto.foundation.FoundationException;
 import com.virgilsecurity.crypto.phe.PheException;
+import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
 
 public class PureCryptoException extends PureException {
-
+    private final CryptoException cryptoException;
     private final FoundationException foundationException;
     private final PheException pheException;
     private final PureCryptoException.ErrorStatus errorStatus;
@@ -51,6 +52,16 @@ public class PureCryptoException extends PureException {
         }
 
         this.errorStatus = errorStatus;
+        this.cryptoException = null;
+        this.foundationException = null;
+        this.pheException = null;
+    }
+
+    public PureCryptoException(CryptoException cryptoException) {
+        super(cryptoException);
+
+        this.errorStatus = ErrorStatus.UNDERLYING_CRYPTO_EXCEPTION;
+        this.cryptoException = cryptoException;
         this.foundationException = null;
         this.pheException = null;
     }
@@ -59,6 +70,7 @@ public class PureCryptoException extends PureException {
         super(foundationException);
 
         this.errorStatus = ErrorStatus.UNDERLYING_FOUNDATION_EXCEPTION;
+        this.cryptoException = null;
         this.foundationException = foundationException;
         this.pheException = null;
     }
@@ -67,12 +79,17 @@ public class PureCryptoException extends PureException {
         super(pheException);
 
         this.errorStatus = ErrorStatus.UNDERLYING_PHE_EXCEPTION;
+        this.cryptoException = null;
         this.foundationException = null;
         this.pheException = pheException;
     }
 
     public PureCryptoException.ErrorStatus getErrorStatus() {
         return errorStatus;
+    }
+
+    public CryptoException getCryptoException() {
+        return cryptoException;
     }
 
     public FoundationException getFoundationException() {
@@ -86,6 +103,7 @@ public class PureCryptoException extends PureException {
     public enum ErrorStatus {
         UNDERLYING_FOUNDATION_EXCEPTION(1, "Underlying foundation exception"),
         UNDERLYING_PHE_EXCEPTION(2, "Underlying phe exception"),
+        UNDERLYING_CRYPTO_EXCEPTION(3, "Underlying crypto exception"),
         SIGNER_IS_ABSENT(3, "Signer is absent"),
         SIGNATURE_IS_ABSENT(4, "Signature is absent"),
         SIGNATURE_VERIFICATION_FAILED(5, "Signature verification failed");

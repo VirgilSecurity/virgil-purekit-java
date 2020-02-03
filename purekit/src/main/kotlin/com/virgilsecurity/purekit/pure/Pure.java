@@ -44,9 +44,13 @@ import com.virgilsecurity.crypto.phe.PheClientEnrollAccountResult;
 import com.virgilsecurity.purekit.data.ProtocolException;
 import com.virgilsecurity.purekit.data.ProtocolHttpException;
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Grant;
+import com.virgilsecurity.purekit.pure.exception.PureException;
+import com.virgilsecurity.purekit.pure.storage.PureStorageCellKeyNotFoundException;
 import com.virgilsecurity.purekit.pure.exception.PureCryptoException;
 import com.virgilsecurity.purekit.pure.exception.PureLogicException;
+import com.virgilsecurity.purekit.pure.storage.PureStorageGenericException;
 import com.virgilsecurity.purekit.pure.model.*;
+import com.virgilsecurity.purekit.pure.storage.PureStorage;
 import com.virgilsecurity.purekit.utils.ValidateUtils;
 import com.virgilsecurity.sdk.crypto.VirgilCrypto;
 import com.virgilsecurity.sdk.crypto.VirgilKeyPair;
@@ -111,7 +115,7 @@ public class Pure {
      * @throws InvalidProtocolBufferException If provided UserRecord cannot be parsed as
      * Protobuf message.
      */
-    public void registerUser(String userId, String password) throws Exception {
+    public void registerUser(String userId, String password) throws PureException {
 
         registerUser(userId, password, true);
     }
@@ -136,8 +140,7 @@ public class Pure {
      * @throws InvalidProtocolBufferException If a PurekitProtosV3Storage.UserRecord received from
      * a server cannot be parsed as a Protobuf message.
      */
-    public AuthResult authenticateUser(String userId, String password, String sessionId, long ttl)
-        throws Exception {
+    public AuthResult authenticateUser(String userId, String password, String sessionId, long ttl) throws PureException {
 
         ValidateUtils.checkNullOrEmpty(userId, "userId");
         ValidateUtils.checkNullOrEmpty(password, "password");
@@ -212,19 +215,19 @@ public class Pure {
      * @throws InvalidProtocolBufferException If a PurekitProtosV3Storage.UserRecord received from
      * a server cannot be parsed as a Protobuf message.
      */
-    public AuthResult authenticateUser(String userId, String password, long ttl) throws Exception {
+    public AuthResult authenticateUser(String userId, String password, long ttl) throws PureException {
 
         return authenticateUser(userId, password, null, ttl);
     }
 
-    public AuthResult authenticateUser(String userId, String password) throws Exception {
+    public AuthResult authenticateUser(String userId, String password) throws PureException {
 
         return authenticateUser(userId, password, null, DEFAULT_GRANT_TTL);
     }
 
-    public AuthResult authenticateUser(String userId, String password, String sessiodId) throws Exception {
+    public AuthResult authenticateUser(String userId, String password, String sessionId) throws PureException {
 
-        return authenticateUser(userId, password, sessiodId, DEFAULT_GRANT_TTL);
+        return authenticateUser(userId, password, sessionId, DEFAULT_GRANT_TTL);
     }
 
     /**
@@ -246,8 +249,7 @@ public class Pure {
      * @throws InvalidProtocolBufferException If a PurekitProtosV3Storage.UserRecord received from
      * a server cannot be parsed as a Protobuf message.
      */
-    public PureGrant createUserGrantAsAdmin(String userId, VirgilPrivateKey bupsk, long ttl)
-        throws Exception {
+    public PureGrant createUserGrantAsAdmin(String userId, VirgilPrivateKey bupsk, long ttl) throws PureException {
 
         ValidateUtils.checkNullOrEmpty(userId, "userId");
         ValidateUtils.checkNull(bupsk, "bupsk");
@@ -264,8 +266,7 @@ public class Pure {
         return new PureGrant(upk, userId, null, creationDate, expirationDate);
     }
 
-    public PureGrant createUserGrantAsAdmin(String userId, VirgilPrivateKey bupsk)
-            throws Exception {
+    public PureGrant createUserGrantAsAdmin(String userId, VirgilPrivateKey bupsk) throws PureException {
         return createUserGrantAsAdmin(userId, bupsk, DEFAULT_GRANT_TTL);
     }
 
@@ -287,21 +288,33 @@ public class Pure {
      * @throws CryptoException Please, see {@link VirgilCrypto#importPrivateKey},
      * {@link VirgilCrypto#verifySignature} methods' CryptoException doc.
      */
-    public PureGrant decryptGrantFromUser(String encryptedGrantString) throws Exception {
+    public PureGrant decryptGrantFromUser(String encryptedGrantString) throws PureException {
 
         ValidateUtils.checkNullOrEmpty(encryptedGrantString, "encryptedGrantString");
 
         byte[] encryptedGrantData = Base64.decode(encryptedGrantString.getBytes());
 
-        PurekitProtosV3Grant.EncryptedGrant encryptedGrant =
-                PurekitProtosV3Grant.EncryptedGrant.parseFrom(encryptedGrantData);
+        PurekitProtosV3Grant.EncryptedGrant encryptedGrant;
+        try {
+            encryptedGrant = PurekitProtosV3Grant.EncryptedGrant.parseFrom(encryptedGrantData);
+        } catch (InvalidProtocolBufferException e) {
+            throw new PureLogicException(PureLogicException.ErrorStatus.GRANT_INVALID_PROTOBUF);
+        }
 
         ByteString encryptedData = encryptedGrant.getEncryptedPhek();
 
-        PurekitProtosV3Grant.EncryptedGrantHeader header =
-                PurekitProtosV3Grant.EncryptedGrantHeader.parseFrom(encryptedGrant.getHeader());
+        PurekitProtosV3Grant.EncryptedGrantHeader header;
+        try {
+            header = PurekitProtosV3Grant.EncryptedGrantHeader.parseFrom(encryptedGrant.getHeader());
+        } catch (InvalidProtocolBufferException e) {
+            throw new PureLogicException(PureLogicException.ErrorStatus.GRANT_INVALID_PROTOBUF);
+        }
 
         GrantKey grantKey = storage.selectGrantKey(header.getUserId(), header.getKeyId().toByteArray());
+
+        if (grantKey.getExpirationDate().before(new Date())) {
+            throw new PureLogicException(PureLogicException.ErrorStatus.GRANT_IS_EXPIRED);
+        }
 
         byte[] grantKeyRaw = pureCrypto.decryptSymmetricNewNonce(grantKey.getEncryptedGrantKey(), new byte[0], ak);
 
@@ -324,8 +337,8 @@ public class Pure {
         return new PureGrant(ukp,
                 header.getUserId(),
                 sessionId,
-                new Date((long) header.getCreationDate() * 1000),
-                new Date((long) header.getExpirationDate() * 1000));
+                new Date((long) (header.getCreationDate()) * 1000),
+                new Date((long) (header.getExpirationDate()) * 1000));
     }
 
     /**
@@ -347,8 +360,7 @@ public class Pure {
      * Protobuf message or a PurekitProtosV3Storage.UserRecord received from a server cannot be
      * parsed as a Protobuf message..
      */
-    public void changeUserPassword(String userId, String oldPassword, String newPassword)
-        throws Exception {
+    public void changeUserPassword(String userId, String oldPassword, String newPassword) throws PureException {
 
         ValidateUtils.checkNullOrEmpty(userId, "userId");
         ValidateUtils.checkNullOrEmpty(oldPassword, "oldPassword");
@@ -382,7 +394,7 @@ public class Pure {
      * Protobuf message or a PurekitProtosV3Storage.UserRecord received from a server cannot be
      * parsed as a Protobuf message.
      */
-    public void changeUserPassword(PureGrant grant, String newPassword) throws Exception {
+    public void changeUserPassword(PureGrant grant, String newPassword) throws PureException {
 
         ValidateUtils.checkNull(grant, "grant");
         ValidateUtils.checkNullOrEmpty(newPassword, "newPassword");
@@ -408,7 +420,7 @@ public class Pure {
      * successfully. Represents a regular HTTP exception with code and message.
      * @throws PureLogicException Please, see {@link PureStorage#selectUser(String)} PureLogicException doc.
      */
-    public void recoverUser(String userId, String newPassword) throws Exception {
+    public void recoverUser(String userId, String newPassword) throws PureException {
         ValidateUtils.checkNullOrEmpty(userId, "userId");
         ValidateUtils.checkNullOrEmpty(newPassword, "newPassword");
 
@@ -440,7 +452,7 @@ public class Pure {
      * @throws InvalidProtocolBufferException If provided UserRecord cannot be parsed as
      * Protobuf message.
      */
-    public void resetUserPassword(String userId, String newPassword) throws Exception {
+    public void resetUserPassword(String userId, String newPassword) throws PureException {
         // TODO: Add possibility to delete cell keys? -> ????
         registerUser(userId, newPassword, false);
     }
@@ -456,7 +468,7 @@ public class Pure {
      * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
      * successfully. Represents a regular HTTP exception with code and message.
      */
-    public void deleteUser(String userId, boolean cascade) throws Exception {
+    public void deleteUser(String userId, boolean cascade) throws PureException {
 
         storage.deleteUser(userId, cascade);
         // TODO: Should delete role assignments
@@ -477,7 +489,7 @@ public class Pure {
      * @throws com.virgilsecurity.sdk.crypto.exceptions.SigningException Please, see
      * {@link com.virgilsecurity.sdk.crypto.VirgilCrypto#generateSignature} method's doc.
      */
-    public long performRotation() throws Exception {
+    public long performRotation() throws PureException {
         if (currentVersion <= 1) {
             return 0;
         }
@@ -548,7 +560,7 @@ public class Pure {
      * @throws InvalidProtocolBufferException If a CellKey received from a server cannot be parsed
      * as a Protobuf message.
      */
-    public byte[] encrypt(String userId, String dataId, byte[] plainText) throws Exception {
+    public byte[] encrypt(String userId, String dataId, byte[] plainText) throws PureException {
 
         return encrypt(userId,
                        dataId,
@@ -593,8 +605,7 @@ public class Pure {
                           Set<String> otherUserIds,
                           Set<String> roleNames,
                           Collection<VirgilPublicKey> publicKeys,
-                          byte[] plainText)
-        throws Exception {
+                          byte[] plainText) throws PureException {
 
         ValidateUtils.checkNull(otherUserIds, "otherUserIds");
         ValidateUtils.checkNull(publicKeys, "publicKeys");
@@ -606,9 +617,11 @@ public class Pure {
         VirgilPublicKey cpk;
 
         // Key already exists
-        CellKey cellKey1 = storage.selectCellKey(userId, dataId);
-
-        if (cellKey1 == null) {
+        try {
+            CellKey cellKey = storage.selectCellKey(userId, dataId);
+            cpk = pureCrypto.importPublicKey(cellKey.getCpk());
+        }
+        catch (PureStorageCellKeyNotFoundException e) {
             // Try to generate and save new key
             try {
                 ArrayList<VirgilPublicKey> recipientList = new ArrayList<>(
@@ -651,19 +664,17 @@ public class Pure {
 
                 storage.insertCellKey(cellKey);
                 cpk = ckp.getPublicKey();
-            } catch (PureLogicException exception) {
+            } catch (PureStorageGenericException exception) {
                 if (exception.getErrorStatus()
-                    != PureLogicException.ErrorStatus.CELL_KEY_ALREADY_EXISTS_IN_STORAGE) {
+                    != PureStorageGenericException.ErrorStatus.CELL_KEY_ALREADY_EXISTS_IN_STORAGE) {
 
                     throw exception;
                 }
 
-                CellKey cellKey2 = storage.selectCellKey(userId, dataId);
+                CellKey cellKey = storage.selectCellKey(userId, dataId);
 
-                cpk = pureCrypto.importPublicKey(cellKey2.getCpk());
+                cpk = pureCrypto.importPublicKey(cellKey.getCpk());
             }
-        } else {
-            cpk = pureCrypto.importPublicKey(cellKey1.getCpk());
         }
 
         return pureCrypto.encryptData(plainText, Collections.singletonList(cpk), oskp.getPrivateKey());
@@ -692,8 +703,7 @@ public class Pure {
      * @throws InvalidProtocolBufferException If a CellKey received from a server cannot be parsed
      * as a Protobuf message.
      */
-    public byte[] decrypt(PureGrant grant, String ownerUserId, String dataId, byte[] cipherText)
-        throws Exception {
+    public byte[] decrypt(PureGrant grant, String ownerUserId, String dataId, byte[] cipherText) throws PureException {
 
         ValidateUtils.checkNull(grant, "grant");
         ValidateUtils.checkNull(cipherText, "cipherText");
@@ -706,10 +716,6 @@ public class Pure {
         }
 
         CellKey cellKey = storage.selectCellKey(userId, dataId);
-
-        if (cellKey == null) {
-            throw new PureLogicException(PureLogicException.ErrorStatus.CELL_KEY_NOT_FOUND_IN_STORAGE);
-        }
 
         PureCryptoData pureCryptoData = new PureCryptoData(cellKey.getEncryptedCskCms(),
                 cellKey.getEncryptedCskBody());
@@ -778,8 +784,7 @@ public class Pure {
     public byte[] decrypt(VirgilPrivateKey privateKey,
                           String ownerUserId,
                           String dataId,
-                          byte[] cipherText)
-            throws Exception {
+                          byte[] cipherText) throws PureException {
 
         // TODO: Delete copy&paste
 
@@ -788,10 +793,6 @@ public class Pure {
         ValidateUtils.checkNullOrEmpty(ownerUserId, "ownerUserId");
 
         CellKey cellKey = storage.selectCellKey(ownerUserId, dataId);
-
-        if (cellKey == null) {
-            throw new PureLogicException(PureLogicException.ErrorStatus.CELL_KEY_NOT_FOUND_IN_STORAGE);
-        }
 
         PureCryptoData pureCryptoData = new PureCryptoData(cellKey.getEncryptedCskCms(),
                 cellKey.getEncryptedCskBody());
@@ -822,7 +823,7 @@ public class Pure {
      * @throws InvalidProtocolBufferException If a CellKey received from a server cannot be parsed
      * as a Protobuf message.
      */
-    public void share(PureGrant grant, String dataId, String otherUserId) throws Exception {
+    public void share(PureGrant grant, String dataId, String otherUserId) throws PureException {
 
         ValidateUtils.checkNull(grant, "grant");
 
@@ -857,8 +858,7 @@ public class Pure {
     public void share(PureGrant grant,
                       String dataId,
                       Set<String> otherUserIds,
-                      Collection<VirgilPublicKey> publicKeys)
-        throws Exception {
+                      Collection<VirgilPublicKey> publicKeys) throws PureException {
 
         ValidateUtils.checkNull(grant, "grant");
         ValidateUtils.checkNull(otherUserIds, "otherUserIds");
@@ -901,7 +901,7 @@ public class Pure {
      * @throws InvalidProtocolBufferException If a CellKey received from a server cannot be parsed
      * as a Protobuf message.
      */
-    public void unshare(String ownerUserId, String dataId, String otherUserId) throws Exception {
+    public void unshare(String ownerUserId, String dataId, String otherUserId) throws PureException {
 
         unshare(ownerUserId,
                 dataId,
@@ -936,8 +936,7 @@ public class Pure {
     public void unshare(String ownerUserId,
                         String dataId,
                         Set<String> otherUserIds,
-                        Collection<VirgilPublicKey> publicKeys)
-        throws Exception {
+                        Collection<VirgilPublicKey> publicKeys) throws PureException {
 
         ValidateUtils.checkNull(otherUserIds, "otherUserIds");
         ValidateUtils.checkNull(publicKeys, "publicKeys");
@@ -969,7 +968,7 @@ public class Pure {
      * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
      * successfully. Represents a regular HTTP exception with code and message.
      */
-    public void deleteKey(String userId, String dataId) throws Exception {
+    public void deleteKey(String userId, String dataId) throws PureException {
 
         storage.deleteCellKey(userId, dataId);
     }
@@ -985,7 +984,7 @@ public class Pure {
      * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
      * successfully. Represents a regular HTTP exception with code and message.
      */
-    public void createRole(String roleName, Set<String> userIds) throws Exception {
+    public void createRole(String roleName, Set<String> userIds) throws PureException {
         VirgilKeyPair rkp = pureCrypto.generateRoleKey();
         byte[] rpkData = pureCrypto.exportPublicKey(rkp.getPublicKey());
         byte[] rskData = pureCrypto.exportPrivateKey(rkp.getPrivateKey());
@@ -1008,7 +1007,7 @@ public class Pure {
      * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
      * successfully. Represents a regular HTTP exception with code and message.
      */
-    public void assignRole(String roleToAssign, PureGrant grant, Set<String> userIds) throws Exception {
+    public void assignRole(String roleToAssign, PureGrant grant, Set<String> userIds) throws PureException {
         RoleAssignment roleAssignment = storage.selectRoleAssignment(roleToAssign, grant.getUserId());
 
         byte[] rskData = pureCrypto.decryptRolePrivateKey(roleAssignment.getEncryptedRsk(), grant.getUkp().getPrivateKey(), oskp.getPublicKey());
@@ -1016,7 +1015,7 @@ public class Pure {
         assignRole(roleToAssign, roleAssignment.getPublicKeyId(), rskData, userIds);
     }
 
-    private void assignRole(String roleName, byte[] publicKeyId, byte[] rskData, Set<String> userIds) throws Exception {
+    private void assignRole(String roleName, byte[] publicKeyId, byte[] rskData, Set<String> userIds) throws PureException {
         Iterable<UserRecord> userRecords = storage.selectUsers(userIds);
 
         ArrayList<RoleAssignment> roleAssignments = new ArrayList<>(userIds.size());
@@ -1042,11 +1041,11 @@ public class Pure {
      * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
      * successfully. Represents a regular HTTP exception with code and message.
      */
-    public void unassignRole(String roleName, Set<String> userIds) throws Exception {
+    public void unassignRole(String roleName, Set<String> userIds) throws PureException {
         storage.deleteRoleAssignments(roleName, userIds);
     }
 
-    private void registerUser(String userId, String password, boolean isUserNew) throws Exception {
+    private void registerUser(String userId, String password, boolean isUserNew) throws PureException {
         ValidateUtils.checkNullOrEmpty(userId, "userId");
         ValidateUtils.checkNullOrEmpty(password, "password");
 
@@ -1089,8 +1088,7 @@ public class Pure {
 
     private void changeUserPassword(UserRecord userRecord,
                                     byte[] privateKeyData,
-                                    String newPassword)
-        throws Exception {
+                                    String newPassword) throws PureException {
 
         ValidateUtils.checkNullOrEmpty(newPassword, "newPassword");
 
@@ -1120,8 +1118,7 @@ public class Pure {
     }
 
     private ArrayList<VirgilPublicKey> keysWithOthers(Collection<VirgilPublicKey> publicKeys,
-                                                      Set<String> otherUserIds)
-        throws Exception {
+                                                      Set<String> otherUserIds) throws PureException {
 
         ArrayList<VirgilPublicKey> keys = new ArrayList<>(publicKeys);
 

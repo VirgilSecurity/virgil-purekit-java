@@ -39,10 +39,16 @@ import java.util.List;
 import java.util.Map;
 
 import com.virgilsecurity.crypto.foundation.Base64;
+import com.virgilsecurity.purekit.pure.client.HttpKmsClient;
+import com.virgilsecurity.purekit.pure.client.HttpPheClient;
+import com.virgilsecurity.purekit.pure.client.HttpPureClient;
 import com.virgilsecurity.purekit.pure.exception.PureLogicException;
+import com.virgilsecurity.purekit.pure.storage.PureModelSerializer;
+import com.virgilsecurity.purekit.pure.storage.PureModelSerializerDependent;
+import com.virgilsecurity.purekit.pure.storage.PureStorage;
+import com.virgilsecurity.purekit.pure.storage.VirgilCloudPureStorage;
 import com.virgilsecurity.purekit.utils.ValidateUtils;
 import com.virgilsecurity.sdk.crypto.VirgilCrypto;
-import com.virgilsecurity.sdk.crypto.VirgilKeyPair;
 import com.virgilsecurity.sdk.crypto.VirgilPublicKey;
 import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
 
@@ -210,7 +216,7 @@ public class PureContext {
         VirgilCrypto crypto = new VirgilCrypto();
         HttpPureClient pureClient = new HttpPureClient(appToken, pureServiceAddress);
 
-        PureStorage storage = new VirgilCloudPureStorage(crypto, pureClient);
+        VirgilCloudPureStorage storage = new VirgilCloudPureStorage(pureClient);
 
         return new PureContext(
             crypto,

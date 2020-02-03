@@ -40,6 +40,7 @@ import com.virgilsecurity.crypto.foundation.*;
 import com.virgilsecurity.crypto.phe.PheCipher;
 import com.virgilsecurity.crypto.phe.PheException;
 import com.virgilsecurity.purekit.pure.exception.PureCryptoException;
+import com.virgilsecurity.purekit.pure.exception.PureException;
 import com.virgilsecurity.sdk.crypto.*;
 import com.virgilsecurity.sdk.crypto.exceptions.*;
 
@@ -277,56 +278,108 @@ class PureCrypto {
         return body;
     }
 
-    VirgilKeyPair generateUserKey() throws CryptoException {
-        return crypto.generateKeyPair(KeyPairType.ED25519);
+    VirgilKeyPair generateUserKey() throws PureCryptoException {
+        try {
+            return crypto.generateKeyPair(KeyPairType.ED25519);
+        } catch (CryptoException e) {
+            throw new PureCryptoException(e);
+        }
     }
 
-    VirgilKeyPair generateRoleKey() throws CryptoException {
-        return crypto.generateKeyPair(KeyPairType.ED25519);
+    VirgilKeyPair generateRoleKey() throws PureCryptoException {
+        try {
+            return crypto.generateKeyPair(KeyPairType.ED25519);
+        } catch (CryptoException e) {
+            throw new PureCryptoException(e);
+        }
     }
 
-    VirgilKeyPair generateCellKey() throws CryptoException {
-        return crypto.generateKeyPair(KeyPairType.ED25519);
+    VirgilKeyPair generateCellKey() throws PureCryptoException {
+        try {
+            return crypto.generateKeyPair(KeyPairType.ED25519);
+        } catch (CryptoException e) {
+            throw new PureCryptoException(e);
+        }
     }
 
-    VirgilKeyPair importPrivateKey(byte[] privateKey) throws CryptoException {
-        return crypto.importPrivateKey(privateKey);
+    VirgilKeyPair importPrivateKey(byte[] privateKey) throws PureCryptoException {
+        try {
+            return crypto.importPrivateKey(privateKey);
+        } catch (CryptoException e) {
+            throw new PureCryptoException(e);
+        }
     }
 
-    VirgilPublicKey importPublicKey(byte[] publicKey) throws CryptoException {
-        return crypto.importPublicKey(publicKey);
+    VirgilPublicKey importPublicKey(byte[] publicKey) throws PureCryptoException {
+        try {
+            return crypto.importPublicKey(publicKey);
+        } catch (CryptoException e) {
+            throw new PureCryptoException(e);
+        }
     }
 
-    byte[] exportPublicKey(VirgilPublicKey publicKey) throws CryptoException {
-        return crypto.exportPublicKey(publicKey);
+    byte[] exportPublicKey(VirgilPublicKey publicKey) throws PureCryptoException {
+        try {
+            return crypto.exportPublicKey(publicKey);
+        } catch (CryptoException e) {
+            throw new PureCryptoException(e);
+        }
     }
 
-    byte[] exportPrivateKey(VirgilPrivateKey privateKey) throws CryptoException {
-        return crypto.exportPrivateKey(privateKey);
+    byte[] exportPrivateKey(VirgilPrivateKey privateKey) throws PureCryptoException {
+        try {
+            return crypto.exportPrivateKey(privateKey);
+        } catch (CryptoException e) {
+            throw new PureCryptoException(e);
+        }
     }
 
-    byte[] encryptForBackup(byte[] plainText, VirgilPublicKey publicKey, VirgilPrivateKey privateKey) throws EncryptionException, SigningException {
-        return crypto.authEncrypt(plainText, privateKey, publicKey);
+    byte[] encryptForBackup(byte[] plainText, VirgilPublicKey publicKey, VirgilPrivateKey privateKey) throws PureCryptoException {
+        try {
+            return crypto.authEncrypt(plainText, privateKey, publicKey);
+        } catch (SigningException | EncryptionException e) {
+            throw new PureCryptoException(e);
+        }
     }
 
-    byte[] decryptBackup(byte[] cipherText, VirgilPrivateKey privateKey, VirgilPublicKey publicKey) throws VerificationException, DecryptionException {
-        return crypto.authDecrypt(cipherText, privateKey, publicKey);
+    byte[] decryptBackup(byte[] cipherText, VirgilPrivateKey privateKey, VirgilPublicKey publicKey) throws PureCryptoException {
+        try {
+            return crypto.authDecrypt(cipherText, privateKey, publicKey);
+        } catch (VerificationException | DecryptionException e) {
+            throw new PureCryptoException(e);
+        }
     }
 
-    byte[] encryptData(byte[] plainText, List<VirgilPublicKey> publicKeys, VirgilPrivateKey privateKey) throws EncryptionException, SigningException {
-        return crypto.authEncrypt(plainText, privateKey, publicKeys);
+    byte[] encryptData(byte[] plainText, List<VirgilPublicKey> publicKeys, VirgilPrivateKey privateKey) throws PureCryptoException {
+        try {
+            return crypto.authEncrypt(plainText, privateKey, publicKeys);
+        } catch (EncryptionException | SigningException e) {
+            throw new PureCryptoException(e);
+        }
     }
 
-    byte[] decryptData(byte[] cipherText, VirgilPrivateKey privateKey, VirgilPublicKey publicKey) throws VerificationException, DecryptionException {
-        return crypto.authDecrypt(cipherText, privateKey, publicKey);
+    byte[] decryptData(byte[] cipherText, VirgilPrivateKey privateKey, VirgilPublicKey publicKey) throws PureCryptoException {
+        try {
+            return crypto.authDecrypt(cipherText, privateKey, publicKey);
+        } catch (VerificationException | DecryptionException e) {
+            throw new PureCryptoException(e);
+        }
     }
 
-    byte[] encryptRolePrivateKey(byte[] plainText, VirgilPublicKey publicKey, VirgilPrivateKey privateKey) throws EncryptionException, SigningException {
-        return crypto.authEncrypt(plainText, privateKey, publicKey);
+    byte[] encryptRolePrivateKey(byte[] plainText, VirgilPublicKey publicKey, VirgilPrivateKey privateKey) throws PureCryptoException {
+        try {
+            return crypto.authEncrypt(plainText, privateKey, publicKey);
+        } catch (SigningException | EncryptionException e) {
+            throw new PureCryptoException(e);
+        }
     }
 
-    byte[] decryptRolePrivateKey(byte[] plainText, VirgilPrivateKey privateKey, VirgilPublicKey publicKey) throws VerificationException, DecryptionException {
-        return crypto.authDecrypt(plainText, privateKey, publicKey);
+    byte[] decryptRolePrivateKey(byte[] plainText, VirgilPrivateKey privateKey, VirgilPublicKey publicKey) throws PureCryptoException {
+        try {
+            return crypto.authDecrypt(plainText, privateKey, publicKey);
+        } catch (VerificationException | DecryptionException e) {
+            throw new PureCryptoException(e);
+        }
     }
 
     byte[] computePasswordHash(String password) {

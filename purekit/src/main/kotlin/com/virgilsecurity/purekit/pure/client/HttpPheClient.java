@@ -31,7 +31,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.purekit.pure;
+package com.virgilsecurity.purekit.pure.client;
 
 import java.util.LinkedHashMap;
 
@@ -50,6 +50,9 @@ public class HttpPheClient {
     private final String appToken;
     private final HttpClientProtobuf client;
 
+    /**
+     * PHE service url
+     */
     public static final String SERVICE_ADDRESS = "https://api.virgilsecurity.com/phe/v1";
 
     /**
@@ -81,6 +84,8 @@ public class HttpPheClient {
     public PurekitProtos.EnrollmentResponse enrollAccount(PurekitProtos.EnrollmentRequest request)
         throws ProtocolException, ProtocolHttpException {
 
+        ValidateUtils.checkNull(request, "request");
+
         return client.firePost(
             request,
             AvailableRequests.ENROLL.getType(),
@@ -105,6 +110,8 @@ public class HttpPheClient {
     public PurekitProtos.VerifyPasswordResponse verifyPassword(
         PurekitProtos.VerifyPasswordRequest request
     ) throws ProtocolException, ProtocolHttpException {
+
+        ValidateUtils.checkNull(request, "request");
 
         return client.firePost(
             request,

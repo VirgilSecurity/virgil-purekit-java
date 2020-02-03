@@ -5,7 +5,10 @@ import com.virgilsecurity.crypto.phe.*;
 import com.virgilsecurity.purekit.data.ProtocolException;
 import com.virgilsecurity.purekit.data.ProtocolHttpException;
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client;
+import com.virgilsecurity.purekit.pure.client.HttpKmsClient;
+import com.virgilsecurity.purekit.pure.exception.KmsClientException;
 import com.virgilsecurity.purekit.pure.exception.PureCryptoException;
+import com.virgilsecurity.purekit.pure.exception.PureException;
 import com.virgilsecurity.purekit.pure.model.UserRecord;
 import com.virgilsecurity.purekit.utils.ValidateUtils;
 
@@ -65,7 +68,7 @@ class KmsManager {
         }
     }
 
-    private byte[] recoverSecret(UserRecord userRecord) throws ProtocolHttpException, ProtocolException, PureCryptoException {
+    private byte[] recoverSecret(UserRecord userRecord) throws PureException {
         try {
             UokmsClient kmsClient = getKmsClient(userRecord.getRecordVersion());
 
@@ -87,6 +90,10 @@ class KmsManager {
         }
         catch (PheException e) {
             throw new PureCryptoException(e);
+        } catch (ProtocolException e) {
+            throw new KmsClientException(e);
+        } catch (ProtocolHttpException e) {
+            throw new KmsClientException(e);
         }
     }
 
@@ -123,7 +130,7 @@ class KmsManager {
         }
     }
 
-    byte[] recoverPwd(UserRecord userRecord) throws ProtocolException, ProtocolHttpException, PureCryptoException {
+    byte[] recoverPwd(UserRecord userRecord) throws PureException {
         byte[] derivedSecret = recoverSecret(userRecord);
 
         return pureCrypto.decryptSymmetricOneTimeKey(userRecord.getPasswordRecoveryBlob(), new byte[0], derivedSecret);

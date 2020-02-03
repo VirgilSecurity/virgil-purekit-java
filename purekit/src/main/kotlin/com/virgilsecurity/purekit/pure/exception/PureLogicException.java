@@ -48,27 +48,14 @@ public class PureLogicException extends PureException {
     }
 
     public enum ErrorStatus {
-        USER_NOT_FOUND_IN_STORAGE(0, "User has not been found in the storage"),
-        CELL_KEY_NOT_FOUND_IN_STORAGE(1, "Cell key has not been found in the storage"),
-        CELL_KEY_ALREADY_EXISTS_IN_STORAGE(2, "Cell key already exists in the storage"),
-        STORAGE_SIGNATURE_VERIFICATION_FAILED(3, "Storage signature verification has been failed"),
-        KEYS_VERSION_MISMATCH(4, "Keys version mismatch"),
-        UPDATE_TOKEN_VERSION_MISMATCH(5, "Update token version mismatch"),
-        NONROTABLE_MASTER_SECRET_INVALID_LENGTH(6, "Nonrotatable master secret invalid length"),
-        CREDENTIALS_PARSING_ERROR(7, "Credentials parsing error"),
-        USER_ID_MISMATCH(8, "User Id mismatch"),
-        CELL_KEY_ID_MISMATCH(9, "Cell key id mismatch"),
-        PHE_VERSION_MISMATCH(10, "PHE version mismatch"),
-        ROLE_NAME_MISMATCH(11, "Role name mismatch"),
-        ROLE_USER_ID_MISMATCH(12, "Role user id mismatch"),
-        ROLE_NAME_USER_ID_MISMATCH(13, "Role name and user id mismatch"),
-        DUPLICATE_USER_ID(14, "Duplicate user Id"),
-        INVALID_PASSWORD(15, "Invalid password"),
-        USER_HAS_NO_ACCESS_TO_DATA(16, "User has no access to data"),
-        DUPLICATE_ROLE_NAME(17, "Duplicate role name"),
-        GRANT_KEY_NOT_FOUND_IN_STORAGE(18, "Grant key has not been found in the storage"),
-        GRANT_KEY_ID_MISMATCH(19, "Grant key id mismatch");
-
+        KEYS_VERSION_MISMATCH(1, "Keys version mismatch"),
+        UPDATE_TOKEN_VERSION_MISMATCH(2, "Update token version mismatch"),
+        NONROTABLE_MASTER_SECRET_INVALID_LENGTH(3, "Nonrotatable master secret invalid length"),
+        CREDENTIALS_PARSING_ERROR(4, "Credentials parsing error"),
+        INVALID_PASSWORD(5, "Invalid password"),
+        USER_HAS_NO_ACCESS_TO_DATA(6, "User has no access to data"),
+        GRANT_INVALID_PROTOBUF(7, "Grant invalid protobuf"),
+        GRANT_IS_EXPIRED(8, "Grant is expired");
 
         private final int code;
         private final String message;

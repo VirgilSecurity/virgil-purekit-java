@@ -31,36 +31,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.purekit.client
+package com.virgilsecurity.purekit.pure.storage;
 
-/**
- * Enum of available requests
- */
-enum class AvailableRequests(val type: String) {
-    // PHE
-    ENROLL("/enroll"),
-    VERIFY_PASSWORD("/verify-password"),
+public interface PureModelSerializerDependent {
+    public PureModelSerializer getPureModelSerializer();
 
-    // PURE
-    INSERT_USER("/user"),
-    UPDATE_USER("/user/%s"),
-    GET_USER("/user/%s"),
-    GET_USERS("/get-users"),
-    DELETE_USER("/user/%s"),
-    INSERT_CELL_KEY("/cell-key"),
-    UPDATE_CELL_KEY("/cell-key/%s/%s"),
-    GET_CELL_KEY("/cell-key/%s/%s"),
-    DELETE_CELL_KEY("/cell-key/%s/%s"),
-    INSERT_ROLE("/roles"),
-    GET_ROLES("/get-roles"),
-    INSERT_ROLE_ASSIGNMENTS("/role-assignments"),
-    GET_ROLE_ASSIGNMENTS("/get-role-assignments"),
-    GET_ROLE_ASSIGNMENT("/get-role-assignment"),
-    DELETE_ROLE_ASSIGNMENTS("/delete-role-assignments"),
-    INSERT_GRANT_KEY("/grant-key"),
-    GET_GRANT_KEY("/grant-key/%s/%s"),
-    DELETE_GRANT_KEY("/grant-key/%s/%s"),
-
-    // KMS
-    DECRYPT_REQUEST("/decrypt"),
+    public void setPureModelSerializer(PureModelSerializer pureModelSerializer);
 }

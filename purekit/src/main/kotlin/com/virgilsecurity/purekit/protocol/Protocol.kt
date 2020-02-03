@@ -42,7 +42,7 @@ import com.virgilsecurity.purekit.client.AvailableRequests
 import com.virgilsecurity.purekit.client.HttpClientProtobuf
 import com.virgilsecurity.purekit.data.*
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtos
-import com.virgilsecurity.purekit.pure.HttpPureClient
+import com.virgilsecurity.purekit.pure.client.HttpPureClient
 import com.virgilsecurity.purekit.utils.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
