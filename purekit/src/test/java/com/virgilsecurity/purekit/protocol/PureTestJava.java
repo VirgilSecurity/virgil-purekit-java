@@ -73,11 +73,10 @@ class PureTestJava {
                                       String appToken,
                                       String publicKey,
                                       String secretKey,
-                                      String updateToken,
                                       Map<String, List<String>> externalPublicKeys,
                                       StorageType storageType) throws CryptoException, PureLogicException, SQLException {
         return setupPure(null, pheServerAddress, pureServerAddress, kmsServerAddress, appToken,
-                publicKey, secretKey, updateToken, externalPublicKeys, storageType, false);
+                publicKey, secretKey, null, externalPublicKeys, storageType, false);
     }
 
     private PureSetupResult setupPure(byte[] nms,
@@ -163,7 +162,7 @@ class PureTestJava {
 
             StorageType[] storages = createStorages();
             for (StorageType storage: storages) {
-                pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKey, secretKey, null,null, storage);
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKey, secretKey, null, storage);
                 Pure pure = new Pure(pureResult.getContext());
 
                 String userId = UUID.randomUUID().toString();
@@ -189,7 +188,7 @@ class PureTestJava {
             PureSetupResult pureResult;
             StorageType[] storages = createStorages();
             for (StorageType storage: storages) {
-                pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKey, secretKey, null, null, storage);
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKey, secretKey, null, storage);
                 Pure pure = new Pure(pureResult.getContext());
 
                 String userId = UUID.randomUUID().toString();
@@ -227,7 +226,7 @@ class PureTestJava {
             PureSetupResult pureResult;
             StorageType[] storages = createStorages();
             for (StorageType storage: storages) {
-                pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKey, secretKey, null, null, storage);
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKey, secretKey, null, storage);
                 Pure pure = new Pure(pureResult.getContext());
 
                 String userId = UUID.randomUUID().toString();
@@ -263,7 +262,7 @@ class PureTestJava {
             PureSetupResult pureResult;
             StorageType[] storages = createStorages();
             for (StorageType storage: storages) {
-                pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKey, secretKey, null, null, storage);
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKey, secretKey, null, storage);
                 Pure pure = new Pure(pureResult.getContext());
 
                 String userId1 = UUID.randomUUID().toString();
@@ -307,7 +306,7 @@ class PureTestJava {
             PureSetupResult pureResult;
             StorageType[] storages = createStorages();
             for (StorageType storage: storages) {
-                pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKey, secretKey, null, null, storage);
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKey, secretKey, null, storage);
                 Pure pure = new Pure(pureResult.getContext());
 
                 String userId1 = UUID.randomUUID().toString();
@@ -352,7 +351,7 @@ class PureTestJava {
             PureSetupResult pureResult;
             StorageType[] storages = createStorages();
             for (StorageType storage: storages) {
-                pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKey, secretKey, null, null, storage);
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKey, secretKey, null, storage);
                 Pure pure = new Pure(pureResult.getContext());
 
                 String userId = UUID.randomUUID().toString();
@@ -397,7 +396,7 @@ class PureTestJava {
             PureSetupResult pureResult;
             StorageType[] storages = createStorages();
             for (StorageType storage: storages) {
-                pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKey, secretKey, null, null, storage);
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKey, secretKey, null, storage);
                 Pure pure = new Pure(pureResult.getContext());
 
                 String userId = UUID.randomUUID().toString();
@@ -451,7 +450,7 @@ class PureTestJava {
             PureSetupResult pureResult;
             StorageType[] storages = createStorages();
             for (StorageType storage: storages) {
-                pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKey, secretKey, null, null, storage);
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKey, secretKey, null, storage);
                 Pure pure = new Pure(pureResult.getContext());
 
                 String userId = UUID.randomUUID().toString();
@@ -489,7 +488,7 @@ class PureTestJava {
             PureSetupResult pureResult;
             StorageType[] storages = createStorages();
             for (StorageType storage: storages) {
-                pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKey, secretKey, null, null, storage);
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKey, secretKey, null, storage);
                 Pure pure = new Pure(pureResult.getContext());
 
                 String userId = UUID.randomUUID().toString();
@@ -532,7 +531,7 @@ class PureTestJava {
             PureSetupResult pureResult;
             StorageType[] storages = createStorages();
             for (StorageType storage: storages) {
-                pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKey, secretKey, null, null, storage);
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKey, secretKey, null, storage);
                 Pure pure = new Pure(pureResult.getContext());
 
                 String userId = UUID.randomUUID().toString();
@@ -596,7 +595,7 @@ class PureTestJava {
                 byte[] nms;
 
                 {
-                    PureSetupResult pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKeyOld, secretKeyOld,  null,null, storage);
+                    PureSetupResult pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKeyOld, secretKeyOld,  null, storage);
                     Pure pure = new Pure(pureResult.getContext());
                     pureStorage = pure.getStorage();
                     nms = pureResult.getNmsData();
@@ -686,7 +685,7 @@ class PureTestJava {
             PureSetupResult pureResult;
             StorageType[] storages = createStorages();
             for (StorageType storage: storages) {
-                pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKey, secretKey, null, null, storage);
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKey, secretKey, null, storage);
                 Pure pure = new Pure(pureResult.getContext());
 
                 String userId1 = UUID.randomUUID().toString();
@@ -741,7 +740,7 @@ class PureTestJava {
                 String publicKeyBase64 = Base64.getEncoder().encodeToString(crypto.exportPublicKey(keyPair.getPublicKey()));
                 Map<String, List<String>> externalPublicKeys = Collections.singletonMap(dataId, Collections.singletonList(publicKeyBase64));
 
-                pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKey, secretKey,null, externalPublicKeys, storage);
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKey, secretKey, externalPublicKeys, storage);
 
                 Pure pure = new Pure(pureResult.getContext());
 
@@ -776,7 +775,7 @@ class PureTestJava {
             PureSetupResult pureResult;
             StorageType[] storages = createStorages();
             for (StorageType storage: storages) {
-                pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKey, secretKey, null, null, storage);
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKey, secretKey, null, storage);
                 Pure pure = new Pure(pureResult.getContext());
 
                 String userId = UUID.randomUUID().toString();
@@ -826,7 +825,7 @@ class PureTestJava {
                     continue;
                 }
 
-                pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKey, secretKey, null, null, storage);
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKey, secretKey, null, storage);
                 Pure pure = new Pure(pureResult.getContext());
 
                 String userId = UUID.randomUUID().toString();
@@ -871,7 +870,7 @@ class PureTestJava {
             PureSetupResult pureResult;
             StorageType[] storages = createStorages();
             for (StorageType storage: storages) {
-                pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKey, secretKey, null, null, storage);
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKey, secretKey, null, storage);
                 Pure pure = new Pure(pureResult.getContext());
 
                 String userId = UUID.randomUUID().toString();
@@ -910,7 +909,7 @@ class PureTestJava {
             PureSetupResult pureResult;
             StorageType[] storages = createStorages();
             for (StorageType storage: storages) {
-                pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKey, secretKey, null, null, storage);
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKey, secretKey, null, storage);
                 Pure pure = new Pure(pureResult.getContext());
 
                 String userId = UUID.randomUUID().toString();
@@ -943,7 +942,7 @@ class PureTestJava {
             PureSetupResult pureResult;
             StorageType[] storages = createStorages();
             for (StorageType storage: storages) {
-                pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKey, secretKey, null, null, storage);
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKey, secretKey, null, storage);
                 Pure pure = new Pure(pureResult.getContext());
 
                 String userId1 = UUID.randomUUID().toString();
@@ -1024,7 +1023,7 @@ class PureTestJava {
             PureSetupResult pureResult;
             StorageType[] storages = createStorages();
             for (StorageType storage: storages) {
-                pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKey, secretKey, null, null, storage);
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKey, secretKey, null, storage);
                 Pure pure = new Pure(pureResult.getContext());
 
                 String userId = UUID.randomUUID().toString();
