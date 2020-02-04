@@ -33,7 +33,6 @@
 
 package com.virgilsecurity.purekit.pure;
 
-import com.virgilsecurity.purekit.pure.Pure;
 import com.virgilsecurity.purekit.pure.model.PureGrant;
 
 /**

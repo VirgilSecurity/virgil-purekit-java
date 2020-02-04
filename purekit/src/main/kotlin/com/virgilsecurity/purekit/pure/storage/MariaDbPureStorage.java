@@ -46,7 +46,11 @@ import java.util.*;
 public class MariaDbPureStorage implements PureStorage, PureModelSerializerDependent {
     private final String url;
 
-    @Override
+    /**
+     * Returns PureModelSerializer
+     *
+     * @return PureModelSerializer
+     */
     public PureModelSerializer getPureModelSerializer() {
         return pureModelSerializer;
     }

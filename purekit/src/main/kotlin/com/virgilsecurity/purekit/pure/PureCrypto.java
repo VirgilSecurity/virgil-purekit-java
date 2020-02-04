@@ -40,7 +40,6 @@ import com.virgilsecurity.crypto.foundation.*;
 import com.virgilsecurity.crypto.phe.PheCipher;
 import com.virgilsecurity.crypto.phe.PheException;
 import com.virgilsecurity.purekit.pure.exception.PureCryptoException;
-import com.virgilsecurity.purekit.pure.exception.PureException;
 import com.virgilsecurity.sdk.crypto.*;
 import com.virgilsecurity.sdk.crypto.exceptions.*;
 

@@ -43,9 +43,7 @@ import com.virgilsecurity.purekit.client.AvailableRequests;
 import com.virgilsecurity.purekit.client.HttpClientProtobuf;
 import com.virgilsecurity.purekit.data.ProtocolException;
 import com.virgilsecurity.purekit.data.ProtocolHttpException;
-import com.virgilsecurity.purekit.protobuf.build.PurekitProtos;
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client;
-import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Grant;
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage;
 import com.virgilsecurity.purekit.utils.ValidateUtils;
 

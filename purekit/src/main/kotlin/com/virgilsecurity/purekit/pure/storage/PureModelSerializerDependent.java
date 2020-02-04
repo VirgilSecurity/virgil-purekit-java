@@ -34,7 +34,5 @@
 package com.virgilsecurity.purekit.pure.storage;
 
 public interface PureModelSerializerDependent {
-    public PureModelSerializer getPureModelSerializer();
-
-    public void setPureModelSerializer(PureModelSerializer pureModelSerializer);
+    void setPureModelSerializer(PureModelSerializer pureModelSerializer);
 }

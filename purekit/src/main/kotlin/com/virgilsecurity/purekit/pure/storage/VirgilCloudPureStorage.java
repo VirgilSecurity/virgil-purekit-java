@@ -51,7 +51,11 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
 
     // TODO: Map more service errors here
 
-    @Override
+    /**
+     * Returns PureModelSerializer
+     *
+     * @return PureModelSerializer
+     */
     public PureModelSerializer getPureModelSerializer() {
         return pureModelSerializer;
     }
