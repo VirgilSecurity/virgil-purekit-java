@@ -136,11 +136,11 @@ class PureTestJava {
     }
 
     private static StorageType[] createStorages() {
-        StorageType[] storages = new StorageType[3];
+        StorageType[] storages = new StorageType[1];
 
-        storages[0] = StorageType.RAM;
-        storages[1] = StorageType.MariaDB;
-        storages[2] = StorageType.VirgilCloud;
+//        storages[0] = StorageType.RAM;
+//        storages[1] = StorageType.MariaDB;
+        storages[0] = StorageType.VirgilCloud;
 
         return storages;
     }
