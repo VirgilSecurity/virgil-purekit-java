@@ -139,11 +139,11 @@ class PureTestJava {
     }
 
     private static StorageType[] createStorages() {
-        StorageType[] storages = new StorageType[1];
+        StorageType[] storages = new StorageType[2];
 
-//        storages[0] = StorageType.RAM;
+        storages[0] = StorageType.RAM;
+        storages[1] = StorageType.MariaDB;
 //        storages[0] = StorageType.VirgilCloud;
-        storages[0] = StorageType.MariaDB;
 
         return storages;
     }
@@ -430,7 +430,7 @@ class PureTestJava {
                     pure.decryptGrantFromUser(authResult.getEncryptedGrant());
                 });
 
-                assertEquals(PureStorageGenericException.ErrorStatus.GRANT_KEY_NOT_FOUND_IN_STORAGE, ex2.getErrorStatus());
+                assertEquals(PureStorageGenericException.ErrorStatus.GRANT_KEY_NOT_FOUND, ex2.getErrorStatus());
             }
         } catch (Exception e) {
             fail(e);
@@ -796,7 +796,7 @@ class PureTestJava {
                     pure.authenticateUser(userId, password);
                 });
 
-                assertEquals(PureStorageGenericException.ErrorStatus.USER_NOT_FOUND_IN_STORAGE, e1.getErrorStatus());
+                assertEquals(PureStorageGenericException.ErrorStatus.USER_NOT_FOUND, e1.getErrorStatus());
 
                 assertThrows(PureStorageCellKeyNotFoundException.class, () -> {
                     pure.decrypt(authResult1.getGrant(), null, dataId, cipherText);
@@ -846,7 +846,7 @@ class PureTestJava {
                     pure.authenticateUser(userId, password);
                 });
 
-                assertEquals(PureStorageGenericException.ErrorStatus.USER_NOT_FOUND_IN_STORAGE, e.getErrorStatus());
+                assertEquals(PureStorageGenericException.ErrorStatus.USER_NOT_FOUND, e.getErrorStatus());
 
                 byte[] plainText = pure.decrypt(authResult1.getGrant(), null, dataId, cipherText);
 
@@ -887,7 +887,7 @@ class PureTestJava {
 
                 pure.deleteKey(userId, dataId);
 
-                PureStorageCellKeyNotFoundException e = assertThrows(PureStorageCellKeyNotFoundException.class, () -> {
+                assertThrows(PureStorageCellKeyNotFoundException.class, () -> {
                     pure.decrypt(authResult1.getGrant(), null, dataId, cipherText);
                 });
             }

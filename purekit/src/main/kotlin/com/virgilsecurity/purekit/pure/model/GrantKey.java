@@ -35,6 +35,9 @@ package com.virgilsecurity.purekit.pure.model;
 
 import java.util.Date;
 
+/**
+ * Grant key
+ */
 public class GrantKey {
     private final String userId;
     private final byte[] keyId;
@@ -42,6 +45,15 @@ public class GrantKey {
     private final Date creationDate;
     private final Date expirationDate;
 
+    /**
+     * Constructor
+     *
+     * @param userId user id
+     * @param keyId key id
+     * @param encryptedGrantKey encrypted grant key
+     * @param creationDate creation date
+     * @param expirationDate expiration date
+     */
     public GrantKey(String userId, byte[] keyId, byte[] encryptedGrantKey, Date creationDate, Date expirationDate) {
         this.userId = userId;
         this.keyId = keyId;
@@ -50,22 +62,47 @@ public class GrantKey {
         this.expirationDate = expirationDate;
     }
 
+    /**
+     * Returns user id
+     *
+     * @return user id
+     */
     public String getUserId() {
         return userId;
     }
 
+    /**
+     * Returns key id
+     *
+     * @return key id
+     */
     public byte[] getKeyId() {
         return keyId;
     }
 
+    /**
+     * Returns encrypted grant key
+     *
+     * @return encrypted grant key
+     */
     public byte[] getEncryptedGrantKey() {
         return encryptedGrantKey;
     }
 
+    /**
+     * Returns expiration date
+     *
+     * @return expiration date
+     */
     public Date getExpirationDate() {
         return expirationDate;
     }
 
+    /**
+     * Returns creation date
+     *
+     * @return creation date
+     */
     public Date getCreationDate() {
         return creationDate;
     }

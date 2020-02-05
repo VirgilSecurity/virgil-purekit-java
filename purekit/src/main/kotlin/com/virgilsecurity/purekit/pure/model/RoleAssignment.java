@@ -33,33 +33,63 @@
 
 package com.virgilsecurity.purekit.pure.model;
 
+/**
+ * Role assignment
+ */
 public class RoleAssignment {
-
-    public String getRoleName() {
-        return roleName;
-    }
-
-    public byte[] getPublicKeyId() {
-        return publicKeyId;
-    }
-
-    public byte[] getEncryptedRsk() {
-        return encryptedRsk;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
     private String roleName;
     private String userId;
     private byte[] publicKeyId;
     private byte[] encryptedRsk;
 
+    /**
+     * Constructor
+     *
+     * @param roleName role name
+     * @param userId user id
+     * @param publicKeyId public key id
+     * @param encryptedRsk encrypted role private key
+     */
     public RoleAssignment(String roleName, String userId, byte[] publicKeyId, byte[] encryptedRsk) {
         this.roleName = roleName;
         this.userId = userId;
         this.publicKeyId = publicKeyId;
         this.encryptedRsk = encryptedRsk;
+    }
+
+    /**
+     * Returns role name
+     *
+     * @return role name
+     */
+    public String getRoleName() {
+        return roleName;
+    }
+
+    /**
+     * Returns public key id
+     *
+     * @return public key id
+     */
+    public byte[] getPublicKeyId() {
+        return publicKeyId;
+    }
+
+    /**
+     * Returns encrypted role private key
+     *
+     * @return encrypted role private key
+     */
+    public byte[] getEncryptedRsk() {
+        return encryptedRsk;
+    }
+
+    /**
+     * Returns user id
+     *
+     * @return user id
+     */
+    public String getUserId() {
+        return userId;
     }
 }

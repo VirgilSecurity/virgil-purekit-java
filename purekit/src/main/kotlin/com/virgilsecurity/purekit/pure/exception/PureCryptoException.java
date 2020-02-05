@@ -37,12 +37,20 @@ import com.virgilsecurity.crypto.foundation.FoundationException;
 import com.virgilsecurity.crypto.phe.PheException;
 import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
 
+/**
+ * Pure crypto exception
+ */
 public class PureCryptoException extends PureException {
     private final CryptoException cryptoException;
     private final FoundationException foundationException;
     private final PheException pheException;
     private final PureCryptoException.ErrorStatus errorStatus;
 
+    /**
+     * Constructor
+     *
+     * @param errorStatus errorStatus
+     */
     public PureCryptoException(PureCryptoException.ErrorStatus errorStatus) {
         super(errorStatus.getMessage());
 
@@ -57,6 +65,11 @@ public class PureCryptoException extends PureException {
         this.pheException = null;
     }
 
+    /**
+     * Constructor
+     *
+     * @param cryptoException crypto exception
+     */
     public PureCryptoException(CryptoException cryptoException) {
         super(cryptoException);
 
@@ -66,6 +79,11 @@ public class PureCryptoException extends PureException {
         this.pheException = null;
     }
 
+    /**
+     * Constructor
+     *
+     * @param foundationException foundation exception
+     */
     public PureCryptoException(FoundationException foundationException) {
         super(foundationException);
 
@@ -75,6 +93,11 @@ public class PureCryptoException extends PureException {
         this.pheException = null;
     }
 
+    /**
+     * Constructor
+     *
+     * @param pheException phe exception
+     */
     public PureCryptoException(PheException pheException) {
         super(pheException);
 
@@ -84,22 +107,45 @@ public class PureCryptoException extends PureException {
         this.pheException = pheException;
     }
 
+    /**
+     * Returns error status
+     *
+     * @return error status
+     */
     public PureCryptoException.ErrorStatus getErrorStatus() {
         return errorStatus;
     }
 
+    /**
+     * Returns crypto exception
+     *
+     * @return crypto exception
+     */
     public CryptoException getCryptoException() {
         return cryptoException;
     }
 
+    /**
+     * Returns foundation exception
+     *
+     * @return foundation exception
+     */
     public FoundationException getFoundationException() {
         return foundationException;
     }
 
+    /**
+     * Returns phe exception
+     *
+     * @return phe exception
+     */
     public PheException getPheException() {
         return pheException;
     }
 
+    /**
+     * Error status
+     */
     public enum ErrorStatus {
         UNDERLYING_FOUNDATION_EXCEPTION(1, "Underlying foundation exception"),
         UNDERLYING_PHE_EXCEPTION(2, "Underlying phe exception"),

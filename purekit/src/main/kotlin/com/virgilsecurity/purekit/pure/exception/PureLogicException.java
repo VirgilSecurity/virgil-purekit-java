@@ -33,20 +33,36 @@
 
 package com.virgilsecurity.purekit.pure.exception;
 
+/**
+ * Pure logic exception
+ */
 public class PureLogicException extends PureException {
 
     private final ErrorStatus errorStatus;
 
+    /**
+     * Constructor
+     *
+     * @param errorStatus error status
+     */
     public PureLogicException(ErrorStatus errorStatus) {
         super(errorStatus.getMessage());
 
         this.errorStatus = errorStatus;
     }
 
+    /**
+     * Error status
+     *
+     * @return error status
+     */
     public ErrorStatus getErrorStatus() {
         return errorStatus;
     }
 
+    /**
+     * Error status
+     */
     public enum ErrorStatus {
         KEYS_VERSION_MISMATCH(1, "Keys version mismatch"),
         UPDATE_TOKEN_VERSION_MISMATCH(2, "Update token version mismatch"),

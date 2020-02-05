@@ -109,7 +109,7 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
         } catch (ProtocolException e) {
             if (e.getErrorCode() == ServiceErrorCode.USER_NOT_FOUND.getCode()) {
                 throw new PureStorageGenericException(
-                        PureStorageGenericException.ErrorStatus.USER_NOT_FOUND_IN_STORAGE
+                        PureStorageGenericException.ErrorStatus.USER_NOT_FOUND
                 );
             }
 
@@ -451,9 +451,7 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
                 } catch (ProtocolException e) {
                     if (e.getErrorCode() == ServiceErrorCode.CELL_KEY_ALREADY_EXISTS.getCode()) {
 
-                        throw new PureStorageGenericException(
-                                PureStorageGenericException.ErrorStatus.CELL_KEY_ALREADY_EXISTS_IN_STORAGE
-                        );
+                        throw new PureStorageCellKeyAlreadyExistsException();
                     }
 
                     throw e;

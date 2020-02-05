@@ -36,24 +36,47 @@ package com.virgilsecurity.purekit.pure.exception;
 import com.virgilsecurity.purekit.data.ProtocolException;
 import com.virgilsecurity.purekit.data.ProtocolHttpException;
 
+/**
+ * Base class for exception from Http clients
+ */
 public class ClientException extends PureException {
     private final ProtocolException protocolException;
     private final ProtocolHttpException protocolHttpException;
 
+    /**
+     * Constructor
+     *
+     * @param protocolException protocolException
+     */
     public ClientException(ProtocolException protocolException) {
         this.protocolException = protocolException;
         this.protocolHttpException = null;
     }
 
+    /**
+     * Constructor
+     *
+     * @param protocolHttpException protocolHttpException
+     */
     public ClientException(ProtocolHttpException protocolHttpException) {
         this.protocolException = null;
         this.protocolHttpException = protocolHttpException;
     }
 
+    /**
+     * Returns protocol exception
+     *
+     * @return protocolException
+     */
     public ProtocolException getProtocolException() {
         return protocolException;
     }
 
+    /**
+     * Returns protocolHttpException
+     *
+     * @return protocolHttpException
+     */
     public ProtocolHttpException getProtocolHttpException() {
         return protocolHttpException;
     }

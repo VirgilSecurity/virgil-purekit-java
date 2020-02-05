@@ -63,23 +63,28 @@ public class PureStorageGenericException extends PureStorageException {
      * Error status
      */
     public enum ErrorStatus {
-        USER_NOT_FOUND_IN_STORAGE(1, "User has not been found in the storage"),
-        CELL_KEY_ALREADY_EXISTS_IN_STORAGE(2, "Cell key already exists in the storage"),
-        STORAGE_SIGNATURE_VERIFICATION_FAILED(3, "Storage signature verification has been failed"),
-        USER_ID_MISMATCH(4, "User Id mismatch"),
-        CELL_KEY_ID_MISMATCH(5, "Cell key id mismatch"),
-        PHE_VERSION_MISMATCH(6, "PHE version mismatch"),
-        ROLE_NAME_MISMATCH(7, "Role name mismatch"),
-        ROLE_USER_ID_MISMATCH(8, "Role user id mismatch"),
-        ROLE_NAME_USER_ID_MISMATCH(9, "Role name and user id mismatch"),
-        DUPLICATE_USER_ID(10, "Duplicate user Id"),
-        DUPLICATE_ROLE_NAME(11, "Duplicate role name"),
-        GRANT_KEY_NOT_FOUND_IN_STORAGE(12, "Grant key has not been found in the storage"),
-        GRANT_KEY_ID_MISMATCH(13, "Grant key id mismatch"),
-        INVALID_PROTOBUF(14, "Invalid protobuf"),
-        SIGNING_EXCEPTION(15, "Signing exception"),
-        VERIFICATION_EXCEPTION(16, "Verification exception"),
-        KEY_ID_MISMATCH(17, "Key id mismatch");
+        USER_NOT_FOUND(1, "User has not been found in the storage"),
+        STORAGE_SIGNATURE_VERIFICATION_FAILED(2, "Storage signature verification has been failed"),
+        USER_ID_MISMATCH(3, "User Id mismatch"),
+        CELL_KEY_ID_MISMATCH(4, "Cell key id mismatch"),
+        PHE_VERSION_MISMATCH(5, "PHE version mismatch"),
+        ROLE_NAME_MISMATCH(6, "Role name mismatch"),
+        ROLE_USER_ID_MISMATCH(7, "Role user id mismatch"),
+        ROLE_NAME_USER_ID_MISMATCH(8, "Role name and user id mismatch"),
+        DUPLICATE_USER_ID(9, "Duplicate user Id"),
+        DUPLICATE_ROLE_NAME(10, "Duplicate role name"),
+        GRANT_KEY_NOT_FOUND(11, "Grant key has not been found in the storage"),
+        GRANT_KEY_ID_MISMATCH(12, "Grant key id mismatch"),
+        INVALID_PROTOBUF(13, "Invalid protobuf"),
+        SIGNING_EXCEPTION(14, "Signing exception"),
+        VERIFICATION_EXCEPTION(15, "Verification exception"),
+        KEY_ID_MISMATCH(16, "Key id mismatch"),
+        ROLE_NOT_FOUND(17, "Role not found"),
+        ROLE_ASSIGNMENT_NOT_FOUND(18, "Role assignment not found"),
+        USER_ALREADY_EXISTS(19, "User already exists"),
+        ROLE_ALREADY_EXISTS(20, "Role already exists"),
+        ROLE_ASSIGNMENT_ALREADY_EXISTS(21, "Role assignment already exists"),
+        GRANT_KEY_ALREADY_EXISTS(22, "Grant key already exists");
 
         private final int code;
         private final String message;

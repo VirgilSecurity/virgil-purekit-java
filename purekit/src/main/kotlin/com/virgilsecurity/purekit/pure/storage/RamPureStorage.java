@@ -38,6 +38,12 @@ import com.virgilsecurity.purekit.pure.model.*;
 import java.util.*;
 import java.util.function.Predicate;
 
+/**
+ * PureStorage implementation that stores data in RAM.
+ * @implNote use this implementation only to try out Pure.
+ * For any real-world usage please see {@link VirgilCloudPureStorage}, {@link MariaDbPureStorage}
+ * or implement {@link PureStorage} yourself.
+ */
 public class RamPureStorage implements PureStorage {
     private HashMap<String, UserRecord> users;
     private HashMap<String, HashMap<String, CellKey>> keys;
@@ -47,6 +53,9 @@ public class RamPureStorage implements PureStorage {
 
     public static int GRANT_KEYS_CLEAN_INTERVAL = 20000;
 
+    /**
+     * Constructor
+     */
     public RamPureStorage() {
         this.users = new HashMap<>();
         this.keys = new HashMap<>();
@@ -70,7 +79,6 @@ public class RamPureStorage implements PureStorage {
             Date currentDate = new Date();
 
             for (Map.Entry<String, HashMap<String, GrantKey>> userGrantKeys: storage.grantKeys.entrySet()) {
-                // TODO: Test
                 userGrantKeys.getValue().entrySet().removeIf(entry -> entry.getValue().getExpirationDate().before(currentDate));
             }
         }
@@ -98,21 +106,21 @@ public class RamPureStorage implements PureStorage {
         UserRecord userRecord = this.users.get(userId);
 
         if (userRecord == null) {
-            throw new PureStorageGenericException(PureStorageGenericException.ErrorStatus.USER_NOT_FOUND_IN_STORAGE);
+            throw new PureStorageGenericException(PureStorageGenericException.ErrorStatus.USER_NOT_FOUND);
         }
 
         return userRecord;
     }
 
     @Override
-    public Collection<UserRecord> selectUsers(Set<String> userIds) {
+    public Collection<UserRecord> selectUsers(Set<String> userIds) throws PureStorageException {
         ArrayList<UserRecord> userRecords = new ArrayList<>(userIds.size());
 
         for (String userId: userIds) {
             UserRecord userRecord = this.users.get(userId);
 
             if (userRecord == null) {
-                throw new NullPointerException();
+                throw new PureStorageGenericException(PureStorageGenericException.ErrorStatus.USER_NOT_FOUND);
             }
 
             userRecords.add(userRecord);
@@ -136,9 +144,9 @@ public class RamPureStorage implements PureStorage {
     }
 
     @Override
-    public void deleteUser(String userId, boolean cascade) {
+    public void deleteUser(String userId, boolean cascade) throws PureStorageException {
         if (this.users.remove(userId) == null) {
-            throw new NullPointerException();
+            throw new PureStorageGenericException(PureStorageGenericException.ErrorStatus.USER_NOT_FOUND);
         }
 
         if (cascade) {
@@ -147,14 +155,20 @@ public class RamPureStorage implements PureStorage {
     }
 
     @Override
-    public CellKey selectCellKey(String userId, String dataId) {
+    public CellKey selectCellKey(String userId, String dataId) throws PureStorageException {
         HashMap<String, CellKey> map = this.keys.get(userId);
 
         if (map == null) {
-            return null;
+            throw new PureStorageCellKeyNotFoundException();
         }
 
-        return map.get(dataId);
+        CellKey cellKey = map.get(dataId);
+
+        if (cellKey == null) {
+            throw new PureStorageCellKeyNotFoundException();
+        }
+
+        return cellKey;
     }
 
     @Override
@@ -162,7 +176,7 @@ public class RamPureStorage implements PureStorage {
         HashMap<String, CellKey> map = this.keys.getOrDefault(cellKey.getUserId(), new HashMap<>());
 
         if (map.putIfAbsent(cellKey.getDataId(), cellKey) != null) {
-            throw new PureStorageGenericException(PureStorageGenericException.ErrorStatus.CELL_KEY_ALREADY_EXISTS_IN_STORAGE);
+            throw new PureStorageCellKeyAlreadyExistsException();
         }
 
         this.keys.put(cellKey.getUserId(), map);
@@ -173,22 +187,22 @@ public class RamPureStorage implements PureStorage {
         HashMap<String, CellKey> map = this.keys.get(cellKey.getUserId());
 
         if (!map.containsKey(cellKey.getDataId())) {
-            throw new PureStorageGenericException(PureStorageGenericException.ErrorStatus.CELL_KEY_ALREADY_EXISTS_IN_STORAGE);
+            throw new PureStorageCellKeyNotFoundException();
         }
 
         map.put(cellKey.getDataId(), cellKey);
     }
 
     @Override
-    public void deleteCellKey(String userId, String dataId) {
+    public void deleteCellKey(String userId, String dataId) throws PureStorageException {
         HashMap<String, CellKey> keys = this.keys.get(userId);
 
         if (keys == null) {
-            throw new NullPointerException();
+            throw new PureStorageCellKeyNotFoundException();
         }
 
         if (keys.remove(dataId) == null) {
-            throw new NullPointerException();
+            throw new PureStorageCellKeyNotFoundException();
         }
     }
 
@@ -198,7 +212,7 @@ public class RamPureStorage implements PureStorage {
     }
 
     @Override
-    public Iterable<Role> selectRoles(Set<String> roleNames) {
+    public Iterable<Role> selectRoles(Set<String> roleNames) throws PureStorageException {
 
         ArrayList<Role> roles = new ArrayList<>(roleNames.size());
 
@@ -206,7 +220,7 @@ public class RamPureStorage implements PureStorage {
             Role role = this.roles.get(roleName);
 
             if (role == null) {
-                throw new NullPointerException();
+                throw new PureStorageGenericException(PureStorageGenericException.ErrorStatus.ROLE_NOT_FOUND);
             }
 
             roles.add(role);
@@ -245,9 +259,21 @@ public class RamPureStorage implements PureStorage {
     }
 
     @Override
-    public RoleAssignment selectRoleAssignment(String roleName, String userId) {
+    public RoleAssignment selectRoleAssignment(String roleName, String userId) throws PureStorageException {
 
-        return this.roleAssignments.get(roleName).get(userId);
+        HashMap<String, RoleAssignment> assignments = this.roleAssignments.get(roleName);
+
+        if (assignments == null) {
+            throw new PureStorageGenericException(PureStorageGenericException.ErrorStatus.ROLE_ASSIGNMENT_NOT_FOUND);
+        }
+
+        RoleAssignment roleAssignment = assignments.get(userId);
+
+        if (roleAssignment == null) {
+            throw new PureStorageGenericException(PureStorageGenericException.ErrorStatus.ROLE_ASSIGNMENT_NOT_FOUND);
+        }
+
+        return roleAssignment;
     }
 
     @Override
@@ -277,9 +303,8 @@ public class RamPureStorage implements PureStorage {
 
         GrantKey key = keys.get(Base64.getEncoder().encodeToString(keyId));
 
-        Date currentDate = new Date();
-        if (key == null || key.getExpirationDate().before(currentDate)) {
-            throw new PureStorageGenericException(PureStorageGenericException.ErrorStatus.GRANT_KEY_NOT_FOUND_IN_STORAGE);
+        if (key == null) {
+            throw new PureStorageGenericException(PureStorageGenericException.ErrorStatus.GRANT_KEY_NOT_FOUND);
         }
 
         return key;

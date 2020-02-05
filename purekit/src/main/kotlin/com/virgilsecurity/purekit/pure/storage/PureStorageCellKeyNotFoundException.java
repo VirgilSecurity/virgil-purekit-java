@@ -33,5 +33,8 @@
 
 package com.virgilsecurity.purekit.pure.storage;
 
+/**
+ * PureStorage CellKey not found exception
+ */
 public class PureStorageCellKeyNotFoundException extends PureStorageException {
 }

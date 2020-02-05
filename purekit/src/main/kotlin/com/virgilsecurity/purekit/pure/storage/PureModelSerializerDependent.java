@@ -33,6 +33,14 @@
 
 package com.virgilsecurity.purekit.pure.storage;
 
+/**
+ * Interface for PureStorage implementations that allows to user PureModelSerializer
+ */
 public interface PureModelSerializerDependent {
+    /**
+     * Sets pureModelSerializer
+     *
+     * @param pureModelSerializer pureModelSerializer
+     */
     void setPureModelSerializer(PureModelSerializer pureModelSerializer);
 }

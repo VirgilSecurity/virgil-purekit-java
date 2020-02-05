@@ -105,6 +105,11 @@ public class PureGrant {
         return userId;
     }
 
+    /**
+     * Returns expiration date
+     *
+     * @return expiration date
+     */
     public Date getExpirationDate() {
         return expirationDate;
     }

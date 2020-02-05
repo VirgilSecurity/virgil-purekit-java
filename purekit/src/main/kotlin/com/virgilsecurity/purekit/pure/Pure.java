@@ -41,22 +41,18 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import com.virgilsecurity.common.util.Base64;
 import com.virgilsecurity.crypto.foundation.FoundationException;
 import com.virgilsecurity.crypto.phe.PheClientEnrollAccountResult;
-import com.virgilsecurity.purekit.data.ProtocolException;
-import com.virgilsecurity.purekit.data.ProtocolHttpException;
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Grant;
 import com.virgilsecurity.purekit.pure.exception.PureException;
+import com.virgilsecurity.purekit.pure.storage.PureStorageCellKeyAlreadyExistsException;
 import com.virgilsecurity.purekit.pure.storage.PureStorageCellKeyNotFoundException;
 import com.virgilsecurity.purekit.pure.exception.PureCryptoException;
 import com.virgilsecurity.purekit.pure.exception.PureLogicException;
-import com.virgilsecurity.purekit.pure.storage.PureStorageGenericException;
 import com.virgilsecurity.purekit.pure.model.*;
 import com.virgilsecurity.purekit.pure.storage.PureStorage;
 import com.virgilsecurity.purekit.utils.ValidateUtils;
-import com.virgilsecurity.sdk.crypto.VirgilCrypto;
 import com.virgilsecurity.sdk.crypto.VirgilKeyPair;
 import com.virgilsecurity.sdk.crypto.VirgilPrivateKey;
 import com.virgilsecurity.sdk.crypto.VirgilPublicKey;
-import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
 
 /**
  * Main class for interactions with PureKit
@@ -104,16 +100,8 @@ public class Pure {
      * @param userId User Id.
      * @param password Password.
      *
-     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
-     * successfully.
-     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
-     * successfully. Represents a regular HTTP exception with code and message.
-     * @throws CryptoException Please, see {@link VirgilCrypto#encrypt},
-     * {@link VirgilCrypto#generateKeyPair}, {@link VirgilCrypto#exportPrivateKey},
-     * {@link VirgilCrypto#exportPublicKey}, {@link VirgilCrypto#generateSignature} methods'
-     * CryptoException doc.
-     * @throws InvalidProtocolBufferException If provided UserRecord cannot be parsed as
-     * Protobuf message.
+     * @throws PureException PureException
+     *
      */
     public void registerUser(String userId, String password) throws PureException {
 
@@ -126,19 +114,11 @@ public class Pure {
      * @param userId User Id.
      * @param password Password.
      * @param sessionId Optional sessionId which will be present in PureGrant.
+     * @param ttl time to live in seconds
      *
      * @return AuthResult with PureGrant and encrypted PureGrant.
      *
-     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
-     * successfully.
-     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
-     * successfully. Represents a regular HTTP exception with code and message.
-     * @throws PureLogicException If provided password is invalid or - please, see
-     * {@link PureStorage#selectUser(String)} PureLogicException doc.
-     * @throws CryptoException Please, see {@link VirgilCrypto#importPrivateKey},
-     * {@link VirgilCrypto#verifySignature} methods' CryptoException doc.
-     * @throws InvalidProtocolBufferException If a PurekitProtosV3Storage.UserRecord received from
-     * a server cannot be parsed as a Protobuf message.
+     * @throws PureException PureException
      */
     public AuthResult authenticateUser(String userId, String password, String sessionId, long ttl) throws PureException {
 
@@ -201,30 +181,43 @@ public class Pure {
      *
      * @param userId User Id.
      * @param password Password.
+     * @param ttl time to live in seconds
      *
      * @return AuthResult with PureGrant and encrypted PureGrant.
      *
-     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
-     * successfully.
-     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
-     * successfully. Represents a regular HTTP exception with code and message.
-     * @throws PureLogicException If provided password is invalid or - please, see
-     * {@link PureStorage#selectUser(String)} PureLogicException doc.
-     * @throws CryptoException Please, see {@link VirgilCrypto#importPrivateKey},
-     * method's CryptoException doc.
-     * @throws InvalidProtocolBufferException If a PurekitProtosV3Storage.UserRecord received from
-     * a server cannot be parsed as a Protobuf message.
+     * @throws PureException PureException
      */
     public AuthResult authenticateUser(String userId, String password, long ttl) throws PureException {
 
         return authenticateUser(userId, password, null, ttl);
     }
 
+    /**
+     * Authenticates user.
+     *
+     * @param userId User id
+     * @param password password
+     *
+     * @return AuthResult with PureGrant and encrypted PureGrant.
+     *
+     * @throws PureException PureException
+     */
     public AuthResult authenticateUser(String userId, String password) throws PureException {
 
         return authenticateUser(userId, password, null, DEFAULT_GRANT_TTL);
     }
 
+    /**
+     * Authenticates user.
+     *
+     * @param userId User id
+     * @param password password
+     * @param sessionId sessionId, can be null
+     *
+     * @return AuthResult with PureGrant and encrypted PureGrant.
+     *
+     * @throws PureException PureException
+     */
     public AuthResult authenticateUser(String userId, String password, String sessionId) throws PureException {
 
         return authenticateUser(userId, password, sessionId, DEFAULT_GRANT_TTL);
@@ -235,19 +228,11 @@ public class Pure {
      *
      * @param userId User Id.
      * @param bupsk Admin backup private key.
+     * @param ttl time to live in seconds
      *
      * @return PureGrant.
      *
-     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
-     * successfully.
-     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
-     * successfully. Represents a regular HTTP exception with code and message.
-     * @throws PureLogicException Please, see {@link PureStorage#selectUser(String)} PureLogicException doc.
-     * @throws CryptoException Please, see {@link VirgilCrypto#decrypt},
-     * {@link VirgilCrypto#importPrivateKey}, {@link VirgilCrypto#veriffySignature} methods'
-     * CryptoException doc.
-     * @throws InvalidProtocolBufferException If a PurekitProtosV3Storage.UserRecord received from
-     * a server cannot be parsed as a Protobuf message.
+     * @throws PureException PureException
      */
     public PureGrant createUserGrantAsAdmin(String userId, VirgilPrivateKey bupsk, long ttl) throws PureException {
 
@@ -277,16 +262,7 @@ public class Pure {
      *
      * @return PureGrant.
      *
-     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
-     * successfully.
-     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
-     * successfully. Represents a regular HTTP exception with code and message.
-     * @throws PureLogicException Please, see {@link PureStorage#selectUser(String)} PureLogicException doc.
-     * @throws InvalidProtocolBufferException If provided encryptedGrantString cannot be parsed as
-     * protobuf message or a PurekitProtosV3Storage.UserRecord received from a server cannot be
-     * parsed as a Protobuf message..
-     * @throws CryptoException Please, see {@link VirgilCrypto#importPrivateKey},
-     * {@link VirgilCrypto#verifySignature} methods' CryptoException doc.
+     * @throws PureException PureException
      */
     public PureGrant decryptGrantFromUser(String encryptedGrantString) throws PureException {
 
@@ -348,17 +324,7 @@ public class Pure {
      * @param oldPassword Old password.
      * @param newPassword New password.
      *
-     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
-     * successfully.
-     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
-     * successfully. Represents a regular HTTP exception with code and message.
-     * @throws PureLogicException Please, see {@link PureStorage#selectUser(String)} PureLogicException doc.
-     * @throws CryptoException Please, see {@link VirgilCrypto#encrypt},
-     * {@link VirgilCrypto#generateSignature}, {@link VirgilCrypto#verifySignature} methods'
-     * CryptoException doc.
-     * @throws InvalidProtocolBufferException If provided UserRecord cannot be parsed as
-     * Protobuf message or a PurekitProtosV3Storage.UserRecord received from a server cannot be
-     * parsed as a Protobuf message..
+     * @throws PureException PureException
      */
     public void changeUserPassword(String userId, String oldPassword, String newPassword) throws PureException {
 
@@ -382,17 +348,7 @@ public class Pure {
      *              {@link Pure#createUserGrantAsAdmin}.
      * @param newPassword New password.
      *
-     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
-     * successfully.
-     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
-     * successfully. Represents a regular HTTP exception with code and message.
-     * @throws PureLogicException Please, see {@link PureStorage#selectUser(String)} PureLogicException doc.
-     * @throws CryptoException Please, see {@link VirgilCrypto#exportPrivateKey},
-     * {@link VirgilCrypto#encrypt}, {@link VirgilCrypto#generateSignature},
-     * {@link VirgilCrypto#verifySignature} methods' CryptoException doc.
-     * @throws InvalidProtocolBufferException If provided UserRecord cannot be parsed as
-     * Protobuf message or a PurekitProtosV3Storage.UserRecord received from a server cannot be
-     * parsed as a Protobuf message.
+     * @throws PureException PureException
      */
     public void changeUserPassword(PureGrant grant, String newPassword) throws PureException {
 
@@ -414,11 +370,7 @@ public class Pure {
      * @param userId userId
      * @param newPassword new password
      *
-     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
-     * successfully.
-     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
-     * successfully. Represents a regular HTTP exception with code and message.
-     * @throws PureLogicException Please, see {@link PureStorage#selectUser(String)} PureLogicException doc.
+     * @throws PureException PureException
      */
     public void recoverUser(String userId, String newPassword) throws PureException {
         ValidateUtils.checkNullOrEmpty(userId, "userId");
@@ -441,16 +393,7 @@ public class Pure {
      * @param userId User id.
      * @param newPassword New password.
      *
-     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
-     * successfully.
-     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
-     * successfully. Represents a regular HTTP exception with code and message.
-     * @throws CryptoException Please, see {@link VirgilCrypto#encrypt},
-     * {@link VirgilCrypto#generateKeyPair}, {@link VirgilCrypto#exportPrivateKey},
-     * {@link VirgilCrypto#exportPublicKey}, {@link VirgilCrypto#generateSignature} methods'
-     * CryptoException doc.
-     * @throws InvalidProtocolBufferException If provided UserRecord cannot be parsed as
-     * Protobuf message.
+     * @throws PureException PureException
      */
     public void resetUserPassword(String userId, String newPassword) throws PureException {
         // TODO: Add possibility to delete cell keys? -> ????
@@ -463,10 +406,7 @@ public class Pure {
      * @param userId User Id.
      * @param cascade Deletes all user cell keys if true.
      *
-     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
-     * successfully.
-     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
-     * successfully. Represents a regular HTTP exception with code and message.
+     * @throws PureException PureException
      */
     public void deleteUser(String userId, boolean cascade) throws PureException {
 
@@ -480,14 +420,7 @@ public class Pure {
      *
      * @return Number of rotated records.
      *
-     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
-     * successfully.
-     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
-     * successfully. Represents a regular HTTP exception with code and message.
-     * @throws InvalidProtocolBufferException If provided UserRecord cannot be parsed as
-     * Protobuf message.
-     * @throws com.virgilsecurity.sdk.crypto.exceptions.SigningException Please, see
-     * {@link com.virgilsecurity.sdk.crypto.VirgilCrypto#generateSignature} method's doc.
+     * @throws PureException PureException
      */
     public long performRotation() throws PureException {
         if (currentVersion <= 1) {
@@ -547,18 +480,7 @@ public class Pure {
      *
      * @return Cipher text.
      *
-     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
-     * successfully.
-     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
-     * successfully. Represents a regular HTTP exception with code and message.
-     * @throws PureLogicException Please, see {@link PureStorage#selectCellKey},
-     * {@link PureStorage#selectUsers}, {@link PureStorage#insertCellKey} methods' PureLogicException doc.
-     * @throws CryptoException Please, see {@link VirgilCrypto#generateKeyPair},
-     * {@link VirgilCrypto#importPublicKey}, {@link VirgilCrypto#exportPublicKey},
-     * {@link VirgilCrypto#exportPrivateKey}, {@link VirgilCrypto#encrypt}
-     * {@link VirgilCrypto#verifySignature} methods' CryptoException doc.
-     * @throws InvalidProtocolBufferException If a CellKey received from a server cannot be parsed
-     * as a Protobuf message.
+     * @throws PureException PureException
      */
     public byte[] encrypt(String userId, String dataId, byte[] plainText) throws PureException {
 
@@ -585,20 +507,7 @@ public class Pure {
      *
      * @return Cipher text.
      *
-     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
-     * successfully.
-     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
-     * successfully. Represents a regular HTTP exception with code and message.
-     * @throws PureLogicException Please, see {@link PureStorage#selectCellKey},
-     * {@link PureStorage#selectUsers}, {@link PureStorage#insertCellKey} methods' PureLogicException doc.
-     * @throws CryptoException Please, see {@link VirgilCrypto#generateKeyPair},
-     * {@link VirgilCrypto#importPublicKey}, {@link VirgilCrypto#exportPublicKey},
-     * {@link VirgilCrypto#exportPrivateKey}, {@link VirgilCrypto#encrypt},
-     * {@link VirgilCrypto#verifySignature}, {@link VirgilCrypto#generateSignature} methods'
-     * CryptoException doc.
-     * @throws InvalidProtocolBufferException If a CellKey received from a server cannot be parsed
-     * as a Protobuf message or a PurekitProtosV3Storage.UserRecord received from
-     * a server cannot be parsed as a Protobuf message.
+     * @throws PureException PureException
      */
     public byte[] encrypt(String userId,
                           String dataId,
@@ -664,13 +573,7 @@ public class Pure {
 
                 storage.insertCellKey(cellKey);
                 cpk = ckp.getPublicKey();
-            } catch (PureStorageGenericException exception) {
-                if (exception.getErrorStatus()
-                    != PureStorageGenericException.ErrorStatus.CELL_KEY_ALREADY_EXISTS_IN_STORAGE) {
-
-                    throw exception;
-                }
-
+            } catch (PureStorageCellKeyAlreadyExistsException e1) {
                 CellKey cellKey = storage.selectCellKey(userId, dataId);
 
                 cpk = pureCrypto.importPublicKey(cellKey.getCpk());
@@ -691,17 +594,7 @@ public class Pure {
      *
      * @return Plain text.
      *
-     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
-     * successfully.
-     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
-     * successfully. Represents a regular HTTP exception with code and message.
-     * @throws PureLogicException If cell key has not been found in a storage, or please see
-     * {@link PureStorage#selectCellKey(String, String)} method's PureLogicException doc.
-     * @throws CryptoException Please, see {@link VirgilCrypto#importPrivateKey},
-     * {@link VirgilCrypto#decrypt}, {@link VirgilCrypto#verifySignature} methods'
-     * CryptoException doc.
-     * @throws InvalidProtocolBufferException If a CellKey received from a server cannot be parsed
-     * as a Protobuf message.
+     * @throws PureException PureException
      */
     public byte[] decrypt(PureGrant grant, String ownerUserId, String dataId, byte[] cipherText) throws PureException {
 
@@ -769,17 +662,7 @@ public class Pure {
      *
      * @return Plain text.
      *
-     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
-     * successfully.
-     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
-     * successfully. Represents a regular HTTP exception with code and message.
-     * @throws PureLogicException If cell key has not been found in a storage, or please see
-     * {@link PureStorage#selectCellKey(String, String)} method's PureLogicException doc.
-     * @throws CryptoException Please, see {@link VirgilCrypto#importPrivateKey},
-     * {@link VirgilCrypto#decrypt}, {@link VirgilCrypto#verifySignature} methods'
-     * CryptoException doc.
-     * @throws InvalidProtocolBufferException If a CellKey received from a server cannot be parsed
-     * as a Protobuf message.
+     * @throws PureException PureException
      */
     public byte[] decrypt(VirgilPrivateKey privateKey,
                           String ownerUserId,
@@ -812,16 +695,7 @@ public class Pure {
      * @param dataId Data Id.
      * @param otherUserId User Id of user to whom access is given.
      *
-     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
-     * successfully.
-     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
-     * successfully. Represents a regular HTTP exception with code and message.
-     * @throws PureLogicException Please, see {@link PureStorage#selectCellKey},
-     * {@link PureStorage#updateCellKey}, {@link PureStorage#selectUsers} methods' PureLogicException doc.
-     * @throws CryptoException Please, see {@link VirgilCrypto#importPublicKey},
-     * {@link VirgilCrypto#verifySignature} methods' CryptoException doc.
-     * @throws InvalidProtocolBufferException If a CellKey received from a server cannot be parsed
-     * as a Protobuf message.
+     * @throws PureException PureException
      */
     public void share(PureGrant grant, String dataId, String otherUserId) throws PureException {
 
@@ -842,18 +716,7 @@ public class Pure {
      * @param otherUserIds Other user Ids.
      * @param publicKeys Public keys to share data with.
      *
-     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
-     * successfully.
-     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
-     * successfully. Represents a regular HTTP exception with code and message.
-     * @throws PureLogicException Please, see {@link PureStorage#selectCellKey},
-     * {@link PureStorage#updateCellKey}, {@link PureStorage#selectUsers} methods' PureLogicException doc.
-     * @throws CryptoException Please, see {@link VirgilCrypto#importPublicKey},
-     * {@link VirgilCrypto#verifySignature}, {@link VirgilCrypto#generateSignature} methods'
-     * CryptoException doc.
-     * @throws InvalidProtocolBufferException If a CellKey received from a server cannot be parsed
-     * as a Protobuf message or a PurekitProtosV3Storage.UserRecord received from a server cannot
-     * be parsed as a Protobuf message.
+     * @throws PureException PureException
      */
     public void share(PureGrant grant,
                       String dataId,
@@ -890,16 +753,7 @@ public class Pure {
      * @param dataId DataId.
      * @param otherUserId User Id of user to whom access is taken away.
      *
-     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
-     * successfully.
-     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
-     * successfully. Represents a regular HTTP exception with code and message.
-     * @throws PureLogicException Please, see {@link PureStorage#selectCellKey},
-     * {@link PureStorage#updateCellKey}, {@link PureStorage#selectUsers} methods' PureLogicException doc.
-     * @throws CryptoException Please, see {@link VirgilCrypto#importPublicKey},
-     * {@link VirgilCrypto#verifySignature} methods' CryptoException doc.
-     * @throws InvalidProtocolBufferException If a CellKey received from a server cannot be parsed
-     * as a Protobuf message.
+     * @throws PureException PureException
      */
     public void unshare(String ownerUserId, String dataId, String otherUserId) throws PureException {
 
@@ -920,18 +774,7 @@ public class Pure {
      * @param otherUserIds Other user ids that are being removed from share list.
      * @param publicKeys Public keys that are being removed from share list.
      *
-     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
-     * successfully.
-     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
-     * successfully. Represents a regular HTTP exception with code and message.
-     * @throws PureLogicException Please, see {@link PureStorage#selectCellKey},
-     * {@link PureStorage#updateCellKey}, {@link PureStorage#selectUsers} methods' PureLogicException doc.
-     * @throws CryptoException Please, see {@link VirgilCrypto#importPublicKey},
-     * {@link VirgilCrypto#verifySignature}, {@link VirgilCrypto#generateSignature} methods'
-     * CryptoException doc.
-     * @throws InvalidProtocolBufferException If a CellKey received from a server cannot be parsed
-     * as a Protobuf message or a PurekitProtosV3Storage.UserRecord received from a server cannot
-     * be parsed as a Protobuf message
+     * @throws PureException PureException
      */
     public void unshare(String ownerUserId,
                         String dataId,
@@ -963,10 +806,7 @@ public class Pure {
      * @param userId User Id.
      * @param dataId Data Id.
      *
-     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
-     * successfully.
-     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
-     * successfully. Represents a regular HTTP exception with code and message.
+     * @throws PureException PureException
      */
     public void deleteKey(String userId, String dataId) throws PureException {
 
@@ -979,10 +819,7 @@ public class Pure {
      * @param roleName role name
      * @param userIds user ids that belong to role
      *
-     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
-     * successfully.
-     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
-     * successfully. Represents a regular HTTP exception with code and message.
+     * @throws PureException PureException
      */
     public void createRole(String roleName, Set<String> userIds) throws PureException {
         VirgilKeyPair rkp = pureCrypto.generateRoleKey();
@@ -1002,10 +839,7 @@ public class Pure {
      * @param roleToAssign role name
      * @param grant grant of one of users, that are already assigned to this role
      * @param userIds user ids of users who will be assigned to this role
-     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
-     * successfully.
-     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
-     * successfully. Represents a regular HTTP exception with code and message.
+     * @throws PureException PureException
      */
     public void assignRole(String roleToAssign, PureGrant grant, Set<String> userIds) throws PureException {
         RoleAssignment roleAssignment = storage.selectRoleAssignment(roleToAssign, grant.getUserId());
@@ -1036,10 +870,7 @@ public class Pure {
      *
      * @param roleName role name
      * @param userIds user ids
-     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
-     * successfully.
-     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
-     * successfully. Represents a regular HTTP exception with code and message.
+     * @throws PureException PureException
      */
     public void unassignRole(String roleName, Set<String> userIds) throws PureException {
         storage.deleteRoleAssignments(roleName, userIds);

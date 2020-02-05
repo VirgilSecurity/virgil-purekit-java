@@ -31,34 +31,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.purekit.pure.exception;
+package com.virgilsecurity.purekit.pure.storage;
 
 /**
- * Base class for all Pure exceptions
+ * PureStorage CellKey already exists exception
  */
-public class PureException extends Exception {
-
-    /**
-     * Constructor
-     */
-    public PureException() {
-    }
-
-    /**
-     * Constructor
-     *
-     * @param errorMessage error message
-     */
-    public PureException(String errorMessage) {
-        super(errorMessage);
-    }
-
-    /**
-     * Constructor
-     *
-     * @param cause cause
-     */
-    public PureException(Throwable cause) {
-        super(cause);
-    }
+public class PureStorageCellKeyAlreadyExistsException extends PureStorageException {
 }

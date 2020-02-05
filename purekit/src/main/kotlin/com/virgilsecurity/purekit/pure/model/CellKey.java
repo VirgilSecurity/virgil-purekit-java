@@ -58,10 +58,20 @@ public class CellKey {
         this.encryptedCskBody = encryptedCskBody;
     }
 
+    /**
+     * Returns user id
+     *
+     * @return user id
+     */
     public String getUserId() {
         return userId;
     }
 
+    /**
+     * Returns data id
+     *
+     * @return data id
+     */
     public String getDataId() {
         return dataId;
     }

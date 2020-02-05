@@ -136,10 +136,20 @@ public class UserRecord {
         return backupPwdHash;
     }
 
+    /**
+     * Returns password recovery wrap
+     *
+     * @return password recovery wrap
+     */
     public byte[] getPasswordRecoveryWrap() {
         return passwordRecoveryWrap;
     }
 
+    /**
+     * Returns password recovery blob
+     *
+     * @return password recovery blob
+     */
     public byte[] getPasswordRecoveryBlob() {
         return passwordRecoveryBlob;
     }

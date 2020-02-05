@@ -36,11 +36,24 @@ package com.virgilsecurity.purekit.pure.exception;
 import com.virgilsecurity.purekit.data.ProtocolException;
 import com.virgilsecurity.purekit.data.ProtocolHttpException;
 
+/**
+ * Kms client exception
+ */
 public class KmsClientException extends ClientException {
+    /**
+     * Constructor
+     *
+     * @param protocolException protocolException
+     */
     public KmsClientException(ProtocolException protocolException) {
         super(protocolException);
     }
 
+    /**
+     * Constructor
+     *
+     * @param protocolHttpException protocolHttpException
+     */
     public KmsClientException(ProtocolHttpException protocolHttpException) {
         super(protocolHttpException);
     }

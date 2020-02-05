@@ -34,16 +34,30 @@
 package com.virgilsecurity.purekit.pure;
 
 import com.virgilsecurity.crypto.foundation.KeyMaterialRng;
+import com.virgilsecurity.purekit.pure.exception.PureCryptoException;
+import com.virgilsecurity.purekit.pure.exception.PureException;
 import com.virgilsecurity.purekit.pure.exception.PureLogicException;
 import com.virgilsecurity.sdk.crypto.VirgilCrypto;
 import com.virgilsecurity.sdk.crypto.VirgilKeyPair;
 import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
 
+/**
+ * Generate nonrotatable secrets from 1 master secret
+ */
 public class NonrotatableSecretsGenerator {
     private static final int NONROTATABLE_MASTER_SECRET_LENGTH = 32;
     private static final int AK_LENGTH = 32;
 
-    public static NonrotatableSecrets generateSecrets(byte[] masterSecret) throws CryptoException, PureLogicException {
+    /**
+     * Generate nonrotatable secrets from 1 master secret
+     *
+     * @param masterSecret master secret
+     *
+     * @return NonrotatableSecrets
+     *
+     * @throws PureException PureException
+     */
+    public static NonrotatableSecrets generateSecrets(byte[] masterSecret) throws PureException {
         if (masterSecret.length != NONROTATABLE_MASTER_SECRET_LENGTH) {
             throw new PureLogicException(PureLogicException.ErrorStatus.NONROTABLE_MASTER_SECRET_INVALID_LENGTH);
         }
@@ -56,8 +70,14 @@ public class NonrotatableSecretsGenerator {
 
         VirgilCrypto crypto = new VirgilCrypto(rng);
 
-        VirgilKeyPair vskp = crypto.generateKeyPair();
-        VirgilKeyPair oskp = crypto.generateKeyPair();
+        VirgilKeyPair vskp;
+        VirgilKeyPair oskp;
+        try {
+            vskp = crypto.generateKeyPair();
+            oskp = crypto.generateKeyPair();
+        } catch (CryptoException e) {
+            throw new PureCryptoException(e);
+        }
 
         return new NonrotatableSecrets(ak, vskp, oskp);
     }

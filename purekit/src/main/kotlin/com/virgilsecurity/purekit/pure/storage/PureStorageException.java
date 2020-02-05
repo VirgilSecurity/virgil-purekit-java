@@ -35,26 +35,22 @@ package com.virgilsecurity.purekit.pure.storage;
 
 import com.virgilsecurity.purekit.pure.exception.PureException;
 
+/**
+ * Base class for PureStorage exceptions
+ */
 public class PureStorageException extends PureException {
+    /**
+     * Constructor
+     */
     public PureStorageException() {
     }
 
+    /**
+     * Constructor
+     *
+     * @param errorMessage error message
+     */
     public PureStorageException(String errorMessage) {
         super(errorMessage);
-    }
-
-    public PureStorageException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public PureStorageException(Throwable cause) {
-        super(cause);
-    }
-
-    public PureStorageException(String message,
-                                Throwable cause,
-                                boolean enableSuppression,
-                                boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
     }
 }

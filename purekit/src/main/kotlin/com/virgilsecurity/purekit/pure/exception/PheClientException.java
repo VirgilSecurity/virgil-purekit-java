@@ -36,11 +36,24 @@ package com.virgilsecurity.purekit.pure.exception;
 import com.virgilsecurity.purekit.data.ProtocolException;
 import com.virgilsecurity.purekit.data.ProtocolHttpException;
 
+/**
+ * Phe client exception
+ */
 public class PheClientException extends ClientException {
+    /**
+     * Constructor
+     *
+     * @param protocolException protocolException
+     */
     public PheClientException(ProtocolException protocolException) {
         super(protocolException);
     }
 
+    /**
+     * Constructor
+     *
+     * @param protocolHttpException protocolHttpException
+     */
     public PheClientException(ProtocolHttpException protocolHttpException) {
         super(protocolHttpException);
     }

@@ -33,21 +33,40 @@
 
 package com.virgilsecurity.purekit.pure.model;
 
+/**
+ * Role
+ */
 public class Role {
-
-    public String getRoleName() {
-        return roleName;
-    }
-
-    public byte[] getRpk() {
-        return rpk;
-    }
 
     private String roleName;
     private byte[] rpk;
 
+    /**
+     * Constructor
+     *
+     * @param roleName role name
+     * @param rpk role public key
+     */
     public Role(String roleName, byte[] rpk) {
         this.roleName = roleName;
         this.rpk = rpk;
+    }
+
+    /**
+     * Returns role name
+     *
+     * @return role name
+     */
+    public String getRoleName() {
+        return roleName;
+    }
+
+    /**
+     * Returns role public key
+     *
+     * @return role public key
+     */
+    public byte[] getRpk() {
+        return rpk;
     }
 }

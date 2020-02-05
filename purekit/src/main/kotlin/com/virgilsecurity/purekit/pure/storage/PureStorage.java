@@ -114,6 +114,9 @@ public interface PureStorage {
     /**
      * Obtains a CellKey for the given userId and dataId from a storage.
      *
+     * @implSpec this method MUST throw {@link PureStorageCellKeyNotFoundException} if key with given
+     * userId and dataId already exists.
+     *
      * @param userId User Id.
      * @param dataId Data Id.
      *
@@ -126,7 +129,7 @@ public interface PureStorage {
     /**
      * Insert a CellKey key into a storage.
      *
-     * @implSpec this method MUST throw {@link PureStorageCellKeyNotFoundException} if key with given
+     * @implSpec this method MUST throw {@link PureStorageCellKeyAlreadyExistsException} if key with given
      * userId and dataId already exists.
      *
      * @param cellKey Cell key record.
