@@ -69,3 +69,8 @@ message DecryptRequest {
 message DecryptResponse {
     bytes response = 1;
 }
+
+message GrantKeyDescriptor {
+    string user_id = 1;
+    bytes key_id = 2;
+}

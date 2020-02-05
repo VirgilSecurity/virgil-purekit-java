@@ -58,8 +58,8 @@ enum class AvailableRequests(val type: String) {
     GET_ROLE_ASSIGNMENT("/get-role-assignment"),
     DELETE_ROLE_ASSIGNMENTS("/delete-role-assignments"),
     INSERT_GRANT_KEY("/grant-key"),
-    GET_GRANT_KEY("/grant-key/%s/%s"),
-    DELETE_GRANT_KEY("/grant-key/%s/%s"),
+    GET_GRANT_KEY("/get-grant-key"),
+    DELETE_GRANT_KEY("/delete-grant-key"),
 
     // KMS
     DECRYPT_REQUEST("/decrypt"),

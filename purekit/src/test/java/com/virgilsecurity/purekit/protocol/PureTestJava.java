@@ -13,14 +13,11 @@ import java.util.*;
 import java.util.stream.Stream;
 
 import com.virgilsecurity.purekit.pure.*;
-import com.virgilsecurity.purekit.pure.storage.PureStorageCellKeyNotFoundException;
+import com.virgilsecurity.purekit.pure.exception.PureException;
+import com.virgilsecurity.purekit.pure.storage.*;
 import com.virgilsecurity.purekit.pure.exception.PureCryptoException;
 import com.virgilsecurity.purekit.pure.exception.PureLogicException;
-import com.virgilsecurity.purekit.pure.storage.PureStorageGenericException;
-import com.virgilsecurity.purekit.pure.storage.MariaDbPureStorage;
 import com.virgilsecurity.purekit.pure.model.*;
-import com.virgilsecurity.purekit.pure.storage.PureStorage;
-import com.virgilsecurity.purekit.pure.storage.RamPureStorage;
 import com.virgilsecurity.purekit.utils.PropertyManager;
 import com.virgilsecurity.purekit.utils.ThreadUtils;
 import com.virgilsecurity.sdk.crypto.KeyPairType;
@@ -74,7 +71,7 @@ class PureTestJava {
                                       String publicKey,
                                       String secretKey,
                                       Map<String, List<String>> externalPublicKeys,
-                                      StorageType storageType) throws CryptoException, PureLogicException, SQLException {
+                                      StorageType storageType) throws CryptoException, PureException, SQLException {
         return setupPure(null, pheServerAddress, pureServerAddress, kmsServerAddress, appToken,
                 publicKey, secretKey, null, externalPublicKeys, storageType, false);
     }
@@ -89,7 +86,7 @@ class PureTestJava {
                                       String updateToken,
                                       Map<String, List<String>> externalPublicKeys,
                                       StorageType storageType,
-                                      boolean skipClean) throws CryptoException, PureLogicException, SQLException {
+                                      boolean skipClean) throws CryptoException, PureException, SQLException {
         VirgilKeyPair bupkp = this.crypto.generateKeyPair(KeyPairType.ED25519);
 
         byte[] nmsData = nms;
@@ -139,11 +136,11 @@ class PureTestJava {
     }
 
     private static StorageType[] createStorages() {
-        StorageType[] storages = new StorageType[2];
+        StorageType[] storages = new StorageType[3];
 
         storages[0] = StorageType.RAM;
         storages[1] = StorageType.MariaDB;
-//        storages[0] = StorageType.VirgilCloud;
+        storages[2] = StorageType.VirgilCloud;
 
         return storages;
     }
@@ -404,33 +401,33 @@ class PureTestJava {
 
                 pure.registerUser(userId, password);
 
-                AuthResult authResult = pure.authenticateUser(userId, password, 5);
+                AuthResult authResult = pure.authenticateUser(userId, password, 10);
 
                 PureGrant grant1 = pure.decryptGrantFromUser(authResult.getEncryptedGrant());
 
                 assertNotNull(grant1);
 
-                Thread.sleep(4000);
+                Thread.sleep(8000);
 
                 PureGrant grant2 = pure.decryptGrantFromUser(authResult.getEncryptedGrant());
 
                 assertNotNull(grant2);
 
-                Thread.sleep( 2000);
+                Thread.sleep(4000);
 
-                PureLogicException ex1 = assertThrows(PureLogicException.class, () -> {
+                PureException ex = assertThrows(PureException.class, () -> {
                     pure.decryptGrantFromUser(authResult.getEncryptedGrant());
                 });
 
-                assertEquals(PureLogicException.ErrorStatus.GRANT_IS_EXPIRED, ex1.getErrorStatus());
-
-                Thread.sleep(20000);
-
-                PureStorageGenericException ex2 = assertThrows(PureStorageGenericException.class, () -> {
-                    pure.decryptGrantFromUser(authResult.getEncryptedGrant());
-                });
-
-                assertEquals(PureStorageGenericException.ErrorStatus.GRANT_KEY_NOT_FOUND, ex2.getErrorStatus());
+                if (ex instanceof PureLogicException) {
+                    assertEquals(PureLogicException.ErrorStatus.GRANT_IS_EXPIRED, ((PureLogicException)(ex)).getErrorStatus());
+                }
+                else if (ex instanceof PureStorageGenericException) {
+                    assertEquals(PureStorageGenericException.ErrorStatus.GRANT_KEY_NOT_FOUND, ((PureStorageGenericException)(ex)).getErrorStatus());
+                }
+                else {
+                    assertEquals(0, 1);
+                }
             }
         } catch (Exception e) {
             fail(e);

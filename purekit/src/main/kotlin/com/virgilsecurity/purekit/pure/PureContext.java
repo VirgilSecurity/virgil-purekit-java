@@ -42,6 +42,8 @@ import com.virgilsecurity.crypto.foundation.Base64;
 import com.virgilsecurity.purekit.pure.client.HttpKmsClient;
 import com.virgilsecurity.purekit.pure.client.HttpPheClient;
 import com.virgilsecurity.purekit.pure.client.HttpPureClient;
+import com.virgilsecurity.purekit.pure.exception.PureCryptoException;
+import com.virgilsecurity.purekit.pure.exception.PureException;
 import com.virgilsecurity.purekit.pure.exception.PureLogicException;
 import com.virgilsecurity.purekit.pure.storage.PureModelSerializer;
 import com.virgilsecurity.purekit.pure.storage.PureModelSerializerDependent;
@@ -93,14 +95,8 @@ public class PureContext {
     private final NonrotatableSecrets nonrotatableSecrets;
     private PureStorage storage;
     private final HttpPheClient pheClient;
-
-    public HttpKmsClient getKmsClient() {
-        return kmsClient;
-    }
-
     private final HttpKmsClient kmsClient;
     private final Map<String, List<VirgilPublicKey>> externalPublicKeys;
-
     private Credentials updateToken;
 
     private PureContext(VirgilCrypto crypto,
@@ -112,7 +108,7 @@ public class PureContext {
                         PureStorage storage,
                         Map<String, List<String>> externalPublicKeys,
                         String pheServiceAddress,
-                        String kmsServiceAddress) throws PureLogicException, CryptoException {
+                        String kmsServiceAddress) throws PureException {
         ValidateUtils.checkNull(storage, "storage");
 
         this.crypto = crypto;
@@ -121,7 +117,11 @@ public class PureContext {
         this.nonrotatableSecrets = NonrotatableSecretsGenerator.generateSecrets(nmsCred.getPayload1());
 
         byte[] buppkData = PureContext.parseCredentials(BUPPK_PREFIX, buppk, false, false).getPayload1();
-        this.buppk = crypto.importPublicKey(buppkData);
+        try {
+            this.buppk = crypto.importPublicKey(buppkData);
+        } catch (CryptoException e) {
+            throw new PureCryptoException(e);
+        }
 
         this.secretKey = PureContext.parseCredentials(SECRET_KEY_PREFIX, secretKey, true, true);
         this.publicKey = PureContext.parseCredentials(PUBLIC_KEY_PREFIX, publicKey, true, true);
@@ -144,8 +144,12 @@ public class PureContext {
                 ArrayList<VirgilPublicKey> publicKeys = new ArrayList<>(publicKeysBase64.size());
 
                 for (String publicKeyBase64 : publicKeysBase64) {
-                    VirgilPublicKey pubKey =
-                        crypto.importPublicKey(Base64.decode(publicKeyBase64.getBytes()));
+                    VirgilPublicKey pubKey;
+                    try {
+                        pubKey = crypto.importPublicKey(Base64.decode(publicKeyBase64.getBytes()));
+                    } catch (CryptoException e) {
+                        throw new PureCryptoException(e);
+                    }
                     publicKeys.add(pubKey);
                 }
 
@@ -163,25 +167,23 @@ public class PureContext {
     /**
      * Designed for usage with Virgil Cloud storage.
      *
-     * @param appToken Application token.
-     * @param nms Nonrotatable master secret.
-     * @param bu Backup public key.
-     * @param sk App secret key.
-     * @param pk Service public key.
+     * @param at Application token. AT.
+     * @param nm Nonrotatable master secret. NM.****
+     * @param bu Backup public key. BU.****
+     * @param sk App secret key. SK.****
+     * @param pk Service public key. PK.****
      * @param externalPublicKeys External public keys that will be added during encryption by
      *                           default. Map key is dataId, value is list of base64 public keys.
      */
-    public static PureContext createContext(String appToken,
-                                            String nms,
+    public static PureContext createContext(String at,
+                                            String nm,
                                             String bu,
                                             String sk,
                                             String pk,
-                                            Map<String, List<String>> externalPublicKeys)
-        throws CryptoException, PureLogicException {
+                                            Map<String, List<String>> externalPublicKeys) throws PureException {
 
         return PureContext.createContext(
-            appToken,
-            nms, bu, sk, pk,
+            at, nm, bu, sk, pk,
             externalPublicKeys,
             HttpPheClient.SERVICE_ADDRESS,
             HttpPureClient.SERVICE_ADDRESS,
@@ -192,36 +194,34 @@ public class PureContext {
     /**
      * Designed for usage with Virgil Cloud storage.
      *
-     * @param appToken Application token.
-     * @param nms Nonrotatable master secret.
-     * @param bu Backup public key.
-     * @param sk App secret key.
-     * @param pk Service public key.
+     * @param at Application token. AT.****
+     * @param nm Nonrotatable master secret. NM.****
+     * @param bu Backup public key. BU.****
+     * @param sk App secret key. SK.****
+     * @param pk Service public key. PK.****
      * @param externalPublicKeys External public keys that will be added during encryption by
      *                           default. Map key is dataId, value is list of base64 public keys.
      * @param pheServiceAddress PHE service address.
      * @param pureServiceAddress Pure service address.
      */
-    public static PureContext createContext(String appToken,
-                                            String nms,
+    public static PureContext createContext(String at,
+                                            String nm,
                                             String bu,
                                             String sk,
                                             String pk,
                                             Map<String, List<String>> externalPublicKeys,
                                             String pheServiceAddress,
                                             String pureServiceAddress,
-                                            String kmsServiceAddress)
-        throws CryptoException, PureLogicException {
+                                            String kmsServiceAddress) throws PureException {
 
         VirgilCrypto crypto = new VirgilCrypto();
-        HttpPureClient pureClient = new HttpPureClient(appToken, pureServiceAddress);
+        HttpPureClient pureClient = new HttpPureClient(at, pureServiceAddress);
 
         VirgilCloudPureStorage storage = new VirgilCloudPureStorage(pureClient);
 
         return new PureContext(
             crypto,
-            appToken,
-            nms, bu, sk, pk,
+            at, nm, bu, sk, pk,
             storage,
             externalPublicKeys,
             pheServiceAddress,
@@ -232,30 +232,25 @@ public class PureContext {
     /**
      * Designed for usage with custom PureStorage.
      *
-     * @param appToken Application token.
-     * @param nms Nonrotatable master secret.
-     * @param bu Backup public key.
+     * @param at Application token. AT.****
+     * @param nm Nonrotatable master secret. NM.****
+     * @param bu Backup public key. BU.****
      * @param storage PureStorage.
-     * @param appSecretKey App secret key.
-     * @param servicePublicKey Service public key.
+     * @param sk App secret key. SK.****
+     * @param pk Service public key. PK.****
      * @param externalPublicKeys External public keys that will be added during encryption by
      *                           default. Map key is dataId, value is list of base64 public keys.
      */
-    public static PureContext createContext(String appToken,
-                                            String nms,
+    public static PureContext createContext(String at,
+                                            String nm,
                                             String bu,
                                             PureStorage storage,
-                                            String secretKey,
-                                            String publicKey,
-                                            Map<String, List<String>> externalPublicKeys)
-        throws CryptoException, PureLogicException {
+                                            String sk,
+                                            String pk,
+                                            Map<String, List<String>> externalPublicKeys) throws PureException {
 
         return PureContext.createContext(
-            appToken,
-            nms, bu,
-            storage,
-            secretKey,
-            publicKey,
+            at, nm, bu, storage, sk, pk,
             externalPublicKeys,
             HttpPheClient.SERVICE_ADDRESS,
             HttpKmsClient.SERVICE_ADDRESS
@@ -265,32 +260,29 @@ public class PureContext {
     /**
      * Designed for usage with custom PureStorage.
      *
-     * @param appToken Application token.
-     * @param nms Nonrotatable master secret.
-     * @param bu Backup public key.
+     * @param at Application token. AT.****
+     * @param nm Nonrotatable master secret. NM.****
+     * @param bu Backup public key. BU.****
      * @param storage PureStorage.
-     * @param appSecretKey App secret key.
-     * @param servicePublicKey Service public key.
+     * @param sk App secret key. SK.****
+     * @param pk Service public key. PK.****
      * @param externalPublicKeys External public keys that will be added during encryption by
      *                           default. Map key is dataId, value is list of base64 public keys.
      * @param pheServiceAddress PHE service address.
      */
-    public static PureContext createContext(String appToken,
-                                            String nms,
+    public static PureContext createContext(String at,
+                                            String nm,
                                             String bu,
                                             PureStorage storage,
-                                            String secretKey,
-                                            String publicKey,
+                                            String sk,
+                                            String pk,
                                             Map<String, List<String>> externalPublicKeys,
                                             String pheServiceAddress,
-                                            String kmsServiceAddress)
-        throws CryptoException, PureLogicException {
+                                            String kmsServiceAddress) throws PureException {
 
         return new PureContext(
             new VirgilCrypto(),
-            appToken, nms, bu,
-            secretKey,
-            publicKey,
+            at, nm, bu, sk, pk,
             storage,
             externalPublicKeys,
             pheServiceAddress,
@@ -301,7 +293,7 @@ public class PureContext {
     private static Credentials parseCredentials(String prefix,
                                                 String credentials,
                                                 boolean isVersioned,
-                                                boolean isTwofold) throws PureLogicException {
+                                                boolean isTwofold) throws PureException {
         ValidateUtils.checkNullOrEmpty(prefix, "prefix");
         ValidateUtils.checkNullOrEmpty(credentials, "credentials");
 
@@ -363,7 +355,7 @@ public class PureContext {
     /**
      * Sets Update token.
      */
-    public void setUpdateToken(String updateToken) throws PureLogicException {
+    public void setUpdateToken(String updateToken) throws PureException {
         this.updateToken = PureContext.parseCredentials("UT", updateToken, true, true);
 
         if (this.updateToken.getVersion() != this.publicKey.getVersion() + 1) {
@@ -427,6 +419,10 @@ public class PureContext {
      */
     public VirgilCrypto getCrypto() {
         return crypto;
+    }
+
+    public HttpKmsClient getKmsClient() {
+        return kmsClient;
     }
 
     public NonrotatableSecrets getNonrotatableSecrets() {

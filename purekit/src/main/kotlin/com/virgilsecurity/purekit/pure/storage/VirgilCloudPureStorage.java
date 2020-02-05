@@ -35,6 +35,7 @@ package com.virgilsecurity.purekit.pure.storage;
 
 import java.util.*;
 
+import com.google.protobuf.ByteString;
 import com.virgilsecurity.purekit.data.ProtocolException;
 import com.virgilsecurity.purekit.data.ProtocolHttpException;
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client;
@@ -195,7 +196,7 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
             protobufRecord = client.getCellKey(userId, dataId);
         } catch (ProtocolException e) {
             if (e.getErrorCode() == ServiceErrorCode.CELL_KEY_NOT_FOUND.getCode()) {
-                return null;
+                throw new PureStorageCellKeyNotFoundException();
             }
 
             throw new VirgilCloudStorageException(e);
@@ -343,7 +344,7 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
                 .setRoleName(roleName)
                 .build();
 
-        PurekitProtosV3Storage.RoleAssignment protobufRecord = null;
+        PurekitProtosV3Storage.RoleAssignment protobufRecord;
         try {
             protobufRecord = client.getRoleAssignment(request);
         } catch (ProtocolException e) {
@@ -391,10 +392,21 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
 
     @Override
     public GrantKey selectGrantKey(String userId, byte[] keyId) throws PureStorageException {
+        PurekitProtosV3Client.GrantKeyDescriptor request = PurekitProtosV3Client.GrantKeyDescriptor.newBuilder()
+                .setUserId(userId)
+                .setKeyId(ByteString.copyFrom(keyId))
+                .build();
+
         PurekitProtosV3Storage.GrantKey protobufRecord;
         try {
-            protobufRecord = client.getGrantKey(userId, keyId);
+            protobufRecord = client.getGrantKey(request);
         } catch (ProtocolException e) {
+            if (e.getErrorCode() == ServiceErrorCode.GRANT_KEY_NOT_FOUND.getCode()) {
+                throw new PureStorageGenericException(
+                        PureStorageGenericException.ErrorStatus.GRANT_KEY_NOT_FOUND
+                );
+            }
+
             throw new VirgilCloudStorageException(e);
         } catch (ProtocolHttpException e) {
             throw new VirgilCloudStorageException(e);
@@ -414,8 +426,13 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
 
     @Override
     public void deleteGrantKey(String userId, byte[] keyId) throws PureStorageException {
+        PurekitProtosV3Client.GrantKeyDescriptor request = PurekitProtosV3Client.GrantKeyDescriptor.newBuilder()
+                .setUserId(userId)
+                .setKeyId(ByteString.copyFrom(keyId))
+                .build();
+
         try {
-            client.deleteGrantKey(userId, keyId);
+            client.deleteGrantKey(request);
         } catch (ProtocolException e) {
             throw new VirgilCloudStorageException(e);
         } catch (ProtocolHttpException e) {

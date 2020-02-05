@@ -474,8 +474,7 @@ public class HttpPureClient {
     /**
      * Obtains grant key
      *
-     * @param userId userid
-     * @param keyId keyid
+     * @param request request
      *
      * @return grant key
      *
@@ -484,12 +483,12 @@ public class HttpPureClient {
      * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
      * successfully. Represents a regular HTTP exception with code and message.
      */
-    public PurekitProtosV3Storage.GrantKey getGrantKey(String userId, byte[] keyId) throws ProtocolHttpException, ProtocolException {
-        ValidateUtils.checkNullOrEmpty(userId, "userId");
-        ValidateUtils.checkNull(keyId, "keyId");
+    public PurekitProtosV3Storage.GrantKey getGrantKey(PurekitProtosV3Client.GrantKeyDescriptor request) throws ProtocolHttpException, ProtocolException {
+        ValidateUtils.checkNull(request, "request");
 
-        return client.fireGet(
-                String.format(AvailableRequests.GET_GRANT_KEY.getType(), userId, Base64.encode(keyId)),
+        return client.firePost(
+                request,
+                AvailableRequests.GET_GRANT_KEY.getType(),
                 this.appToken,
                 PurekitProtosV3Storage.GrantKey.parser()
         );
@@ -498,20 +497,19 @@ public class HttpPureClient {
     /**
      * Deletes grant key
      *
-     * @param userId user id
-     * @param keyId key id
+     * @param request request
      *
      * @throws ProtocolException Thrown if an error from the PHE service has been parsed
      * successfully.
      * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
      * successfully. Represents a regular HTTP exception with code and message.
      */
-    public void deleteGrantKey(String userId, byte[] keyId) throws ProtocolHttpException, ProtocolException {
-        ValidateUtils.checkNullOrEmpty(userId, "userId");
-        ValidateUtils.checkNull(keyId, "keyId");
+    public void deleteGrantKey(PurekitProtosV3Client.GrantKeyDescriptor request) throws ProtocolHttpException, ProtocolException {
+        ValidateUtils.checkNull(request, "request");
 
-        client.fireDelete(
-                String.format(AvailableRequests.GET_GRANT_KEY.getType(), userId, Base64.encode(keyId)),
+        client.firePost(
+                request,
+                AvailableRequests.DELETE_GRANT_KEY.getType(),
                 this.appToken
         );
     }
