@@ -67,7 +67,7 @@ public class PureStorageGenericException extends PureStorageException {
         STORAGE_SIGNATURE_VERIFICATION_FAILED(2, "Storage signature verification has been failed"),
         USER_ID_MISMATCH(3, "User Id mismatch"),
         CELL_KEY_ID_MISMATCH(4, "Cell key id mismatch"),
-        PHE_VERSION_MISMATCH(5, "PHE version mismatch"),
+        RECORD_VERSION_MISMATCH(5, "Record version mismatch"),
         ROLE_NAME_MISMATCH(6, "Role name mismatch"),
         ROLE_USER_ID_MISMATCH(7, "Role user id mismatch"),
         ROLE_NAME_USER_ID_MISMATCH(8, "Role name and user id mismatch"),

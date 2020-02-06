@@ -8711,9 +8711,9 @@ public final class PurekitProtosV3Storage {
     com.google.protobuf.ByteString getKeyId();
 
     /**
-     * <code>bytes encrypted_grant_key = 4;</code>
+     * <code>bytes encrypted_grant_key_blob = 4;</code>
      */
-    com.google.protobuf.ByteString getEncryptedGrantKey();
+    com.google.protobuf.ByteString getEncryptedGrantKeyBlob();
 
     /**
      * <code>uint32 creation_date = 5;</code>
@@ -8740,7 +8740,7 @@ public final class PurekitProtosV3Storage {
     private GrantKeySigned() {
       userId_ = "";
       keyId_ = com.google.protobuf.ByteString.EMPTY;
-      encryptedGrantKey_ = com.google.protobuf.ByteString.EMPTY;
+      encryptedGrantKeyBlob_ = com.google.protobuf.ByteString.EMPTY;
     }
 
     @java.lang.Override
@@ -8791,7 +8791,7 @@ public final class PurekitProtosV3Storage {
             }
             case 34: {
 
-              encryptedGrantKey_ = input.readBytes();
+              encryptedGrantKeyBlob_ = input.readBytes();
               break;
             }
             case 40: {
@@ -8888,13 +8888,13 @@ public final class PurekitProtosV3Storage {
       return keyId_;
     }
 
-    public static final int ENCRYPTED_GRANT_KEY_FIELD_NUMBER = 4;
-    private com.google.protobuf.ByteString encryptedGrantKey_;
+    public static final int ENCRYPTED_GRANT_KEY_BLOB_FIELD_NUMBER = 4;
+    private com.google.protobuf.ByteString encryptedGrantKeyBlob_;
     /**
-     * <code>bytes encrypted_grant_key = 4;</code>
+     * <code>bytes encrypted_grant_key_blob = 4;</code>
      */
-    public com.google.protobuf.ByteString getEncryptedGrantKey() {
-      return encryptedGrantKey_;
+    public com.google.protobuf.ByteString getEncryptedGrantKeyBlob() {
+      return encryptedGrantKeyBlob_;
     }
 
     public static final int CREATION_DATE_FIELD_NUMBER = 5;
@@ -8938,8 +8938,8 @@ public final class PurekitProtosV3Storage {
       if (!keyId_.isEmpty()) {
         output.writeBytes(3, keyId_);
       }
-      if (!encryptedGrantKey_.isEmpty()) {
-        output.writeBytes(4, encryptedGrantKey_);
+      if (!encryptedGrantKeyBlob_.isEmpty()) {
+        output.writeBytes(4, encryptedGrantKeyBlob_);
       }
       if (creationDate_ != 0) {
         output.writeUInt32(5, creationDate_);
@@ -8967,9 +8967,9 @@ public final class PurekitProtosV3Storage {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(3, keyId_);
       }
-      if (!encryptedGrantKey_.isEmpty()) {
+      if (!encryptedGrantKeyBlob_.isEmpty()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(4, encryptedGrantKey_);
+          .computeBytesSize(4, encryptedGrantKeyBlob_);
       }
       if (creationDate_ != 0) {
         size += com.google.protobuf.CodedOutputStream
@@ -9000,8 +9000,8 @@ public final class PurekitProtosV3Storage {
           .equals(other.getUserId())) return false;
       if (!getKeyId()
           .equals(other.getKeyId())) return false;
-      if (!getEncryptedGrantKey()
-          .equals(other.getEncryptedGrantKey())) return false;
+      if (!getEncryptedGrantKeyBlob()
+          .equals(other.getEncryptedGrantKeyBlob())) return false;
       if (getCreationDate()
           != other.getCreationDate()) return false;
       if (getExpirationDate()
@@ -9023,8 +9023,8 @@ public final class PurekitProtosV3Storage {
       hash = (53 * hash) + getUserId().hashCode();
       hash = (37 * hash) + KEY_ID_FIELD_NUMBER;
       hash = (53 * hash) + getKeyId().hashCode();
-      hash = (37 * hash) + ENCRYPTED_GRANT_KEY_FIELD_NUMBER;
-      hash = (53 * hash) + getEncryptedGrantKey().hashCode();
+      hash = (37 * hash) + ENCRYPTED_GRANT_KEY_BLOB_FIELD_NUMBER;
+      hash = (53 * hash) + getEncryptedGrantKeyBlob().hashCode();
       hash = (37 * hash) + CREATION_DATE_FIELD_NUMBER;
       hash = (53 * hash) + getCreationDate();
       hash = (37 * hash) + EXPIRATION_DATE_FIELD_NUMBER;
@@ -9168,7 +9168,7 @@ public final class PurekitProtosV3Storage {
 
         keyId_ = com.google.protobuf.ByteString.EMPTY;
 
-        encryptedGrantKey_ = com.google.protobuf.ByteString.EMPTY;
+        encryptedGrantKeyBlob_ = com.google.protobuf.ByteString.EMPTY;
 
         creationDate_ = 0;
 
@@ -9203,7 +9203,7 @@ public final class PurekitProtosV3Storage {
         result.version_ = version_;
         result.userId_ = userId_;
         result.keyId_ = keyId_;
-        result.encryptedGrantKey_ = encryptedGrantKey_;
+        result.encryptedGrantKeyBlob_ = encryptedGrantKeyBlob_;
         result.creationDate_ = creationDate_;
         result.expirationDate_ = expirationDate_;
         onBuilt();
@@ -9264,8 +9264,8 @@ public final class PurekitProtosV3Storage {
         if (other.getKeyId() != com.google.protobuf.ByteString.EMPTY) {
           setKeyId(other.getKeyId());
         }
-        if (other.getEncryptedGrantKey() != com.google.protobuf.ByteString.EMPTY) {
-          setEncryptedGrantKey(other.getEncryptedGrantKey());
+        if (other.getEncryptedGrantKeyBlob() != com.google.protobuf.ByteString.EMPTY) {
+          setEncryptedGrantKeyBlob(other.getEncryptedGrantKeyBlob());
         }
         if (other.getCreationDate() != 0) {
           setCreationDate(other.getCreationDate());
@@ -9426,31 +9426,31 @@ public final class PurekitProtosV3Storage {
         return this;
       }
 
-      private com.google.protobuf.ByteString encryptedGrantKey_ = com.google.protobuf.ByteString.EMPTY;
+      private com.google.protobuf.ByteString encryptedGrantKeyBlob_ = com.google.protobuf.ByteString.EMPTY;
       /**
-       * <code>bytes encrypted_grant_key = 4;</code>
+       * <code>bytes encrypted_grant_key_blob = 4;</code>
        */
-      public com.google.protobuf.ByteString getEncryptedGrantKey() {
-        return encryptedGrantKey_;
+      public com.google.protobuf.ByteString getEncryptedGrantKeyBlob() {
+        return encryptedGrantKeyBlob_;
       }
       /**
-       * <code>bytes encrypted_grant_key = 4;</code>
+       * <code>bytes encrypted_grant_key_blob = 4;</code>
        */
-      public Builder setEncryptedGrantKey(com.google.protobuf.ByteString value) {
+      public Builder setEncryptedGrantKeyBlob(com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
   
-        encryptedGrantKey_ = value;
+        encryptedGrantKeyBlob_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>bytes encrypted_grant_key = 4;</code>
+       * <code>bytes encrypted_grant_key_blob = 4;</code>
        */
-      public Builder clearEncryptedGrantKey() {
+      public Builder clearEncryptedGrantKeyBlob() {
         
-        encryptedGrantKey_ = getDefaultInstance().getEncryptedGrantKey();
+        encryptedGrantKeyBlob_ = getDefaultInstance().getEncryptedGrantKeyBlob();
         onChanged();
         return this;
       }
@@ -9577,6 +9577,16 @@ public final class PurekitProtosV3Storage {
      * <code>bytes signature = 3;</code>
      */
     com.google.protobuf.ByteString getSignature();
+
+    /**
+     * <code>uint32 record_version = 4;</code>
+     */
+    int getRecordVersion();
+
+    /**
+     * <code>bytes encrypted_grant_key_wrap = 5;</code>
+     */
+    com.google.protobuf.ByteString getEncryptedGrantKeyWrap();
   }
   /**
    * Protobuf type {@code build.GrantKey}
@@ -9593,6 +9603,7 @@ public final class PurekitProtosV3Storage {
     private GrantKey() {
       grantKeySigned_ = com.google.protobuf.ByteString.EMPTY;
       signature_ = com.google.protobuf.ByteString.EMPTY;
+      encryptedGrantKeyWrap_ = com.google.protobuf.ByteString.EMPTY;
     }
 
     @java.lang.Override
@@ -9638,6 +9649,16 @@ public final class PurekitProtosV3Storage {
             case 26: {
 
               signature_ = input.readBytes();
+              break;
+            }
+            case 32: {
+
+              recordVersion_ = input.readUInt32();
+              break;
+            }
+            case 42: {
+
+              encryptedGrantKeyWrap_ = input.readBytes();
               break;
             }
             default: {
@@ -9699,6 +9720,24 @@ public final class PurekitProtosV3Storage {
       return signature_;
     }
 
+    public static final int RECORD_VERSION_FIELD_NUMBER = 4;
+    private int recordVersion_;
+    /**
+     * <code>uint32 record_version = 4;</code>
+     */
+    public int getRecordVersion() {
+      return recordVersion_;
+    }
+
+    public static final int ENCRYPTED_GRANT_KEY_WRAP_FIELD_NUMBER = 5;
+    private com.google.protobuf.ByteString encryptedGrantKeyWrap_;
+    /**
+     * <code>bytes encrypted_grant_key_wrap = 5;</code>
+     */
+    public com.google.protobuf.ByteString getEncryptedGrantKeyWrap() {
+      return encryptedGrantKeyWrap_;
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -9722,6 +9761,12 @@ public final class PurekitProtosV3Storage {
       if (!signature_.isEmpty()) {
         output.writeBytes(3, signature_);
       }
+      if (recordVersion_ != 0) {
+        output.writeUInt32(4, recordVersion_);
+      }
+      if (!encryptedGrantKeyWrap_.isEmpty()) {
+        output.writeBytes(5, encryptedGrantKeyWrap_);
+      }
       unknownFields.writeTo(output);
     }
 
@@ -9742,6 +9787,14 @@ public final class PurekitProtosV3Storage {
       if (!signature_.isEmpty()) {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(3, signature_);
+      }
+      if (recordVersion_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeUInt32Size(4, recordVersion_);
+      }
+      if (!encryptedGrantKeyWrap_.isEmpty()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(5, encryptedGrantKeyWrap_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -9764,6 +9817,10 @@ public final class PurekitProtosV3Storage {
           .equals(other.getGrantKeySigned())) return false;
       if (!getSignature()
           .equals(other.getSignature())) return false;
+      if (getRecordVersion()
+          != other.getRecordVersion()) return false;
+      if (!getEncryptedGrantKeyWrap()
+          .equals(other.getEncryptedGrantKeyWrap())) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -9781,6 +9838,10 @@ public final class PurekitProtosV3Storage {
       hash = (53 * hash) + getGrantKeySigned().hashCode();
       hash = (37 * hash) + SIGNATURE_FIELD_NUMBER;
       hash = (53 * hash) + getSignature().hashCode();
+      hash = (37 * hash) + RECORD_VERSION_FIELD_NUMBER;
+      hash = (53 * hash) + getRecordVersion();
+      hash = (37 * hash) + ENCRYPTED_GRANT_KEY_WRAP_FIELD_NUMBER;
+      hash = (53 * hash) + getEncryptedGrantKeyWrap().hashCode();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -9920,6 +9981,10 @@ public final class PurekitProtosV3Storage {
 
         signature_ = com.google.protobuf.ByteString.EMPTY;
 
+        recordVersion_ = 0;
+
+        encryptedGrantKeyWrap_ = com.google.protobuf.ByteString.EMPTY;
+
         return this;
       }
 
@@ -9949,6 +10014,8 @@ public final class PurekitProtosV3Storage {
         result.version_ = version_;
         result.grantKeySigned_ = grantKeySigned_;
         result.signature_ = signature_;
+        result.recordVersion_ = recordVersion_;
+        result.encryptedGrantKeyWrap_ = encryptedGrantKeyWrap_;
         onBuilt();
         return result;
       }
@@ -10005,6 +10072,12 @@ public final class PurekitProtosV3Storage {
         }
         if (other.getSignature() != com.google.protobuf.ByteString.EMPTY) {
           setSignature(other.getSignature());
+        }
+        if (other.getRecordVersion() != 0) {
+          setRecordVersion(other.getRecordVersion());
+        }
+        if (other.getEncryptedGrantKeyWrap() != com.google.protobuf.ByteString.EMPTY) {
+          setEncryptedGrantKeyWrap(other.getEncryptedGrantKeyWrap());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -10115,6 +10188,61 @@ public final class PurekitProtosV3Storage {
       public Builder clearSignature() {
         
         signature_ = getDefaultInstance().getSignature();
+        onChanged();
+        return this;
+      }
+
+      private int recordVersion_ ;
+      /**
+       * <code>uint32 record_version = 4;</code>
+       */
+      public int getRecordVersion() {
+        return recordVersion_;
+      }
+      /**
+       * <code>uint32 record_version = 4;</code>
+       */
+      public Builder setRecordVersion(int value) {
+        
+        recordVersion_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>uint32 record_version = 4;</code>
+       */
+      public Builder clearRecordVersion() {
+        
+        recordVersion_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private com.google.protobuf.ByteString encryptedGrantKeyWrap_ = com.google.protobuf.ByteString.EMPTY;
+      /**
+       * <code>bytes encrypted_grant_key_wrap = 5;</code>
+       */
+      public com.google.protobuf.ByteString getEncryptedGrantKeyWrap() {
+        return encryptedGrantKeyWrap_;
+      }
+      /**
+       * <code>bytes encrypted_grant_key_wrap = 5;</code>
+       */
+      public Builder setEncryptedGrantKeyWrap(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        encryptedGrantKeyWrap_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>bytes encrypted_grant_key_wrap = 5;</code>
+       */
+      public Builder clearEncryptedGrantKeyWrap() {
+        
+        encryptedGrantKeyWrap_ = getDefaultInstance().getEncryptedGrantKeyWrap();
         onChanged();
         return this;
       }
@@ -10273,14 +10401,16 @@ public final class PurekitProtosV3Storage {
       "t\022\017\n\007version\030\001 \001(\r\022\036\n\026role_assignment_si" +
       "gned\030\002 \001(\014\022\021\n\tsignature\030\003 \001(\014\"B\n\017RoleAss" +
       "ignments\022/\n\020role_assignments\030\001 \003(\0132\025.bui" +
-      "ld.RoleAssignment\"\217\001\n\016GrantKeySigned\022\017\n\007" +
+      "ld.RoleAssignment\"\224\001\n\016GrantKeySigned\022\017\n\007" +
       "version\030\001 \001(\r\022\017\n\007user_id\030\002 \001(\t\022\016\n\006key_id" +
-      "\030\003 \001(\014\022\033\n\023encrypted_grant_key\030\004 \001(\014\022\025\n\rc" +
-      "reation_date\030\005 \001(\r\022\027\n\017expiration_date\030\006 " +
-      "\001(\r\"H\n\010GrantKey\022\017\n\007version\030\001 \001(\r\022\030\n\020gran" +
-      "t_key_signed\030\002 \001(\014\022\021\n\tsignature\030\003 \001(\014BC\n" +
-      ")com.virgilsecurity.purekit.protobuf.bui" +
-      "ldB\026PurekitProtosV3Storageb\006proto3"
+      "\030\003 \001(\014\022 \n\030encrypted_grant_key_blob\030\004 \001(\014" +
+      "\022\025\n\rcreation_date\030\005 \001(\r\022\027\n\017expiration_da" +
+      "te\030\006 \001(\r\"\202\001\n\010GrantKey\022\017\n\007version\030\001 \001(\r\022\030" +
+      "\n\020grant_key_signed\030\002 \001(\014\022\021\n\tsignature\030\003 " +
+      "\001(\014\022\026\n\016record_version\030\004 \001(\r\022 \n\030encrypted" +
+      "_grant_key_wrap\030\005 \001(\014BC\n)com.virgilsecur" +
+      "ity.purekit.protobuf.buildB\026PurekitProto" +
+      "sV3Storageb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -10357,13 +10487,13 @@ public final class PurekitProtosV3Storage {
     internal_static_build_GrantKeySigned_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_build_GrantKeySigned_descriptor,
-        new java.lang.String[] { "Version", "UserId", "KeyId", "EncryptedGrantKey", "CreationDate", "ExpirationDate", });
+        new java.lang.String[] { "Version", "UserId", "KeyId", "EncryptedGrantKeyBlob", "CreationDate", "ExpirationDate", });
     internal_static_build_GrantKey_descriptor =
       getDescriptor().getMessageTypes().get(12);
     internal_static_build_GrantKey_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_build_GrantKey_descriptor,
-        new java.lang.String[] { "Version", "GrantKeySigned", "Signature", });
+        new java.lang.String[] { "Version", "GrantKeySigned", "Signature", "RecordVersion", "EncryptedGrantKeyWrap", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

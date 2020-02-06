@@ -138,9 +138,9 @@ class PureTestJava {
     private static StorageType[] createStorages() {
         StorageType[] storages = new StorageType[1];
 
-//        storages[0] = StorageType.RAM;
-//        storages[1] = StorageType.MariaDB;
-        storages[0] = StorageType.VirgilCloud;
+        storages[0] = StorageType.RAM;
+//        storages[0] = StorageType.MariaDB;
+//        storages[0] = StorageType.VirgilCloud;
 
         return storages;
     }
@@ -559,15 +559,15 @@ class PureTestJava {
     }
 
     @ParameterizedTest @MethodSource("testArguments")
-    void rotation__local_storage__should_rotate(String pheServerAddress,
-                                                String pureServerAddress,
-                                                String kmsServerAddress,
-                                                String appToken,
-                                                String publicKeyOld,
-                                                String secretKeyOld,
-                                                String updateToken,
-                                                String publicKeyNew,
-                                                String secretKeyNew) throws InterruptedException {
+    void rotation__local_storage__decrypt_and_recover_works(String pheServerAddress,
+                                                            String pureServerAddress,
+                                                            String kmsServerAddress,
+                                                            String appToken,
+                                                            String publicKeyOld,
+                                                            String secretKeyOld,
+                                                            String updateToken,
+                                                            String publicKeyNew,
+                                                            String secretKeyNew) throws InterruptedException {
         ThreadUtils.pause();
 
         try {
@@ -578,7 +578,7 @@ class PureTestJava {
                     continue;
                 }
 
-                long total = 30;
+                long total = 20;
 
                 PureStorage pureStorage;
 
@@ -617,9 +617,10 @@ class PureTestJava {
 
                     blob = pure.encrypt(firstUserId, dataId, text);
 
-                    long rotated = pure.performRotation();
+                    Pure.RotationResults results = pure.performRotation();
 
-                    assertEquals(total, rotated);
+                    assertEquals(total, results.getUsersRotated());
+                    assertEquals(0, results.getGrantKeysRotated());
                 }
 
                 {
@@ -661,6 +662,118 @@ class PureTestJava {
 
                     byte[] decrypted2 = pure.decrypt(authResult2.getGrant(), firstUserId, dataId, blob);
 
+                    assertArrayEquals(text, decrypted2);
+                }
+            }
+        } catch (Exception e) {
+            fail(e);
+        }
+    }
+
+    @ParameterizedTest @MethodSource("testArguments")
+    void rotation__local_storage__grant_works(String pheServerAddress,
+                                              String pureServerAddress,
+                                              String kmsServerAddress,
+                                              String appToken,
+                                              String publicKeyOld,
+                                              String secretKeyOld,
+                                              String updateToken,
+                                              String publicKeyNew,
+                                              String secretKeyNew) throws InterruptedException {
+        ThreadUtils.pause();
+
+        try {
+            StorageType[] storages = createStorages();
+            for (StorageType storage: storages) {
+                // VirgilCloudPureStorage should not support that
+                if (storage == StorageType.VirgilCloud) {
+                    continue;
+                }
+
+                long total = 20;
+
+                PureStorage pureStorage;
+
+                String firstUserId = null;
+                String firstUserPwd = null;
+                String dataId = UUID.randomUUID().toString();
+                byte[] text = UUID.randomUUID().toString().getBytes();
+
+                byte[] blob;
+                byte[] nms;
+
+                String encryptedGrant1;
+                String encryptedGrant2;
+
+                {
+                    PureSetupResult pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKeyOld, secretKeyOld,  null, storage);
+                    Pure pure = new Pure(pureResult.getContext());
+                    pureStorage = pure.getStorage();
+                    nms = pureResult.getNmsData();
+
+                    for (long i = 0; i < total; i++) {
+                        String userId = UUID.randomUUID().toString();
+                        String password = UUID.randomUUID().toString();
+
+                        pure.registerUser(userId, password);
+
+                        if (i == 0) {
+                            firstUserId = userId;
+                            firstUserPwd = password;
+                        }
+                    }
+
+                    encryptedGrant1 = pure.authenticateUser(firstUserId, firstUserPwd).getEncryptedGrant();
+                }
+
+                {
+                    PureSetupResult pureResult = this.setupPure(nms, pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKeyOld, secretKeyOld, updateToken, null, storage, true);
+                    pureResult.getContext().setStorage(pureStorage);
+                    Pure pure = new Pure(pureResult.getContext());
+
+                    blob = pure.encrypt(firstUserId, dataId, text);
+
+                    encryptedGrant2 = pure.authenticateUser(firstUserId, firstUserPwd).getEncryptedGrant();
+
+                    Pure.RotationResults results = pure.performRotation();
+
+                    assertEquals(total, results.getUsersRotated());
+                    assertEquals(1, results.getGrantKeysRotated());
+                }
+
+                {
+                    PureSetupResult pureResult = this.setupPure(nms, pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKeyNew, secretKeyNew, null, null, storage, true);
+                    pureResult.getContext().setStorage(pureStorage);
+                    Pure pure = new Pure(pureResult.getContext());
+
+                    PureGrant pureGrant1 = pure.decryptGrantFromUser(encryptedGrant1);
+                    assertNotNull(pureGrant1);
+
+                    PureGrant pureGrant2 = pure.decryptGrantFromUser(encryptedGrant2);
+                    assertNotNull(pureGrant2);
+
+                    byte[] decrypted1 = pure.decrypt(pureGrant1, firstUserId, dataId, blob);
+                    assertArrayEquals(text, decrypted1);
+
+                    byte[] decrypted2 = pure.decrypt(pureGrant2, firstUserId, dataId, blob);
+                    assertArrayEquals(text, decrypted2);
+                }
+
+                {
+                    PureSetupResult pureResult = this.setupPure(nms, pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKeyOld, secretKeyOld, updateToken, null, storage, true);
+                    pureResult.getContext().setStorage(pureStorage);
+                    Pure pure = new Pure(pureResult.getContext());
+
+                    PureGrant pureGrant1 = pure.decryptGrantFromUser(encryptedGrant1);
+                    assertNotNull(pureGrant1);
+
+                    PureGrant pureGrant2 = pure.decryptGrantFromUser(encryptedGrant2);
+                    assertNotNull(pureGrant2);
+
+                    byte[] decrypted1 = pure.decrypt(pureGrant1, firstUserId, dataId, blob);
+                    assertArrayEquals(text, decrypted1);
+
+                    byte[] decrypted2 = pure.decrypt(pureGrant2, firstUserId, dataId, blob);
                     assertArrayEquals(text, decrypted2);
                 }
             }

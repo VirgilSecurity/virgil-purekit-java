@@ -117,7 +117,7 @@ message GrantKeySigned {
     uint32 version = 1;
     string user_id = 2;
     bytes key_id = 3;
-    bytes encrypted_grant_key = 4;
+    bytes encrypted_grant_key_blob = 4;
     uint32 creation_date = 5;
     uint32 expiration_date = 6;
 }
@@ -126,4 +126,6 @@ message GrantKey {
     uint32 version = 1;
     bytes grant_key_signed = 2;
     bytes signature = 3;
+    uint32 record_version = 4;
+    bytes encrypted_grant_key_wrap = 5;
 }

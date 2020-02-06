@@ -46,7 +46,6 @@ import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
  */
 public class NonrotatableSecretsGenerator {
     private static final int NONROTATABLE_MASTER_SECRET_LENGTH = 32;
-    private static final int AK_LENGTH = 32;
 
     /**
      * Generate nonrotatable secrets from 1 master secret
@@ -66,8 +65,6 @@ public class NonrotatableSecretsGenerator {
 
         rng.resetKeyMaterial(masterSecret);
 
-        byte[] ak = rng.random(AK_LENGTH);
-
         VirgilCrypto crypto = new VirgilCrypto(rng);
 
         VirgilKeyPair vskp;
@@ -79,6 +76,6 @@ public class NonrotatableSecretsGenerator {
             throw new PureCryptoException(e);
         }
 
-        return new NonrotatableSecrets(ak, vskp, oskp);
+        return new NonrotatableSecrets(vskp, oskp);
     }
 }

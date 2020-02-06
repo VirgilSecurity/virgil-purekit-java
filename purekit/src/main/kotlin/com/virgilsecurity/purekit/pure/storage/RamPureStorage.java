@@ -49,7 +49,7 @@ public class RamPureStorage implements PureStorage {
     private HashMap<String, HashMap<String, CellKey>> keys;
     private HashMap<String, Role> roles;
     private HashMap<String, HashMap<String, RoleAssignment>> roleAssignments;
-    private HashMap<String, HashMap<String, GrantKey>> grantKeys;
+    private HashMap<String, GrantKey> grantKeys;
 
     public static int GRANT_KEYS_CLEAN_INTERVAL = 20000;
 
@@ -78,9 +78,7 @@ public class RamPureStorage implements PureStorage {
         public void run() {
             Date currentDate = new Date();
 
-            for (Map.Entry<String, HashMap<String, GrantKey>> userGrantKeys: storage.grantKeys.entrySet()) {
-                userGrantKeys.getValue().entrySet().removeIf(entry -> entry.getValue().getExpirationDate().before(currentDate));
-            }
+            storage.grantKeys.entrySet().removeIf(entry -> entry.getValue().getExpirationDate().before(currentDate));
         }
     }
 
@@ -134,9 +132,9 @@ public class RamPureStorage implements PureStorage {
     }
 
     @Override
-    public Collection<UserRecord> selectUsers(int pheRecordVersion) {
+    public Collection<UserRecord> selectUsers(int recordVersion) {
         ArrayList<UserRecord> records = new ArrayList<>(this.users.values());
-        records.removeIf(isNotVersion(pheRecordVersion));
+        records.removeIf(isNotVersion(recordVersion));
 
         int limit = 10;
 
@@ -290,32 +288,45 @@ public class RamPureStorage implements PureStorage {
 
     @Override
     public void insertGrantKey(GrantKey grantKey) {
-        HashMap<String, GrantKey> keys = this.grantKeys.getOrDefault(grantKey.getUserId(), new HashMap<>());
-
-        keys.put(Base64.getEncoder().encodeToString(grantKey.getKeyId()), grantKey);
-
-        this.grantKeys.put(grantKey.getUserId(), keys);
+        this.grantKeys.put(Base64.getEncoder().encodeToString(grantKey.getKeyId()), grantKey);
     }
 
     @Override
     public GrantKey selectGrantKey(String userId, byte[] keyId) throws PureStorageException {
-        HashMap<String, GrantKey> keys = this.grantKeys.get(userId);
-
-        GrantKey key = keys.get(Base64.getEncoder().encodeToString(keyId));
+        GrantKey key = grantKeys.get(Base64.getEncoder().encodeToString(keyId));
 
         if (key == null) {
             throw new PureStorageGenericException(PureStorageGenericException.ErrorStatus.GRANT_KEY_NOT_FOUND);
         }
 
+        assert userId.equals(key.getUserId());
+
         return key;
+    }
+
+    public static Predicate<GrantKey> isNotGrantVersion(Integer version) {
+        return p -> p.getRecordVersion() != version;
+    }
+
+    @Override
+    public Iterable<GrantKey> selectGrantKeys(int recordVersion) throws PureStorageException {
+        ArrayList<GrantKey> records = new ArrayList<>(this.grantKeys.values());
+        records.removeIf(isNotGrantVersion(recordVersion));
+
+        int limit = 10;
+
+        return records.subList(0, Math.min(limit, records.size()));
+    }
+
+    @Override
+    public void updateGrantKeys(Iterable<GrantKey> grantKeys) throws PureStorageException {
+        for (GrantKey grantKey: grantKeys) {
+            this.grantKeys.put(Base64.getEncoder().encodeToString(grantKey.getKeyId()), grantKey);
+        }
     }
 
     @Override
     public void deleteGrantKey(String userId, byte[] keyId) {
-        HashMap<String, GrantKey> keys = this.grantKeys.get(userId);
-
-        keys.remove(Base64.getEncoder().encodeToString(keyId));
-
-        grantKeys.put(userId, keys);
+        grantKeys.remove(Base64.getEncoder().encodeToString(keyId));
     }
 }

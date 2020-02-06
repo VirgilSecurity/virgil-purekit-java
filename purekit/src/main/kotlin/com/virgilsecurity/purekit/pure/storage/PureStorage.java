@@ -241,6 +241,26 @@ public interface PureStorage {
     GrantKey selectGrantKey(String userId, byte[] keyId) throws PureStorageException;
 
     /**
+     * Obrains grant keys with given record version
+     *
+     * @param recordVersion record version
+     *
+     * @return Grant keys
+     *
+     * @throws PureStorageException PureStorageException
+     */
+    Iterable<GrantKey> selectGrantKeys(int recordVersion) throws PureStorageException;
+
+    /**
+     * Updated grant keys
+     *
+     * @param grantKeys grant keys
+     *
+     * @throws PureStorageException PureStorageException
+     */
+    void updateGrantKeys(Iterable<GrantKey> grantKeys) throws PureStorageException;
+
+    /**
      * Deletes GrantKey from a storage.
      *
      * @param userId user id

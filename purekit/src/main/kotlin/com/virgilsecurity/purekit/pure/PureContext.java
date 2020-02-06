@@ -62,11 +62,13 @@ public class PureContext {
     static class Credentials {
         private byte[] payload1;
         private byte[] payload2;
+        private byte[] payload3;
         private int version;
 
-        private Credentials(byte[] payload1, byte[] payload2, int version) {
+        private Credentials(byte[] payload1, byte[] payload2, byte[] payload3, int version) {
             this.payload1 = payload1;
             this.payload2 = payload2;
+            this.payload3 = payload3;
             this.version = version;
         }
 
@@ -76,6 +78,10 @@ public class PureContext {
 
         byte[] getPayload2() {
             return payload2;
+        }
+
+        public byte[] getPayload3() {
+            return payload3;
         }
 
         int getVersion() {
@@ -113,18 +119,18 @@ public class PureContext {
 
         this.crypto = crypto;
 
-        Credentials nmsCred = PureContext.parseCredentials(NMS_PREFIX, nms, false, false);
+        Credentials nmsCred = PureContext.parseCredentials(NMS_PREFIX, nms, false, 1);
         this.nonrotatableSecrets = NonrotatableSecretsGenerator.generateSecrets(nmsCred.getPayload1());
 
-        byte[] buppkData = PureContext.parseCredentials(BUPPK_PREFIX, buppk, false, false).getPayload1();
+        byte[] buppkData = PureContext.parseCredentials(BUPPK_PREFIX, buppk, false, 1).getPayload1();
         try {
             this.buppk = crypto.importPublicKey(buppkData);
         } catch (CryptoException e) {
             throw new PureCryptoException(e);
         }
 
-        this.secretKey = PureContext.parseCredentials(SECRET_KEY_PREFIX, secretKey, true, true);
-        this.publicKey = PureContext.parseCredentials(PUBLIC_KEY_PREFIX, publicKey, true, true);
+        this.secretKey = PureContext.parseCredentials(SECRET_KEY_PREFIX, secretKey, true, 3);
+        this.publicKey = PureContext.parseCredentials(PUBLIC_KEY_PREFIX, publicKey, true, 2);
         this.pheClient = new HttpPheClient(appToken, pheServiceAddress);
         this.kmsClient = new HttpKmsClient(appToken, kmsServiceAddress);
 
@@ -293,13 +299,13 @@ public class PureContext {
     private static Credentials parseCredentials(String prefix,
                                                 String credentials,
                                                 boolean isVersioned,
-                                                boolean isTwofold) throws PureException {
+                                                int numberOfPayloads) throws PureException {
         ValidateUtils.checkNullOrEmpty(prefix, "prefix");
         ValidateUtils.checkNullOrEmpty(credentials, "credentials");
 
         String[] parts = credentials.split("\\.");
 
-        int numberOfParts = 2 + (isTwofold ? 1 : 0) + (isVersioned ? 1 : 0);
+        int numberOfParts = 1 + numberOfPayloads + (isVersioned ? 1 : 0);
 
         if (parts.length != numberOfParts) {
             throw new PureLogicException(PureLogicException.ErrorStatus.CREDENTIALS_PARSING_ERROR);
@@ -320,18 +326,26 @@ public class PureContext {
             version = 0;
         }
 
-        byte[] payload1 = Base64.decode(parts[index].getBytes());
-        byte[] payload2;
 
-        if (isTwofold) {
-            index++;
+        byte[] payload1;
+        byte[] payload2 = null;
+        byte[] payload3 = null;
+
+        payload1 = Base64.decode(parts[index].getBytes());
+        numberOfPayloads--;
+        index++;
+
+        if (numberOfPayloads > 0) {
             payload2 = Base64.decode(parts[index].getBytes());
-        }
-        else {
-            payload2 = new byte[0];
+            numberOfPayloads--;
+            index++;
         }
 
-        return new Credentials(payload1, payload2, version);
+        if (numberOfPayloads > 0) {
+            payload3 = Base64.decode(parts[index].getBytes());
+        }
+
+        return new Credentials(payload1, payload2, payload3, version);
     }
 
     /**
@@ -356,7 +370,7 @@ public class PureContext {
      * Sets Update token.
      */
     public void setUpdateToken(String updateToken) throws PureException {
-        this.updateToken = PureContext.parseCredentials("UT", updateToken, true, true);
+        this.updateToken = PureContext.parseCredentials("UT", updateToken, true, 3);
 
         if (this.updateToken.getVersion() != this.publicKey.getVersion() + 1) {
             throw new PureLogicException(PureLogicException.ErrorStatus.UPDATE_TOKEN_VERSION_MISMATCH);

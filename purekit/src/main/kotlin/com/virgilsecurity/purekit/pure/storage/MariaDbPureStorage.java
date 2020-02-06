@@ -81,7 +81,7 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
         try (Connection conn = getConnection()) {
             try (PreparedStatement stmt = conn.prepareStatement("INSERT INTO virgil_users (" +
                     "user_id," +
-                    "phe_record_version," +
+                    "record_version," +
                     "protobuf) " +
                     "VALUES (?, ?, ?);")) {
 
@@ -111,7 +111,7 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
 
         try (Connection conn = getConnection()) {
             try (PreparedStatement stmt = conn.prepareStatement("UPDATE virgil_users " +
-                    "SET phe_record_version=?," +
+                    "SET record_version=?," +
                     "protobuf=? " +
                     "WHERE user_id=?;")) {
 
@@ -132,13 +132,13 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
     }
 
     @Override
-    public void updateUsers(Iterable<UserRecord> userRecords, int previousPheVersion) throws PureStorageException {
+    public void updateUsers(Iterable<UserRecord> userRecords, int previousVersion) throws PureStorageException {
         try (Connection conn = getConnection()) {
             conn.setAutoCommit(false);
             try (PreparedStatement stmt = conn.prepareStatement("UPDATE virgil_users " +
-                    "SET phe_record_version=?," +
+                    "SET record_version=?," +
                     "protobuf=? " +
-                    "WHERE user_id=? AND phe_record_version=?;")) {
+                    "WHERE user_id=? AND record_version=?;")) {
 
                 for (UserRecord userRecord: userRecords) {
                     PurekitProtosV3Storage.UserRecord protobuf = pureModelSerializer.serializeUserRecord(userRecord);
@@ -146,7 +146,7 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
                     stmt.setInt(1, userRecord.getRecordVersion());
                     stmt.setBytes(2, protobuf.toByteArray());
                     stmt.setString(3, userRecord.getUserId());
-                    stmt.setInt(4, previousPheVersion);
+                    stmt.setInt(4, previousVersion);
                     stmt.addBatch();
                 }
 
@@ -255,22 +255,22 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
     }
 
     @Override
-    public Iterable<UserRecord> selectUsers(int pheRecordVersion) throws PureStorageException {
+    public Iterable<UserRecord> selectUsers(int recordVersion) throws PureStorageException {
         try (Connection conn = getConnection()) {
             try (PreparedStatement stmt = conn.prepareStatement("SELECT protobuf " +
                     "FROM virgil_users " +
-                    "WHERE phe_record_version=? " +
+                    "WHERE record_version=? " +
                     "LIMIT 1000;")) {
 
-                stmt.setInt(1, pheRecordVersion);
+                stmt.setInt(1,recordVersion);
 
                 try (ResultSet rs = stmt.executeQuery()) {
                     ArrayList<UserRecord> userRecords = new ArrayList<>();
                     while (rs.next()) {
                         UserRecord userRecord = parseUserRecord(rs);
 
-                        if (pheRecordVersion != userRecord.getRecordVersion()) {
-                            throw new PureStorageGenericException(PureStorageGenericException.ErrorStatus.PHE_VERSION_MISMATCH);
+                        if (recordVersion != userRecord.getRecordVersion()) {
+                            throw new PureStorageGenericException(PureStorageGenericException.ErrorStatus.RECORD_VERSION_MISMATCH);
                         }
 
                         userRecords.add(userRecord);
@@ -671,15 +671,17 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
             try (PreparedStatement stmt = conn.prepareStatement("INSERT INTO virgil_grant_keys (" +
                     "user_id," +
                     "key_id," +
+                    "record_version," +
                     "expiration_date," +
                     "protobuf) " +
-                    "VALUES (?, ?, ?, ?);")) {
+                    "VALUES (?, ?, ?, ?, ?);")) {
 
                 Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
                 stmt.setString(1, grantKey.getUserId());
                 stmt.setBytes(2, grantKey.getKeyId());
-                stmt.setTimestamp(3, new Timestamp(grantKey.getExpirationDate().getTime()), cal);
-                stmt.setBytes(4, protobuf.toByteArray());
+                stmt.setInt(3, grantKey.getRecordVersion());
+                stmt.setTimestamp(4, new Timestamp(grantKey.getExpirationDate().getTime()), cal);
+                stmt.setBytes(5, protobuf.toByteArray());
 
                 try {
                     stmt.executeUpdate();
@@ -723,6 +725,65 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
                         throw new PureStorageGenericException(PureStorageGenericException.ErrorStatus.GRANT_KEY_NOT_FOUND);
                     }
                 }
+            }
+        } catch (SQLException e) {
+            throw new MariaDbSqlException(e);
+        }
+    }
+
+    @Override
+    public Iterable<GrantKey> selectGrantKeys(int recordVersion) throws PureStorageException {
+        try (Connection conn = getConnection()) {
+            try (PreparedStatement stmt = conn.prepareStatement("SELECT protobuf " +
+                    "FROM virgil_grant_keys " +
+                    "WHERE record_version=? " +
+                    "LIMIT 1000;")) {
+
+                stmt.setInt(1, recordVersion);
+
+                try (ResultSet rs = stmt.executeQuery()) {
+                    ArrayList<GrantKey> grantKeys = new ArrayList<>();
+                    while (rs.next()) {
+                        GrantKey grantKey = parseGrantKey(rs);
+
+                        if (recordVersion != grantKey.getRecordVersion()) {
+                            throw new PureStorageGenericException(PureStorageGenericException.ErrorStatus.RECORD_VERSION_MISMATCH);
+                        }
+
+                        grantKeys.add(grantKey);
+                    }
+
+                    return grantKeys;
+                }
+            }
+        } catch (SQLException e) {
+            throw new MariaDbSqlException(e);
+        }
+    }
+
+    @Override
+    public void updateGrantKeys(Iterable<GrantKey> grantKeys) throws PureStorageException {
+        try (Connection conn = getConnection()) {
+            conn.setAutoCommit(false);
+            try (PreparedStatement stmt = conn.prepareStatement("UPDATE virgil_grant_keys " +
+                    "SET record_version=?," +
+                    "protobuf=? " +
+                    "WHERE key_id=? AND user_id=?;")) {
+
+                for (GrantKey grantKey: grantKeys) {
+                    PurekitProtosV3Storage.GrantKey protobuf = pureModelSerializer.serializeGrantKey(grantKey);
+
+                    stmt.setInt(1, grantKey.getRecordVersion());
+                    stmt.setBytes(2, protobuf.toByteArray());
+                    stmt.setBytes(3, grantKey.getKeyId());
+                    stmt.setString(4, grantKey.getUserId());
+                    stmt.addBatch();
+                }
+
+                stmt.executeBatch();
+            }
+            finally {
+                conn.setAutoCommit(true);
             }
         } catch (SQLException e) {
             throw new MariaDbSqlException(e);
@@ -787,35 +848,31 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
             try (Statement stmt = conn.createStatement()) {
                 stmt.executeUpdate("CREATE TABLE virgil_users (" +
                         "user_id CHAR(36) NOT NULL PRIMARY KEY," +
-                        "phe_record_version INTEGER NOT NULL," +
-                        "    INDEX phe_record_version_index(phe_record_version)," +
-                        "    UNIQUE INDEX user_id_phe_record_version_index(user_id, phe_record_version)," +
+                        "record_version INTEGER NOT NULL," +
+                        "    INDEX record_version_index(record_version)," +
+                        "    UNIQUE INDEX user_id_record_version_index(user_id, record_version)," +
                         "protobuf VARBINARY(2048) NOT NULL" +
                         ");");
             }
             try (Statement stmt = conn.createStatement()) {
                 stmt.executeUpdate("CREATE TABLE virgil_keys (" +
-                        "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY," +
                         "user_id CHAR(36) NOT NULL," +
                         "    FOREIGN KEY (user_id)" +
                         "        REFERENCES virgil_users(user_id)" +
                         "        ON DELETE CASCADE," +
                         "data_id VARCHAR(128) NOT NULL," +
-                        "    UNIQUE INDEX user_id_data_id_index(user_id, data_id)," +
-                        "protobuf VARBINARY(32768) NOT NULL /* FIXME Up to 128 recipients */" +
+                        "protobuf VARBINARY(32768) NOT NULL, /* FIXME Up to 128 recipients */" +
+                        "    PRIMARY KEY(user_id, data_id)" +
                         ");");
             }
             try (Statement stmt = conn.createStatement()) {
                 stmt.executeUpdate("CREATE TABLE virgil_roles (" +
-                        "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY," +
-                        "role_name VARCHAR(64) NOT NULL," +
-                        "    INDEX role_name_index(role_name)," +
+                        "role_name VARCHAR(64) NOT NULL PRIMARY KEY," +
                         "protobuf VARBINARY(196) NOT NULL" +
                         ");");
             }
             try (Statement stmt = conn.createStatement()) {
                 stmt.executeUpdate("CREATE TABLE virgil_role_assignments (" +
-                        "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY," +
                         "role_name VARCHAR(64) NOT NULL," +
                         "    FOREIGN KEY (role_name)" +
                         "        REFERENCES virgil_roles(role_name)" +
@@ -825,12 +882,14 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
                         "        REFERENCES virgil_users(user_id)" +
                         "        ON DELETE CASCADE," +
                         "    INDEX user_id_index(user_id)," +
-                        "    UNIQUE INDEX user_id_role_name_index(user_id, role_name)," +
-                        "protobuf VARBINARY(1024) NOT NULL" +
+                        "protobuf VARBINARY(1024) NOT NULL," +
+                        "    PRIMARY KEY(role_name, user_id)" +
                         ");");
             }
             try (Statement stmt = conn.createStatement()) {
                 stmt.executeUpdate("CREATE TABLE virgil_grant_keys (" +
+                        "record_version INTEGER NOT NULL," +
+                        "    INDEX record_version_index(record_version)," +
                         "user_id CHAR(36) NOT NULL," +
                         "    FOREIGN KEY (user_id)" +
                         "        REFERENCES virgil_users(user_id)" +

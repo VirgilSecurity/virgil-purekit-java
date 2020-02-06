@@ -41,6 +41,7 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import com.virgilsecurity.common.util.Base64;
 import com.virgilsecurity.crypto.foundation.FoundationException;
 import com.virgilsecurity.crypto.phe.PheClientEnrollAccountResult;
+import com.virgilsecurity.crypto.phe.UokmsClientGenerateEncryptWrapResult;
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Grant;
 import com.virgilsecurity.purekit.pure.exception.PureException;
 import com.virgilsecurity.purekit.pure.storage.PureStorageCellKeyAlreadyExistsException;
@@ -62,7 +63,6 @@ public class Pure {
     private final int currentVersion;
     private final PureCrypto pureCrypto;
     private final PureStorage storage;
-    private final byte[] ak;
     private final VirgilPublicKey buppk;
     private final VirgilKeyPair oskp;
     private final Map<String, List<VirgilPublicKey>> externalPublicKeys;
@@ -79,7 +79,6 @@ public class Pure {
     public Pure(PureContext context) throws PureCryptoException {
         this.pureCrypto = new PureCrypto(context.getCrypto());
         this.storage = context.getStorage();
-        this.ak = context.getNonrotatableSecrets().getAk();
         this.buppk = context.getBuppk();
         this.oskp = context.getNonrotatableSecrets().getOskp();
         this.externalPublicKeys = context.getExternalPublicKeys();
@@ -156,9 +155,13 @@ public class Pure {
 
         byte[] headerBytes = header.toByteArray();
 
-        byte[] encryptedGrantKey = pureCrypto.encryptSymmetricNewNonce(grantKeyRaw, new byte[0], ak);
+        KmsManager.KmsEncryptedData grantWrap = kmsManager.generateGrantKeyEncryptionData(grantKeyRaw, headerBytes);
 
-        GrantKey grantKey = new GrantKey(userId, keyId, encryptedGrantKey, creationDate, expirationDate);
+        GrantKey grantKey = new GrantKey(userId,
+                keyId, currentVersion,
+                grantWrap.getWrap(),
+                grantWrap.getBlob(),
+                creationDate, expirationDate);
 
         storage.insertGrantKey(grantKey);
 
@@ -292,7 +295,7 @@ public class Pure {
             throw new PureLogicException(PureLogicException.ErrorStatus.GRANT_IS_EXPIRED);
         }
 
-        byte[] grantKeyRaw = pureCrypto.decryptSymmetricNewNonce(grantKey.getEncryptedGrantKey(), new byte[0], ak);
+        byte[] grantKeyRaw = kmsManager.recoverGrantKey(grantKey, encryptedGrant.getHeader().toByteArray());
 
         byte[] phek = pureCrypto.decryptSymmetricOneTimeKey(encryptedData.toByteArray(),
                 encryptedGrant.getHeader().toByteArray(),
@@ -414,6 +417,24 @@ public class Pure {
         // TODO: Should delete role assignments
     }
 
+    public static class RotationResults {
+        private final long usersRotated;
+        private final long grantKeysRotated;
+
+        public RotationResults(long usersRotated, long grantKeysRotated) {
+            this.usersRotated = usersRotated;
+            this.grantKeysRotated = grantKeysRotated;
+        }
+
+        public long getUsersRotated() {
+            return usersRotated;
+        }
+
+        public long getGrantKeysRotated() {
+            return grantKeysRotated;
+        }
+    }
+
     /**
      * Performs PHE and KMS records rotation for all users with old version.
      * Pure should be initialized with UpdateToken for this operation.
@@ -422,12 +443,13 @@ public class Pure {
      *
      * @throws PureException PureException
      */
-    public long performRotation() throws PureException {
+    public RotationResults performRotation() throws PureException {
         if (currentVersion <= 1) {
-            return 0;
+            return new RotationResults(0, 0);
         }
 
-        long rotations = 0;
+        long usersRotated = 0;
+        long grantKeysRotated = 0;
 
         while (true) {
             Iterable<UserRecord> userRecords = storage.selectUsers(currentVersion - 1);
@@ -437,7 +459,7 @@ public class Pure {
                 assert userRecord.getRecordVersion() == currentVersion - 1;
 
                 byte[] newRecord = pheManager.performRotation(userRecord.getPheRecord());
-                byte[] newWrap = kmsManager.performRotation(userRecord.getPasswordRecoveryWrap());
+                byte[] newWrap = kmsManager.performPwdRotation(userRecord.getPasswordRecoveryWrap());
 
                 UserRecord newUserRecord = new UserRecord(
                     userRecord.getUserId(),
@@ -460,11 +482,43 @@ public class Pure {
                 break;
             }
             else {
-                rotations += newUserRecords.size();
+                usersRotated += newUserRecords.size();
             }
         }
 
-        return rotations;
+        while (true) {
+            Iterable<GrantKey> grantKeys = storage.selectGrantKeys(currentVersion - 1);
+            ArrayList<GrantKey> newGrantKeys = new ArrayList<>();
+
+            for (GrantKey grantKey: grantKeys) {
+                assert grantKey.getRecordVersion() == currentVersion - 1;
+
+                byte[] newWrap = kmsManager.performGrantRotation(grantKey.getEncryptedGrantKeyWrap());
+
+                GrantKey newGrantKey = new GrantKey(
+                        grantKey.getUserId(),
+                        grantKey.getKeyId(),
+                        currentVersion,
+                        newWrap,
+                        grantKey.getEncryptedGrantKeyBlob(),
+                        grantKey.getCreationDate(),
+                        grantKey.getExpirationDate()
+                );
+
+                newGrantKeys.add(newGrantKey);
+            }
+
+            storage.updateGrantKeys(newGrantKeys);
+
+            if (newGrantKeys.isEmpty()) {
+                break;
+            }
+            else {
+                grantKeysRotated += newGrantKeys.size();
+            }
+        }
+
+        return new RotationResults(usersRotated, grantKeysRotated);
     }
 
     /**
@@ -884,7 +938,7 @@ public class Pure {
 
         byte[] encryptedPwdHash = pureCrypto.encryptForBackup(passwordHash, buppk, oskp.getPrivateKey());
 
-        KmsManager.PwdRecoveryData pwdRecoveryData = kmsManager.generatePwdRecoveryData(passwordHash);
+        KmsManager.KmsEncryptedData pwdRecoveryData = kmsManager.generatePwdRecoveryData(passwordHash);
 
         PheClientEnrollAccountResult pheResult = pheManager.getEnrollment(passwordHash);
 
@@ -927,7 +981,7 @@ public class Pure {
 
         PheClientEnrollAccountResult enrollResult = pheManager.getEnrollment(newPasswordHash);
 
-        KmsManager.PwdRecoveryData pwdRecoveryData = kmsManager.generatePwdRecoveryData(newPasswordHash);
+        KmsManager.KmsEncryptedData pwdRecoveryData = kmsManager.generatePwdRecoveryData(newPasswordHash);
 
         byte[] newEncryptedUsk = pureCrypto.encryptSymmetricNewNonce(privateKeyData, new byte[0], enrollResult.getAccountKey());
 
@@ -979,14 +1033,6 @@ public class Pure {
      */
     public PureStorage getStorage() {
         return storage;
-    }
-
-    /**
-     *
-     * @return Auth key
-     */
-    public byte[] getAk() {
-        return ak;
     }
 
     /**

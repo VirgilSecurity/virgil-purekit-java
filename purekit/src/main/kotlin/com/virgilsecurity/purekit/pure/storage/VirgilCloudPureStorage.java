@@ -169,7 +169,7 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
     }
 
     @Override
-    public Iterable<UserRecord> selectUsers(int pheRecordVersion) throws PureStorageException {
+    public Iterable<UserRecord> selectUsers(int recordVersion) throws PureStorageException {
         throw new UnsupportedOperationException(
             "This method always throws UnsupportedOperationException, as in case of using "
                 + "Virgil Cloud storage, rotation happens on the Virgil side."
@@ -422,6 +422,22 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
         }
 
         return grantKey;
+    }
+
+    @Override
+    public Iterable<GrantKey> selectGrantKeys(int recordVersion) throws PureStorageException {
+        throw new UnsupportedOperationException(
+                "This method always throws UnsupportedOperationException, as in case of using "
+                        + "Virgil Cloud storage, rotation happens on the Virgil side."
+        );
+    }
+
+    @Override
+    public void updateGrantKeys(Iterable<GrantKey> grantKeys) throws PureStorageException {
+        throw new UnsupportedOperationException(
+                "This method always throws UnsupportedOperationException, as in case of using "
+                        + "Virgil Cloud storage, rotation happens on the Virgil side."
+        );
     }
 
     @Override

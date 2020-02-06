@@ -39,30 +39,18 @@ import com.virgilsecurity.sdk.crypto.VirgilKeyPair;
  * Nonrotatable secrets
  */
 public class NonrotatableSecrets {
-    private final byte[] ak;
     private final VirgilKeyPair vskp;
     private final VirgilKeyPair oskp;
 
     /**
      * Constructor
      *
-     * @param ak auth key
      * @param vskp virgil signing key pair
      * @param oskp own signing key pair
      */
-    public NonrotatableSecrets(byte[] ak, VirgilKeyPair vskp, VirgilKeyPair oskp) {
-        this.ak = ak;
+    public NonrotatableSecrets(VirgilKeyPair vskp, VirgilKeyPair oskp) {
         this.vskp = vskp;
         this.oskp = oskp;
-    }
-
-    /**
-     * Returns auth key
-     *
-     * @return auth key
-     */
-    public byte[] getAk() {
-        return ak;
     }
 
     /**

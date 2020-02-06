@@ -360,7 +360,7 @@ public class PureModelSerializer {
                 .setVersion(PureModelSerializer.CURRENT_GRANT_KEY_SIGNED_VERSION)
                 .setUserId(grantKey.getUserId())
                 .setKeyId(ByteString.copyFrom(grantKey.getKeyId()))
-                .setEncryptedGrantKey(ByteString.copyFrom(grantKey.getEncryptedGrantKey()))
+                .setEncryptedGrantKeyBlob(ByteString.copyFrom(grantKey.getEncryptedGrantKeyBlob()))
                 .setCreationDate((int) (grantKey.getCreationDate().getTime() / 1000))
                 .setExpirationDate((int) (grantKey.getExpirationDate().getTime() / 1000))
                 .build()
@@ -372,6 +372,8 @@ public class PureModelSerializer {
                 .newBuilder()
                 .setVersion(PureModelSerializer.CURRENT_GRANT_KEY_VERSION)
                 .setGrantKeySigned(ByteString.copyFrom(grantKeySigned))
+                .setRecordVersion(grantKey.getRecordVersion())
+                .setEncryptedGrantKeyWrap(ByteString.copyFrom(grantKey.getEncryptedGrantKeyWrap()))
                 .setSignature(ByteString.copyFrom(signature))
                 .build();
     }
@@ -395,8 +397,11 @@ public class PureModelSerializer {
             throw new PureStorageInvalidProtobufException(e);
         }
 
-        return new GrantKey(grantKeySigned.getUserId(), grantKeySigned.getKeyId().toByteArray(),
-                grantKeySigned.getEncryptedGrantKey().toByteArray(),
+        return new GrantKey(grantKeySigned.getUserId(),
+                grantKeySigned.getKeyId().toByteArray(),
+                protobufRecord.getRecordVersion(),
+                protobufRecord.getEncryptedGrantKeyWrap().toByteArray(),
+                grantKeySigned.getEncryptedGrantKeyBlob().toByteArray(),
                 new Date((long)(grantKeySigned.getCreationDate()) * 1000),
                 new Date((long)(grantKeySigned.getExpirationDate()) * 1000));
     }

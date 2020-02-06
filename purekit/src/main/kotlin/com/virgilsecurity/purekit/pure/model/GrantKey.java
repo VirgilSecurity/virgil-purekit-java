@@ -41,7 +41,9 @@ import java.util.Date;
 public class GrantKey {
     private final String userId;
     private final byte[] keyId;
-    private final byte[] encryptedGrantKey;
+    private final int recordVersion;
+    private final byte[] encryptedGrantKeyWrap;
+    private final byte[] encryptedGrantKeyBlob;
     private final Date creationDate;
     private final Date expirationDate;
 
@@ -50,14 +52,24 @@ public class GrantKey {
      *
      * @param userId user id
      * @param keyId key id
-     * @param encryptedGrantKey encrypted grant key
+     * @param recordVersion record version
+     * @param encryptedGrantKeyWrap encryptedGrantKeyWrape
+     * @param encryptedGrantKeyBlob encryptedGrantKeyBlob
      * @param creationDate creation date
      * @param expirationDate expiration date
      */
-    public GrantKey(String userId, byte[] keyId, byte[] encryptedGrantKey, Date creationDate, Date expirationDate) {
+    public GrantKey(String userId,
+                    byte[] keyId,
+                    int recordVersion,
+                    byte[] encryptedGrantKeyWrap,
+                    byte[] encryptedGrantKeyBlob,
+                    Date creationDate,
+                    Date expirationDate) {
         this.userId = userId;
         this.keyId = keyId;
-        this.encryptedGrantKey = encryptedGrantKey;
+        this.recordVersion = recordVersion;
+        this.encryptedGrantKeyWrap = encryptedGrantKeyWrap;
+        this.encryptedGrantKeyBlob = encryptedGrantKeyBlob;
         this.creationDate = creationDate;
         this.expirationDate = expirationDate;
     }
@@ -81,12 +93,30 @@ public class GrantKey {
     }
 
     /**
-     * Returns encrypted grant key
+     * Returns record version
      *
-     * @return encrypted grant key
+     * @return record version
      */
-    public byte[] getEncryptedGrantKey() {
-        return encryptedGrantKey;
+    public int getRecordVersion() {
+        return recordVersion;
+    }
+
+    /**
+     * Returns key wrap
+     *
+     * @return key wrap
+     */
+    public byte[] getEncryptedGrantKeyWrap() {
+        return encryptedGrantKeyWrap;
+    }
+
+    /**
+     * Returns key blod
+     *
+     * @return key blob
+     */
+    public byte[] getEncryptedGrantKeyBlob() {
+        return encryptedGrantKeyBlob;
     }
 
     /**
