@@ -136,11 +136,11 @@ class PureTestJava {
     }
 
     private static StorageType[] createStorages() {
-        StorageType[] storages = new StorageType[1];
+        StorageType[] storages = new StorageType[2];
 
         storages[0] = StorageType.RAM;
-//        storages[0] = StorageType.MariaDB;
-//        storages[0] = StorageType.VirgilCloud;
+        storages[1] = StorageType.VirgilCloud;
+//        storages[2] = StorageType.MariaDB;
 
         return storages;
     }
@@ -401,19 +401,19 @@ class PureTestJava {
 
                 pure.registerUser(userId, password);
 
-                AuthResult authResult = pure.authenticateUser(userId, password, 10);
+                AuthResult authResult = pure.authenticateUser(userId, password, 20);
 
                 PureGrant grant1 = pure.decryptGrantFromUser(authResult.getEncryptedGrant());
 
                 assertNotNull(grant1);
 
-                Thread.sleep(8000);
+                Thread.sleep(16000);
 
                 PureGrant grant2 = pure.decryptGrantFromUser(authResult.getEncryptedGrant());
 
                 assertNotNull(grant2);
 
-                Thread.sleep(4000);
+                Thread.sleep(8000);
 
                 PureException ex = assertThrows(PureException.class, () -> {
                     pure.decryptGrantFromUser(authResult.getEncryptedGrant());

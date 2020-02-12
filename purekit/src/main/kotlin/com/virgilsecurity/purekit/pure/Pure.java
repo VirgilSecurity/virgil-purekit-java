@@ -41,7 +41,6 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import com.virgilsecurity.common.util.Base64;
 import com.virgilsecurity.crypto.foundation.FoundationException;
 import com.virgilsecurity.crypto.phe.PheClientEnrollAccountResult;
-import com.virgilsecurity.crypto.phe.UokmsClientGenerateEncryptWrapResult;
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Grant;
 import com.virgilsecurity.purekit.pure.exception.PureException;
 import com.virgilsecurity.purekit.pure.storage.PureStorageCellKeyAlreadyExistsException;
