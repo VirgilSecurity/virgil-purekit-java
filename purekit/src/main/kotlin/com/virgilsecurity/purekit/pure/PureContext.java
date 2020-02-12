@@ -173,7 +173,7 @@ public class PureContext {
     /**
      * Designed for usage with Virgil Cloud storage.
      *
-     * @param at Application token. AT.
+     * @param at Application token. AT.****
      * @param nm Nonrotatable master secret. NM.****
      * @param bu Backup public key. BU.****
      * @param sk App secret key. SK.****
@@ -241,22 +241,22 @@ public class PureContext {
      * @param at Application token. AT.****
      * @param nm Nonrotatable master secret. NM.****
      * @param bu Backup public key. BU.****
-     * @param storage PureStorage.
      * @param sk App secret key. SK.****
      * @param pk Service public key. PK.****
+     * @param storage PureStorage.
      * @param externalPublicKeys External public keys that will be added during encryption by
      *                           default. Map key is dataId, value is list of base64 public keys.
      */
     public static PureContext createContext(String at,
                                             String nm,
                                             String bu,
-                                            PureStorage storage,
                                             String sk,
                                             String pk,
+                                            PureStorage storage,
                                             Map<String, List<String>> externalPublicKeys) throws PureException {
 
         return PureContext.createContext(
-            at, nm, bu, storage, sk, pk,
+            at, nm, bu, sk, pk, storage,
             externalPublicKeys,
             HttpPheClient.SERVICE_ADDRESS,
             HttpKmsClient.SERVICE_ADDRESS
@@ -269,9 +269,9 @@ public class PureContext {
      * @param at Application token. AT.****
      * @param nm Nonrotatable master secret. NM.****
      * @param bu Backup public key. BU.****
-     * @param storage PureStorage.
      * @param sk App secret key. SK.****
      * @param pk Service public key. PK.****
+     * @param storage PureStorage.
      * @param externalPublicKeys External public keys that will be added during encryption by
      *                           default. Map key is dataId, value is list of base64 public keys.
      * @param pheServiceAddress PHE service address.
@@ -279,9 +279,9 @@ public class PureContext {
     public static PureContext createContext(String at,
                                             String nm,
                                             String bu,
-                                            PureStorage storage,
                                             String sk,
                                             String pk,
+                                            PureStorage storage,
                                             Map<String, List<String>> externalPublicKeys,
                                             String pheServiceAddress,
                                             String kmsServiceAddress) throws PureException {

@@ -223,7 +223,7 @@ class PureCrypto {
         return crypto.computeHash(key, HashAlgorithm.SHA512);
     }
 
-    byte[] encryptSymmetricOneTimeKey(byte[] plainText, byte[] ad, byte[] key) throws PureCryptoException {
+    byte[] encryptSymmetricWithOneTimeKey(byte[] plainText, byte[] ad, byte[] key) throws PureCryptoException {
         try (Aes256Gcm aes256Gcm = new Aes256Gcm()) {
 
             aes256Gcm.setKey(Arrays.copyOfRange(key, 0, aes256Gcm.getKeyLen()));
@@ -238,7 +238,7 @@ class PureCrypto {
         }
     }
 
-    byte[] decryptSymmetricOneTimeKey(byte[] cipherText, byte[] ad, byte[] key) throws PureCryptoException {
+    byte[] decryptSymmetricWithOneTimeKey(byte[] cipherText, byte[] ad, byte[] key) throws PureCryptoException {
         try (Aes256Gcm aes256Gcm = new Aes256Gcm()) {
 
             aes256Gcm.setKey(Arrays.copyOfRange(key, 0, aes256Gcm.getKeyLen()));
@@ -251,7 +251,7 @@ class PureCrypto {
         }
     }
 
-    byte[] encryptSymmetricNewNonce(byte[] plainText, byte[] ad, byte[] key) throws PureCryptoException {
+    byte[] encryptSymmetricWithNewNonce(byte[] plainText, byte[] ad, byte[] key) throws PureCryptoException {
         try {
             return pheCipher.authEncrypt(plainText, ad, key);
         }
@@ -260,7 +260,7 @@ class PureCrypto {
         }
     }
 
-    byte[] decryptSymmetricNewNonce(byte[] cipherText, byte[] ad, byte[] key) throws PureCryptoException {
+    byte[] decryptSymmetricWithNewNonce(byte[] cipherText, byte[] ad, byte[] key) throws PureCryptoException {
         try {
             return pheCipher.authDecrypt(cipherText, ad, key);
         }
@@ -333,17 +333,17 @@ class PureCrypto {
         }
     }
 
-    byte[] encryptForBackup(byte[] plainText, VirgilPublicKey publicKey, VirgilPrivateKey privateKey) throws PureCryptoException {
+    byte[] encryptForBackup(byte[] plainText, VirgilPublicKey encryptKey, VirgilPrivateKey signingKey) throws PureCryptoException {
         try {
-            return crypto.authEncrypt(plainText, privateKey, publicKey);
+            return crypto.authEncrypt(plainText, signingKey, encryptKey);
         } catch (SigningException | EncryptionException e) {
             throw new PureCryptoException(e);
         }
     }
 
-    byte[] decryptBackup(byte[] cipherText, VirgilPrivateKey privateKey, VirgilPublicKey publicKey) throws PureCryptoException {
+    byte[] decryptBackup(byte[] cipherText, VirgilPrivateKey decryptKey, VirgilPublicKey verifyKey) throws PureCryptoException {
         try {
-            return crypto.authDecrypt(cipherText, privateKey, publicKey);
+            return crypto.authDecrypt(cipherText, decryptKey, verifyKey);
         } catch (VerificationException | DecryptionException e) {
             throw new PureCryptoException(e);
         }

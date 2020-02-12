@@ -127,7 +127,7 @@ public class Pure {
 
         byte[] phek = pheManager.computePheKey(userRecord, password);
 
-        byte[] uskData = pureCrypto.decryptSymmetricNewNonce(userRecord.getEncryptedUsk(), new byte[0], phek);
+        byte[] uskData = pureCrypto.decryptSymmetricWithNewNonce(userRecord.getEncryptedUsk(), new byte[0], phek);
 
         VirgilKeyPair ukp = pureCrypto.importPrivateKey(uskData);
 
@@ -164,7 +164,7 @@ public class Pure {
 
         storage.insertGrantKey(grantKey);
 
-        byte[] encryptedPhek = pureCrypto.encryptSymmetricOneTimeKey(phek, headerBytes, grantKeyRaw);
+        byte[] encryptedPhek = pureCrypto.encryptSymmetricWithOneTimeKey(phek, headerBytes, grantKeyRaw);
 
         PurekitProtosV3Grant.EncryptedGrant encryptedGrantData =
                 PurekitProtosV3Grant.EncryptedGrant.newBuilder()
@@ -296,13 +296,13 @@ public class Pure {
 
         byte[] grantKeyRaw = kmsManager.recoverGrantKey(grantKey, encryptedGrant.getHeader().toByteArray());
 
-        byte[] phek = pureCrypto.decryptSymmetricOneTimeKey(encryptedData.toByteArray(),
+        byte[] phek = pureCrypto.decryptSymmetricWithOneTimeKey(encryptedData.toByteArray(),
                 encryptedGrant.getHeader().toByteArray(),
                 grantKeyRaw);
 
         UserRecord userRecord = storage.selectUser(header.getUserId());
 
-        byte[] usk = pureCrypto.decryptSymmetricNewNonce(userRecord.getEncryptedUsk(), new byte[0], phek);
+        byte[] usk = pureCrypto.decryptSymmetricWithNewNonce(userRecord.getEncryptedUsk(), new byte[0], phek);
 
         VirgilKeyPair ukp = pureCrypto.importPrivateKey(usk);
 
@@ -338,7 +338,7 @@ public class Pure {
 
         byte[] oldPhek = pheManager.computePheKey(userRecord, oldPassword);
 
-        byte[] privateKeyData = pureCrypto.decryptSymmetricNewNonce(userRecord.getEncryptedUsk(), new byte[0], oldPhek);
+        byte[] privateKeyData = pureCrypto.decryptSymmetricWithNewNonce(userRecord.getEncryptedUsk(), new byte[0], oldPhek);
 
         changeUserPassword(userRecord, privateKeyData, newPassword);
     }
@@ -384,7 +384,7 @@ public class Pure {
 
         byte[] oldPhek = pheManager.computePheKey(userRecord, pwdHash);
 
-        byte[] privateKeyData = pureCrypto.decryptSymmetricNewNonce(userRecord.getEncryptedUsk(), new byte[0], oldPhek);
+        byte[] privateKeyData = pureCrypto.decryptSymmetricWithNewNonce(userRecord.getEncryptedUsk(), new byte[0], oldPhek);
 
         changeUserPassword(userRecord, privateKeyData, newPassword);
     }
@@ -945,7 +945,7 @@ public class Pure {
 
         byte[] uskData = pureCrypto.exportPrivateKey(ukp.getPrivateKey());
 
-        byte[] encryptedUsk = pureCrypto.encryptSymmetricNewNonce(uskData, new byte[0], pheResult.getAccountKey());
+        byte[] encryptedUsk = pureCrypto.encryptSymmetricWithNewNonce(uskData, new byte[0], pheResult.getAccountKey());
 
         byte[] encryptedUskBackup = pureCrypto.encryptForBackup(uskData, buppk, oskp.getPrivateKey());
 
@@ -982,7 +982,7 @@ public class Pure {
 
         KmsManager.KmsEncryptedData pwdRecoveryData = kmsManager.generatePwdRecoveryData(newPasswordHash);
 
-        byte[] newEncryptedUsk = pureCrypto.encryptSymmetricNewNonce(privateKeyData, new byte[0], enrollResult.getAccountKey());
+        byte[] newEncryptedUsk = pureCrypto.encryptSymmetricWithNewNonce(privateKeyData, new byte[0], enrollResult.getAccountKey());
 
         byte[] encryptedPwdHash = pureCrypto.encryptForBackup(newPasswordHash, buppk, oskp.getPrivateKey());
 

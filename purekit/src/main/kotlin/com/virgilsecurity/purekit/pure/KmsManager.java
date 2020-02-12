@@ -222,13 +222,13 @@ class KmsManager {
     byte[] recoverPwd(UserRecord userRecord) throws PureException {
         byte[] derivedSecret = recoverPwdSecret(userRecord);
 
-        return pureCrypto.decryptSymmetricOneTimeKey(userRecord.getPasswordRecoveryBlob(), new byte[0], derivedSecret);
+        return pureCrypto.decryptSymmetricWithOneTimeKey(userRecord.getPasswordRecoveryBlob(), new byte[0], derivedSecret);
     }
 
     byte[] recoverGrantKey(GrantKey grantKey, byte[] header) throws PureException {
         byte[] derivedSecret = recoverGrantKeySecret(grantKey);
 
-        return pureCrypto.decryptSymmetricOneTimeKey(grantKey.getEncryptedGrantKeyBlob(), header, derivedSecret);
+        return pureCrypto.decryptSymmetricWithOneTimeKey(grantKey.getEncryptedGrantKeyBlob(), header, derivedSecret);
     }
 
     KmsEncryptedData generatePwdRecoveryData(byte[] passwordHash) throws PureCryptoException {
@@ -246,7 +246,7 @@ class KmsManager {
 
             byte[] derivedSecret = kmsResult.getEncryptionKey();
 
-            byte[] resetPwdBlob = pureCrypto.encryptSymmetricOneTimeKey(data, header, derivedSecret);
+            byte[] resetPwdBlob = pureCrypto.encryptSymmetricWithOneTimeKey(data, header, derivedSecret);
 
             return new KmsEncryptedData(kmsResult.getWrap(), resetPwdBlob);
         }

@@ -103,7 +103,7 @@ class PureTestJava {
         switch (storageType) {
             case RAM:
                 context = PureContext.createContext(appToken, nmsString, bupkpString,
-                        new RamPureStorage(), secretKey, publicKey, externalPublicKeys,
+                        secretKey, publicKey, new RamPureStorage(), externalPublicKeys,
                         pheServerAddress, kmsServerAddress);
                 break;
 
@@ -120,7 +120,7 @@ class PureTestJava {
                     mariaDbPureStorage.initDb(20);
                 }
                 context = PureContext.createContext(appToken, nmsString, bupkpString,
-                        mariaDbPureStorage, secretKey, publicKey, externalPublicKeys,
+                        secretKey, publicKey, mariaDbPureStorage, externalPublicKeys,
                         pheServerAddress, kmsServerAddress);
                 break;
 
