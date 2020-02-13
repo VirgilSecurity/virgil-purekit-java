@@ -225,8 +225,7 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
         HashSet<String> idsSet = new HashSet<>(userIds);
 
         try (Connection conn = getConnection()) {
-            // TODO: Add userIds size limit and compute StringBuilder size properly
-            StringBuilder sbSql = new StringBuilder( 512 );
+            StringBuilder sbSql = new StringBuilder(/* heuristics */ 64 + 38 * userIds.size());
             sbSql.append("SELECT protobuf " +
                     "FROM virgil_users " +
                     "WHERE user_id in (" );
@@ -504,8 +503,7 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
         HashSet<String> namesSet = new HashSet<>(roleNames);
 
         try (Connection conn = getConnection()) {
-            // TODO: Proper StringBuilder size
-            StringBuilder sbSql = new StringBuilder(512);
+            StringBuilder sbSql = new StringBuilder(/* heuristics */ 64 + 66 * roleNames.size());
             sbSql.append("SELECT protobuf " +
                     "FROM virgil_roles " +
                     "WHERE role_name in (");
@@ -679,8 +677,7 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
         }
 
         try (Connection conn = getConnection()) {
-            // TODO: Proper StringBuild size
-            StringBuilder sbSql = new StringBuilder( 512 );
+            StringBuilder sbSql = new StringBuilder( /* heuristics */ 64 + 38 * userIds.size() );
             sbSql.append("DELETE FROM virgil_role_assignments WHERE role_name=? AND user_id in (" );
 
             for (int i = 0; i < userIds.size(); i++) {

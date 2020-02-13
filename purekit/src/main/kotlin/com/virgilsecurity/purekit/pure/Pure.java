@@ -416,7 +416,6 @@ public class Pure {
     public void deleteUser(String userId, boolean cascade) throws PureException {
 
         storage.deleteUser(userId, cascade);
-        // TODO: Should delete role assignments
     }
 
     /**
@@ -743,8 +742,6 @@ public class Pure {
                           String ownerUserId,
                           String dataId,
                           byte[] cipherText) throws PureException {
-
-        // TODO: Delete copy&paste
 
         ValidateUtils.checkNull(privateKey, "privateKey");
         ValidateUtils.checkNullOrEmpty(dataId, "dataId");

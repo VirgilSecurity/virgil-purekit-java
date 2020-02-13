@@ -186,7 +186,6 @@ class PureCrypto {
         try (MessageInfoDerSerializer messageInfoSerializer = new MessageInfoDerSerializer()) {
             messageInfoSerializer.setupDefaults();
             try (MessageInfo messageInfo = messageInfoSerializer.deserialize(cms)) {
-                // FIXME: KeyRecipientInfoList is also autoclosable
                 KeyRecipientInfoList keyRecipientInfoList = messageInfo.keyRecipientInfoList();
 
                 while (keyRecipientInfoList != null && keyRecipientInfoList.hasItem()) {
