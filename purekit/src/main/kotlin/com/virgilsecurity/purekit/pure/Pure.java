@@ -105,7 +105,7 @@ public class Pure {
      *
      */
     public void registerUser(String userId, String password) throws PureException {
-        registerUserInternal(userId, password, true);
+        registerUserInternal(userId, password);
     }
 
     /**
@@ -124,7 +124,7 @@ public class Pure {
         ValidateUtils.checkNullOrEmpty(password, "password");
         ValidateUtils.checkNull(pureSessionParams, "pureSessionParams");
 
-        RegisterResult registerResult = registerUserInternal(userId, password, true);
+        RegisterResult registerResult = registerUserInternal(userId, password);
 
         return authenticateUserInternal(registerResult.getUserRecord(), registerResult.getUkp(),
                 registerResult.getPhek(), pureSessionParams.getSessionId(), pureSessionParams.getTtl());
@@ -397,12 +397,13 @@ public class Pure {
      *
      * @param userId User id.
      * @param newPassword New password.
+     * @param cascade Deletes all user cell keys if true.
      *
      * @throws PureException PureException
      */
-    public void resetUserPassword(String userId, String newPassword) throws PureException {
-        // TODO: Add possibility to delete cell keys? -> ????
-        registerUserInternal(userId, newPassword, false);
+    public void resetUserPassword(String userId, String newPassword, boolean cascade) throws PureException {
+        deleteUser(userId, cascade);
+        registerUserInternal(userId, newPassword);
     }
 
     /**
@@ -970,7 +971,7 @@ public class Pure {
         }
     }
 
-    private RegisterResult registerUserInternal(String userId, String password, boolean isUserNew) throws PureException {
+    private RegisterResult registerUserInternal(String userId, String password) throws PureException {
         ValidateUtils.checkNullOrEmpty(userId, "userId");
         ValidateUtils.checkNullOrEmpty(password, "password");
 
@@ -1004,11 +1005,7 @@ public class Pure {
             pwdRecoveryData.getBlob()
         );
 
-        if (isUserNew) {
-            storage.insertUser(userRecord);
-        } else {
-            storage.updateUser(userRecord);
-        }
+        storage.insertUser(userRecord);
 
         return new RegisterResult(userRecord, ukp, pheResult.getAccountKey());
     }

@@ -522,27 +522,38 @@ class PureTestJava {
                 pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKey, secretKey, null, storage);
                 Pure pure = new Pure(pureResult.getContext());
 
-                String userId = UUID.randomUUID().toString();
+                String userId1 = UUID.randomUUID().toString();
                 String password1 = UUID.randomUUID().toString();
-                String password2 = UUID.randomUUID().toString();
-                String dataId = UUID.randomUUID().toString();
+                String userId2 = UUID.randomUUID().toString();
+                String password21 = UUID.randomUUID().toString();
+                String password22 = UUID.randomUUID().toString();
+                String dataId1 = UUID.randomUUID().toString();
+                String dataId2 = UUID.randomUUID().toString();
                 byte[] text = UUID.randomUUID().toString().getBytes();
 
-                pure.registerUser(userId, password1);
+                AuthResult authResult1 = pure.registerUser(userId1, password1, new PureSessionParams());
+                pure.registerUser(userId2, password21);
 
-                byte[] cipherText = pure.encrypt(userId, dataId, text);
+                byte[] cipherText1 = pure.encrypt(userId1, dataId1, text);
+                pure.share(authResult1.getGrant(), dataId1, userId2);
 
-                pure.resetUserPassword(userId, password2);
+                byte[] cipherText2 = pure.encrypt(userId2, dataId2, text);
 
-                AuthResult authResult = pure.authenticateUser(userId, password2);
+                pure.resetUserPassword(userId2, password22, true);
+
+                AuthResult authResult = pure.authenticateUser(userId2, password22);
 
                 assertNotNull(authResult);
 
-                PureLogicException e = assertThrows(PureLogicException.class, () -> {
-                    pure.decrypt(authResult.getGrant(), null, dataId, cipherText);
+                PureLogicException e1 = assertThrows(PureLogicException.class, () -> {
+                    pure.decrypt(authResult.getGrant(), userId1, dataId1, cipherText1);
                 });
 
-                assertEquals(PureLogicException.ErrorStatus.USER_HAS_NO_ACCESS_TO_DATA, e.getErrorStatus());
+                assertEquals(PureLogicException.ErrorStatus.USER_HAS_NO_ACCESS_TO_DATA, e1.getErrorStatus());
+
+                assertThrows(PureStorageCellKeyNotFoundException.class, () -> {
+                    pure.decrypt(authResult.getGrant(), null, dataId2, cipherText2);
+                });
             }
         } catch (Exception e) {
             fail(e);
