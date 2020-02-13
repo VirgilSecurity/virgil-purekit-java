@@ -37,6 +37,7 @@ import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage;
 import com.virgilsecurity.purekit.pure.model.*;
 import com.virgilsecurity.purekit.utils.ValidateUtils;
 
+import javax.sql.DataSource;
 import java.io.IOException;
 import java.sql.*;
 import java.util.*;
@@ -46,6 +47,7 @@ import java.util.*;
  */
 public class MariaDbPureStorage implements PureStorage, PureModelSerializerDependent {
     private final String url;
+    private final DataSource dataSource;
 
     /**
      * Returns PureModelSerializer
@@ -67,16 +69,35 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
 
     /**
      * Constructor
+     *
      * @param url connection url with credentials, e.g. "jdbc:mariadb://localhost/puretest?user=root&password=qwerty"
      */
     public MariaDbPureStorage(String url) {
         ValidateUtils.checkNullOrEmpty(url, "url");
 
         this.url = url;
+        this.dataSource = null;
+    }
+
+    /**
+     * Constructor
+     *
+     * @param dataSource connection dataSource
+     */
+    public MariaDbPureStorage(DataSource dataSource) {
+        ValidateUtils.checkNull(dataSource, "dataSource");
+
+        this.url = null;
+        this.dataSource = dataSource;
     }
 
     private Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(url);
+        if (dataSource != null) {
+            return dataSource.getConnection();
+        }
+        else {
+            return DriverManager.getConnection(url);
+        }
     }
 
     @Override
