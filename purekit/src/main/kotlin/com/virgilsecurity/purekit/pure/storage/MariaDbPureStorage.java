@@ -916,14 +916,14 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
                         "        REFERENCES virgil_users(user_id)" +
                         "        ON DELETE CASCADE," +
                         "data_id VARCHAR(128) NOT NULL," +
-                        "protobuf VARBINARY(32768) NOT NULL, /* FIXME Up to 128 recipients */" +
+                        "protobuf VARBINARY(32768) NOT NULL, /* Up to 125 recipients */" +
                         "    PRIMARY KEY(user_id, data_id)" +
                         ");");
             }
             try (Statement stmt = conn.createStatement()) {
                 stmt.executeUpdate("CREATE TABLE virgil_roles (" +
                         "role_name VARCHAR(64) NOT NULL PRIMARY KEY," +
-                        "protobuf VARBINARY(196) NOT NULL" +
+                        "protobuf VARBINARY(256) NOT NULL" +
                         ");");
             }
             try (Statement stmt = conn.createStatement()) {
@@ -952,7 +952,7 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
                         "key_id BINARY(64) NOT NULL," +
                         "expiration_date TIMESTAMP NOT NULL," +
                         "    INDEX expiration_date_index(expiration_date)," +
-                        "protobuf VARBINARY(1024) NOT NULL," +
+                        "protobuf VARBINARY(512) NOT NULL," +
                         "    PRIMARY KEY(user_id, key_id)" +
                         ");");
             }
