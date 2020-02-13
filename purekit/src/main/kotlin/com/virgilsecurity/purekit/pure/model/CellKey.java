@@ -33,6 +33,8 @@
 
 package com.virgilsecurity.purekit.pure.model;
 
+import com.virgilsecurity.purekit.utils.ValidateUtils;
+
 /**
  * CellKey class represents encrypted asymmetric key used to encrypt data.
  */
@@ -51,6 +53,12 @@ public class CellKey {
      * @param encryptedCskBody Encrypted cell secret key body.
      */
     public CellKey(String userId, String dataId, byte[] cpk, byte[] encryptedCskCms, byte[] encryptedCskBody) {
+        ValidateUtils.checkNullOrEmpty(userId, "userId");
+        ValidateUtils.checkNullOrEmpty(dataId, "dataId");
+        ValidateUtils.checkNullOrEmpty(cpk, "cpk");
+        ValidateUtils.checkNullOrEmpty(encryptedCskCms, "encryptedCskCms");
+        ValidateUtils.checkNullOrEmpty(encryptedCskBody, "encryptedCskBody");
+
         this.userId = userId;
         this.dataId = dataId;
         this.cpk = cpk;

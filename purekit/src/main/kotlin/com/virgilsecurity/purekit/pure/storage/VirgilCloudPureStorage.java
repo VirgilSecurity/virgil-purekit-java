@@ -63,6 +63,8 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
 
     @Override
     public void setPureModelSerializer(PureModelSerializer pureModelSerializer) {
+        ValidateUtils.checkNull(pureModelSerializer, "pureModelSerializer");
+
         this.pureModelSerializer = pureModelSerializer;
     }
 
@@ -82,12 +84,14 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
 
     @Override
     public void insertUser(UserRecord userRecord) throws PureStorageException {
+        ValidateUtils.checkNull(userRecord, "userRecord");
 
         sendUser(userRecord, true);
     }
 
     @Override
     public void updateUser(UserRecord userRecord) throws PureStorageException {
+        ValidateUtils.checkNull(userRecord, "userRecord");
 
         sendUser(userRecord, false);
     }
@@ -102,6 +106,7 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
 
     @Override
     public UserRecord selectUser(String userId) throws PureStorageException {
+        ValidateUtils.checkNullOrEmpty(userId, "userId");
 
         PurekitProtosV3Storage.UserRecord protobufRecord;
 
@@ -130,6 +135,7 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
 
     @Override
     public Iterable<UserRecord> selectUsers(Set<String> userIds) throws PureStorageException {
+        ValidateUtils.checkNull(userIds, "userIds");
 
         if (userIds.isEmpty()) {
             return Collections.emptyList();
@@ -178,6 +184,7 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
 
     @Override
     public void deleteUser(String userId, boolean cascade) throws PureStorageException {
+        ValidateUtils.checkNullOrEmpty(userId, "userId");
 
         try {
             client.deleteUser(userId, cascade);
@@ -190,6 +197,8 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
 
     @Override
     public CellKey selectCellKey(String userId, String dataId) throws PureStorageException {
+        ValidateUtils.checkNullOrEmpty(userId, "userId");
+        ValidateUtils.checkNullOrEmpty(dataId, "dataId");
 
         PurekitProtosV3Storage.CellKey protobufRecord;
         try {
@@ -215,18 +224,22 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
 
     @Override
     public void insertCellKey(CellKey cellKey) throws PureStorageException {
+        ValidateUtils.checkNull(cellKey, "cellKey");
 
         insertKey(cellKey, true);
     }
 
     @Override
     public void updateCellKey(CellKey cellKey) throws PureStorageException {
+        ValidateUtils.checkNull(cellKey, "cellKey");
 
         insertKey(cellKey, false);
     }
 
     @Override
     public void deleteCellKey(String userId, String dataId) throws PureStorageException {
+        ValidateUtils.checkNullOrEmpty(userId, "userId");
+        ValidateUtils.checkNullOrEmpty(dataId, "dataId");
 
         try {
             client.deleteCellKey(userId, dataId);
@@ -239,6 +252,8 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
 
     @Override
     public void insertRole(Role role) throws PureStorageException {
+        ValidateUtils.checkNull(role, "role");
+
         PurekitProtosV3Storage.Role protobufRecord = pureModelSerializer.serializeRole(role);
 
         try {
@@ -252,6 +267,8 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
 
     @Override
     public Iterable<Role> selectRoles(Set<String> roleNames) throws PureStorageException {
+        ValidateUtils.checkNull(roleNames, "roleNames");
+
         if (roleNames.isEmpty()) {
             return Collections.emptyList();
         }
@@ -290,6 +307,12 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
 
     @Override
     public void insertRoleAssignments(Collection<RoleAssignment> roleAssignments) throws PureStorageException {
+        ValidateUtils.checkNull(roleAssignments, "roleAssignments");
+
+        if (roleAssignments.isEmpty()) {
+            return;
+        }
+
         PurekitProtosV3Storage.RoleAssignments.Builder protobufBuilder = PurekitProtosV3Storage.RoleAssignments.newBuilder();
 
         for (RoleAssignment roleAssignment: roleAssignments) {
@@ -309,6 +332,8 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
 
     @Override
     public Iterable<RoleAssignment> selectRoleAssignments(String userId) throws PureStorageException {
+        ValidateUtils.checkNullOrEmpty(userId, "userId");
+
         PurekitProtosV3Client.GetRoleAssignments request = PurekitProtosV3Client.GetRoleAssignments.newBuilder()
                 .setUserId(userId)
                 .build();
@@ -339,6 +364,9 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
 
     @Override
     public RoleAssignment selectRoleAssignment(String roleName, String userId) throws PureStorageException {
+        ValidateUtils.checkNullOrEmpty(roleName, "roleName");
+        ValidateUtils.checkNullOrEmpty(userId, "userId");
+
         PurekitProtosV3Client.GetRoleAssignment request = PurekitProtosV3Client.GetRoleAssignment.newBuilder()
                 .setUserId(userId)
                 .setRoleName(roleName)
@@ -358,6 +386,9 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
 
     @Override
     public void deleteRoleAssignments(String roleName, Set<String> userIds) throws PureStorageException {
+        ValidateUtils.checkNullOrEmpty(roleName, "roleName");
+        ValidateUtils.checkNull(userIds, "userIds");
+
         if (userIds.isEmpty()) {
             return;
         }
@@ -379,6 +410,8 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
 
     @Override
     public void insertGrantKey(GrantKey grantKey) throws PureStorageException {
+        ValidateUtils.checkNull(grantKey, "grantKey");
+
         PurekitProtosV3Storage.GrantKey protobufRecord = pureModelSerializer.serializeGrantKey(grantKey);
 
         try {
@@ -392,6 +425,9 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
 
     @Override
     public GrantKey selectGrantKey(String userId, byte[] keyId) throws PureStorageException {
+        ValidateUtils.checkNullOrEmpty(userId, "userId");
+        ValidateUtils.checkNullOrEmpty(keyId, "keyId");
+
         PurekitProtosV3Client.GrantKeyDescriptor request = PurekitProtosV3Client.GrantKeyDescriptor.newBuilder()
                 .setUserId(userId)
                 .setKeyId(ByteString.copyFrom(keyId))
@@ -442,6 +478,9 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
 
     @Override
     public void deleteGrantKey(String userId, byte[] keyId) throws PureStorageException {
+        ValidateUtils.checkNullOrEmpty(userId, "userId");
+        ValidateUtils.checkNullOrEmpty(keyId, "keyId");
+
         PurekitProtosV3Client.GrantKeyDescriptor request = PurekitProtosV3Client.GrantKeyDescriptor.newBuilder()
                 .setUserId(userId)
                 .setKeyId(ByteString.copyFrom(keyId))

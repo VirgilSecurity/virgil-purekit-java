@@ -401,7 +401,7 @@ class PureTestJava {
 
                 pure.registerUser(userId, password);
 
-                AuthResult authResult = pure.authenticateUser(userId, password, 20);
+                AuthResult authResult = pure.authenticateUser(userId, password, new PureSessionParams(20));
 
                 PureGrant grant1 = pure.decryptGrantFromUser(authResult.getEncryptedGrant());
 

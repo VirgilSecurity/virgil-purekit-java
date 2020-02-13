@@ -33,6 +33,8 @@
 
 package com.virgilsecurity.purekit.pure.model;
 
+import com.virgilsecurity.purekit.utils.ValidateUtils;
+
 /**
  * Role
  */
@@ -48,6 +50,9 @@ public class Role {
      * @param rpk role public key
      */
     public Role(String roleName, byte[] rpk) {
+        ValidateUtils.checkNullOrEmpty(roleName, "roleName");
+        ValidateUtils.checkNullOrEmpty(rpk, "rpk");
+
         this.roleName = roleName;
         this.rpk = rpk;
     }

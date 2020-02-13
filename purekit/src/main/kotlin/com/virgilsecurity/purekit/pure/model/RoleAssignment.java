@@ -33,6 +33,8 @@
 
 package com.virgilsecurity.purekit.pure.model;
 
+import com.virgilsecurity.purekit.utils.ValidateUtils;
+
 /**
  * Role assignment
  */
@@ -51,6 +53,11 @@ public class RoleAssignment {
      * @param encryptedRsk encrypted role private key
      */
     public RoleAssignment(String roleName, String userId, byte[] publicKeyId, byte[] encryptedRsk) {
+        ValidateUtils.checkNullOrEmpty(roleName, "roleName");
+        ValidateUtils.checkNullOrEmpty(userId, "userId");
+        ValidateUtils.checkNullOrEmpty(publicKeyId, "publicKeyId");
+        ValidateUtils.checkNullOrEmpty(encryptedRsk, "encryptedRsk");
+
         this.roleName = roleName;
         this.userId = userId;
         this.publicKeyId = publicKeyId;

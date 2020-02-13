@@ -38,7 +38,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.virgilsecurity.common.exception.EmptyArgumentException;
-import com.virgilsecurity.common.util.Base64;
 import com.virgilsecurity.purekit.client.AvailableRequests;
 import com.virgilsecurity.purekit.client.HttpClientProtobuf;
 import com.virgilsecurity.purekit.data.ProtocolException;
@@ -369,7 +368,7 @@ public class HttpPureClient {
 
         ValidateUtils.checkNull(roleAssignments, "roleAssignments");
         if (roleAssignments.getRoleAssignmentsList().isEmpty()) {
-            throw new EmptyArgumentException("roleNames");
+            throw new EmptyArgumentException("roleAssignments");
         }
 
         client.firePost(

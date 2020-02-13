@@ -80,7 +80,7 @@ public class PureContext {
             return payload2;
         }
 
-        public byte[] getPayload3() {
+        byte[] getPayload3() {
             return payload3;
         }
 
@@ -115,7 +115,15 @@ public class PureContext {
                         Map<String, List<String>> externalPublicKeys,
                         String pheServiceAddress,
                         String kmsServiceAddress) throws PureException {
+        ValidateUtils.checkNull(crypto, "crypto");
+        ValidateUtils.checkNullOrEmpty(appToken, "appToken");
+        ValidateUtils.checkNullOrEmpty(nms, "nms");
+        ValidateUtils.checkNullOrEmpty(buppk, buppk);
+        ValidateUtils.checkNullOrEmpty(secretKey, secretKey);
+        ValidateUtils.checkNullOrEmpty(publicKey, "publicKey");
         ValidateUtils.checkNull(storage, "storage");
+        ValidateUtils.checkNullOrEmpty(pheServiceAddress, "pheServiceAddress");
+        ValidateUtils.checkNullOrEmpty(kmsServiceAddress, "kmsServiceAddress");
 
         this.crypto = crypto;
 
@@ -219,6 +227,9 @@ public class PureContext {
                                             String pheServiceAddress,
                                             String pureServiceAddress,
                                             String kmsServiceAddress) throws PureException {
+
+        ValidateUtils.checkNullOrEmpty(at, "at");
+        ValidateUtils.checkNullOrEmpty(pureServiceAddress, "pureServiceAddress");
 
         VirgilCrypto crypto = new VirgilCrypto();
         HttpPureClient pureClient = new HttpPureClient(at, pureServiceAddress);

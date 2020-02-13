@@ -33,6 +33,8 @@
 
 package com.virgilsecurity.purekit.pure.model;
 
+import com.virgilsecurity.purekit.utils.ValidateUtils;
+
 /**
  * User record
  */
@@ -62,6 +64,15 @@ public class UserRecord {
     public UserRecord(String userId, byte[] pheRecord, int recordVersion, byte[] upk,
                       byte[] encryptedUsk, byte[] encryptedUskBackup, byte[] backupPwdHash,
                       byte[] passwordRecoveryWrap, byte[] passwordRecoveryBlob) {
+        ValidateUtils.checkNullOrEmpty(userId, "userId");
+        ValidateUtils.checkNullOrEmpty(pheRecord, "pheRecord");
+        ValidateUtils.checkNullOrEmpty(upk, "upk");
+        ValidateUtils.checkNullOrEmpty(encryptedUsk, "encryptedUsk");
+        ValidateUtils.checkNullOrEmpty(encryptedUskBackup, "encryptedUskBackup");
+        ValidateUtils.checkNullOrEmpty(backupPwdHash, "backupPwdHash");
+        ValidateUtils.checkNullOrEmpty(passwordRecoveryWrap, "passwordRecoveryWrap");
+        ValidateUtils.checkNullOrEmpty(passwordRecoveryBlob, "passwordRecoveryBlob");
+
         this.userId = userId;
         this.pheRecord = pheRecord;
         this.recordVersion = recordVersion;

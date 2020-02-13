@@ -33,12 +33,17 @@
 
 package com.virgilsecurity.purekit.pure;
 
+import com.virgilsecurity.purekit.utils.ValidateUtils;
+
 class PureCryptoData {
 
     private final byte[] cms;
     private final byte[] body;
 
     PureCryptoData(byte[] cms, byte[] body) {
+        ValidateUtils.checkNullOrEmpty(cms, "cms");
+        ValidateUtils.checkNullOrEmpty(body, "body");
+
         this.cms = cms;
         this.body = body;
     }

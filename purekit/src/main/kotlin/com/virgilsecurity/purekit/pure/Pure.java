@@ -59,6 +59,9 @@ import com.virgilsecurity.sdk.crypto.VirgilPublicKey;
  */
 public class Pure {
     public static final long DEFAULT_GRANT_TTL = 60 * 60; // 1 hour
+
+    private final static int currentGrantVersion = 1;
+
     private final int currentVersion;
     private final PureCrypto pureCrypto;
     private final PureStorage storage;
@@ -68,14 +71,14 @@ public class Pure {
     private final PheManager pheManager;
     private final KmsManager kmsManager;
 
-    private final static int currentGrantVersion = 1;
-
     /**
      * Instantiates Pure.
      *
      * @param context PureContext.
      */
     public Pure(PureContext context) throws PureCryptoException {
+        ValidateUtils.checkNull(context, "context");
+
         this.pureCrypto = new PureCrypto(context.getCrypto());
         this.storage = context.getStorage();
         this.buppk = context.getBuppk();
@@ -102,8 +105,29 @@ public class Pure {
      *
      */
     public void registerUser(String userId, String password) throws PureException {
+        registerUserInternal(userId, password, true);
+    }
 
-        registerUser(userId, password, true);
+    /**
+     * Registers and authenticates new user.
+     *
+     * @param userId User Id.
+     * @param password Password.
+     * @param pureSessionParams pureSessionParams
+     *
+     * @throws PureException PureException
+     *
+     */
+    public AuthResult registerUser(String userId, String password, PureSessionParams pureSessionParams) throws PureException {
+
+        ValidateUtils.checkNullOrEmpty(userId, "userId");
+        ValidateUtils.checkNullOrEmpty(password, "password");
+        ValidateUtils.checkNull(pureSessionParams, "pureSessionParams");
+
+        RegisterResult registerResult = registerUserInternal(userId, password, true);
+
+        return authenticateUserInternal(registerResult.getUserRecord(), registerResult.getUkp(),
+                registerResult.getPhek(), pureSessionParams.getSessionId(), pureSessionParams.getTtl());
     }
 
     /**
@@ -111,17 +135,17 @@ public class Pure {
      *
      * @param userId User Id.
      * @param password Password.
-     * @param sessionId Optional sessionId which will be present in PureGrant.
-     * @param ttl time to live in seconds
+     * @param pureSessionParams pureSessionParams
      *
      * @return AuthResult with PureGrant and encrypted PureGrant.
      *
      * @throws PureException PureException
      */
-    public AuthResult authenticateUser(String userId, String password, String sessionId, long ttl) throws PureException {
+    public AuthResult authenticateUser(String userId, String password, PureSessionParams pureSessionParams) throws PureException {
 
         ValidateUtils.checkNullOrEmpty(userId, "userId");
         ValidateUtils.checkNullOrEmpty(password, "password");
+        ValidateUtils.checkNull(pureSessionParams, "pureSessionParams");
 
         UserRecord userRecord = storage.selectUser(userId);
 
@@ -131,51 +155,7 @@ public class Pure {
 
         VirgilKeyPair ukp = pureCrypto.importPrivateKey(uskData);
 
-        Date creationDate = new Date();
-        Date expirationDate = new Date(creationDate.getTime() + ttl * 1000);
-
-        PureGrant grant = new PureGrant(ukp, userId, sessionId, creationDate, expirationDate);
-
-        byte[] grantKeyRaw = pureCrypto.generateSymmetricOneTimeKey();
-        byte[] keyId = pureCrypto.computeSymmetricKeyId(grantKeyRaw);
-
-        PurekitProtosV3Grant.EncryptedGrantHeader.Builder headerBuilder =
-                PurekitProtosV3Grant.EncryptedGrantHeader.newBuilder()
-                        .setCreationDate((int) (grant.getCreationDate().getTime() / 1000))
-                        .setExpirationDate((int) (grant.getExpirationDate().getTime() / 1000))
-                        .setUserId(grant.getUserId())
-                        .setKeyId(ByteString.copyFrom(keyId));
-
-        if (sessionId != null) {
-            headerBuilder.setSessionId(sessionId);
-        }
-
-        PurekitProtosV3Grant.EncryptedGrantHeader header = headerBuilder.build();
-
-        byte[] headerBytes = header.toByteArray();
-
-        KmsManager.KmsEncryptedData grantWrap = kmsManager.generateGrantKeyEncryptionData(grantKeyRaw, headerBytes);
-
-        GrantKey grantKey = new GrantKey(userId,
-                keyId, currentVersion,
-                grantWrap.getWrap(),
-                grantWrap.getBlob(),
-                creationDate, expirationDate);
-
-        storage.insertGrantKey(grantKey);
-
-        byte[] encryptedPhek = pureCrypto.encryptSymmetricWithOneTimeKey(phek, headerBytes, grantKeyRaw);
-
-        PurekitProtosV3Grant.EncryptedGrant encryptedGrantData =
-                PurekitProtosV3Grant.EncryptedGrant.newBuilder()
-                        .setVersion(Pure.currentGrantVersion)
-                        .setHeader(ByteString.copyFrom(headerBytes))
-                        .setEncryptedPhek(ByteString.copyFrom(encryptedPhek))
-                        .build();
-
-        String encryptedGrant = Base64.encode(encryptedGrantData.toByteArray());
-
-        return new AuthResult(grant, encryptedGrant);
+        return authenticateUserInternal(userRecord, ukp, phek, pureSessionParams.getSessionId(), pureSessionParams.getTtl());
     }
 
     /**
@@ -183,22 +163,6 @@ public class Pure {
      *
      * @param userId User Id.
      * @param password Password.
-     * @param ttl time to live in seconds
-     *
-     * @return AuthResult with PureGrant and encrypted PureGrant.
-     *
-     * @throws PureException PureException
-     */
-    public AuthResult authenticateUser(String userId, String password, long ttl) throws PureException {
-
-        return authenticateUser(userId, password, null, ttl);
-    }
-
-    /**
-     * Authenticates user.
-     *
-     * @param userId User id
-     * @param password password
      *
      * @return AuthResult with PureGrant and encrypted PureGrant.
      *
@@ -206,23 +170,7 @@ public class Pure {
      */
     public AuthResult authenticateUser(String userId, String password) throws PureException {
 
-        return authenticateUser(userId, password, null, DEFAULT_GRANT_TTL);
-    }
-
-    /**
-     * Authenticates user.
-     *
-     * @param userId User id
-     * @param password password
-     * @param sessionId sessionId, can be null
-     *
-     * @return AuthResult with PureGrant and encrypted PureGrant.
-     *
-     * @throws PureException PureException
-     */
-    public AuthResult authenticateUser(String userId, String password, String sessionId) throws PureException {
-
-        return authenticateUser(userId, password, sessionId, DEFAULT_GRANT_TTL);
+        return authenticateUser(userId, password, new PureSessionParams());
     }
 
     /**
@@ -340,7 +288,7 @@ public class Pure {
 
         byte[] privateKeyData = pureCrypto.decryptSymmetricWithNewNonce(userRecord.getEncryptedUsk(), new byte[0], oldPhek);
 
-        changeUserPassword(userRecord, privateKeyData, newPassword);
+        changeUserPasswordInternal(userRecord, privateKeyData, newPassword);
     }
 
     /**
@@ -361,7 +309,7 @@ public class Pure {
 
         byte[] privateKeyData = pureCrypto.exportPrivateKey(grant.getUkp().getPrivateKey());
 
-        changeUserPassword(userRecord, privateKeyData, newPassword);
+        changeUserPasswordInternal(userRecord, privateKeyData, newPassword);
     }
 
     /**
@@ -386,7 +334,7 @@ public class Pure {
 
         byte[] privateKeyData = pureCrypto.decryptSymmetricWithNewNonce(userRecord.getEncryptedUsk(), new byte[0], oldPhek);
 
-        changeUserPassword(userRecord, privateKeyData, newPassword);
+        changeUserPasswordInternal(userRecord, privateKeyData, newPassword);
     }
 
     /**
@@ -399,7 +347,7 @@ public class Pure {
      */
     public void resetUserPassword(String userId, String newPassword) throws PureException {
         // TODO: Add possibility to delete cell keys? -> ????
-        registerUser(userId, newPassword, false);
+        registerUserInternal(userId, newPassword, false);
     }
 
     /**
@@ -929,7 +877,31 @@ public class Pure {
         storage.deleteRoleAssignments(roleName, userIds);
     }
 
-    private void registerUser(String userId, String password, boolean isUserNew) throws PureException {
+    static class RegisterResult {
+        private final UserRecord userRecord;
+        private final VirgilKeyPair ukp;
+        private final byte[] phek;
+
+        public RegisterResult(UserRecord userRecord, VirgilKeyPair ukp, byte[] phek) {
+            this.userRecord = userRecord;
+            this.ukp = ukp;
+            this.phek = phek;
+        }
+
+        public UserRecord getUserRecord() {
+            return userRecord;
+        }
+
+        public VirgilKeyPair getUkp() {
+            return ukp;
+        }
+
+        public byte[] getPhek() {
+            return phek;
+        }
+    }
+
+    private RegisterResult registerUserInternal(String userId, String password, boolean isUserNew) throws PureException {
         ValidateUtils.checkNullOrEmpty(userId, "userId");
         ValidateUtils.checkNullOrEmpty(password, "password");
 
@@ -968,11 +940,61 @@ public class Pure {
         } else {
             storage.updateUser(userRecord);
         }
+
+        return new RegisterResult(userRecord, ukp, pheResult.getAccountKey());
     }
 
-    private void changeUserPassword(UserRecord userRecord,
-                                    byte[] privateKeyData,
-                                    String newPassword) throws PureException {
+    private AuthResult authenticateUserInternal(UserRecord userRecord, VirgilKeyPair ukp, byte[] phek, String sessionId, long ttl) throws PureException {
+        Date creationDate = new Date();
+        Date expirationDate = new Date(creationDate.getTime() + ttl * 1000);
+
+        PureGrant grant = new PureGrant(ukp, userRecord.getUserId(), sessionId, creationDate, expirationDate);
+
+        byte[] grantKeyRaw = pureCrypto.generateSymmetricOneTimeKey();
+        byte[] keyId = pureCrypto.computeSymmetricKeyId(grantKeyRaw);
+
+        PurekitProtosV3Grant.EncryptedGrantHeader.Builder headerBuilder =
+                PurekitProtosV3Grant.EncryptedGrantHeader.newBuilder()
+                        .setCreationDate((int) (grant.getCreationDate().getTime() / 1000))
+                        .setExpirationDate((int) (grant.getExpirationDate().getTime() / 1000))
+                        .setUserId(grant.getUserId())
+                        .setKeyId(ByteString.copyFrom(keyId));
+
+        if (sessionId != null) {
+            headerBuilder.setSessionId(sessionId);
+        }
+
+        PurekitProtosV3Grant.EncryptedGrantHeader header = headerBuilder.build();
+
+        byte[] headerBytes = header.toByteArray();
+
+        KmsManager.KmsEncryptedData grantWrap = kmsManager.generateGrantKeyEncryptionData(grantKeyRaw, headerBytes);
+
+        GrantKey grantKey = new GrantKey(userRecord.getUserId(),
+                keyId, currentVersion,
+                grantWrap.getWrap(),
+                grantWrap.getBlob(),
+                creationDate, expirationDate);
+
+        storage.insertGrantKey(grantKey);
+
+        byte[] encryptedPhek = pureCrypto.encryptSymmetricWithOneTimeKey(phek, headerBytes, grantKeyRaw);
+
+        PurekitProtosV3Grant.EncryptedGrant encryptedGrantData =
+                PurekitProtosV3Grant.EncryptedGrant.newBuilder()
+                        .setVersion(Pure.currentGrantVersion)
+                        .setHeader(ByteString.copyFrom(headerBytes))
+                        .setEncryptedPhek(ByteString.copyFrom(encryptedPhek))
+                        .build();
+
+        String encryptedGrant = Base64.encode(encryptedGrantData.toByteArray());
+
+        return new AuthResult(grant, encryptedGrant);
+    }
+
+    private void changeUserPasswordInternal(UserRecord userRecord,
+                                            byte[] privateKeyData,
+                                            String newPassword) throws PureException {
 
         ValidateUtils.checkNullOrEmpty(newPassword, "newPassword");
 
