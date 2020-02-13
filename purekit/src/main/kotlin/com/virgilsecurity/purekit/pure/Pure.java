@@ -174,6 +174,23 @@ public class Pure {
     }
 
     /**
+     * Invalidates existing encrypted user grant
+     *
+     * @param encryptedGrantString encryptedGrantString
+     *
+     * @throws PureException PureException
+     */
+    public void invalidateEncryptedUserGrant(String encryptedGrantString) throws PureException {
+        DeserializedEncryptedGrant deserializedEncryptedGrant = deserializeEncryptedGrant(encryptedGrantString);
+
+        // Just to check that grant was valid
+        decryptPheKeyFromEncryptedGrant(deserializedEncryptedGrant);
+
+        storage.deleteGrantKey(deserializedEncryptedGrant.getHeader().getUserId(),
+                deserializedEncryptedGrant.getHeader().getKeyId().toByteArray());
+    }
+
+    /**
      * Creates PureGrant for some user using admin backup private key.
      *
      * @param userId User Id.
@@ -201,8 +218,75 @@ public class Pure {
         return new PureGrant(upk, userId, null, creationDate, expirationDate);
     }
 
+    /**
+     * Creates PureGrant for some user using admin backup private key.
+     *
+     * @param userId User Id.
+     * @param bupsk Admin backup private key.
+     *
+     * @return PureGrant.
+     *
+     * @throws PureException PureException
+     */
     public PureGrant createUserGrantAsAdmin(String userId, VirgilPrivateKey bupsk) throws PureException {
         return createUserGrantAsAdmin(userId, bupsk, DEFAULT_GRANT_TTL);
+    }
+
+    static class DeserializedEncryptedGrant {
+        private final PurekitProtosV3Grant.EncryptedGrant encryptedGrant;
+        private final PurekitProtosV3Grant.EncryptedGrantHeader header;
+
+        DeserializedEncryptedGrant(PurekitProtosV3Grant.EncryptedGrant encryptedGrant, PurekitProtosV3Grant.EncryptedGrantHeader header) {
+            this.encryptedGrant = encryptedGrant;
+            this.header = header;
+        }
+
+        PurekitProtosV3Grant.EncryptedGrant getEncryptedGrant() {
+            return encryptedGrant;
+        }
+
+        PurekitProtosV3Grant.EncryptedGrantHeader getHeader() {
+            return header;
+        }
+    }
+
+    private DeserializedEncryptedGrant deserializeEncryptedGrant(String encryptedGrantString)  throws PureException {
+        ValidateUtils.checkNullOrEmpty(encryptedGrantString, "encryptedGrantString");
+
+        byte[] encryptedGrantData = Base64.decode(encryptedGrantString.getBytes());
+
+        PurekitProtosV3Grant.EncryptedGrant encryptedGrant;
+        try {
+            encryptedGrant = PurekitProtosV3Grant.EncryptedGrant.parseFrom(encryptedGrantData);
+        } catch (InvalidProtocolBufferException e) {
+            throw new PureLogicException(PureLogicException.ErrorStatus.GRANT_INVALID_PROTOBUF);
+        }
+
+        PurekitProtosV3Grant.EncryptedGrantHeader header;
+        try {
+            header = PurekitProtosV3Grant.EncryptedGrantHeader.parseFrom(encryptedGrant.getHeader());
+        } catch (InvalidProtocolBufferException e) {
+            throw new PureLogicException(PureLogicException.ErrorStatus.GRANT_INVALID_PROTOBUF);
+        }
+
+        return new DeserializedEncryptedGrant(encryptedGrant, header);
+    }
+
+    private byte[] decryptPheKeyFromEncryptedGrant(DeserializedEncryptedGrant deserializedEncryptedGrant) throws PureException {
+        ByteString encryptedData = deserializedEncryptedGrant.getEncryptedGrant().getEncryptedPhek();
+
+        GrantKey grantKey = storage.selectGrantKey(deserializedEncryptedGrant.getHeader().getUserId(),
+                deserializedEncryptedGrant.getHeader().getKeyId().toByteArray());
+
+        if (grantKey.getExpirationDate().before(new Date())) {
+            throw new PureLogicException(PureLogicException.ErrorStatus.GRANT_IS_EXPIRED);
+        }
+
+        byte[] grantKeyRaw = kmsManager.recoverGrantKey(grantKey, deserializedEncryptedGrant.getHeader().toByteArray());
+
+        return pureCrypto.decryptSymmetricWithOneTimeKey(encryptedData.toByteArray(),
+                deserializedEncryptedGrant.getHeader().toByteArray(),
+                grantKeyRaw);
     }
 
     /**
@@ -215,56 +299,27 @@ public class Pure {
      * @throws PureException PureException
      */
     public PureGrant decryptGrantFromUser(String encryptedGrantString) throws PureException {
+        DeserializedEncryptedGrant deserializedEncryptedGrant = deserializeEncryptedGrant(encryptedGrantString);
 
-        ValidateUtils.checkNullOrEmpty(encryptedGrantString, "encryptedGrantString");
+        byte[] phek = decryptPheKeyFromEncryptedGrant(deserializedEncryptedGrant);
 
-        byte[] encryptedGrantData = Base64.decode(encryptedGrantString.getBytes());
-
-        PurekitProtosV3Grant.EncryptedGrant encryptedGrant;
-        try {
-            encryptedGrant = PurekitProtosV3Grant.EncryptedGrant.parseFrom(encryptedGrantData);
-        } catch (InvalidProtocolBufferException e) {
-            throw new PureLogicException(PureLogicException.ErrorStatus.GRANT_INVALID_PROTOBUF);
-        }
-
-        ByteString encryptedData = encryptedGrant.getEncryptedPhek();
-
-        PurekitProtosV3Grant.EncryptedGrantHeader header;
-        try {
-            header = PurekitProtosV3Grant.EncryptedGrantHeader.parseFrom(encryptedGrant.getHeader());
-        } catch (InvalidProtocolBufferException e) {
-            throw new PureLogicException(PureLogicException.ErrorStatus.GRANT_INVALID_PROTOBUF);
-        }
-
-        GrantKey grantKey = storage.selectGrantKey(header.getUserId(), header.getKeyId().toByteArray());
-
-        if (grantKey.getExpirationDate().before(new Date())) {
-            throw new PureLogicException(PureLogicException.ErrorStatus.GRANT_IS_EXPIRED);
-        }
-
-        byte[] grantKeyRaw = kmsManager.recoverGrantKey(grantKey, encryptedGrant.getHeader().toByteArray());
-
-        byte[] phek = pureCrypto.decryptSymmetricWithOneTimeKey(encryptedData.toByteArray(),
-                encryptedGrant.getHeader().toByteArray(),
-                grantKeyRaw);
-
-        UserRecord userRecord = storage.selectUser(header.getUserId());
+        UserRecord userRecord = storage.selectUser(deserializedEncryptedGrant.getHeader().getUserId());
 
         byte[] usk = pureCrypto.decryptSymmetricWithNewNonce(userRecord.getEncryptedUsk(), new byte[0], phek);
 
         VirgilKeyPair ukp = pureCrypto.importPrivateKey(usk);
 
-        String sessionId = header.getSessionId();
+        String sessionId = deserializedEncryptedGrant.getHeader().getSessionId();
 
         if (sessionId.isEmpty()) {
             sessionId = null;
         }
 
         return new PureGrant(ukp,
-                header.getUserId(),
+                deserializedEncryptedGrant.getHeader().getUserId(),
                 sessionId,
-                new Date((long) (header.getCreationDate()) * 1000),
-                new Date((long) (header.getExpirationDate()) * 1000));
+                new Date((long) (deserializedEncryptedGrant.getHeader().getCreationDate()) * 1000),
+                new Date((long) (deserializedEncryptedGrant.getHeader().getExpirationDate()) * 1000));
     }
 
     /**
@@ -364,19 +419,38 @@ public class Pure {
         // TODO: Should delete role assignments
     }
 
+    /**
+     * Rotation result
+     */
     public static class RotationResults {
         private final long usersRotated;
         private final long grantKeysRotated;
 
+        /**
+         * Constructor
+         *
+         * @param usersRotated number of users that were rotated
+         * @param grantKeysRotated number of grant keys that were rotated
+         */
         public RotationResults(long usersRotated, long grantKeysRotated) {
             this.usersRotated = usersRotated;
             this.grantKeysRotated = grantKeysRotated;
         }
 
+        /**
+         * Returns number of users that were rotated
+         *
+         * @return number of users that were rotated
+         */
         public long getUsersRotated() {
             return usersRotated;
         }
 
+        /**
+         * Returns number of grant keys that were rotated
+         *
+         * @return number of grant keys that were rotated
+         */
         public long getGrantKeysRotated() {
             return grantKeysRotated;
         }
@@ -701,7 +775,6 @@ public class Pure {
     public void share(PureGrant grant, String dataId, String otherUserId) throws PureException {
 
         ValidateUtils.checkNull(grant, "grant");
-
         ValidateUtils.checkNullOrEmpty(dataId, "dataId");
         ValidateUtils.checkNullOrEmpty(otherUserId, "otherUserId");
 
@@ -727,7 +800,6 @@ public class Pure {
         ValidateUtils.checkNull(grant, "grant");
         ValidateUtils.checkNull(otherUserIds, "otherUserIds");
         ValidateUtils.checkNull(publicKeys, "publicKeys");
-
         ValidateUtils.checkNullOrEmpty(dataId, "dataId");
 
         ArrayList<VirgilPublicKey> keys = keysWithOthers(publicKeys, otherUserIds);

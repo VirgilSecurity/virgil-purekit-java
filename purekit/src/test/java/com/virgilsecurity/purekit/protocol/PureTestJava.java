@@ -435,6 +435,40 @@ class PureTestJava {
     }
 
     @ParameterizedTest @MethodSource("testArgumentsNoToken")
+    void grant__invalidate__should_not_decrypt(String pheServerAddress,
+                                               String pureServerAddress,
+                                               String kmsServerAddress,
+                                               String appToken,
+                                               String publicKey,
+                                               String secretKey) throws InterruptedException {
+        ThreadUtils.pause();
+
+        try {
+            PureSetupResult pureResult;
+            StorageType[] storages = createStorages();
+            for (StorageType storage: storages) {
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKey, secretKey, null, storage);
+                Pure pure = new Pure(pureResult.getContext());
+
+                String userId = UUID.randomUUID().toString();
+                String password = UUID.randomUUID().toString();
+
+                AuthResult authResult = pure.registerUser(userId, password, new PureSessionParams());
+
+                pure.invalidateEncryptedUserGrant(authResult.getEncryptedGrant());
+
+                PureStorageGenericException ex = assertThrows(PureStorageGenericException.class, () -> {
+                    pure.decryptGrantFromUser(authResult.getEncryptedGrant());
+                });
+
+                assertEquals(PureStorageGenericException.ErrorStatus.GRANT_KEY_NOT_FOUND, ex.getErrorStatus());
+            }
+        } catch (Exception e) {
+            fail(e);
+        }
+    }
+
+    @ParameterizedTest @MethodSource("testArgumentsNoToken")
     void grant__admin_access__should_decrypt(String pheServerAddress,
                                              String pureServerAddress,
                                              String kmsServerAddress,
