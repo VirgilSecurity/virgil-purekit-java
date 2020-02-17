@@ -34,7 +34,7 @@
 buildscript {
     ext.versions = [
             // Virgil
-            virgilCrypto   : '0.12.1',
+            virgilCrypto   : '0.12.2-SNAPSHOT',
             sdk            : '7.1.0',
 
             // Http client
@@ -73,6 +73,9 @@ allprojects {
     version "3.0.0-SNAPSHOT"
 
     repositories {
+        maven {
+            url 'https://oss.sonatype.org/content/repositories/snapshots'
+        }
         jcenter()
         mavenCentral()
         mavenLocal()

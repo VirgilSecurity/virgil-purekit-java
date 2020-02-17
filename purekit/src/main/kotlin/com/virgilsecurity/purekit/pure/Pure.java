@@ -952,21 +952,21 @@ public class Pure {
         private final VirgilKeyPair ukp;
         private final byte[] phek;
 
-        public RegisterResult(UserRecord userRecord, VirgilKeyPair ukp, byte[] phek) {
+        RegisterResult(UserRecord userRecord, VirgilKeyPair ukp, byte[] phek) {
             this.userRecord = userRecord;
             this.ukp = ukp;
             this.phek = phek;
         }
 
-        public UserRecord getUserRecord() {
+        UserRecord getUserRecord() {
             return userRecord;
         }
 
-        public VirgilKeyPair getUkp() {
+        VirgilKeyPair getUkp() {
             return ukp;
         }
 
-        public byte[] getPhek() {
+        byte[] getPhek() {
             return phek;
         }
     }

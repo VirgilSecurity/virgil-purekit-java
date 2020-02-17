@@ -741,11 +741,10 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
                     "protobuf) " +
                     "VALUES (?, ?, ?, ?, ?);")) {
 
-                Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
                 stmt.setString(1, grantKey.getUserId());
                 stmt.setBytes(2, grantKey.getKeyId());
                 stmt.setInt(3, grantKey.getRecordVersion());
-                stmt.setTimestamp(4, new Timestamp(grantKey.getExpirationDate().getTime()), cal);
+                stmt.setLong(4, grantKey.getExpirationDate().getTime() / 1000);
                 stmt.setBytes(5, protobuf.toByteArray());
 
                 try {
@@ -968,7 +967,7 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
                         "        REFERENCES virgil_users(user_id)" +
                         "        ON DELETE CASCADE," +
                         "key_id BINARY(64) NOT NULL," +
-                        "expiration_date TIMESTAMP NOT NULL," +
+                        "expiration_date BIGINT NOT NULL," +
                         "    INDEX expiration_date_index(expiration_date)," +
                         "protobuf VARBINARY(512) NOT NULL," +
                         "    PRIMARY KEY(user_id, key_id)" +
@@ -979,7 +978,7 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
             }
             try (PreparedStatement stmt = conn.prepareStatement("CREATE EVENT delete_expired_grant_keys ON SCHEDULE EVERY ? SECOND" +
                                              "    DO" +
-                                             "        DELETE FROM virgil_grant_keys WHERE expiration_date < CURRENT_TIMESTAMP;")) {
+                                             "        DELETE FROM virgil_grant_keys WHERE expiration_date < UNIX_TIMESTAMP();")) {
                 stmt.setInt(1, cleanGrantKeysIntervalSeconds);
 
                 stmt.executeUpdate();

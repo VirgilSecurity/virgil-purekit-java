@@ -49,9 +49,6 @@ import com.virgilsecurity.purekit.utils.ValidateUtils;
  * PureStorage on Virgil cloud side
  */
 public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerDependent {
-
-    // TODO: Map more service errors here
-
     /**
      * Returns PureModelSerializer
      *

@@ -59,6 +59,7 @@ dependencies {
 
     // Virgil Core SDK
     implementation "com.virgilsecurity.sdk:crypto:$versions.sdk"
+    testImplementation "com.virgilsecurity.sdk:sdk:$versions.sdk"
 
     // Phe crypto
     api "com.virgilsecurity.crypto:phe:$versions.virgilCrypto"
