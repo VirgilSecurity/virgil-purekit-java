@@ -42,8 +42,8 @@ message EncryptedGrantHeader {
     string user_id = 1;
     string session_id = 2;
     bytes key_id = 3;
-    uint32 creation_date = 4;
-    uint32 expiration_date = 5;
+    uint64 creation_date = 4;
+    uint64 expiration_date = 5;
 }
 
 message EncryptedGrant {

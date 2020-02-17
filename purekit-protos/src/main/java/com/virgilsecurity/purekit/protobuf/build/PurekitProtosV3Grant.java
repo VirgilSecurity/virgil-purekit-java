@@ -44,14 +44,14 @@ public final class PurekitProtosV3Grant {
     com.google.protobuf.ByteString getKeyId();
 
     /**
-     * <code>uint32 creation_date = 4;</code>
+     * <code>uint64 creation_date = 4;</code>
      */
-    int getCreationDate();
+    long getCreationDate();
 
     /**
-     * <code>uint32 expiration_date = 5;</code>
+     * <code>uint64 expiration_date = 5;</code>
      */
-    int getExpirationDate();
+    long getExpirationDate();
   }
   /**
    * Protobuf type {@code build.EncryptedGrantHeader}
@@ -120,12 +120,12 @@ public final class PurekitProtosV3Grant {
             }
             case 32: {
 
-              creationDate_ = input.readUInt32();
+              creationDate_ = input.readUInt64();
               break;
             }
             case 40: {
 
-              expirationDate_ = input.readUInt32();
+              expirationDate_ = input.readUInt64();
               break;
             }
             default: {
@@ -238,20 +238,20 @@ public final class PurekitProtosV3Grant {
     }
 
     public static final int CREATION_DATE_FIELD_NUMBER = 4;
-    private int creationDate_;
+    private long creationDate_;
     /**
-     * <code>uint32 creation_date = 4;</code>
+     * <code>uint64 creation_date = 4;</code>
      */
-    public int getCreationDate() {
+    public long getCreationDate() {
       return creationDate_;
     }
 
     public static final int EXPIRATION_DATE_FIELD_NUMBER = 5;
-    private int expirationDate_;
+    private long expirationDate_;
     /**
-     * <code>uint32 expiration_date = 5;</code>
+     * <code>uint64 expiration_date = 5;</code>
      */
-    public int getExpirationDate() {
+    public long getExpirationDate() {
       return expirationDate_;
     }
 
@@ -278,11 +278,11 @@ public final class PurekitProtosV3Grant {
       if (!keyId_.isEmpty()) {
         output.writeBytes(3, keyId_);
       }
-      if (creationDate_ != 0) {
-        output.writeUInt32(4, creationDate_);
+      if (creationDate_ != 0L) {
+        output.writeUInt64(4, creationDate_);
       }
-      if (expirationDate_ != 0) {
-        output.writeUInt32(5, expirationDate_);
+      if (expirationDate_ != 0L) {
+        output.writeUInt64(5, expirationDate_);
       }
       unknownFields.writeTo(output);
     }
@@ -303,13 +303,13 @@ public final class PurekitProtosV3Grant {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(3, keyId_);
       }
-      if (creationDate_ != 0) {
+      if (creationDate_ != 0L) {
         size += com.google.protobuf.CodedOutputStream
-          .computeUInt32Size(4, creationDate_);
+          .computeUInt64Size(4, creationDate_);
       }
-      if (expirationDate_ != 0) {
+      if (expirationDate_ != 0L) {
         size += com.google.protobuf.CodedOutputStream
-          .computeUInt32Size(5, expirationDate_);
+          .computeUInt64Size(5, expirationDate_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -354,9 +354,11 @@ public final class PurekitProtosV3Grant {
       hash = (37 * hash) + KEY_ID_FIELD_NUMBER;
       hash = (53 * hash) + getKeyId().hashCode();
       hash = (37 * hash) + CREATION_DATE_FIELD_NUMBER;
-      hash = (53 * hash) + getCreationDate();
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getCreationDate());
       hash = (37 * hash) + EXPIRATION_DATE_FIELD_NUMBER;
-      hash = (53 * hash) + getExpirationDate();
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getExpirationDate());
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -496,9 +498,9 @@ public final class PurekitProtosV3Grant {
 
         keyId_ = com.google.protobuf.ByteString.EMPTY;
 
-        creationDate_ = 0;
+        creationDate_ = 0L;
 
-        expirationDate_ = 0;
+        expirationDate_ = 0L;
 
         return this;
       }
@@ -590,10 +592,10 @@ public final class PurekitProtosV3Grant {
         if (other.getKeyId() != com.google.protobuf.ByteString.EMPTY) {
           setKeyId(other.getKeyId());
         }
-        if (other.getCreationDate() != 0) {
+        if (other.getCreationDate() != 0L) {
           setCreationDate(other.getCreationDate());
         }
-        if (other.getExpirationDate() != 0) {
+        if (other.getExpirationDate() != 0L) {
           setExpirationDate(other.getExpirationDate());
         }
         this.mergeUnknownFields(other.unknownFields);
@@ -792,54 +794,54 @@ public final class PurekitProtosV3Grant {
         return this;
       }
 
-      private int creationDate_ ;
+      private long creationDate_ ;
       /**
-       * <code>uint32 creation_date = 4;</code>
+       * <code>uint64 creation_date = 4;</code>
        */
-      public int getCreationDate() {
+      public long getCreationDate() {
         return creationDate_;
       }
       /**
-       * <code>uint32 creation_date = 4;</code>
+       * <code>uint64 creation_date = 4;</code>
        */
-      public Builder setCreationDate(int value) {
+      public Builder setCreationDate(long value) {
         
         creationDate_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>uint32 creation_date = 4;</code>
+       * <code>uint64 creation_date = 4;</code>
        */
       public Builder clearCreationDate() {
         
-        creationDate_ = 0;
+        creationDate_ = 0L;
         onChanged();
         return this;
       }
 
-      private int expirationDate_ ;
+      private long expirationDate_ ;
       /**
-       * <code>uint32 expiration_date = 5;</code>
+       * <code>uint64 expiration_date = 5;</code>
        */
-      public int getExpirationDate() {
+      public long getExpirationDate() {
         return expirationDate_;
       }
       /**
-       * <code>uint32 expiration_date = 5;</code>
+       * <code>uint64 expiration_date = 5;</code>
        */
-      public Builder setExpirationDate(int value) {
+      public Builder setExpirationDate(long value) {
         
         expirationDate_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>uint32 expiration_date = 5;</code>
+       * <code>uint64 expiration_date = 5;</code>
        */
       public Builder clearExpirationDate() {
         
-        expirationDate_ = 0;
+        expirationDate_ = 0L;
         onChanged();
         return this;
       }
@@ -1530,7 +1532,7 @@ public final class PurekitProtosV3Grant {
       "\n\025purekitV3_grant.proto\022\005build\"{\n\024Encryp" +
       "tedGrantHeader\022\017\n\007user_id\030\001 \001(\t\022\022\n\nsessi" +
       "on_id\030\002 \001(\t\022\016\n\006key_id\030\003 \001(\014\022\025\n\rcreation_" +
-      "date\030\004 \001(\r\022\027\n\017expiration_date\030\005 \001(\r\"I\n\016E" +
+      "date\030\004 \001(\004\022\027\n\017expiration_date\030\005 \001(\004\"I\n\016E" +
       "ncryptedGrant\022\017\n\007version\030\001 \001(\r\022\026\n\016encryp" +
       "ted_phek\030\002 \001(\014\022\016\n\006header\030\003 \001(\014BA\n)com.vi" +
       "rgilsecurity.purekit.protobuf.buildB\024Pur" +

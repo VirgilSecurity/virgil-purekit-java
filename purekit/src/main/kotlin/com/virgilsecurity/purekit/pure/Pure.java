@@ -318,8 +318,8 @@ public class Pure {
         return new PureGrant(ukp,
                 deserializedEncryptedGrant.getHeader().getUserId(),
                 sessionId,
-                new Date((long) (deserializedEncryptedGrant.getHeader().getCreationDate()) * 1000),
-                new Date((long) (deserializedEncryptedGrant.getHeader().getExpirationDate()) * 1000));
+                new Date(deserializedEncryptedGrant.getHeader().getCreationDate() * 1000),
+                new Date(deserializedEncryptedGrant.getHeader().getExpirationDate() * 1000));
     }
 
     /**
@@ -779,6 +779,8 @@ public class Pure {
         share(grant, dataId, Collections.singleton(otherUserId), Collections.emptyList());
     }
 
+    // TODO: Add share for roles
+
     /**
      * Gives possibility to decrypt data to other user that is not data owner.
      * Shared data can then be decrypted using other user's PureGrant.
@@ -1021,8 +1023,8 @@ public class Pure {
 
         PurekitProtosV3Grant.EncryptedGrantHeader.Builder headerBuilder =
                 PurekitProtosV3Grant.EncryptedGrantHeader.newBuilder()
-                        .setCreationDate((int) (grant.getCreationDate().getTime() / 1000))
-                        .setExpirationDate((int) (grant.getExpirationDate().getTime() / 1000))
+                        .setCreationDate(grant.getCreationDate().getTime() / 1000)
+                        .setExpirationDate(grant.getExpirationDate().getTime() / 1000)
                         .setUserId(grant.getUserId())
                         .setKeyId(ByteString.copyFrom(keyId));
 

@@ -378,8 +378,8 @@ public class PureModelSerializer {
                 .setUserId(grantKey.getUserId())
                 .setKeyId(ByteString.copyFrom(grantKey.getKeyId()))
                 .setEncryptedGrantKeyBlob(ByteString.copyFrom(grantKey.getEncryptedGrantKeyBlob()))
-                .setCreationDate((int) (grantKey.getCreationDate().getTime() / 1000))
-                .setExpirationDate((int) (grantKey.getExpirationDate().getTime() / 1000))
+                .setCreationDate(grantKey.getCreationDate().getTime() / 1000)
+                .setExpirationDate(grantKey.getExpirationDate().getTime() / 1000)
                 .build()
                 .toByteArray();
 
@@ -421,7 +421,7 @@ public class PureModelSerializer {
                 protobufRecord.getRecordVersion(),
                 protobufRecord.getEncryptedGrantKeyWrap().toByteArray(),
                 grantKeySigned.getEncryptedGrantKeyBlob().toByteArray(),
-                new Date((long)(grantKeySigned.getCreationDate()) * 1000),
-                new Date((long)(grantKeySigned.getExpirationDate()) * 1000));
+                new Date(grantKeySigned.getCreationDate() * 1000),
+                new Date(grantKeySigned.getExpirationDate() * 1000));
     }
 }

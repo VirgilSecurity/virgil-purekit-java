@@ -8716,14 +8716,14 @@ public final class PurekitProtosV3Storage {
     com.google.protobuf.ByteString getEncryptedGrantKeyBlob();
 
     /**
-     * <code>uint32 creation_date = 5;</code>
+     * <code>uint64 creation_date = 5;</code>
      */
-    int getCreationDate();
+    long getCreationDate();
 
     /**
-     * <code>uint32 expiration_date = 6;</code>
+     * <code>uint64 expiration_date = 6;</code>
      */
-    int getExpirationDate();
+    long getExpirationDate();
   }
   /**
    * Protobuf type {@code build.GrantKeySigned}
@@ -8796,12 +8796,12 @@ public final class PurekitProtosV3Storage {
             }
             case 40: {
 
-              creationDate_ = input.readUInt32();
+              creationDate_ = input.readUInt64();
               break;
             }
             case 48: {
 
-              expirationDate_ = input.readUInt32();
+              expirationDate_ = input.readUInt64();
               break;
             }
             default: {
@@ -8898,20 +8898,20 @@ public final class PurekitProtosV3Storage {
     }
 
     public static final int CREATION_DATE_FIELD_NUMBER = 5;
-    private int creationDate_;
+    private long creationDate_;
     /**
-     * <code>uint32 creation_date = 5;</code>
+     * <code>uint64 creation_date = 5;</code>
      */
-    public int getCreationDate() {
+    public long getCreationDate() {
       return creationDate_;
     }
 
     public static final int EXPIRATION_DATE_FIELD_NUMBER = 6;
-    private int expirationDate_;
+    private long expirationDate_;
     /**
-     * <code>uint32 expiration_date = 6;</code>
+     * <code>uint64 expiration_date = 6;</code>
      */
-    public int getExpirationDate() {
+    public long getExpirationDate() {
       return expirationDate_;
     }
 
@@ -8941,11 +8941,11 @@ public final class PurekitProtosV3Storage {
       if (!encryptedGrantKeyBlob_.isEmpty()) {
         output.writeBytes(4, encryptedGrantKeyBlob_);
       }
-      if (creationDate_ != 0) {
-        output.writeUInt32(5, creationDate_);
+      if (creationDate_ != 0L) {
+        output.writeUInt64(5, creationDate_);
       }
-      if (expirationDate_ != 0) {
-        output.writeUInt32(6, expirationDate_);
+      if (expirationDate_ != 0L) {
+        output.writeUInt64(6, expirationDate_);
       }
       unknownFields.writeTo(output);
     }
@@ -8971,13 +8971,13 @@ public final class PurekitProtosV3Storage {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(4, encryptedGrantKeyBlob_);
       }
-      if (creationDate_ != 0) {
+      if (creationDate_ != 0L) {
         size += com.google.protobuf.CodedOutputStream
-          .computeUInt32Size(5, creationDate_);
+          .computeUInt64Size(5, creationDate_);
       }
-      if (expirationDate_ != 0) {
+      if (expirationDate_ != 0L) {
         size += com.google.protobuf.CodedOutputStream
-          .computeUInt32Size(6, expirationDate_);
+          .computeUInt64Size(6, expirationDate_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -9026,9 +9026,11 @@ public final class PurekitProtosV3Storage {
       hash = (37 * hash) + ENCRYPTED_GRANT_KEY_BLOB_FIELD_NUMBER;
       hash = (53 * hash) + getEncryptedGrantKeyBlob().hashCode();
       hash = (37 * hash) + CREATION_DATE_FIELD_NUMBER;
-      hash = (53 * hash) + getCreationDate();
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getCreationDate());
       hash = (37 * hash) + EXPIRATION_DATE_FIELD_NUMBER;
-      hash = (53 * hash) + getExpirationDate();
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getExpirationDate());
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -9170,9 +9172,9 @@ public final class PurekitProtosV3Storage {
 
         encryptedGrantKeyBlob_ = com.google.protobuf.ByteString.EMPTY;
 
-        creationDate_ = 0;
+        creationDate_ = 0L;
 
-        expirationDate_ = 0;
+        expirationDate_ = 0L;
 
         return this;
       }
@@ -9267,10 +9269,10 @@ public final class PurekitProtosV3Storage {
         if (other.getEncryptedGrantKeyBlob() != com.google.protobuf.ByteString.EMPTY) {
           setEncryptedGrantKeyBlob(other.getEncryptedGrantKeyBlob());
         }
-        if (other.getCreationDate() != 0) {
+        if (other.getCreationDate() != 0L) {
           setCreationDate(other.getCreationDate());
         }
-        if (other.getExpirationDate() != 0) {
+        if (other.getExpirationDate() != 0L) {
           setExpirationDate(other.getExpirationDate());
         }
         this.mergeUnknownFields(other.unknownFields);
@@ -9455,54 +9457,54 @@ public final class PurekitProtosV3Storage {
         return this;
       }
 
-      private int creationDate_ ;
+      private long creationDate_ ;
       /**
-       * <code>uint32 creation_date = 5;</code>
+       * <code>uint64 creation_date = 5;</code>
        */
-      public int getCreationDate() {
+      public long getCreationDate() {
         return creationDate_;
       }
       /**
-       * <code>uint32 creation_date = 5;</code>
+       * <code>uint64 creation_date = 5;</code>
        */
-      public Builder setCreationDate(int value) {
+      public Builder setCreationDate(long value) {
         
         creationDate_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>uint32 creation_date = 5;</code>
+       * <code>uint64 creation_date = 5;</code>
        */
       public Builder clearCreationDate() {
         
-        creationDate_ = 0;
+        creationDate_ = 0L;
         onChanged();
         return this;
       }
 
-      private int expirationDate_ ;
+      private long expirationDate_ ;
       /**
-       * <code>uint32 expiration_date = 6;</code>
+       * <code>uint64 expiration_date = 6;</code>
        */
-      public int getExpirationDate() {
+      public long getExpirationDate() {
         return expirationDate_;
       }
       /**
-       * <code>uint32 expiration_date = 6;</code>
+       * <code>uint64 expiration_date = 6;</code>
        */
-      public Builder setExpirationDate(int value) {
+      public Builder setExpirationDate(long value) {
         
         expirationDate_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>uint32 expiration_date = 6;</code>
+       * <code>uint64 expiration_date = 6;</code>
        */
       public Builder clearExpirationDate() {
         
-        expirationDate_ = 0;
+        expirationDate_ = 0L;
         onChanged();
         return this;
       }
@@ -10404,8 +10406,8 @@ public final class PurekitProtosV3Storage {
       "ld.RoleAssignment\"\224\001\n\016GrantKeySigned\022\017\n\007" +
       "version\030\001 \001(\r\022\017\n\007user_id\030\002 \001(\t\022\016\n\006key_id" +
       "\030\003 \001(\014\022 \n\030encrypted_grant_key_blob\030\004 \001(\014" +
-      "\022\025\n\rcreation_date\030\005 \001(\r\022\027\n\017expiration_da" +
-      "te\030\006 \001(\r\"\202\001\n\010GrantKey\022\017\n\007version\030\001 \001(\r\022\030" +
+      "\022\025\n\rcreation_date\030\005 \001(\004\022\027\n\017expiration_da" +
+      "te\030\006 \001(\004\"\202\001\n\010GrantKey\022\017\n\007version\030\001 \001(\r\022\030" +
       "\n\020grant_key_signed\030\002 \001(\014\022\021\n\tsignature\030\003 " +
       "\001(\014\022\026\n\016record_version\030\004 \001(\r\022 \n\030encrypted" +
       "_grant_key_wrap\030\005 \001(\014BC\n)com.virgilsecur" +

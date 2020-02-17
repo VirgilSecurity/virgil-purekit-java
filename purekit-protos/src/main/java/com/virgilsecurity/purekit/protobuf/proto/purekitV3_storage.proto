@@ -118,8 +118,8 @@ message GrantKeySigned {
     string user_id = 2;
     bytes key_id = 3;
     bytes encrypted_grant_key_blob = 4;
-    uint32 creation_date = 5;
-    uint32 expiration_date = 6;
+    uint64 creation_date = 5;
+    uint64 expiration_date = 6;
 }
 
 message GrantKey {
