@@ -37,9 +37,6 @@ plugins {
     id 'signing'
 }
 
-group "com.virgilsecurity"
-version "3.0.0"
-
 apply plugin: 'java-library'
 apply plugin: 'kotlin'
 apply plugin: 'maven'
@@ -51,7 +48,6 @@ sourceCompatibility = 1.8
 repositories {
     jcenter()
 }
-
 
 dependencies {
     implementation project(":purekit-protos")

@@ -69,6 +69,9 @@ buildscript {
 }
 
 allprojects {
+    group "com.virgilsecurity"
+    version "3.0.0-SNAPSHOT"
+
     repositories {
         jcenter()
         mavenCentral()
