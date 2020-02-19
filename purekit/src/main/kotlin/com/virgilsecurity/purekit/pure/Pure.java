@@ -368,7 +368,7 @@ public class Pure {
     }
 
     /**
-     * Recovers user in case he doesn't remember his password
+     * Recovers user in case he doesn't remember his password. All encrypted data remains accessible after this method call.
      *
      * Note: this method is under server-side rate-limiting, which prevents adversary from decrypting database.
      *
