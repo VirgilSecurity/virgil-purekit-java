@@ -175,7 +175,7 @@ public interface PureStorage {
      *
      * @throws PureStorageException PureStorageException
      */
-    Iterable<Role> selectRoles(Set<String> roleNames) throws PureStorageException;
+    Set<Role> selectRoles(Set<String> roleNames) throws PureStorageException;
 
     /**
      * Insert a Role assignment into a storage.

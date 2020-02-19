@@ -264,11 +264,11 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
     }
 
     @Override
-    public Iterable<Role> selectRoles(Set<String> roleNames) throws PureStorageException {
+    public Set<Role> selectRoles(Set<String> roleNames) throws PureStorageException {
         ValidateUtils.checkNull(roleNames, "roleNames");
 
         if (roleNames.isEmpty()) {
-            return Collections.emptyList();
+            return Collections.emptySet();
         }
 
         PurekitProtosV3Client.GetRoles getRolesResuest =
@@ -276,7 +276,7 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
 
         HashSet<String> namesSet = new HashSet<>(roleNames);
 
-        PurekitProtosV3Storage.Roles protoRecords = null;
+        PurekitProtosV3Storage.Roles protoRecords;
         try {
             protoRecords = client.getRoles(getRolesResuest);
         } catch (ProtocolException e) {
@@ -289,7 +289,7 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
             throw new PureStorageGenericException(PureStorageGenericException.ErrorStatus.DUPLICATE_ROLE_NAME);
         }
 
-        ArrayList<Role> roles = new ArrayList<>(protoRecords.getRolesCount());
+        Set<Role> roles = new HashSet<>(protoRecords.getRolesCount());
 
         for (PurekitProtosV3Storage.Role protobufRecord : protoRecords.getRolesList()) {
             Role role = pureModelSerializer.parseRole(protobufRecord);

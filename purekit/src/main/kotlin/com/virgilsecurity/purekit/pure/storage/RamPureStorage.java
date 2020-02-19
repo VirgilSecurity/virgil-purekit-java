@@ -210,9 +210,9 @@ public class RamPureStorage implements PureStorage {
     }
 
     @Override
-    public Iterable<Role> selectRoles(Set<String> roleNames) throws PureStorageException {
+    public Set<Role> selectRoles(Set<String> roleNames) throws PureStorageException {
 
-        ArrayList<Role> roles = new ArrayList<>(roleNames.size());
+        Set<Role> roles = new HashSet<>(roleNames.size());
 
         for (String roleName: roleNames) {
             Role role = this.roles.get(roleName);

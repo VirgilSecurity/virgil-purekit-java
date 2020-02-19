@@ -514,11 +514,11 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
     }
 
     @Override
-    public Iterable<Role> selectRoles(Set<String> roleNames) throws PureStorageException {
+    public Set<Role> selectRoles(Set<String> roleNames) throws PureStorageException {
         ValidateUtils.checkNull(roleNames, "roleNames");
 
         if (roleNames.isEmpty()) {
-            return new ArrayList<>();
+            return Collections.emptySet();
         }
 
         HashSet<String> namesSet = new HashSet<>(roleNames);
@@ -542,7 +542,7 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
                 }
 
                 try (ResultSet rs = stmt.executeQuery()) {
-                    ArrayList<Role> roles = new ArrayList<>();
+                    Set<Role> roles = new HashSet<>();
                     while (rs.next()) {
                         Role role = parseRole(rs);
 

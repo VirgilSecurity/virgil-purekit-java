@@ -35,9 +35,11 @@ package com.virgilsecurity.purekit.pure;
 
 import java.nio.ByteBuffer;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
+import com.virgilsecurity.common.exception.EmptyArgumentException;
 import com.virgilsecurity.common.util.Base64;
 import com.virgilsecurity.crypto.foundation.FoundationException;
 import com.virgilsecurity.crypto.phe.PheClientEnrollAccountResult;
@@ -795,7 +797,46 @@ public class Pure {
         share(grant, dataId, Collections.singleton(otherUserId), Collections.emptyList());
     }
 
-    // TODO: Add share for roles
+    /**
+     * Share data to roles
+     *
+     * @param grant pure grant
+     * @param dataId dataId
+     * @param roleNames role names
+     * @throws PureException PureException
+     */
+    public void shareToRole(PureGrant grant, String dataId, Set<String> roleNames) throws PureException {
+        ValidateUtils.checkNull(grant, "grant");
+        ValidateUtils.checkNullOrEmpty(dataId, "dataId");
+        ValidateUtils.checkNull(roleNames, "roleNames");
+
+        if (roleNames.isEmpty()) {
+            throw new EmptyArgumentException("roleNames");
+        }
+
+        Set<Role> roles = storage.selectRoles(roleNames);
+
+        Set<VirgilPublicKey> roleKeys = new HashSet<>(roleNames.size());
+
+        for (Role role: roles) {
+            roleKeys.add(pureCrypto.importPublicKey(role.getRpk()));
+        }
+
+        share(grant, dataId, Collections.emptySet(), roleKeys);
+    }
+    /**
+     * Share data to role
+     *
+     * @param grant pure grant
+     * @param dataId dataId
+     * @param roleName role name
+     * @throws PureException PureException
+     */
+    public void shareToRole(PureGrant grant, String dataId, String roleName) throws PureException {
+        ValidateUtils.checkNull(roleName, "roleName");
+
+        shareToRole(grant, dataId, Collections.singleton(roleName));
+    }
 
     /**
      * Gives possibility to decrypt data to other user that is not data owner.
@@ -923,19 +964,31 @@ public class Pure {
     }
 
     /**
+     * Assigns user to role
+     *
+     * @param roleName role name
+     * @param grant grant of one of users, that are already assigned to this role
+     * @param userId user id of user who will be assigned to this role
+     * @throws PureException PureException
+     */
+    public void assignRole(String roleName, PureGrant grant, String userId) throws PureException {
+        assignRole(roleName, grant, Collections.singleton(userId));
+    }
+
+    /**
      * Assigns users to role
      *
-     * @param roleToAssign role name
+     * @param roleName role name
      * @param grant grant of one of users, that are already assigned to this role
      * @param userIds user ids of users who will be assigned to this role
      * @throws PureException PureException
      */
-    public void assignRole(String roleToAssign, PureGrant grant, Set<String> userIds) throws PureException {
-        RoleAssignment roleAssignment = storage.selectRoleAssignment(roleToAssign, grant.getUserId());
+    public void assignRole(String roleName, PureGrant grant, Set<String> userIds) throws PureException {
+        RoleAssignment roleAssignment = storage.selectRoleAssignment(roleName, grant.getUserId());
 
         byte[] rskData = pureCrypto.decryptRolePrivateKey(roleAssignment.getEncryptedRsk(), grant.getUkp().getPrivateKey(), oskp.getPublicKey());
 
-        assignRole(roleToAssign, roleAssignment.getPublicKeyId(), rskData, userIds);
+        assignRole(roleName, roleAssignment.getPublicKeyId(), rskData, userIds);
     }
 
     private void assignRole(String roleName, byte[] publicKeyId, byte[] rskData, Set<String> userIds) throws PureException {
