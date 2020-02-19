@@ -42,16 +42,12 @@ import java.io.File
 object FileUtils {
 
     @JvmStatic fun versionFromGradle(): String =
-            File(PropertyUtils.getSystemProperty("user.dir")
-                         + File.separator
-                         + PUREKIT_MODULE_NAME,
+            File(PropertyUtils.getSystemProperty("user.dir"),
                  "build.gradle")
                     .readLines()
                     .first { it.startsWith(VERSION_PREFIX) }
                     .substringAfter(VERSION_PREFIX)
                     .removeSuffix("\"")
 
-    private const val VERSION_PREFIX = "version \""
-
-    private const val PUREKIT_MODULE_NAME = "purekit"
+    private const val VERSION_PREFIX = "    version \""
 }
