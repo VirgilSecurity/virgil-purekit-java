@@ -663,7 +663,23 @@ public class Pure {
      *
      * @param grant User PureGrant obtained using {@link Pure#authenticateUser} or
      *             {@link Pure#createUserGrantAsAdmin} methods.
-     * @param ownerUserId Owner userId, pass null if PureGrant belongs to.
+     * @param dataId Data Id that was used during encryption.
+     * @param cipherText Cipher text.
+     *
+     * @return Plain text.
+     *
+     * @throws PureException PureException
+     */
+    public byte[] decrypt(PureGrant grant, String dataId, byte[] cipherText) throws PureException {
+        return decrypt(grant, null, dataId, cipherText);
+    }
+
+    /**
+     * Decrypts data.
+     *
+     * @param grant User PureGrant obtained using {@link Pure#authenticateUser} or
+     *             {@link Pure#createUserGrantAsAdmin} methods.
+     * @param ownerUserId Owner userId, pass null if PureGrant belongs to owner.
      * @param dataId Data Id that was used during encryption.
      * @param cipherText Cipher text.
      *
