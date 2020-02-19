@@ -325,7 +325,7 @@ public class HttpPureClient {
     /**
      * Obtains roles
      *
-     * @param roleNames Role names
+     * @param getRolesRequest Role names
      *
      * @return Roles
      *
@@ -334,19 +334,13 @@ public class HttpPureClient {
      * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
      * successfully. Represents a regular HTTP exception with code and message.
      */
-    public PurekitProtosV3Storage.Roles getRoles(Collection<String> roleNames)
+    public PurekitProtosV3Storage.Roles getRoles(PurekitProtosV3Client.GetRoles getRolesRequest)
             throws ProtocolHttpException, ProtocolException {
 
-        ValidateUtils.checkNull(roleNames, "roleNames");
-        if (roleNames.isEmpty()) {
-            throw new EmptyArgumentException("roleNames");
-        }
-
-        PurekitProtosV3Client.GetRoles getRoles =
-                PurekitProtosV3Client.GetRoles.newBuilder().addAllRoleNames(roleNames).build();
+        ValidateUtils.checkNull(getRolesRequest, "getRolesRequest");
 
         return client.firePost(
-                getRoles,
+                getRolesRequest,
                 AvailableRequests.GET_ROLES.getType(),
                 this.appToken,
                 PurekitProtosV3Storage.Roles.parser()

@@ -36,6 +36,7 @@ package com.virgilsecurity.purekit.pure.storage;
 import java.util.*;
 
 import com.google.protobuf.ByteString;
+import com.virgilsecurity.common.exception.EmptyArgumentException;
 import com.virgilsecurity.purekit.data.ProtocolException;
 import com.virgilsecurity.purekit.data.ProtocolHttpException;
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client;
@@ -270,11 +271,14 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
             return Collections.emptyList();
         }
 
+        PurekitProtosV3Client.GetRoles getRolesResuest =
+                PurekitProtosV3Client.GetRoles.newBuilder().addAllRoleNames(roleNames).build();
+
         HashSet<String> namesSet = new HashSet<>(roleNames);
 
         PurekitProtosV3Storage.Roles protoRecords = null;
         try {
-            protoRecords = client.getRoles(roleNames);
+            protoRecords = client.getRoles(getRolesResuest);
         } catch (ProtocolException e) {
             throw new VirgilCloudStorageException(e);
         } catch (ProtocolHttpException e) {
