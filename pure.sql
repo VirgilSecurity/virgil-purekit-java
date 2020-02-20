@@ -1,3 +1,6 @@
+CREATE DATABASE puretest;
+USE puretest;
+
 -- MariaDB dump 10.17  Distrib 10.4.11-MariaDB, for debian-linux-gnu (x86_64)
 --
 -- Host: localhost    Database: puretest
