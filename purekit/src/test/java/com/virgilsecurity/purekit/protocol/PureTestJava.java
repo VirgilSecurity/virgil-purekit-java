@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Stream;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.virgilsecurity.common.util.Base64;
@@ -29,11 +30,16 @@ import com.virgilsecurity.sdk.crypto.VirgilCrypto;
 import com.virgilsecurity.sdk.crypto.VirgilKeyPair;
 import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
 
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-class PureTestJava {
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+public class PureTestJava {
     private static class PureSetupResult {
         private final PureContext context;
         private final VirgilKeyPair bupkp;
@@ -1257,8 +1263,9 @@ class PureTestJava {
         }
     }
 
+    @Order(1)
     @ParameterizedTest @MethodSource("testArgumentsNoToken")
-    void crosscompatibility__json__should_work(String pheServerAddress,
+    void cross_compatibility__json__should_work(String pheServerAddress,
                                                String pureServerAddress,
                                                String kmsServerAddress,
                                                String appToken,
