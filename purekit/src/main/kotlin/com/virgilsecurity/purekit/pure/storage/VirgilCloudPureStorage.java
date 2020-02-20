@@ -152,7 +152,7 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
         }
 
         if (protoRecords.getUserRecordsCount() != userIds.size()) {
-            throw new PureStorageGenericException(PureStorageGenericException.ErrorStatus.DUPLICATE_USER_ID);
+            throw new PureStorageGenericException(PureStorageGenericException.ErrorStatus.USER_COUNT_MISMATCH);
         }
 
         ArrayList<UserRecord> userRecords = new ArrayList<>(protoRecords.getUserRecordsCount());

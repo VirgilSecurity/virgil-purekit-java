@@ -71,7 +71,7 @@ public class PureStorageGenericException extends PureStorageException {
         ROLE_NAME_MISMATCH(6, "Role name mismatch"),
         ROLE_USER_ID_MISMATCH(7, "Role user id mismatch"),
         ROLE_NAME_USER_ID_MISMATCH(8, "Role name and user id mismatch"),
-        DUPLICATE_USER_ID(9, "Duplicate user Id"),
+        USER_COUNT_MISMATCH(9, "User count mismatch"),
         DUPLICATE_ROLE_NAME(10, "Duplicate role name"),
         GRANT_KEY_NOT_FOUND(11, "Grant key has not been found in the storage"),
         GRANT_KEY_ID_MISMATCH(12, "Grant key id mismatch"),
