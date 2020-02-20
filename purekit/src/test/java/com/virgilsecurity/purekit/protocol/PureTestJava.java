@@ -8,10 +8,14 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.io.InputStreamReader;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Stream;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.virgilsecurity.common.util.Base64;
 import com.virgilsecurity.purekit.pure.*;
 import com.virgilsecurity.purekit.pure.exception.PureException;
 import com.virgilsecurity.purekit.pure.storage.*;
@@ -94,9 +98,9 @@ class PureTestJava {
         if (nmsData == null) {
             nmsData = this.crypto.generateRandomData(32);
         }
-        String nmsString = String.format("NM.%s", Base64.getEncoder().encodeToString(nmsData));
+        String nmsString = String.format("NM.%s", Base64.encode(nmsData));
 
-        String bupkpString = String.format("BU.%s", Base64.getEncoder().encodeToString(this.crypto.exportPublicKey(bupkp.getPublicKey())));
+        String bupkpString = String.format("BU.%s", Base64.encode(this.crypto.exportPublicKey(bupkp.getPublicKey())));
 
         PureContext context;
 
@@ -136,11 +140,11 @@ class PureTestJava {
     }
 
     private static StorageType[] createStorages() {
-        StorageType[] storages = new StorageType[2];
+        StorageType[] storages = new StorageType[3];
 
         storages[0] = StorageType.RAM;
         storages[1] = StorageType.VirgilCloud;
-//        storages[2] = StorageType.MariaDB;
+        storages[2] = StorageType.MariaDB;
 
         return storages;
     }
@@ -892,7 +896,7 @@ class PureTestJava {
             for (StorageType storage: storages) {
                 VirgilKeyPair keyPair = this.crypto.generateKeyPair();
                 String dataId = UUID.randomUUID().toString();
-                String publicKeyBase64 = Base64.getEncoder().encodeToString(crypto.exportPublicKey(keyPair.getPublicKey()));
+                String publicKeyBase64 = Base64.encode(crypto.exportPublicKey(keyPair.getPublicKey()));
                 Map<String, List<String>> externalPublicKeys = Collections.singletonMap(dataId, Collections.singletonList(publicKeyBase64));
 
                 pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKey, secretKey, externalPublicKeys, storage);
@@ -1206,6 +1210,104 @@ class PureTestJava {
                 byte[] decrypted = pure.decrypt(authResult.getGrant(), userId, dataId, blob);
                 assertArrayEquals(text, decrypted);
             }
+        } catch (Exception e) {
+            fail(e);
+        }
+    }
+
+    @ParameterizedTest @MethodSource("testArgumentsNoToken")
+    void share__role__should_decrypt(String pheServerAddress,
+                                     String pureServerAddress,
+                                     String kmsServerAddress,
+                                     String appToken,
+                                     String publicKey,
+                                     String secretKey) throws InterruptedException {
+        ThreadUtils.pause();
+
+        try {
+            PureSetupResult pureResult;
+            StorageType[] storages = createStorages();
+            for (StorageType storage: storages) {
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKey, secretKey, null, storage);
+                Pure pure = new Pure(pureResult.getContext());
+
+                String userId1 = UUID.randomUUID().toString();
+                String userId2 = UUID.randomUUID().toString();
+                String password1 = UUID.randomUUID().toString();
+                String password2 = UUID.randomUUID().toString();
+                String dataId = UUID.randomUUID().toString();
+                String roleName = UUID.randomUUID().toString();
+
+                AuthResult authResult1 = pure.registerUser(userId1, password1, new PureSessionParams());
+                AuthResult authResult2 = pure.registerUser(userId2, password2, new PureSessionParams());
+
+                byte[] text = UUID.randomUUID().toString().getBytes();
+
+                byte[] blob = pure.encrypt(userId1, dataId, text);
+
+                pure.createRole(roleName, Collections.singleton(userId2));
+
+                pure.shareToRole(authResult1.getGrant(), dataId, roleName);
+
+                byte[] decrypted = pure.decrypt(authResult2.getGrant(), userId1, dataId, blob);
+                assertArrayEquals(text, decrypted);
+            }
+        } catch (Exception e) {
+            fail(e);
+        }
+    }
+
+    @ParameterizedTest @MethodSource("testArgumentsNoToken")
+    void crosscompatibility__json__should_work(String pheServerAddress,
+                                               String pureServerAddress,
+                                               String kmsServerAddress,
+                                               String appToken,
+                                               String publicKey,
+                                               String secretKey) throws InterruptedException {
+        ThreadUtils.pause();
+
+        try {
+            JsonObject testData = (JsonObject) new JsonParser()
+                    .parse(new InputStreamReader(Objects.requireNonNull(
+                            this.getClass().getClassLoader()
+                                    .getResourceAsStream(
+                                            "com/virgilsecurity/purekit/purekit_compatibility_data.json"))));
+
+            String encryptedGrant = testData.get("encrypted_grant").getAsString();
+            String userId1 = testData.get("user_id1").getAsString();
+            String userId2 = testData.get("user_id2").getAsString();
+            String password1 = testData.get("password1").getAsString();
+            String password2 = testData.get("password2").getAsString();
+            String dataId1 = testData.get("data_id1").getAsString();
+            String dataId2 = testData.get("data_id2").getAsString();
+            byte[] text1 = Base64.decode(testData.get("text1").getAsString());
+            byte[] text2 = Base64.decode(testData.get("text2").getAsString());
+            byte[] blob1 = Base64.decode(testData.get("blob1").getAsString());
+            byte[] blob2 = Base64.decode(testData.get("blob2").getAsString());
+            byte[] nms = Base64.decode(testData.get("nms").getAsString());
+
+            PureSetupResult pureResult = this.setupPure(nms, pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKey, secretKey, null, null, StorageType.MariaDB, true);
+            Pure pure = new Pure(pureResult.getContext());
+
+            PureGrant pureGrant = pure.decryptGrantFromUser(encryptedGrant);
+
+            assertNotNull(pureGrant);
+
+            AuthResult authResult1 = pure.authenticateUser(userId1, password1);
+            AuthResult authResult2 = pure.authenticateUser(userId2, password2);
+
+            assertNotNull(authResult1);
+            assertNotNull(authResult2);
+
+            byte[] text11 = pure.decrypt(authResult1.getGrant(), null, dataId1, blob1);
+            byte[] text12 = pure.decrypt(authResult2.getGrant(), userId1, dataId1, blob1);
+            byte[] text21 = pure.decrypt(authResult1.getGrant(), null, dataId2, blob2);
+            byte[] text22 = pure.decrypt(authResult2.getGrant(), userId1, dataId2, blob2);
+
+            assertArrayEquals(text1, text11);
+            assertArrayEquals(text1, text12);
+            assertArrayEquals(text2, text21);
+            assertArrayEquals(text2, text22);
         } catch (Exception e) {
             fail(e);
         }
