@@ -894,6 +894,21 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
     }
 
     /**
+     * Executes arbitrary sql
+     *
+     * @param sql sql string
+     *
+     * @throws SQLException SQLException
+     */
+    public void executeSql(String sql) throws SQLException {
+        try (Connection conn = getConnection()) {
+            try (Statement stmt = conn.createStatement()) {
+                stmt.execute(sql);
+            }
+        }
+    }
+
+    /**
      * Drops tables and events
      *
      * @throws SQLException SQLException

@@ -9,11 +9,15 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.InputStreamReader;
+import java.net.URI;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Stream;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.virgilsecurity.common.util.Base64;
@@ -30,7 +34,6 @@ import com.virgilsecurity.sdk.crypto.VirgilCrypto;
 import com.virgilsecurity.sdk.crypto.VirgilKeyPair;
 import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.TestMethodOrder;
@@ -1263,14 +1266,13 @@ public class PureTestJava {
         }
     }
 
-    @Order(1)
     @ParameterizedTest @MethodSource("testArgumentsNoToken")
     void cross_compatibility__json__should_work(String pheServerAddress,
-                                               String pureServerAddress,
-                                               String kmsServerAddress,
-                                               String appToken,
-                                               String publicKey,
-                                               String secretKey) throws InterruptedException {
+                                                String pureServerAddress,
+                                                String kmsServerAddress,
+                                                String appToken,
+                                                String publicKey,
+                                                String secretKey) throws InterruptedException {
         ThreadUtils.pause();
 
         try {
@@ -1278,7 +1280,7 @@ public class PureTestJava {
                     .parse(new InputStreamReader(Objects.requireNonNull(
                             this.getClass().getClassLoader()
                                     .getResourceAsStream(
-                                            "com/virgilsecurity/purekit/purekit_compatibility_data.json"))));
+                                            "com/virgilsecurity/purekit/compatibility_data.json"))));
 
             String encryptedGrant = testData.get("encrypted_grant").getAsString();
             String userId1 = testData.get("user_id1").getAsString();
@@ -1295,6 +1297,16 @@ public class PureTestJava {
 
             PureSetupResult pureResult = this.setupPure(nms, pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKey, secretKey, null, null, StorageType.MariaDB, true);
             Pure pure = new Pure(pureResult.getContext());
+
+            MariaDbPureStorage mariaDbPureStorage = (MariaDbPureStorage) pureResult.getContext().getStorage();
+
+            List<String> sqls = Files.readAllLines(Paths.get(this.getClass().getClassLoader().getResource("com/virgilsecurity/purekit/compatibility_tables.sql").getPath()), StandardCharsets.UTF_8);
+
+            mariaDbPureStorage.cleanDb();
+
+            for (String sql: sqls) {
+                mariaDbPureStorage.executeSql(sql);
+            }
 
             PureGrant pureGrant = pure.decryptGrantFromUser(encryptedGrant);
 
