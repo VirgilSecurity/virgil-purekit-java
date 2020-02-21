@@ -568,6 +568,29 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
     }
 
     @Override
+    public void deleteRole(String roleName, boolean cascade) throws PureStorageException {
+        ValidateUtils.checkNullOrEmpty(roleName, "roleName");
+
+        if (!cascade) {
+            throw new MariaDbOperationNotSupportedException();
+        }
+
+        try (Connection conn = getConnection()) {
+            try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM virgil_roles WHERE role_name = ?;")) {
+                stmt.setString(1, roleName);
+
+                int rows = stmt.executeUpdate();
+
+                if (rows != 1) {
+                    throw new PureStorageGenericException(PureStorageGenericException.ErrorStatus.ROLE_NOT_FOUND);
+                }
+            }
+        } catch (SQLException e) {
+            throw new MariaDbSqlException(e);
+        }
+    }
+
+    @Override
     public void insertRoleAssignments(Collection<RoleAssignment> roleAssignments) throws PureStorageException {
         ValidateUtils.checkNull(roleAssignments, "roleAssignments");
 

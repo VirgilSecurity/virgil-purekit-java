@@ -178,6 +178,16 @@ public interface PureStorage {
     Set<Role> selectRoles(Set<String> roleNames) throws PureStorageException;
 
     /**
+     * Deletes role from a storage.
+     *
+     * @param roleName role name
+     * @param cascade if true - deletes all role assignments for this role
+     *
+     * @throws PureStorageException PureStorageException
+     */
+    void deleteRole(String roleName, boolean cascade) throws PureStorageException;
+
+    /**
      * Insert a Role assignment into a storage.
      *
      * @param roleAssignments RoleAssignment record

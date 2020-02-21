@@ -1179,6 +1179,69 @@ public class PureTestJava {
     }
 
     @ParameterizedTest @MethodSource("testArgumentsNoToken")
+    void delete_roles__new_role__should_delete(String pheServerAddress,
+                                               String pureServerAddress,
+                                               String kmsServerAddress,
+                                               String appToken,
+                                               String publicKey,
+                                               String secretKey) throws InterruptedException {
+        ThreadUtils.pause();
+
+        try {
+            PureSetupResult pureResult;
+            StorageType[] storages = createStorages();
+            for (StorageType storage: storages) {
+
+                if (storage == StorageType.VirgilCloud) {
+                    // FIXME: Remove
+                    continue;
+                }
+
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKey, secretKey, null, storage);
+                Pure pure = new Pure(pureResult.getContext());
+
+                String userId1 = UUID.randomUUID().toString();
+                String userId2 = UUID.randomUUID().toString();
+                String password1 = UUID.randomUUID().toString();
+                String password2 = UUID.randomUUID().toString();
+                String dataId1 = UUID.randomUUID().toString();
+                String dataId2 = UUID.randomUUID().toString();
+                String roleName1 = UUID.randomUUID().toString();
+                String roleName2 = UUID.randomUUID().toString();
+
+                pure.registerUser(userId1, password1);
+                pure.registerUser(userId2, password2);
+
+                byte[] text1 = UUID.randomUUID().toString().getBytes();
+                byte[] text2 = UUID.randomUUID().toString().getBytes();
+
+                AuthResult authResult1 = pure.authenticateUser(userId1, password1);
+                AuthResult authResult2 = pure.authenticateUser(userId2, password2);
+
+                pure.createRole(roleName1, Collections.singleton(userId1));
+                pure.createRole(roleName2, Collections.singleton(userId2));
+
+                byte[] cipherText1 = pure.encrypt(userId1, dataId1, Collections.emptySet(), Collections.singleton(roleName2), Collections.emptyList(), text1);
+                byte[] cipherText2 = pure.encrypt(userId2, dataId2, Collections.emptySet(), Collections.singleton(roleName1), Collections.emptyList(), text2);
+
+                pure.deleteRole(roleName1, true);
+                PureLogicException e = assertThrows(PureLogicException.class, () -> {
+                    pure.decrypt(authResult1.getGrant(), userId2, dataId2, cipherText2);
+                });
+                assertEquals(PureLogicException.ErrorStatus.USER_HAS_NO_ACCESS_TO_DATA, e.getErrorStatus());
+
+                if (storage != StorageType.MariaDB) {
+                    pure.deleteRole(roleName2, false);
+                    byte[] plainText = pure.decrypt(authResult2.getGrant(), userId1, dataId1, cipherText1);
+                    assertArrayEquals(text1, plainText);
+                }
+            }
+        } catch (Exception e) {
+            fail(e);
+        }
+    }
+
+    @ParameterizedTest @MethodSource("testArgumentsNoToken")
     void recovery__new_user__should_recover(String pheServerAddress,
                                             String pureServerAddress,
                                             String kmsServerAddress,

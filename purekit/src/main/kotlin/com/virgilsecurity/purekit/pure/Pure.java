@@ -409,6 +409,18 @@ public class Pure {
     }
 
     /**
+     * Deletes user with given id and all his keys.
+     *
+     * @param userId User Id.
+     *
+     * @throws PureException PureException
+     */
+    public void deleteUser(String userId) throws PureException {
+
+        storage.deleteUser(userId, true);
+    }
+
+    /**
      * Deletes user with given id.
      *
      * @param userId User Id.
@@ -961,6 +973,29 @@ public class Pure {
         storage.insertRole(role);
 
         assignRole(roleName, rkp.getPublicKey().getIdentifier(), rskData, userIds);
+    }
+
+    /**
+     * Deletes role making previously encrypted data inaccessible.
+     *
+     * @param roleName role name
+     *
+     * @throws PureException PureException
+     */
+    public void deleteRole(String roleName) throws PureException {
+        deleteRole(roleName, true);
+    }
+
+    /**
+     * Deletes role making previously encrypted data inaccessible.
+     *
+     * @param roleName role name
+     * @param cascade true - will keep access to previously encrypted data
+     *
+     * @throws PureException PureException
+     */
+    public void deleteRole(String roleName, boolean cascade) throws PureException {
+        storage.deleteRole(roleName, cascade);
     }
 
     /**

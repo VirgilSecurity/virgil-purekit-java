@@ -307,6 +307,12 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
     }
 
     @Override
+    public void deleteRole(String roleName, boolean cascade) throws PureStorageException {
+        // TODO: Implement
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public void insertRoleAssignments(Collection<RoleAssignment> roleAssignments) throws PureStorageException {
         ValidateUtils.checkNull(roleAssignments, "roleAssignments");
 

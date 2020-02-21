@@ -228,6 +228,15 @@ public class RamPureStorage implements PureStorage {
     }
 
     @Override
+    public void deleteRole(String roleName, boolean cascade) throws PureStorageException {
+        this.roles.remove(roleName);
+
+        if (cascade) {
+            this.roleAssignments.remove(roleName);
+        }
+    }
+
+    @Override
     public void insertRoleAssignments(Collection<RoleAssignment> roleAssignments) {
 
         for (RoleAssignment roleAssignment: roleAssignments) {
