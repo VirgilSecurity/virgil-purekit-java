@@ -271,14 +271,14 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
             return Collections.emptySet();
         }
 
-        PurekitProtosV3Client.GetRoles getRolesResuest =
+        PurekitProtosV3Client.GetRoles getRolesRequest =
                 PurekitProtosV3Client.GetRoles.newBuilder().addAllRoleNames(roleNames).build();
 
         HashSet<String> namesSet = new HashSet<>(roleNames);
 
         PurekitProtosV3Storage.Roles protoRecords;
         try {
-            protoRecords = client.getRoles(getRolesResuest);
+            protoRecords = client.getRoles(getRolesRequest);
         } catch (ProtocolException e) {
             throw new VirgilCloudStorageException(e);
         } catch (ProtocolHttpException e) {
