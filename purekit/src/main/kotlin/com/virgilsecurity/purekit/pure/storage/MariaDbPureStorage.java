@@ -34,18 +34,36 @@
 package com.virgilsecurity.purekit.pure.storage;
 
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage;
-import com.virgilsecurity.purekit.pure.model.*;
+import com.virgilsecurity.purekit.pure.model.CellKey;
+import com.virgilsecurity.purekit.pure.model.GrantKey;
+import com.virgilsecurity.purekit.pure.model.Role;
+import com.virgilsecurity.purekit.pure.model.RoleAssignment;
+import com.virgilsecurity.purekit.pure.model.UserRecord;
 import com.virgilsecurity.purekit.utils.ValidateUtils;
 
-import javax.sql.DataSource;
 import java.io.IOException;
-import java.sql.*;
-import java.util.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.sql.DataSource;
 
 /**
  * MariaDB storage
  */
+//TODO move to a storage.mariadb package with all dependent classes
 public class MariaDbPureStorage implements PureStorage, PureModelSerializerDependent {
+    public static final int ER_DUP_ENTRY = 1062;
     private final String url;
     private final DataSource dataSource;
 
@@ -121,7 +139,7 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
                     stmt.executeUpdate();
                 }
                 catch (SQLIntegrityConstraintViolationException e) {
-                    if (e.getErrorCode() != 1062) {
+                    if (e.getErrorCode() != ER_DUP_ENTRY) {
                         throw e;
                     }
 
@@ -269,6 +287,7 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
                         UserRecord userRecord = parseUserRecord(rs);
 
                         if (!idsSet.contains(userRecord.getUserId())) {
+                            //TODO should error message contain ID of user which doesn't match?
                             throw new PureStorageGenericException(PureStorageGenericException.ErrorStatus.USER_ID_MISMATCH);
                         }
 
@@ -278,6 +297,7 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
                     }
 
                     if (!idsSet.isEmpty()) {
+                        //TODO list ID's of users that were not found
                         throw new PureStorageGenericException(PureStorageGenericException.ErrorStatus.USER_NOT_FOUND);
                     }
 
@@ -373,6 +393,7 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
                         CellKey cellKey = parseCellKey(rs);
 
                         if (!userId.equals(cellKey.getUserId()) || !dataId.equals(cellKey.getDataId())) {
+                            //TODO add userId and dataId to exception message?
                             throw new PureStorageGenericException(PureStorageGenericException.ErrorStatus.CELL_KEY_ID_MISMATCH);
                         }
 
@@ -409,7 +430,7 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
                     stmt.executeUpdate();
                 }
                 catch (SQLIntegrityConstraintViolationException e) {
-                    if (e.getErrorCode() != 1062) {
+                    if (e.getErrorCode() != ER_DUP_ENTRY) {
                         throw e;
                     }
 
@@ -619,7 +640,7 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
                     stmt.executeBatch();
                 }
                 catch (SQLIntegrityConstraintViolationException e) {
-                    if (e.getErrorCode() != 1062) {
+                    if (e.getErrorCode() != ER_DUP_ENTRY) {
                         throw e;
                     }
 
@@ -954,6 +975,7 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
      * @throws SQLException SQLException
      */
     public void initDb(int cleanGrantKeysIntervalSeconds) throws SQLException {
+        //TODO we should provide SQL as a text file to allow developers create tables manually
         try (Connection conn = getConnection()) {
             try (Statement stmt = conn.createStatement()) {
                 stmt.executeUpdate("CREATE TABLE virgil_users (" +

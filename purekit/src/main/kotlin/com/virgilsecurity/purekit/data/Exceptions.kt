@@ -66,9 +66,11 @@ class InvalidProtobufTypeException(message: String? = "Can not parse model you h
 /**
  * Exception that is been thrown when no keys was found.
  */
+//TODO default message is wrong
 class NoKeysFoundException(message: String? = "Can not parse model you have given.") : Exception(message)
 
 /**
  * Exception that is been thrown when the proof is wrong.
  */
+//TODO default message is wrong
 class InvalidProofException(message: String? = "Can not parse model you have given.") : Exception(message)

@@ -33,10 +33,14 @@
 
 package com.virgilsecurity.purekit.pure.storage;
 
+import com.virgilsecurity.purekit.pure.model.CellKey;
+import com.virgilsecurity.purekit.pure.model.GrantKey;
+import com.virgilsecurity.purekit.pure.model.Role;
+import com.virgilsecurity.purekit.pure.model.RoleAssignment;
+import com.virgilsecurity.purekit.pure.model.UserRecord;
+
 import java.util.Collection;
 import java.util.Set;
-
-import com.virgilsecurity.purekit.pure.model.*;
 
 /**
  * Interface for Pure storage.

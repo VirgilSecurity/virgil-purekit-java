@@ -33,11 +33,6 @@
 
 package com.virgilsecurity.purekit.pure;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.virgilsecurity.crypto.foundation.Base64;
 import com.virgilsecurity.purekit.pure.client.HttpKmsClient;
 import com.virgilsecurity.purekit.pure.client.HttpPheClient;
@@ -53,6 +48,11 @@ import com.virgilsecurity.purekit.utils.ValidateUtils;
 import com.virgilsecurity.sdk.crypto.VirgilCrypto;
 import com.virgilsecurity.sdk.crypto.VirgilPublicKey;
 import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * PureContext class represents dependencies needed to initialize Pure.

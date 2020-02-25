@@ -36,6 +36,7 @@ package com.virgilsecurity.purekit.client
 /**
  * Enum of available requests
  */
+//TODO I would call 'path', but not 'type'
 enum class AvailableRequests(val type: String) {
     // PHE
     ENROLL("/enroll"),

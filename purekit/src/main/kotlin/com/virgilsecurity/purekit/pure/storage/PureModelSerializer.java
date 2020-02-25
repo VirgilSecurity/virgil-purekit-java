@@ -37,7 +37,11 @@ import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Crypto;
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage;
-import com.virgilsecurity.purekit.pure.model.*;
+import com.virgilsecurity.purekit.pure.model.CellKey;
+import com.virgilsecurity.purekit.pure.model.GrantKey;
+import com.virgilsecurity.purekit.pure.model.Role;
+import com.virgilsecurity.purekit.pure.model.RoleAssignment;
+import com.virgilsecurity.purekit.pure.model.UserRecord;
 import com.virgilsecurity.purekit.utils.ValidateUtils;
 import com.virgilsecurity.sdk.crypto.VirgilCrypto;
 import com.virgilsecurity.sdk.crypto.VirgilKeyPair;
@@ -80,7 +84,7 @@ public class PureModelSerializer {
 
     private byte[] generateSignature(byte[] model) throws PureStorageGenericException {
         try {
-            return crypto.generateSignature(model, signingKey.getPrivateKey());
+            return this.crypto.generateSignature(model, this.signingKey.getPrivateKey());
         } catch (SigningException e) {
             throw new PureStorageGenericException(PureStorageGenericException.ErrorStatus.SIGNING_EXCEPTION);
         }
@@ -89,7 +93,7 @@ public class PureModelSerializer {
     private void verifySignature(byte[] signature, byte[] model) throws PureStorageException {
         boolean verified;
         try {
-            verified = crypto.verifySignature(signature, model, signingKey.getPublicKey());
+            verified = this.crypto.verifySignature(signature, model, this.signingKey.getPublicKey());
         } catch (VerificationException e) {
             throw new PureStorageGenericException(PureStorageGenericException.ErrorStatus.VERIFICATION_EXCEPTION);
         }

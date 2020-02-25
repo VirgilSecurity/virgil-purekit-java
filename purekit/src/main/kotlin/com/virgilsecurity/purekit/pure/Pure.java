@@ -33,10 +33,6 @@
 
 package com.virgilsecurity.purekit.pure;
 
-import java.nio.ByteBuffer;
-import java.util.*;
-import java.util.stream.Collectors;
-
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.virgilsecurity.common.exception.EmptyArgumentException;
@@ -44,17 +40,32 @@ import com.virgilsecurity.common.util.Base64;
 import com.virgilsecurity.crypto.foundation.FoundationException;
 import com.virgilsecurity.crypto.phe.PheClientEnrollAccountResult;
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Grant;
+import com.virgilsecurity.purekit.pure.exception.PureCryptoException;
 import com.virgilsecurity.purekit.pure.exception.PureException;
+import com.virgilsecurity.purekit.pure.exception.PureLogicException;
+import com.virgilsecurity.purekit.pure.model.CellKey;
+import com.virgilsecurity.purekit.pure.model.GrantKey;
+import com.virgilsecurity.purekit.pure.model.PureGrant;
+import com.virgilsecurity.purekit.pure.model.Role;
+import com.virgilsecurity.purekit.pure.model.RoleAssignment;
+import com.virgilsecurity.purekit.pure.model.UserRecord;
+import com.virgilsecurity.purekit.pure.storage.PureStorage;
 import com.virgilsecurity.purekit.pure.storage.PureStorageCellKeyAlreadyExistsException;
 import com.virgilsecurity.purekit.pure.storage.PureStorageCellKeyNotFoundException;
-import com.virgilsecurity.purekit.pure.exception.PureCryptoException;
-import com.virgilsecurity.purekit.pure.exception.PureLogicException;
-import com.virgilsecurity.purekit.pure.model.*;
-import com.virgilsecurity.purekit.pure.storage.PureStorage;
 import com.virgilsecurity.purekit.utils.ValidateUtils;
 import com.virgilsecurity.sdk.crypto.VirgilKeyPair;
 import com.virgilsecurity.sdk.crypto.VirgilPrivateKey;
 import com.virgilsecurity.sdk.crypto.VirgilPublicKey;
+
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Main class for interactions with PureKit

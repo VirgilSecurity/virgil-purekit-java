@@ -33,10 +33,10 @@
 
 package com.virgilsecurity.purekit.pure.model;
 
-import java.util.Date;
-
 import com.virgilsecurity.purekit.utils.ValidateUtils;
 import com.virgilsecurity.sdk.crypto.VirgilKeyPair;
+
+import java.util.Date;
 
 /**
  * PureGrant class.

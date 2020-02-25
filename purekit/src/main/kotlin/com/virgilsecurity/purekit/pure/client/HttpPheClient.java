@@ -33,14 +33,14 @@
 
 package com.virgilsecurity.purekit.pure.client;
 
-import java.util.LinkedHashMap;
-
 import com.virgilsecurity.purekit.client.AvailableRequests;
 import com.virgilsecurity.purekit.client.HttpClientProtobuf;
 import com.virgilsecurity.purekit.data.ProtocolException;
 import com.virgilsecurity.purekit.data.ProtocolHttpException;
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtos;
 import com.virgilsecurity.purekit.utils.ValidateUtils;
+
+import java.util.LinkedHashMap;
 
 /**
  * HttpPheClient class is for http interactions with PHE service.
@@ -89,6 +89,7 @@ public class HttpPheClient {
         return client.firePost(
             request,
             AvailableRequests.ENROLL.getType(),
+            //TODO mutableMapOf() by default
             new LinkedHashMap<>(),
             this.appToken,
             PurekitProtos.EnrollmentResponse.parser()

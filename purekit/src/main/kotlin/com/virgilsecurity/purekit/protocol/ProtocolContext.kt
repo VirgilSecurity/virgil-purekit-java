@@ -46,6 +46,7 @@ class ProtocolContext private constructor(
         val appToken: String,
         val pheClients: Map<Int, PheClient>,
         val version: Int,
+        //TODO this parameter is never used
         val updateToken: PurekitProtos.VersionedUpdateToken?
 ) {
 
@@ -74,6 +75,7 @@ class ProtocolContext private constructor(
                     KEY_SECRET_KEY
             )
 
+            //TODO Public and Secret keys must be the same version.
             require(publicVersion == secretVersion) { "Public and Secret keys must have the same version." }
 
             val pheClients = mutableMapOf<Int, PheClient>().apply {
@@ -94,6 +96,7 @@ class ProtocolContext private constructor(
                 )
 
                 require(tokenVersion == currentVersion + 1) {
+                    //TODO Should be {currentVersion + 1}
                     "Incorrect token version $tokenVersion. Should be {$tokenVersion + 1}."
                 }
 

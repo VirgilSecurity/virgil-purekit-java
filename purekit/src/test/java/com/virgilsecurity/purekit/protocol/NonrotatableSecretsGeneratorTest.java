@@ -27,6 +27,7 @@ class NonrotatableSecretsGeneratorTest {
             assertArrayEquals(Base64.getDecoder().decode(oskpId), nonrotatableSecrets.getOskp().getPublicKey().getIdentifier());
             assertArrayEquals(Base64.getDecoder().decode(vskpId), nonrotatableSecrets.getVskp().getPublicKey().getIdentifier());
         } catch (Exception e) {
+            //TODO no need to catch exception here
             fail(e);
         }
     }

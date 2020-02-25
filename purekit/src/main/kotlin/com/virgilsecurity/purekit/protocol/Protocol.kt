@@ -43,7 +43,7 @@ import com.virgilsecurity.purekit.client.HttpClientProtobuf
 import com.virgilsecurity.purekit.data.*
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtos
 import com.virgilsecurity.purekit.pure.client.HttpPureClient
-import com.virgilsecurity.purekit.utils.*
+import com.virgilsecurity.purekit.utils.requires
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.future.asCompletableFuture
@@ -60,6 +60,7 @@ class Protocol @JvmOverloads constructor(
     private val appToken: String = protocolContext.appToken
     private val pheClients: Map<Int, PheClient> = protocolContext.pheClients
     private val currentVersion: Int = protocolContext.version
+    //TODO PheCipher is not closed then Protocol not used anymore
     private val pheCipher: PheCipher by lazy { PheCipher().apply { setupDefaults() } }
 
     /**

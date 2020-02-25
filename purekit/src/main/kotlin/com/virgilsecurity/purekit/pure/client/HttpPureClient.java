@@ -33,10 +33,6 @@
 
 package com.virgilsecurity.purekit.pure.client;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-
 import com.virgilsecurity.common.exception.EmptyArgumentException;
 import com.virgilsecurity.purekit.client.AvailableRequests;
 import com.virgilsecurity.purekit.client.HttpClientProtobuf;
@@ -45,6 +41,10 @@ import com.virgilsecurity.purekit.data.ProtocolHttpException;
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client;
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage;
 import com.virgilsecurity.purekit.utils.ValidateUtils;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Class for http interactions with Pure service

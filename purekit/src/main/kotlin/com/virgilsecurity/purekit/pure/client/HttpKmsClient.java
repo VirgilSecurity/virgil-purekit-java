@@ -89,6 +89,7 @@ public class HttpKmsClient {
         return client.firePost(
                 request,
                 AvailableRequests.DECRYPT_REQUEST.getType(),
+                //TODO no need to path headers because of value by default
                 new LinkedHashMap<>(),
                 this.appToken,
                 PurekitProtosV3Client.DecryptResponse.parser()

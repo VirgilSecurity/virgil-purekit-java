@@ -34,7 +34,12 @@
 package com.virgilsecurity.purekit.pure;
 
 import com.google.protobuf.ByteString;
-import com.virgilsecurity.crypto.phe.*;
+import com.virgilsecurity.crypto.phe.PheException;
+import com.virgilsecurity.crypto.phe.UokmsClient;
+import com.virgilsecurity.crypto.phe.UokmsClientGenerateDecryptRequestResult;
+import com.virgilsecurity.crypto.phe.UokmsClientGenerateEncryptWrapResult;
+import com.virgilsecurity.crypto.phe.UokmsClientRotateKeysResult;
+import com.virgilsecurity.crypto.phe.UokmsWrapRotation;
 import com.virgilsecurity.purekit.data.ProtocolException;
 import com.virgilsecurity.purekit.data.ProtocolHttpException;
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client;

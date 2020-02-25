@@ -94,6 +94,7 @@ class HttpClientProtobuf {
     ): O? {
         headers.addConstHeaders().addTokenHeader(authToken)
 
+        //TODO This line appears few times in this file. It could be moved to a function
         val stringParams = params?.map { "${it.key}=${it.value}" }?.joinToString(separator = "&", prefix = "?") ?: ""
 
         val (_, response, _) = "$serviceBaseUrl$endpoint$stringParams".httpGet()

@@ -33,19 +33,44 @@
 
 package com.virgilsecurity.purekit.pure;
 
-import java.nio.ByteBuffer;
-import java.util.*;
-
-import com.virgilsecurity.crypto.foundation.*;
+import com.virgilsecurity.crypto.foundation.Aes256Gcm;
+import com.virgilsecurity.crypto.foundation.AuthEncryptAuthEncryptResult;
+import com.virgilsecurity.crypto.foundation.FoundationException;
+import com.virgilsecurity.crypto.foundation.KeyRecipientInfo;
+import com.virgilsecurity.crypto.foundation.KeyRecipientInfoList;
+import com.virgilsecurity.crypto.foundation.MessageInfo;
+import com.virgilsecurity.crypto.foundation.MessageInfoDerSerializer;
+import com.virgilsecurity.crypto.foundation.MessageInfoEditor;
+import com.virgilsecurity.crypto.foundation.RecipientCipher;
+import com.virgilsecurity.crypto.foundation.Sha512;
+import com.virgilsecurity.crypto.foundation.SignerInfo;
+import com.virgilsecurity.crypto.foundation.SignerInfoList;
 import com.virgilsecurity.crypto.phe.PheCipher;
 import com.virgilsecurity.crypto.phe.PheException;
 import com.virgilsecurity.purekit.pure.exception.PureCryptoException;
-import com.virgilsecurity.sdk.crypto.*;
-import com.virgilsecurity.sdk.crypto.exceptions.*;
+import com.virgilsecurity.sdk.crypto.HashAlgorithm;
+import com.virgilsecurity.sdk.crypto.KeyPairType;
+import com.virgilsecurity.sdk.crypto.VirgilCrypto;
+import com.virgilsecurity.sdk.crypto.VirgilKeyPair;
+import com.virgilsecurity.sdk.crypto.VirgilPrivateKey;
+import com.virgilsecurity.sdk.crypto.VirgilPublicKey;
+import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
+import com.virgilsecurity.sdk.crypto.exceptions.DecryptionException;
+import com.virgilsecurity.sdk.crypto.exceptions.EncryptionException;
+import com.virgilsecurity.sdk.crypto.exceptions.SigningException;
+import com.virgilsecurity.sdk.crypto.exceptions.VerificationException;
+
+import java.nio.ByteBuffer;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 class PureCrypto {
 
     private final VirgilCrypto crypto;
+    //TODO pheCipher is not closed
     private final PheCipher pheCipher;
 
     PureCrypto(VirgilCrypto crypto) throws PureCryptoException {
@@ -73,10 +98,12 @@ class PureCrypto {
 
             cipher.addSigner(signingKey.getIdentifier(), signingKey.getPrivateKey());
 
+            //TODO add null check for recipients
             for (VirgilPublicKey key : recipients) {
                 cipher.addKeyRecipient(key.getIdentifier(), key.getPublicKey());
             }
 
+            //TODO Sha512 is not closed, but it's OK because native resources will be cleared on finalize
             cipher.setSignerHash(new Sha512());
             cipher.startSignedEncryption(plainTextData.length);
 
@@ -168,6 +195,7 @@ class PureCrypto {
 
             infoEditor.unpack(cms);
 
+            //TODO null check for publicKeys
             for (VirgilPublicKey publicKey : publicKeys) {
                 infoEditor.removeKeyRecipient(publicKey.getIdentifier());
             }
@@ -203,6 +231,7 @@ class PureCrypto {
 
                 return publicKeysIds;
             }
+            //TODO remove this catch, leave the next one
             catch (FoundationException e) {
                 throw new PureCryptoException(e);
             }
@@ -335,6 +364,7 @@ class PureCrypto {
     byte[] encryptForBackup(byte[] plainText, VirgilPublicKey encryptKey, VirgilPrivateKey signingKey) throws PureCryptoException {
         try {
             return crypto.authEncrypt(plainText, signingKey, encryptKey);
+            //TODO CryptoException could be used here
         } catch (SigningException | EncryptionException e) {
             throw new PureCryptoException(e);
         }
@@ -343,6 +373,7 @@ class PureCrypto {
     byte[] decryptBackup(byte[] cipherText, VirgilPrivateKey decryptKey, VirgilPublicKey verifyKey) throws PureCryptoException {
         try {
             return crypto.authDecrypt(cipherText, decryptKey, verifyKey);
+            //TODO CryptoException could be used here
         } catch (VerificationException | DecryptionException e) {
             throw new PureCryptoException(e);
         }
@@ -351,6 +382,7 @@ class PureCrypto {
     byte[] encryptData(byte[] plainText, List<VirgilPublicKey> publicKeys, VirgilPrivateKey privateKey) throws PureCryptoException {
         try {
             return crypto.authEncrypt(plainText, privateKey, publicKeys);
+            //TODO CryptoException could be used here
         } catch (EncryptionException | SigningException e) {
             throw new PureCryptoException(e);
         }
@@ -359,6 +391,7 @@ class PureCrypto {
     byte[] decryptData(byte[] cipherText, VirgilPrivateKey privateKey, VirgilPublicKey publicKey) throws PureCryptoException {
         try {
             return crypto.authDecrypt(cipherText, privateKey, publicKey);
+            //TODO CryptoException could be used here
         } catch (VerificationException | DecryptionException e) {
             throw new PureCryptoException(e);
         }
@@ -367,6 +400,7 @@ class PureCrypto {
     byte[] encryptRolePrivateKey(byte[] plainText, VirgilPublicKey publicKey, VirgilPrivateKey privateKey) throws PureCryptoException {
         try {
             return crypto.authEncrypt(plainText, privateKey, publicKey);
+            //TODO CryptoException could be used here
         } catch (SigningException | EncryptionException e) {
             throw new PureCryptoException(e);
         }
@@ -375,6 +409,7 @@ class PureCrypto {
     byte[] decryptRolePrivateKey(byte[] plainText, VirgilPrivateKey privateKey, VirgilPublicKey publicKey) throws PureCryptoException {
         try {
             return crypto.authDecrypt(plainText, privateKey, publicKey);
+            //TODO CryptoException could be used here
         } catch (VerificationException | DecryptionException e) {
             throw new PureCryptoException(e);
         }
