@@ -98,7 +98,6 @@ class PureCrypto {
 
             cipher.addSigner(signingKey.getIdentifier(), signingKey.getPrivateKey());
 
-            //TODO add null check for recipients
             for (VirgilPublicKey key : recipients) {
                 cipher.addKeyRecipient(key.getIdentifier(), key.getPublicKey());
             }
@@ -194,7 +193,6 @@ class PureCrypto {
 
             infoEditor.unpack(cms);
 
-            //TODO null check for publicKeys
             for (VirgilPublicKey publicKey : publicKeys) {
                 infoEditor.removeKeyRecipient(publicKey.getIdentifier());
             }

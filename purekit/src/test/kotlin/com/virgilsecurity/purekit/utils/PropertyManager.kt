@@ -62,6 +62,7 @@ class PropertyManager {
         @JvmStatic val pheServiceAddress: String by lazy { envPropertyReader.getProperty(PHE_SERVER_ADDRESS) }
         @JvmStatic val pureServerAddress: String by lazy { envPropertyReader.getProperty(PURE_SERVER_ADDRESS) }
         @JvmStatic val kmsServerAddress: String by lazy { envPropertyReader.getProperty(KMS_SERVER_ADDRESS) }
+        @JvmStatic val env: String by lazy { PropertyUtils.getSystemProperty(ENVIRONMENT_PARAMETER) ?: "" }
 
         private val envPropertyReader: EnvPropertyReader by lazy {
             val environment = PropertyUtils.getSystemProperty(ENVIRONMENT_PARAMETER)

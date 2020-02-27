@@ -1200,18 +1200,19 @@ public class PureTestJava {
         }
     }
 
-    @ParameterizedTest @MethodSource("testArgumentsNoToken")
+    @ParameterizedTest @MethodSource("testArgumentsComp")
     void cross_compatibility__json__should_work(String pheServerAddress,
                                                 String pureServerAddress,
                                                 String kmsServerAddress,
                                                 String appToken,
                                                 String publicKey,
-                                                String secretKey) throws PureException, SQLException, IOException {
+                                                String secretKey,
+                                                String env) throws PureException, SQLException, IOException {
         JsonObject testData = (JsonObject) new JsonParser()
                 .parse(new InputStreamReader(Objects.requireNonNull(
                         this.getClass().getClassLoader()
                                 .getResourceAsStream(
-                                        "com/virgilsecurity/purekit/compatibility_data.json"))));
+                                        "com/virgilsecurity/purekit/compatibility_data_" + env + ".json"))));
 
         String encryptedGrant = testData.get("encrypted_grant").getAsString();
         String userId1 = testData.get("user_id1").getAsString();
@@ -1231,7 +1232,7 @@ public class PureTestJava {
 
         MariaDbPureStorage mariaDbPureStorage = (MariaDbPureStorage) pureResult.getContext().getStorage();
 
-        List<String> sqls = Files.readAllLines(Paths.get(this.getClass().getClassLoader().getResource("com/virgilsecurity/purekit/compatibility_tables.sql").getPath()), StandardCharsets.UTF_8);
+        List<String> sqls = Files.readAllLines(Paths.get(this.getClass().getClassLoader().getResource("com/virgilsecurity/purekit/compatibility_tables_" + env + ".sql").getPath()), StandardCharsets.UTF_8);
 
         mariaDbPureStorage.cleanDb();
 
@@ -1268,6 +1269,18 @@ public class PureTestJava {
                          PropertyManager.getAppToken(),
                          PropertyManager.getPublicKeyNew(),
                          PropertyManager.getSecretKeyNew())
+        );
+    }
+
+    private static Stream<Arguments> testArgumentsComp() {
+        return Stream.of(
+                Arguments.of(PropertyManager.getPheServiceAddress(),
+                        PropertyManager.getPureServerAddress(),
+                        PropertyManager.getKmsServerAddress(),
+                        PropertyManager.getAppToken(),
+                        PropertyManager.getPublicKeyNew(),
+                        PropertyManager.getSecretKeyNew(),
+                        PropertyManager.getEnv())
         );
     }
 

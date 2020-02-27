@@ -118,8 +118,8 @@ public class PureContext {
         ValidateUtils.checkNull(crypto, "crypto");
         ValidateUtils.checkNullOrEmpty(appToken, "appToken");
         ValidateUtils.checkNullOrEmpty(nms, "nms");
-        ValidateUtils.checkNullOrEmpty(buppk, buppk);
-        ValidateUtils.checkNullOrEmpty(secretKey, secretKey);
+        ValidateUtils.checkNullOrEmpty(buppk, "buppk");
+        ValidateUtils.checkNullOrEmpty(secretKey, "secretKey");
         ValidateUtils.checkNullOrEmpty(publicKey, "publicKey");
         ValidateUtils.checkNull(storage, "storage");
         ValidateUtils.checkNullOrEmpty(pheServiceAddress, "pheServiceAddress");
