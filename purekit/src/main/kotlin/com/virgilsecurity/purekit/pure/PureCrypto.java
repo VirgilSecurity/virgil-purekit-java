@@ -91,7 +91,8 @@ class PureCrypto {
             throws PureCryptoException {
 
         try (Aes256Gcm aesGcm = new Aes256Gcm();
-             RecipientCipher cipher = new RecipientCipher()) {
+             RecipientCipher cipher = new RecipientCipher();
+             Sha512 sha512 = new Sha512()) {
 
             cipher.setEncryptionCipher(aesGcm);
             cipher.setRandom(crypto.getRng());
@@ -103,8 +104,7 @@ class PureCrypto {
                 cipher.addKeyRecipient(key.getIdentifier(), key.getPublicKey());
             }
 
-            //TODO Sha512 is not closed, but it's OK because native resources will be cleared on finalize
-            cipher.setSignerHash(new Sha512());
+            cipher.setSignerHash(sha512);
             cipher.startSignedEncryption(plainTextData.length);
 
             byte[] cms = cipher.packMessageInfo();
@@ -230,10 +230,6 @@ class PureCrypto {
                 }
 
                 return publicKeysIds;
-            }
-            //TODO remove this catch, leave the next one
-            catch (FoundationException e) {
-                throw new PureCryptoException(e);
             }
         }
         catch (FoundationException e) {
