@@ -197,12 +197,20 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
                     stmt.setBytes(2, protobuf.toByteArray());
                     stmt.setString(3, userRecord.getUserId());
                     stmt.setInt(4, previousVersion);
+
                     stmt.addBatch();
                 }
 
                 stmt.executeBatch();
+                conn.commit();
+            } catch (SQLException e) {
+                conn.rollback();
+                throw new MariaDbSqlException(e);
             }
-            finally {
+            catch (Exception e) {
+                conn.rollback();
+                throw e;
+            } finally {
                 conn.setAutoCommit(true);
             }
         } catch (SQLException e) {
@@ -646,6 +654,15 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
 
                     throw new PureStorageGenericException(PureStorageGenericException.ErrorStatus.ROLE_ASSIGNMENT_ALREADY_EXISTS);
                 }
+
+                conn.commit();
+            } catch (SQLException e) {
+                conn.rollback();
+                throw new MariaDbSqlException(e);
+            }
+            catch (Exception e) {
+                conn.rollback();
+                throw e;
             }
             finally {
                 conn.setAutoCommit(true);
@@ -742,28 +759,39 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
         }
 
         try (Connection conn = getConnection()) {
-            StringBuilder sbSql = new StringBuilder( /* heuristics */ 64 + 38 * userIds.size() );
-            sbSql.append("DELETE FROM virgil_role_assignments WHERE role_name=? AND user_id in (" );
+            conn.setAutoCommit(false);
 
-            for (int i = 0; i < userIds.size(); i++) {
-                if (i > 0) sbSql.append(",");
-                sbSql.append("?");
-            }
-            sbSql.append(");");
-
-            try (PreparedStatement stmt = conn.prepareStatement(sbSql.toString())) {
-                stmt.setString(1, roleName);
-
-                int i = 2;
+            try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM virgil_role_assignments WHERE role_name=? AND user_id=?;")) {
                 for (String userId: userIds) {
-                    stmt.setString(i++, userId);
+                    stmt.setString(1, roleName);
+                    stmt.setString(2, userId);
+
+                    stmt.addBatch();
                 }
 
-                int rows = stmt.executeUpdate();
+                int[] rowsArray = stmt.executeBatch();
 
-                if (rows != userIds.size()) {
+                if (rowsArray.length != userIds.size()) {
                     throw new PureStorageGenericException(PureStorageGenericException.ErrorStatus.ROLE_ASSIGNMENT_NOT_FOUND);
                 }
+
+                for (int rows: rowsArray) {
+                    if (rows != 1) {
+                        throw new PureStorageGenericException(PureStorageGenericException.ErrorStatus.ROLE_ASSIGNMENT_NOT_FOUND);
+                    }
+                }
+
+                conn.commit();
+            } catch (SQLException e) {
+                conn.rollback();
+                throw new MariaDbSqlException(e);
+            }
+            catch (Exception e) {
+                conn.rollback();
+                throw e;
+            }
+            finally {
+                conn.setAutoCommit(true);
             }
         } catch (SQLException e) {
             throw new MariaDbSqlException(e);
@@ -894,8 +922,16 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
                 }
 
                 stmt.executeBatch();
+                conn.commit();
             }
-            finally {
+            catch (SQLException e) {
+                conn.rollback();
+                throw new MariaDbSqlException(e);
+            }
+            catch (Exception e) {
+                conn.rollback();
+                throw e;
+            } finally {
                 conn.setAutoCommit(true);
             }
         } catch (SQLException e) {
@@ -975,7 +1011,6 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
      * @throws SQLException SQLException
      */
     public void initDb(int cleanGrantKeysIntervalSeconds) throws SQLException {
-        //TODO we should provide SQL as a text file to allow developers create tables manually
         try (Connection conn = getConnection()) {
             try (Statement stmt = conn.createStatement()) {
                 stmt.executeUpdate("CREATE TABLE virgil_users (" +
