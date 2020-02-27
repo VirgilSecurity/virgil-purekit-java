@@ -295,7 +295,6 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
                         UserRecord userRecord = parseUserRecord(rs);
 
                         if (!idsSet.contains(userRecord.getUserId())) {
-                            //TODO should error message contain ID of user which doesn't match?
                             throw new PureStorageGenericException(PureStorageGenericException.ErrorStatus.USER_ID_MISMATCH);
                         }
 
@@ -305,7 +304,6 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
                     }
 
                     if (!idsSet.isEmpty()) {
-                        //TODO list ID's of users that were not found
                         throw new PureStorageGenericException(PureStorageGenericException.ErrorStatus.USER_NOT_FOUND);
                     }
 
@@ -401,7 +399,6 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
                         CellKey cellKey = parseCellKey(rs);
 
                         if (!userId.equals(cellKey.getUserId()) || !dataId.equals(cellKey.getDataId())) {
-                            //TODO add userId and dataId to exception message?
                             throw new PureStorageGenericException(PureStorageGenericException.ErrorStatus.CELL_KEY_ID_MISMATCH);
                         }
 
