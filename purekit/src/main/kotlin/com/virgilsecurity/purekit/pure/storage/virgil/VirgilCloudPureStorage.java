@@ -31,12 +31,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.purekit.pure.storage;
+package com.virgilsecurity.purekit.pure.storage.virgil;
 
 import java.util.*;
 
 import com.google.protobuf.ByteString;
-import com.virgilsecurity.common.exception.EmptyArgumentException;
 import com.virgilsecurity.purekit.data.ProtocolException;
 import com.virgilsecurity.purekit.data.ProtocolHttpException;
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client;
@@ -44,6 +43,10 @@ import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage;
 import com.virgilsecurity.purekit.pure.client.HttpPureClient;
 import com.virgilsecurity.purekit.pure.client.ServiceErrorCode;
 import com.virgilsecurity.purekit.pure.model.*;
+import com.virgilsecurity.purekit.pure.storage.PureModelSerializer;
+import com.virgilsecurity.purekit.pure.storage.PureModelSerializerDependent;
+import com.virgilsecurity.purekit.pure.storage.PureStorage;
+import com.virgilsecurity.purekit.pure.storage.exception.*;
 import com.virgilsecurity.purekit.utils.ValidateUtils;
 
 /**
@@ -112,9 +115,7 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
             protobufRecord = client.getUser(userId);
         } catch (ProtocolException e) {
             if (e.getErrorCode() == ServiceErrorCode.USER_NOT_FOUND.getCode()) {
-                throw new PureStorageGenericException(
-                        PureStorageGenericException.ErrorStatus.USER_NOT_FOUND
-                );
+                throw new PureStorageUserNotFoundException(userId);
             }
 
             throw new VirgilCloudStorageException(e);
@@ -160,13 +161,15 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
         for (PurekitProtosV3Storage.UserRecord protobufRecord : protoRecords.getUserRecordsList()) {
             UserRecord userRecord = pureModelSerializer.parseUserRecord(protobufRecord);
 
-            if (!idsSet.contains(userRecord.getUserId())) {
+            if (!idsSet.remove(userRecord.getUserId())) {
                 throw new PureStorageGenericException(PureStorageGenericException.ErrorStatus.USER_ID_MISMATCH);
             }
 
-            idsSet.remove(userRecord.getUserId());
-
             userRecords.add(userRecord);
+        }
+
+        if (!idsSet.isEmpty()) {
+            throw new PureStorageUserNotFoundException(idsSet);
         }
 
         return userRecords;
@@ -294,13 +297,15 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
         for (PurekitProtosV3Storage.Role protobufRecord : protoRecords.getRolesList()) {
             Role role = pureModelSerializer.parseRole(protobufRecord);
 
-            if (!namesSet.contains(role.getRoleName())) {
+            if (!namesSet.remove(role.getRoleName())) {
                 throw new PureStorageGenericException(PureStorageGenericException.ErrorStatus.ROLE_NAME_MISMATCH);
             }
 
-            namesSet.remove(role.getRoleName());
-
             roles.add(role);
+        }
+
+        if (!namesSet.isEmpty()) {
+            throw new PureStorageRoleNotFoundException(namesSet);
         }
 
         return roles;
@@ -383,6 +388,10 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
         try {
             protobufRecord = client.getRoleAssignment(request);
         } catch (ProtocolException e) {
+            if (e.getErrorCode() == ServiceErrorCode.ROLE_ASSIGNMENT_NOT_FOUND.getCode()) {
+                throw new PureStorageRoleAssignmentNotFoundException(userId, roleName);
+            }
+
             throw new VirgilCloudStorageException(e);
         } catch (ProtocolHttpException e) {
             throw new VirgilCloudStorageException(e);
@@ -445,9 +454,7 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
             protobufRecord = client.getGrantKey(request);
         } catch (ProtocolException e) {
             if (e.getErrorCode() == ServiceErrorCode.GRANT_KEY_NOT_FOUND.getCode()) {
-                throw new PureStorageGenericException(
-                        PureStorageGenericException.ErrorStatus.GRANT_KEY_NOT_FOUND
-                );
+                throw new PureStorageGrantKeyNotFoundException(userId, keyId);
             }
 
             throw new VirgilCloudStorageException(e);

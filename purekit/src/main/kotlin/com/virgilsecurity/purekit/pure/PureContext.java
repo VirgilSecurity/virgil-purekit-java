@@ -43,7 +43,7 @@ import com.virgilsecurity.purekit.pure.exception.PureLogicException;
 import com.virgilsecurity.purekit.pure.storage.PureModelSerializer;
 import com.virgilsecurity.purekit.pure.storage.PureModelSerializerDependent;
 import com.virgilsecurity.purekit.pure.storage.PureStorage;
-import com.virgilsecurity.purekit.pure.storage.VirgilCloudPureStorage;
+import com.virgilsecurity.purekit.pure.storage.virgil.VirgilCloudPureStorage;
 import com.virgilsecurity.purekit.utils.ValidateUtils;
 import com.virgilsecurity.sdk.crypto.VirgilCrypto;
 import com.virgilsecurity.sdk.crypto.VirgilPublicKey;

@@ -31,55 +31,54 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.purekit.pure.storage.mariadb;
+package com.virgilsecurity.purekit.pure.storage.virgil;
 
+import com.virgilsecurity.purekit.data.ProtocolException;
+import com.virgilsecurity.purekit.data.ProtocolHttpException;
 import com.virgilsecurity.purekit.pure.storage.exception.PureStorageException;
 
-import java.io.IOException;
-import java.sql.SQLException;
-
 /**
- * MariaDbSqlStorage exception
+ * Virgil Cloud storage exception
  */
-public class MariaDbSqlException extends PureStorageException {
-    private final SQLException sqlException;
-    private final IOException ioException;
+public class VirgilCloudStorageException extends PureStorageException {
+    private final ProtocolException protocolException;
+    private final ProtocolHttpException protocolHttpException;
 
     /**
      * Constructor
      *
-     * @param sqlException sql exception
+     * @param protocolException protocolException
      */
-    public MariaDbSqlException(SQLException sqlException) {
-        this.sqlException = sqlException;
-        this.ioException = null;
+    public VirgilCloudStorageException(ProtocolException protocolException) {
+        this.protocolException = protocolException;
+        this.protocolHttpException = null;
     }
 
     /**
      * Constructor
      *
-     * @param ioException io exception
+     * @param protocolHttpException protocol http exception
      */
-    public MariaDbSqlException(IOException ioException) {
-        this.sqlException = null;
-        this.ioException = ioException;
+    public VirgilCloudStorageException(ProtocolHttpException protocolHttpException) {
+        this.protocolException = null;
+        this.protocolHttpException = protocolHttpException;
     }
 
     /**
-     * Returns sql exception
+     * Returns protocolException
      *
-     * @return sql exception
+     * @return protocolException
      */
-    public SQLException getSqlException() {
-        return sqlException;
+    public ProtocolException getProtocolException() {
+        return protocolException;
     }
 
     /**
-     * Returns io exception
+     * Returns protocolHttpException
      *
-     * @return io exception
+     * @return protocolHttpException
      */
-    public IOException getIoException() {
-        return ioException;
+    public ProtocolHttpException getProtocolHttpException() {
+        return protocolHttpException;
     }
 }

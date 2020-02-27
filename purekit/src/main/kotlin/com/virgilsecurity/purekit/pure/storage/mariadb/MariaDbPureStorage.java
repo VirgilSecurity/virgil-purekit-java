@@ -40,6 +40,7 @@ import com.virgilsecurity.purekit.pure.model.Role;
 import com.virgilsecurity.purekit.pure.model.RoleAssignment;
 import com.virgilsecurity.purekit.pure.model.UserRecord;
 import com.virgilsecurity.purekit.pure.storage.*;
+import com.virgilsecurity.purekit.pure.storage.exception.*;
 import com.virgilsecurity.purekit.utils.ValidateUtils;
 
 import java.io.IOException;
@@ -50,12 +51,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Collections;
+import java.util.Collection;
+import java.util.Arrays;
 
 import javax.sql.DataSource;
 
@@ -170,7 +171,7 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
                 int rows = stmt.executeUpdate();
 
                 if (rows != 1) {
-                    throw new PureStorageGenericException(PureStorageGenericException.ErrorStatus.USER_NOT_FOUND);
+                    throw new PureStorageUserNotFoundException(userRecord.getUserId());
                 }
             }
         } catch (SQLException e) {
@@ -252,7 +253,7 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
                         return userRecord;
                     }
                     else {
-                        throw new PureStorageGenericException(PureStorageGenericException.ErrorStatus.USER_NOT_FOUND);
+                        throw new PureStorageUserNotFoundException(userId);
                     }
                 }
             }
@@ -304,7 +305,7 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
                     }
 
                     if (!idsSet.isEmpty()) {
-                        throw new PureStorageGenericException(PureStorageGenericException.ErrorStatus.USER_NOT_FOUND);
+                        throw new PureStorageUserNotFoundException(idsSet);
                     }
 
                     return userRecords;
@@ -360,7 +361,7 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
                 int rows = stmt.executeUpdate();
 
                 if (rows != 1) {
-                    throw new PureStorageGenericException(PureStorageGenericException.ErrorStatus.USER_NOT_FOUND);
+                    throw new PureStorageUserNotFoundException(userId);
                 }
             }
         } catch (SQLException e) {
@@ -582,7 +583,7 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
                     }
 
                     if (!namesSet.isEmpty()) {
-                        throw new PureStorageGenericException(PureStorageGenericException.ErrorStatus.ROLE_NOT_FOUND);
+                        throw new PureStorageRoleNotFoundException(namesSet);
                     }
 
                     return roles;
@@ -608,7 +609,7 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
                 int rows = stmt.executeUpdate();
 
                 if (rows != 1) {
-                    throw new PureStorageGenericException(PureStorageGenericException.ErrorStatus.ROLE_NOT_FOUND);
+                    throw new PureStorageRoleNotFoundException(roleName);
                 }
             }
         } catch (SQLException e) {
@@ -737,7 +738,7 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
                         return roleAssignment;
                     }
                     else {
-                        throw new PureStorageGenericException(PureStorageGenericException.ErrorStatus.ROLE_ASSIGNMENT_NOT_FOUND);
+                        throw new PureStorageRoleAssignmentNotFoundException(userId, roleName);
                     }
                 }
             }
@@ -755,13 +756,17 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
             return;
         }
 
+        String[] userIdsArray = new String[userIds.size()];
+
         try (Connection conn = getConnection()) {
             conn.setAutoCommit(false);
 
             try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM virgil_role_assignments WHERE role_name=? AND user_id=?;")) {
+                int j = 0;
                 for (String userId: userIds) {
                     stmt.setString(1, roleName);
                     stmt.setString(2, userId);
+                    userIdsArray[j++] = userId;
 
                     stmt.addBatch();
                 }
@@ -769,12 +774,12 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
                 int[] rowsArray = stmt.executeBatch();
 
                 if (rowsArray.length != userIds.size()) {
-                    throw new PureStorageGenericException(PureStorageGenericException.ErrorStatus.ROLE_ASSIGNMENT_NOT_FOUND);
+                    throw new MariaDbOperationNotSupportedException();
                 }
 
-                for (int rows: rowsArray) {
-                    if (rows != 1) {
-                        throw new PureStorageGenericException(PureStorageGenericException.ErrorStatus.ROLE_ASSIGNMENT_NOT_FOUND);
+                for (int i = 0; i < rowsArray.length; i++) {
+                    if (rowsArray[i] != 1) {
+                        throw new PureStorageRoleAssignmentNotFoundException(userIdsArray[i], roleName);
                     }
                 }
 
@@ -858,7 +863,7 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
                         return grantKey;
                     }
                     else {
-                        throw new PureStorageGenericException(PureStorageGenericException.ErrorStatus.GRANT_KEY_NOT_FOUND);
+                        throw new PureStorageGrantKeyNotFoundException(userId, keyId);
                     }
                 }
             }
@@ -962,7 +967,7 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
                 int rows = stmt.executeUpdate();
 
                 if (rows != 1) {
-                    throw new PureStorageGenericException(PureStorageGenericException.ErrorStatus.GRANT_KEY_NOT_FOUND);
+                    throw new PureStorageGrantKeyNotFoundException(userId, keyId);
                 }
             }
         } catch (SQLException e) {

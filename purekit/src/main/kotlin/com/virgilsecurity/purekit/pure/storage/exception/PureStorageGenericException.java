@@ -31,7 +31,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.purekit.pure.storage;
+package com.virgilsecurity.purekit.pure.storage.exception;
 
 /**
  * Common PureStorage exceptions
@@ -63,7 +63,6 @@ public class PureStorageGenericException extends PureStorageException {
      * Error status
      */
     public enum ErrorStatus {
-        USER_NOT_FOUND(1, "User has not been found in the storage"),
         STORAGE_SIGNATURE_VERIFICATION_FAILED(2, "Storage signature verification has been failed"),
         USER_ID_MISMATCH(3, "User Id mismatch"),
         CELL_KEY_ID_MISMATCH(4, "Cell key id mismatch"),
@@ -73,14 +72,11 @@ public class PureStorageGenericException extends PureStorageException {
         ROLE_NAME_USER_ID_MISMATCH(8, "Role name and user id mismatch"),
         USER_COUNT_MISMATCH(9, "User count mismatch"),
         DUPLICATE_ROLE_NAME(10, "Duplicate role name"),
-        GRANT_KEY_NOT_FOUND(11, "Grant key has not been found in the storage"),
         GRANT_KEY_ID_MISMATCH(12, "Grant key id mismatch"),
         INVALID_PROTOBUF(13, "Invalid protobuf"),
         SIGNING_EXCEPTION(14, "Signing exception"),
         VERIFICATION_EXCEPTION(15, "Verification exception"),
         KEY_ID_MISMATCH(16, "Key id mismatch"),
-        ROLE_NOT_FOUND(17, "Role not found"),
-        ROLE_ASSIGNMENT_NOT_FOUND(18, "Role assignment not found"),
         USER_ALREADY_EXISTS(19, "User already exists"),
         ROLE_ALREADY_EXISTS(20, "Role already exists"),
         ROLE_ASSIGNMENT_ALREADY_EXISTS(21, "Role assignment already exists"),

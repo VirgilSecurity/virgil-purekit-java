@@ -31,10 +31,24 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.purekit.pure.storage;
+package com.virgilsecurity.purekit.pure.storage.exception;
 
-/**
- * PureStorage CellKey not found exception
- */
-public class PureStorageCellKeyNotFoundException extends PureStorageException {
+import com.virgilsecurity.common.util.Base64;
+
+public class PureStorageGrantKeyNotFoundException extends PureStorageException {
+    private final String userId;
+    private final String keyId;
+
+    public PureStorageGrantKeyNotFoundException(String userId, byte[] keyId) {
+        this.userId = userId;
+        this.keyId = Base64.encode(keyId);
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public String getKeyId() {
+        return keyId;
+    }
 }

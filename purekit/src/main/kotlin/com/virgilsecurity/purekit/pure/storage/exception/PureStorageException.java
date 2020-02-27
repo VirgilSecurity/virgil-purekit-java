@@ -31,55 +31,26 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.purekit.pure.storage.mariadb;
+package com.virgilsecurity.purekit.pure.storage.exception;
 
-import com.virgilsecurity.purekit.pure.storage.exception.PureStorageException;
-
-import java.io.IOException;
-import java.sql.SQLException;
+import com.virgilsecurity.purekit.pure.exception.PureException;
 
 /**
- * MariaDbSqlStorage exception
+ * Base class for PureStorage exceptions
  */
-public class MariaDbSqlException extends PureStorageException {
-    private final SQLException sqlException;
-    private final IOException ioException;
-
+public class PureStorageException extends PureException {
     /**
      * Constructor
-     *
-     * @param sqlException sql exception
      */
-    public MariaDbSqlException(SQLException sqlException) {
-        this.sqlException = sqlException;
-        this.ioException = null;
+    public PureStorageException() {
     }
 
     /**
      * Constructor
      *
-     * @param ioException io exception
+     * @param errorMessage error message
      */
-    public MariaDbSqlException(IOException ioException) {
-        this.sqlException = null;
-        this.ioException = ioException;
-    }
-
-    /**
-     * Returns sql exception
-     *
-     * @return sql exception
-     */
-    public SQLException getSqlException() {
-        return sqlException;
-    }
-
-    /**
-     * Returns io exception
-     *
-     * @return io exception
-     */
-    public IOException getIoException() {
-        return ioException;
+    public PureStorageException(String errorMessage) {
+        super(errorMessage);
     }
 }

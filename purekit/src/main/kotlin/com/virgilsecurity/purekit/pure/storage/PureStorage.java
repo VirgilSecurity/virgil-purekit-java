@@ -38,6 +38,9 @@ import com.virgilsecurity.purekit.pure.model.GrantKey;
 import com.virgilsecurity.purekit.pure.model.Role;
 import com.virgilsecurity.purekit.pure.model.RoleAssignment;
 import com.virgilsecurity.purekit.pure.model.UserRecord;
+import com.virgilsecurity.purekit.pure.storage.exception.PureStorageCellKeyAlreadyExistsException;
+import com.virgilsecurity.purekit.pure.storage.exception.PureStorageCellKeyNotFoundException;
+import com.virgilsecurity.purekit.pure.storage.exception.PureStorageException;
 
 import java.util.Collection;
 import java.util.Set;

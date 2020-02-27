@@ -31,26 +31,22 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.purekit.pure.storage;
+package com.virgilsecurity.purekit.pure.storage.exception;
 
-import com.virgilsecurity.purekit.pure.exception.PureException;
+public class PureStorageRoleAssignmentNotFoundException extends PureStorageException {
+    private final String userId;
+    private final String roleName;
 
-/**
- * Base class for PureStorage exceptions
- */
-public class PureStorageException extends PureException {
-    /**
-     * Constructor
-     */
-    public PureStorageException() {
+    public PureStorageRoleAssignmentNotFoundException(String userId, String roleName) {
+        this.userId = userId;
+        this.roleName = roleName;
     }
 
-    /**
-     * Constructor
-     *
-     * @param errorMessage error message
-     */
-    public PureStorageException(String errorMessage) {
-        super(errorMessage);
+    public String getUserId() {
+        return userId;
+    }
+
+    public String getRoleName() {
+        return roleName;
     }
 }

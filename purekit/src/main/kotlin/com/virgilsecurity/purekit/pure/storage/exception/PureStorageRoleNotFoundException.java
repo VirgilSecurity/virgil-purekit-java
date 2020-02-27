@@ -31,10 +31,23 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.purekit.pure.storage;
+package com.virgilsecurity.purekit.pure.storage.exception;
 
-/**
- * PureStorage CellKey already exists exception
- */
-public class PureStorageCellKeyAlreadyExistsException extends PureStorageException {
+import java.util.Collections;
+import java.util.Set;
+
+public class PureStorageRoleNotFoundException extends PureStorageException {
+    private final Set<String> roleNames;
+
+    public PureStorageRoleNotFoundException(Set<String> roleNames) {
+        this.roleNames = roleNames;
+    }
+
+    public PureStorageRoleNotFoundException(String roleName) {
+        this.roleNames = Collections.singleton(roleName);
+    }
+
+    public Set<String> getRoleNames() {
+        return roleNames;
+    }
 }

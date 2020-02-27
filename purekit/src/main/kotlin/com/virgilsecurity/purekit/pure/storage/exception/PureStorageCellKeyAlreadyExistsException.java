@@ -31,53 +31,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.purekit.pure.storage;
-
-import com.virgilsecurity.purekit.data.ProtocolException;
-import com.virgilsecurity.purekit.data.ProtocolHttpException;
+package com.virgilsecurity.purekit.pure.storage.exception;
 
 /**
- * Virgil Cloud storage exception
+ * PureStorage CellKey already exists exception
  */
-public class VirgilCloudStorageException extends PureStorageException {
-    private final ProtocolException protocolException;
-    private final ProtocolHttpException protocolHttpException;
-
-    /**
-     * Constructor
-     *
-     * @param protocolException protocolException
-     */
-    public VirgilCloudStorageException(ProtocolException protocolException) {
-        this.protocolException = protocolException;
-        this.protocolHttpException = null;
-    }
-
-    /**
-     * Constructor
-     *
-     * @param protocolHttpException protocol http exception
-     */
-    public VirgilCloudStorageException(ProtocolHttpException protocolHttpException) {
-        this.protocolException = null;
-        this.protocolHttpException = protocolHttpException;
-    }
-
-    /**
-     * Returns protocolException
-     *
-     * @return protocolException
-     */
-    public ProtocolException getProtocolException() {
-        return protocolException;
-    }
-
-    /**
-     * Returns protocolHttpException
-     *
-     * @return protocolHttpException
-     */
-    public ProtocolHttpException getProtocolHttpException() {
-        return protocolHttpException;
-    }
+public class PureStorageCellKeyAlreadyExistsException extends PureStorageException {
 }

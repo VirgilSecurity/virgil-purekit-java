@@ -31,55 +31,33 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.purekit.pure.storage.mariadb;
+package com.virgilsecurity.purekit.pure.storage.exception;
 
-import com.virgilsecurity.purekit.pure.storage.exception.PureStorageException;
-
-import java.io.IOException;
-import java.sql.SQLException;
+import com.google.protobuf.InvalidProtocolBufferException;
 
 /**
- * MariaDbSqlStorage exception
+ * Invalid protobuf exception wrapped in PureStorageException
  */
-public class MariaDbSqlException extends PureStorageException {
-    private final SQLException sqlException;
-    private final IOException ioException;
+public class PureStorageInvalidProtobufException extends PureStorageException {
+    private final InvalidProtocolBufferException invalidProtocolBufferException;
 
     /**
      * Constructor
      *
-     * @param sqlException sql exception
+     * @param invalidProtocolBufferException invalidProtocolBufferException
      */
-    public MariaDbSqlException(SQLException sqlException) {
-        this.sqlException = sqlException;
-        this.ioException = null;
+    public PureStorageInvalidProtobufException(InvalidProtocolBufferException invalidProtocolBufferException) {
+        super();
+
+        this.invalidProtocolBufferException = invalidProtocolBufferException;
     }
 
     /**
-     * Constructor
+     * Returns invalidProtocolBufferException
      *
-     * @param ioException io exception
+     * @return invalidProtocolBufferException
      */
-    public MariaDbSqlException(IOException ioException) {
-        this.sqlException = null;
-        this.ioException = ioException;
-    }
-
-    /**
-     * Returns sql exception
-     *
-     * @return sql exception
-     */
-    public SQLException getSqlException() {
-        return sqlException;
-    }
-
-    /**
-     * Returns io exception
-     *
-     * @return io exception
-     */
-    public IOException getIoException() {
-        return ioException;
-    }
+    public InvalidProtocolBufferException getInvalidProtocolBufferException() {
+        return invalidProtocolBufferException;
+    };
 }

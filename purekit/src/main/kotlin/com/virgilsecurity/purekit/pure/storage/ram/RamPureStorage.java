@@ -31,14 +31,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.purekit.pure.storage;
+package com.virgilsecurity.purekit.pure.storage.ram;
 
 import com.virgilsecurity.purekit.pure.model.CellKey;
 import com.virgilsecurity.purekit.pure.model.GrantKey;
 import com.virgilsecurity.purekit.pure.model.Role;
 import com.virgilsecurity.purekit.pure.model.RoleAssignment;
 import com.virgilsecurity.purekit.pure.model.UserRecord;
+import com.virgilsecurity.purekit.pure.storage.PureStorage;
+import com.virgilsecurity.purekit.pure.storage.exception.*;
 import com.virgilsecurity.purekit.pure.storage.mariadb.MariaDbPureStorage;
+import com.virgilsecurity.purekit.pure.storage.virgil.VirgilCloudPureStorage;
 
 import java.util.ArrayList;
 import java.util.Base64;
@@ -117,7 +120,7 @@ public class RamPureStorage implements PureStorage {
         UserRecord userRecord = this.users.get(userId);
 
         if (userRecord == null) {
-            throw new PureStorageGenericException(PureStorageGenericException.ErrorStatus.USER_NOT_FOUND);
+            throw new PureStorageUserNotFoundException(userId);
         }
 
         return userRecord;
@@ -131,7 +134,7 @@ public class RamPureStorage implements PureStorage {
             UserRecord userRecord = this.users.get(userId);
 
             if (userRecord == null) {
-                throw new PureStorageGenericException(PureStorageGenericException.ErrorStatus.USER_NOT_FOUND);
+                throw new PureStorageUserNotFoundException(userId);
             }
 
             userRecords.add(userRecord);
@@ -157,7 +160,7 @@ public class RamPureStorage implements PureStorage {
     @Override
     public void deleteUser(String userId, boolean cascade) throws PureStorageException {
         if (this.users.remove(userId) == null) {
-            throw new PureStorageGenericException(PureStorageGenericException.ErrorStatus.USER_NOT_FOUND);
+            throw new PureStorageUserNotFoundException(userId);
         }
 
         if (cascade) {
@@ -231,7 +234,7 @@ public class RamPureStorage implements PureStorage {
             Role role = this.roles.get(roleName);
 
             if (role == null) {
-                throw new PureStorageGenericException(PureStorageGenericException.ErrorStatus.ROLE_NOT_FOUND);
+                throw new PureStorageRoleNotFoundException(roleName);
             }
 
             roles.add(role);
@@ -284,13 +287,13 @@ public class RamPureStorage implements PureStorage {
         HashMap<String, RoleAssignment> assignments = this.roleAssignments.get(roleName);
 
         if (assignments == null) {
-            throw new PureStorageGenericException(PureStorageGenericException.ErrorStatus.ROLE_ASSIGNMENT_NOT_FOUND);
+            throw new PureStorageRoleAssignmentNotFoundException(userId, roleName);
         }
 
         RoleAssignment roleAssignment = assignments.get(userId);
 
         if (roleAssignment == null) {
-            throw new PureStorageGenericException(PureStorageGenericException.ErrorStatus.ROLE_ASSIGNMENT_NOT_FOUND);
+            throw new PureStorageRoleAssignmentNotFoundException(userId, roleName);
         }
 
         return roleAssignment;
@@ -318,7 +321,7 @@ public class RamPureStorage implements PureStorage {
         GrantKey key = grantKeys.get(Base64.getEncoder().encodeToString(keyId));
 
         if (key == null) {
-            throw new PureStorageGenericException(PureStorageGenericException.ErrorStatus.GRANT_KEY_NOT_FOUND);
+            throw new PureStorageGrantKeyNotFoundException(userId, keyId);
         }
 
         assert userId.equals(key.getUserId());

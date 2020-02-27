@@ -1,12 +1,7 @@
 package com.virgilsecurity.purekit.protocol;
 
 import static com.virgilsecurity.crypto.phe.PheException.ERROR_AES_FAILED;
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -26,10 +21,14 @@ import com.virgilsecurity.purekit.pure.storage.*;
 import com.virgilsecurity.purekit.pure.exception.PureCryptoException;
 import com.virgilsecurity.purekit.pure.exception.PureLogicException;
 import com.virgilsecurity.purekit.pure.model.*;
+import com.virgilsecurity.purekit.pure.storage.exception.PureStorageCellKeyNotFoundException;
+import com.virgilsecurity.purekit.pure.storage.exception.PureStorageGenericException;
+import com.virgilsecurity.purekit.pure.storage.exception.PureStorageGrantKeyNotFoundException;
+import com.virgilsecurity.purekit.pure.storage.exception.PureStorageUserNotFoundException;
 import com.virgilsecurity.purekit.pure.storage.mariadb.MariaDbPureStorage;
 import com.virgilsecurity.purekit.pure.storage.mariadb.MariaDbSqlException;
+import com.virgilsecurity.purekit.pure.storage.ram.RamPureStorage;
 import com.virgilsecurity.purekit.utils.PropertyManager;
-import com.virgilsecurity.purekit.utils.ThreadUtils;
 import com.virgilsecurity.sdk.crypto.KeyPairType;
 import com.virgilsecurity.sdk.crypto.VirgilCrypto;
 import com.virgilsecurity.sdk.crypto.VirgilKeyPair;
@@ -405,9 +404,7 @@ public class PureTestJava {
             if (ex instanceof PureLogicException) {
                 assertEquals(PureLogicException.ErrorStatus.GRANT_IS_EXPIRED, ((PureLogicException)(ex)).getErrorStatus());
             }
-            else if (ex instanceof PureStorageGenericException) {
-                assertEquals(PureStorageGenericException.ErrorStatus.GRANT_KEY_NOT_FOUND, ((PureStorageGenericException)(ex)).getErrorStatus());
-            }
+            else if (ex instanceof PureStorageGrantKeyNotFoundException) { }
             else {
                 assertEquals(0, 1);
             }
@@ -434,11 +431,11 @@ public class PureTestJava {
 
             pure.invalidateEncryptedUserGrant(authResult.getEncryptedGrant());
 
-            PureStorageGenericException ex = assertThrows(PureStorageGenericException.class, () -> {
+            PureStorageGrantKeyNotFoundException ex = assertThrows(PureStorageGrantKeyNotFoundException.class, () -> {
                 pure.decryptGrantFromUser(authResult.getEncryptedGrant());
             });
 
-            assertEquals(PureStorageGenericException.ErrorStatus.GRANT_KEY_NOT_FOUND, ex.getErrorStatus());
+            assertEquals(userId, ex.getUserId());
         }
     }
 
@@ -876,11 +873,11 @@ public class PureTestJava {
 
             pure.deleteUser(userId, true);
 
-            PureStorageGenericException e1 = assertThrows(PureStorageGenericException.class, () -> {
+            PureStorageUserNotFoundException e1 = assertThrows(PureStorageUserNotFoundException.class, () -> {
                 pure.authenticateUser(userId, password);
             });
 
-            assertEquals(PureStorageGenericException.ErrorStatus.USER_NOT_FOUND, e1.getErrorStatus());
+            assertTrue(e1.getUserIds().contains(userId));
 
             assertThrows(PureStorageCellKeyNotFoundException.class, () -> {
                 pure.decrypt(authResult1.getGrant(), null, dataId, cipherText);
@@ -920,11 +917,11 @@ public class PureTestJava {
 
             pure.deleteUser(userId, false);
 
-            PureStorageGenericException e = assertThrows(PureStorageGenericException.class, () -> {
+            PureStorageUserNotFoundException e = assertThrows(PureStorageUserNotFoundException.class, () -> {
                 pure.authenticateUser(userId, password);
             });
 
-            assertEquals(PureStorageGenericException.ErrorStatus.USER_NOT_FOUND, e.getErrorStatus());
+            assertTrue(e.getUserIds().contains(userId));
 
             byte[] plainText = pure.decrypt(authResult1.getGrant(), null, dataId, cipherText);
 

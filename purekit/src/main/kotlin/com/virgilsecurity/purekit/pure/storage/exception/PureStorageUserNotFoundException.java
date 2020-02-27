@@ -31,55 +31,23 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.purekit.pure.storage.mariadb;
+package com.virgilsecurity.purekit.pure.storage.exception;
 
-import com.virgilsecurity.purekit.pure.storage.exception.PureStorageException;
+import java.util.Collections;
+import java.util.Set;
 
-import java.io.IOException;
-import java.sql.SQLException;
+public class PureStorageUserNotFoundException extends PureStorageException {
+    private final Set<String> userIds;
 
-/**
- * MariaDbSqlStorage exception
- */
-public class MariaDbSqlException extends PureStorageException {
-    private final SQLException sqlException;
-    private final IOException ioException;
-
-    /**
-     * Constructor
-     *
-     * @param sqlException sql exception
-     */
-    public MariaDbSqlException(SQLException sqlException) {
-        this.sqlException = sqlException;
-        this.ioException = null;
+    public PureStorageUserNotFoundException(Set<String> userIds) {
+        this.userIds = userIds;
     }
 
-    /**
-     * Constructor
-     *
-     * @param ioException io exception
-     */
-    public MariaDbSqlException(IOException ioException) {
-        this.sqlException = null;
-        this.ioException = ioException;
+    public PureStorageUserNotFoundException(String userId) {
+        this.userIds = Collections.singleton(userId);
     }
 
-    /**
-     * Returns sql exception
-     *
-     * @return sql exception
-     */
-    public SQLException getSqlException() {
-        return sqlException;
-    }
-
-    /**
-     * Returns io exception
-     *
-     * @return io exception
-     */
-    public IOException getIoException() {
-        return ioException;
+    public Set<String> getUserIds() {
+        return userIds;
     }
 }

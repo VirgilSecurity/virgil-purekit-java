@@ -31,33 +31,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.purekit.pure.storage;
-
-import com.google.protobuf.InvalidProtocolBufferException;
+package com.virgilsecurity.purekit.pure.storage.exception;
 
 /**
- * Invalid protobuf exception wrapped in PureStorageException
+ * PureStorage CellKey not found exception
  */
-public class PureStorageInvalidProtobufException extends PureStorageException {
-    private final InvalidProtocolBufferException invalidProtocolBufferException;
-
-    /**
-     * Constructor
-     *
-     * @param invalidProtocolBufferException invalidProtocolBufferException
-     */
-    public PureStorageInvalidProtobufException(InvalidProtocolBufferException invalidProtocolBufferException) {
-        super();
-
-        this.invalidProtocolBufferException = invalidProtocolBufferException;
-    }
-
-    /**
-     * Returns invalidProtocolBufferException
-     *
-     * @return invalidProtocolBufferException
-     */
-    public InvalidProtocolBufferException getInvalidProtocolBufferException() {
-        return invalidProtocolBufferException;
-    };
+public class PureStorageCellKeyNotFoundException extends PureStorageException {
 }
