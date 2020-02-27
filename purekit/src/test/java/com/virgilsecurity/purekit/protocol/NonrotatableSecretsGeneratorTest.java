@@ -7,6 +7,7 @@ import java.util.*;
 
 import com.virgilsecurity.purekit.pure.NonrotatableSecrets;
 import com.virgilsecurity.purekit.pure.NonrotatableSecretsGenerator;
+import com.virgilsecurity.purekit.pure.exception.PureException;
 import com.virgilsecurity.purekit.utils.ThreadUtils;
 import org.junit.jupiter.api.Test;
 
@@ -16,19 +17,14 @@ class NonrotatableSecretsGeneratorTest {
     private static final String vskpId = "l3RDBZ9U6Cs=";
 
     @Test
-    void generate_secrets__fixed_seed__should_match() throws InterruptedException {
+    void generate_secrets__fixed_seed__should_match() throws InterruptedException, PureException {
         ThreadUtils.pause();
 
-        try {
-            byte[] data = Base64.getDecoder().decode(nms);
+        byte[] data = Base64.getDecoder().decode(nms);
 
-            NonrotatableSecrets nonrotatableSecrets = NonrotatableSecretsGenerator.generateSecrets(data);
+        NonrotatableSecrets nonrotatableSecrets = NonrotatableSecretsGenerator.generateSecrets(data);
 
-            assertArrayEquals(Base64.getDecoder().decode(oskpId), nonrotatableSecrets.getOskp().getPublicKey().getIdentifier());
-            assertArrayEquals(Base64.getDecoder().decode(vskpId), nonrotatableSecrets.getVskp().getPublicKey().getIdentifier());
-        } catch (Exception e) {
-            //TODO no need to catch exception here
-            fail(e);
-        }
+        assertArrayEquals(Base64.getDecoder().decode(oskpId), nonrotatableSecrets.getOskp().getPublicKey().getIdentifier());
+        assertArrayEquals(Base64.getDecoder().decode(vskpId), nonrotatableSecrets.getVskp().getPublicKey().getIdentifier());
     }
 }

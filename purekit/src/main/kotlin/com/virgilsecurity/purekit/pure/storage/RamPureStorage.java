@@ -38,6 +38,7 @@ import com.virgilsecurity.purekit.pure.model.GrantKey;
 import com.virgilsecurity.purekit.pure.model.Role;
 import com.virgilsecurity.purekit.pure.model.RoleAssignment;
 import com.virgilsecurity.purekit.pure.model.UserRecord;
+import com.virgilsecurity.purekit.pure.storage.mariadb.MariaDbPureStorage;
 
 import java.util.ArrayList;
 import java.util.Base64;

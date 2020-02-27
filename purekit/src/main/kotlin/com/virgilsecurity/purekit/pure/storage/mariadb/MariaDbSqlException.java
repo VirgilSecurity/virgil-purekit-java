@@ -31,7 +31,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.purekit.pure.storage;
+package com.virgilsecurity.purekit.pure.storage.mariadb;
+
+import com.virgilsecurity.purekit.pure.storage.PureStorageException;
 
 import java.io.IOException;
 import java.sql.SQLException;

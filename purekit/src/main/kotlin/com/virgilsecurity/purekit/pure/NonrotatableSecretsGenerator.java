@@ -61,12 +61,9 @@ public class NonrotatableSecretsGenerator {
             throw new PureLogicException(PureLogicException.ErrorStatus.NONROTABLE_MASTER_SECRET_INVALID_LENGTH);
         }
 
-        //TODO rng is not closed
         KeyMaterialRng rng = new KeyMaterialRng();
-
         rng.resetKeyMaterial(masterSecret);
 
-        //TODO crypto is not closed
         VirgilCrypto crypto = new VirgilCrypto(rng);
 
         VirgilKeyPair vskp;

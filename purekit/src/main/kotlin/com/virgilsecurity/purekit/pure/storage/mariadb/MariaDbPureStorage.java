@@ -31,7 +31,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.purekit.pure.storage;
+package com.virgilsecurity.purekit.pure.storage.mariadb;
 
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage;
 import com.virgilsecurity.purekit.pure.model.CellKey;
@@ -39,6 +39,7 @@ import com.virgilsecurity.purekit.pure.model.GrantKey;
 import com.virgilsecurity.purekit.pure.model.Role;
 import com.virgilsecurity.purekit.pure.model.RoleAssignment;
 import com.virgilsecurity.purekit.pure.model.UserRecord;
+import com.virgilsecurity.purekit.pure.storage.*;
 import com.virgilsecurity.purekit.utils.ValidateUtils;
 
 import java.io.IOException;
@@ -61,7 +62,6 @@ import javax.sql.DataSource;
 /**
  * MariaDB storage
  */
-//TODO move to a storage.mariadb package with all dependent classes
 public class MariaDbPureStorage implements PureStorage, PureModelSerializerDependent {
     public static final int ER_DUP_ENTRY = 1062;
     private final String url;

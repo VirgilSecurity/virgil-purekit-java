@@ -70,7 +70,6 @@ import java.util.Set;
 class PureCrypto {
 
     private final VirgilCrypto crypto;
-    //TODO pheCipher is not closed
     private final PheCipher pheCipher;
 
     PureCrypto(VirgilCrypto crypto) throws PureCryptoException {
@@ -360,7 +359,6 @@ class PureCrypto {
     byte[] encryptForBackup(byte[] plainText, VirgilPublicKey encryptKey, VirgilPrivateKey signingKey) throws PureCryptoException {
         try {
             return crypto.authEncrypt(plainText, signingKey, encryptKey);
-            //TODO CryptoException could be used here
         } catch (SigningException | EncryptionException e) {
             throw new PureCryptoException(e);
         }
@@ -369,7 +367,6 @@ class PureCrypto {
     byte[] decryptBackup(byte[] cipherText, VirgilPrivateKey decryptKey, VirgilPublicKey verifyKey) throws PureCryptoException {
         try {
             return crypto.authDecrypt(cipherText, decryptKey, verifyKey);
-            //TODO CryptoException could be used here
         } catch (VerificationException | DecryptionException e) {
             throw new PureCryptoException(e);
         }
@@ -378,7 +375,6 @@ class PureCrypto {
     byte[] encryptData(byte[] plainText, List<VirgilPublicKey> publicKeys, VirgilPrivateKey privateKey) throws PureCryptoException {
         try {
             return crypto.authEncrypt(plainText, privateKey, publicKeys);
-            //TODO CryptoException could be used here
         } catch (EncryptionException | SigningException e) {
             throw new PureCryptoException(e);
         }
@@ -387,7 +383,6 @@ class PureCrypto {
     byte[] decryptData(byte[] cipherText, VirgilPrivateKey privateKey, VirgilPublicKey publicKey) throws PureCryptoException {
         try {
             return crypto.authDecrypt(cipherText, privateKey, publicKey);
-            //TODO CryptoException could be used here
         } catch (VerificationException | DecryptionException e) {
             throw new PureCryptoException(e);
         }
@@ -396,7 +391,6 @@ class PureCrypto {
     byte[] encryptRolePrivateKey(byte[] plainText, VirgilPublicKey publicKey, VirgilPrivateKey privateKey) throws PureCryptoException {
         try {
             return crypto.authEncrypt(plainText, privateKey, publicKey);
-            //TODO CryptoException could be used here
         } catch (SigningException | EncryptionException e) {
             throw new PureCryptoException(e);
         }
@@ -405,7 +399,6 @@ class PureCrypto {
     byte[] decryptRolePrivateKey(byte[] plainText, VirgilPrivateKey privateKey, VirgilPublicKey publicKey) throws PureCryptoException {
         try {
             return crypto.authDecrypt(plainText, privateKey, publicKey);
-            //TODO CryptoException could be used here
         } catch (VerificationException | DecryptionException e) {
             throw new PureCryptoException(e);
         }

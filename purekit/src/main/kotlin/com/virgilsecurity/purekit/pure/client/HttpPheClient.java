@@ -89,8 +89,6 @@ public class HttpPheClient {
         return client.firePost(
             request,
             AvailableRequests.ENROLL.getType(),
-            //TODO mutableMapOf() by default
-            new LinkedHashMap<>(),
             this.appToken,
             PurekitProtos.EnrollmentResponse.parser()
         );
