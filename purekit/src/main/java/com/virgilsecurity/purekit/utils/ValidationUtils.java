@@ -6,7 +6,7 @@ import com.virgilsecurity.common.exception.NullArgumentException;
 /**
  * ValidateUtils class.
  */
-public class ValidateUtils {
+public class ValidationUtils {
 
   /**
    * Throws NullArgumentException if an argument is null and EmptyArgumentException if an argument

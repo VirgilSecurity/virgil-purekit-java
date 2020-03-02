@@ -33,11 +33,10 @@
 
 package com.virgilsecurity.purekit.client;
 
-import com.virgilsecurity.purekit.client.HttpClientProtobuf;
 import com.virgilsecurity.purekit.data.ProtocolException;
 import com.virgilsecurity.purekit.data.ProtocolHttpException;
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client;
-import com.virgilsecurity.purekit.utils.ValidateUtils;
+import com.virgilsecurity.purekit.utils.ValidationUtils;
 
 /**
  * HttpPheClient class is for http interactions with PHE service.
@@ -59,8 +58,8 @@ public class HttpKmsClient {
      * @param serviceAddress Service url.
      */
     public HttpKmsClient(String appToken, String serviceAddress) {
-        ValidateUtils.checkNullOrEmpty(appToken, "appToken");
-        ValidateUtils.checkNullOrEmpty(serviceAddress, "serviceAddress");
+        ValidationUtils.checkNullOrEmpty(appToken, "appToken");
+        ValidationUtils.checkNullOrEmpty(serviceAddress, "serviceAddress");
 
         this.appToken = appToken;
         this.client = new HttpClientProtobuf(serviceAddress);
@@ -81,7 +80,7 @@ public class HttpKmsClient {
     public PurekitProtosV3Client.DecryptResponse decrypt(PurekitProtosV3Client.DecryptRequest request)
             throws ProtocolException, ProtocolHttpException {
 
-        ValidateUtils.checkNull(request, "request");
+        ValidationUtils.checkNull(request, "request");
 
         return client.firePost(
                 request,

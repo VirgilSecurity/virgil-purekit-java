@@ -33,7 +33,7 @@
 
 package com.virgilsecurity.purekit.model;
 
-import com.virgilsecurity.purekit.utils.ValidateUtils;
+import com.virgilsecurity.purekit.utils.ValidationUtils;
 
 import java.util.Date;
 
@@ -67,12 +67,12 @@ public class GrantKey {
                     byte[] encryptedGrantKeyBlob,
                     Date creationDate,
                     Date expirationDate) {
-        ValidateUtils.checkNullOrEmpty(userId, "userId");
-        ValidateUtils.checkNullOrEmpty(keyId, "keyId");
-        ValidateUtils.checkNullOrEmpty(encryptedGrantKeyWrap, "encryptedGrantKeyWrap");
-        ValidateUtils.checkNullOrEmpty(encryptedGrantKeyBlob, "encryptedGrantKeyBlob");
-        ValidateUtils.checkNull(creationDate, "creationDate");
-        ValidateUtils.checkNull(expirationDate, "expirationDate");
+        ValidationUtils.checkNullOrEmpty(userId, "userId");
+        ValidationUtils.checkNullOrEmpty(keyId, "keyId");
+        ValidationUtils.checkNullOrEmpty(encryptedGrantKeyWrap, "encryptedGrantKeyWrap");
+        ValidationUtils.checkNullOrEmpty(encryptedGrantKeyBlob, "encryptedGrantKeyBlob");
+        ValidationUtils.checkNull(creationDate, "creationDate");
+        ValidationUtils.checkNull(expirationDate, "expirationDate");
 
         this.userId = userId;
         this.keyId = keyId;

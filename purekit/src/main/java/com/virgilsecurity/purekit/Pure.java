@@ -52,7 +52,7 @@ import com.virgilsecurity.purekit.model.UserRecord;
 import com.virgilsecurity.purekit.storage.PureStorage;
 import com.virgilsecurity.purekit.storage.exception.PureStorageCellKeyAlreadyExistsException;
 import com.virgilsecurity.purekit.storage.exception.PureStorageCellKeyNotFoundException;
-import com.virgilsecurity.purekit.utils.ValidateUtils;
+import com.virgilsecurity.purekit.utils.ValidationUtils;
 import com.virgilsecurity.sdk.crypto.VirgilKeyPair;
 import com.virgilsecurity.sdk.crypto.VirgilPrivateKey;
 import com.virgilsecurity.sdk.crypto.VirgilPublicKey;
@@ -90,7 +90,7 @@ public class Pure {
      * @param context PureContext.
      */
     public Pure(PureContext context) throws PureCryptoException {
-        ValidateUtils.checkNull(context, "context");
+        ValidationUtils.checkNull(context, "context");
 
         this.pureCrypto = new PureCrypto(context.getCrypto());
         this.storage = context.getStorage();
@@ -133,14 +133,14 @@ public class Pure {
      */
     public AuthResult registerUser(String userId, String password, PureSessionParams pureSessionParams) throws PureException {
 
-        ValidateUtils.checkNullOrEmpty(userId, "userId");
-        ValidateUtils.checkNullOrEmpty(password, "password");
-        ValidateUtils.checkNull(pureSessionParams, "pureSessionParams");
+        ValidationUtils.checkNullOrEmpty(userId, "userId");
+        ValidationUtils.checkNullOrEmpty(password, "password");
+        ValidationUtils.checkNull(pureSessionParams, "pureSessionParams");
 
-        RegisterResult registerResult = registerUserInternal(userId, password);
+        RegistrationResult registrationResult = registerUserInternal(userId, password);
 
-        return authenticateUserInternal(registerResult.getUserRecord(), registerResult.getUkp(),
-                registerResult.getPhek(), pureSessionParams.getSessionId(), pureSessionParams.getTtl());
+        return authenticateUserInternal(registrationResult.getUserRecord(), registrationResult.getUkp(),
+                registrationResult.getPhek(), pureSessionParams.getSessionId(), pureSessionParams.getTtl());
     }
 
     /**
@@ -156,9 +156,9 @@ public class Pure {
      */
     public AuthResult authenticateUser(String userId, String password, PureSessionParams pureSessionParams) throws PureException {
 
-        ValidateUtils.checkNullOrEmpty(userId, "userId");
-        ValidateUtils.checkNullOrEmpty(password, "password");
-        ValidateUtils.checkNull(pureSessionParams, "pureSessionParams");
+        ValidationUtils.checkNullOrEmpty(userId, "userId");
+        ValidationUtils.checkNullOrEmpty(password, "password");
+        ValidationUtils.checkNull(pureSessionParams, "pureSessionParams");
 
         UserRecord userRecord = storage.selectUser(userId);
 
@@ -216,8 +216,8 @@ public class Pure {
      */
     public PureGrant createUserGrantAsAdmin(String userId, VirgilPrivateKey bupsk, long ttl) throws PureException {
 
-        ValidateUtils.checkNullOrEmpty(userId, "userId");
-        ValidateUtils.checkNull(bupsk, "bupsk");
+        ValidationUtils.checkNullOrEmpty(userId, "userId");
+        ValidationUtils.checkNull(bupsk, "bupsk");
 
         UserRecord userRecord = storage.selectUser(userId);
 
@@ -264,7 +264,7 @@ public class Pure {
     }
 
     private DeserializedEncryptedGrant deserializeEncryptedGrant(String encryptedGrantString)  throws PureException {
-        ValidateUtils.checkNullOrEmpty(encryptedGrantString, "encryptedGrantString");
+        ValidationUtils.checkNullOrEmpty(encryptedGrantString, "encryptedGrantString");
 
         byte[] encryptedGrantData = Base64.decode(encryptedGrantString.getBytes());
 
@@ -346,9 +346,9 @@ public class Pure {
      */
     public void changeUserPassword(String userId, String oldPassword, String newPassword) throws PureException {
 
-        ValidateUtils.checkNullOrEmpty(userId, "userId");
-        ValidateUtils.checkNullOrEmpty(oldPassword, "oldPassword");
-        ValidateUtils.checkNullOrEmpty(newPassword, "newPassword");
+        ValidationUtils.checkNullOrEmpty(userId, "userId");
+        ValidationUtils.checkNullOrEmpty(oldPassword, "oldPassword");
+        ValidationUtils.checkNullOrEmpty(newPassword, "newPassword");
 
         UserRecord userRecord = storage.selectUser(userId);
 
@@ -370,8 +370,8 @@ public class Pure {
      */
     public void changeUserPassword(PureGrant grant, String newPassword) throws PureException {
 
-        ValidateUtils.checkNull(grant, "grant");
-        ValidateUtils.checkNullOrEmpty(newPassword, "newPassword");
+        ValidationUtils.checkNull(grant, "grant");
+        ValidationUtils.checkNullOrEmpty(newPassword, "newPassword");
 
         UserRecord userRecord = storage.selectUser(grant.getUserId());
 
@@ -391,8 +391,8 @@ public class Pure {
      * @throws PureException PureException
      */
     public void recoverUser(String userId, String newPassword) throws PureException {
-        ValidateUtils.checkNullOrEmpty(userId, "userId");
-        ValidateUtils.checkNullOrEmpty(newPassword, "newPassword");
+        ValidationUtils.checkNullOrEmpty(userId, "userId");
+        ValidationUtils.checkNullOrEmpty(newPassword, "newPassword");
 
         UserRecord userRecord = storage.selectUser(userId);
 
@@ -616,12 +616,12 @@ public class Pure {
                           Collection<VirgilPublicKey> publicKeys,
                           byte[] plainText) throws PureException {
 
-        ValidateUtils.checkNull(otherUserIds, "otherUserIds");
-        ValidateUtils.checkNull(publicKeys, "publicKeys");
-        ValidateUtils.checkNull(plainText, "plainText");
+        ValidationUtils.checkNull(otherUserIds, "otherUserIds");
+        ValidationUtils.checkNull(publicKeys, "publicKeys");
+        ValidationUtils.checkNull(plainText, "plainText");
 
-        ValidateUtils.checkNullOrEmpty(userId, "userId");
-        ValidateUtils.checkNullOrEmpty(dataId, "dataId");
+        ValidationUtils.checkNullOrEmpty(userId, "userId");
+        ValidationUtils.checkNullOrEmpty(dataId, "dataId");
 
         VirgilPublicKey cpk;
 
@@ -714,9 +714,9 @@ public class Pure {
      */
     public byte[] decrypt(PureGrant grant, String ownerUserId, String dataId, byte[] cipherText) throws PureException {
 
-        ValidateUtils.checkNull(grant, "grant");
-        ValidateUtils.checkNull(cipherText, "cipherText");
-        ValidateUtils.checkNullOrEmpty(dataId, "dataId");
+        ValidationUtils.checkNull(grant, "grant");
+        ValidationUtils.checkNull(cipherText, "cipherText");
+        ValidationUtils.checkNullOrEmpty(dataId, "dataId");
 
         String userId = ownerUserId;
 
@@ -785,9 +785,9 @@ public class Pure {
                           String dataId,
                           byte[] cipherText) throws PureException {
 
-        ValidateUtils.checkNull(privateKey, "privateKey");
-        ValidateUtils.checkNullOrEmpty(dataId, "dataId");
-        ValidateUtils.checkNullOrEmpty(ownerUserId, "ownerUserId");
+        ValidationUtils.checkNull(privateKey, "privateKey");
+        ValidationUtils.checkNullOrEmpty(dataId, "dataId");
+        ValidationUtils.checkNullOrEmpty(ownerUserId, "ownerUserId");
 
         CellKey cellKey = storage.selectCellKey(ownerUserId, dataId);
 
@@ -813,9 +813,9 @@ public class Pure {
      */
     public void share(PureGrant grant, String dataId, String otherUserId) throws PureException {
 
-        ValidateUtils.checkNull(grant, "grant");
-        ValidateUtils.checkNullOrEmpty(dataId, "dataId");
-        ValidateUtils.checkNullOrEmpty(otherUserId, "otherUserId");
+        ValidationUtils.checkNull(grant, "grant");
+        ValidationUtils.checkNullOrEmpty(dataId, "dataId");
+        ValidationUtils.checkNullOrEmpty(otherUserId, "otherUserId");
 
         share(grant, dataId, Collections.singleton(otherUserId), Collections.emptyList());
     }
@@ -829,9 +829,9 @@ public class Pure {
      * @throws PureException PureException
      */
     public void shareToRole(PureGrant grant, String dataId, Set<String> roleNames) throws PureException {
-        ValidateUtils.checkNull(grant, "grant");
-        ValidateUtils.checkNullOrEmpty(dataId, "dataId");
-        ValidateUtils.checkNull(roleNames, "roleNames");
+        ValidationUtils.checkNull(grant, "grant");
+        ValidationUtils.checkNullOrEmpty(dataId, "dataId");
+        ValidationUtils.checkNull(roleNames, "roleNames");
 
         if (roleNames.isEmpty()) {
             throw new EmptyArgumentException("roleNames");
@@ -856,7 +856,7 @@ public class Pure {
      * @throws PureException PureException
      */
     public void shareToRole(PureGrant grant, String dataId, String roleName) throws PureException {
-        ValidateUtils.checkNull(roleName, "roleName");
+        ValidationUtils.checkNull(roleName, "roleName");
 
         shareToRole(grant, dataId, Collections.singleton(roleName));
     }
@@ -877,10 +877,10 @@ public class Pure {
                       Set<String> otherUserIds,
                       Collection<VirgilPublicKey> publicKeys) throws PureException {
 
-        ValidateUtils.checkNull(grant, "grant");
-        ValidateUtils.checkNull(otherUserIds, "otherUserIds");
-        ValidateUtils.checkNull(publicKeys, "publicKeys");
-        ValidateUtils.checkNullOrEmpty(dataId, "dataId");
+        ValidationUtils.checkNull(grant, "grant");
+        ValidationUtils.checkNull(otherUserIds, "otherUserIds");
+        ValidationUtils.checkNull(publicKeys, "publicKeys");
+        ValidationUtils.checkNullOrEmpty(dataId, "dataId");
 
         ArrayList<VirgilPublicKey> keys = keysWithOthers(publicKeys, otherUserIds);
         CellKey cellKey = storage.selectCellKey(grant.getUserId(), dataId);
@@ -934,11 +934,11 @@ public class Pure {
                         Set<String> otherUserIds,
                         Collection<VirgilPublicKey> publicKeys) throws PureException {
 
-        ValidateUtils.checkNull(otherUserIds, "otherUserIds");
-        ValidateUtils.checkNull(publicKeys, "publicKeys");
+        ValidationUtils.checkNull(otherUserIds, "otherUserIds");
+        ValidationUtils.checkNull(publicKeys, "publicKeys");
 
-        ValidateUtils.checkNullOrEmpty(ownerUserId, "ownerUserId");
-        ValidateUtils.checkNullOrEmpty(dataId, "dataId");
+        ValidationUtils.checkNullOrEmpty(ownerUserId, "ownerUserId");
+        ValidationUtils.checkNullOrEmpty(dataId, "dataId");
 
         ArrayList<VirgilPublicKey> keys = keysWithOthers(publicKeys, otherUserIds);
 
@@ -1064,12 +1064,12 @@ public class Pure {
         storage.deleteRoleAssignments(roleName, userIds);
     }
 
-    static class RegisterResult {
+    static class RegistrationResult {
         private final UserRecord userRecord;
         private final VirgilKeyPair ukp;
         private final byte[] phek;
 
-        RegisterResult(UserRecord userRecord, VirgilKeyPair ukp, byte[] phek) {
+        RegistrationResult(UserRecord userRecord, VirgilKeyPair ukp, byte[] phek) {
             this.userRecord = userRecord;
             this.ukp = ukp;
             this.phek = phek;
@@ -1088,9 +1088,9 @@ public class Pure {
         }
     }
 
-    private RegisterResult registerUserInternal(String userId, String password) throws PureException {
-        ValidateUtils.checkNullOrEmpty(userId, "userId");
-        ValidateUtils.checkNullOrEmpty(password, "password");
+    private RegistrationResult registerUserInternal(String userId, String password) throws PureException {
+        ValidationUtils.checkNullOrEmpty(userId, "userId");
+        ValidationUtils.checkNullOrEmpty(password, "password");
 
         byte[] passwordHash = pureCrypto.computePasswordHash(password);
 
@@ -1124,7 +1124,7 @@ public class Pure {
 
         storage.insertUser(userRecord);
 
-        return new RegisterResult(userRecord, ukp, pheResult.getAccountKey());
+        return new RegistrationResult(userRecord, ukp, pheResult.getAccountKey());
     }
 
     private AuthResult authenticateUserInternal(UserRecord userRecord, VirgilKeyPair ukp, byte[] phek, String sessionId, long ttl) throws PureException {
@@ -1179,7 +1179,7 @@ public class Pure {
                                             byte[] privateKeyData,
                                             String newPassword) throws PureException {
 
-        ValidateUtils.checkNullOrEmpty(newPassword, "newPassword");
+        ValidationUtils.checkNullOrEmpty(newPassword, "newPassword");
 
         byte[] newPasswordHash = pureCrypto.computePasswordHash(newPassword);
 

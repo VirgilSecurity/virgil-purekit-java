@@ -34,7 +34,7 @@
 package com.virgilsecurity.purekit;
 
 import com.virgilsecurity.purekit.model.PureGrant;
-import com.virgilsecurity.purekit.utils.ValidateUtils;
+import com.virgilsecurity.purekit.utils.ValidationUtils;
 
 /**
  * AuthResult class is a Result of {@link Pure#authenticateUser(String, String)}.
@@ -51,8 +51,8 @@ public class AuthResult {
      * @param encryptedGrant Encrypted grant.
      */
     AuthResult(PureGrant grant, String encryptedGrant) {
-        ValidateUtils.checkNull(grant, "grant");
-        ValidateUtils.checkNullOrEmpty(encryptedGrant, "encryptedGrant");
+        ValidationUtils.checkNull(grant, "grant");
+        ValidationUtils.checkNullOrEmpty(encryptedGrant, "encryptedGrant");
 
         this.grant = grant;
         this.encryptedGrant = encryptedGrant;

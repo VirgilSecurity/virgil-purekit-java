@@ -33,7 +33,7 @@
 
 package com.virgilsecurity.purekit;
 
-import com.virgilsecurity.purekit.utils.ValidateUtils;
+import com.virgilsecurity.purekit.utils.ValidationUtils;
 import com.virgilsecurity.sdk.crypto.VirgilKeyPair;
 
 /**
@@ -50,8 +50,8 @@ public class NonrotatableSecrets {
      * @param oskp own signing key pair
      */
     public NonrotatableSecrets(VirgilKeyPair vskp, VirgilKeyPair oskp) {
-        ValidateUtils.checkNull(vskp, "vskp");
-        ValidateUtils.checkNull(oskp, "oskp");
+        ValidationUtils.checkNull(vskp, "vskp");
+        ValidationUtils.checkNull(oskp, "oskp");
 
         this.vskp = vskp;
         this.oskp = oskp;

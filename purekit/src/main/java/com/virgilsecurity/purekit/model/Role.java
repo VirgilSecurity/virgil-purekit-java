@@ -33,7 +33,7 @@
 
 package com.virgilsecurity.purekit.model;
 
-import com.virgilsecurity.purekit.utils.ValidateUtils;
+import com.virgilsecurity.purekit.utils.ValidationUtils;
 
 /**
  * Role
@@ -50,8 +50,8 @@ public class Role {
      * @param rpk role public key
      */
     public Role(String roleName, byte[] rpk) {
-        ValidateUtils.checkNullOrEmpty(roleName, "roleName");
-        ValidateUtils.checkNullOrEmpty(rpk, "rpk");
+        ValidationUtils.checkNullOrEmpty(roleName, "roleName");
+        ValidationUtils.checkNullOrEmpty(rpk, "rpk");
 
         this.roleName = roleName;
         this.rpk = rpk;

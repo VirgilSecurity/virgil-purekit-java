@@ -34,12 +34,11 @@
 package com.virgilsecurity.purekit.client;
 
 import com.virgilsecurity.common.exception.EmptyArgumentException;
-import com.virgilsecurity.purekit.client.HttpClientProtobuf;
 import com.virgilsecurity.purekit.data.ProtocolException;
 import com.virgilsecurity.purekit.data.ProtocolHttpException;
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client;
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage;
-import com.virgilsecurity.purekit.utils.ValidateUtils;
+import com.virgilsecurity.purekit.utils.ValidationUtils;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -67,8 +66,8 @@ public class HttpPureClient {
      * @param serviceAddress Service url.
      */
     public HttpPureClient(String appToken, String serviceAddress) {
-        ValidateUtils.checkNullOrEmpty(appToken, "appToken");
-        ValidateUtils.checkNullOrEmpty(serviceAddress, "serviceAddress");
+        ValidationUtils.checkNullOrEmpty(appToken, "appToken");
+        ValidationUtils.checkNullOrEmpty(serviceAddress, "serviceAddress");
 
         this.appToken = appToken;
         this.client = new HttpClientProtobuf(serviceAddress);
@@ -87,7 +86,7 @@ public class HttpPureClient {
     public void insertUser(PurekitProtosV3Storage.UserRecord userRecord) 
         throws ProtocolHttpException, ProtocolException {
 
-        ValidateUtils.checkNull(userRecord, "userRecord");
+        ValidationUtils.checkNull(userRecord, "userRecord");
         
         client.firePost(
                 userRecord,
@@ -110,8 +109,8 @@ public class HttpPureClient {
     public void updateUser(String userId, PurekitProtosV3Storage.UserRecord userRecord) 
         throws ProtocolHttpException, ProtocolException {
 
-        ValidateUtils.checkNull(userRecord, "userRecord");
-        ValidateUtils.checkNullOrEmpty(userId, "userId");
+        ValidationUtils.checkNull(userRecord, "userRecord");
+        ValidationUtils.checkNullOrEmpty(userId, "userId");
 
         client.firePut(
                 userRecord,
@@ -135,7 +134,7 @@ public class HttpPureClient {
     public PurekitProtosV3Storage.UserRecord getUser(String userId) 
         throws ProtocolHttpException, ProtocolException {
 
-        ValidateUtils.checkNullOrEmpty(userId, "userId");
+        ValidationUtils.checkNullOrEmpty(userId, "userId");
 
         return client.fireGet(
                 String.format("/user/%s", userId),
@@ -159,7 +158,7 @@ public class HttpPureClient {
     public PurekitProtosV3Storage.UserRecords getUsers(Collection<String> userIds) 
         throws ProtocolHttpException, ProtocolException {
 
-        ValidateUtils.checkNull(userIds, "userIds");
+        ValidationUtils.checkNull(userIds, "userIds");
         if (userIds.isEmpty()) {
             throw new EmptyArgumentException("userIds");
         }
@@ -189,7 +188,7 @@ public class HttpPureClient {
     public void deleteUser(String userId, boolean cascade) 
         throws ProtocolHttpException, ProtocolException {
 
-        ValidateUtils.checkNullOrEmpty(userId, "userId");
+        ValidationUtils.checkNullOrEmpty(userId, "userId");
 
         Map<String, String> params = new HashMap<>();
         params.put(KEY_CASCADE, String.valueOf(cascade));
@@ -214,7 +213,7 @@ public class HttpPureClient {
     public void insertCellKey(PurekitProtosV3Storage.CellKey cellKey) 
         throws ProtocolHttpException, ProtocolException {
 
-        ValidateUtils.checkNull(cellKey, "cellKey");
+        ValidationUtils.checkNull(cellKey, "cellKey");
         
         client.firePost(
                 cellKey,
@@ -238,9 +237,9 @@ public class HttpPureClient {
     public void updateCellKey(String userId, String dataId, PurekitProtosV3Storage.CellKey cellKey) 
         throws ProtocolHttpException, ProtocolException {
 
-        ValidateUtils.checkNullOrEmpty(userId, "userId");
-        ValidateUtils.checkNullOrEmpty(dataId, "dataId");
-        ValidateUtils.checkNull(cellKey, "cellKey");
+        ValidationUtils.checkNullOrEmpty(userId, "userId");
+        ValidationUtils.checkNullOrEmpty(dataId, "dataId");
+        ValidationUtils.checkNull(cellKey, "cellKey");
 
         client.firePut(
                 cellKey,
@@ -265,8 +264,8 @@ public class HttpPureClient {
     public PurekitProtosV3Storage.CellKey getCellKey(String userId, String dataId)
         throws ProtocolHttpException, ProtocolException {
 
-        ValidateUtils.checkNullOrEmpty(userId, "userId");
-        ValidateUtils.checkNullOrEmpty(dataId, "dataId");
+        ValidationUtils.checkNullOrEmpty(userId, "userId");
+        ValidationUtils.checkNullOrEmpty(dataId, "dataId");
 
         return client.fireGet(
                 String.format("/cell-key/%s/%s", userId, dataId),
@@ -289,8 +288,8 @@ public class HttpPureClient {
     public void deleteCellKey(String userId, String dataId)
         throws ProtocolHttpException, ProtocolException {
 
-        ValidateUtils.checkNullOrEmpty(userId, "userId");
-        ValidateUtils.checkNullOrEmpty(dataId, "dataId");
+        ValidationUtils.checkNullOrEmpty(userId, "userId");
+        ValidationUtils.checkNullOrEmpty(dataId, "dataId");
 
         client.fireDelete(
                 String.format("/cell-key/%s/%s", userId, dataId),
@@ -312,7 +311,7 @@ public class HttpPureClient {
     public void insertRole(PurekitProtosV3Storage.Role role)
             throws ProtocolHttpException, ProtocolException {
 
-        ValidateUtils.checkNull(role, "role");
+        ValidationUtils.checkNull(role, "role");
 
         client.firePost(
                 role,
@@ -336,7 +335,7 @@ public class HttpPureClient {
     public PurekitProtosV3Storage.Roles getRoles(PurekitProtosV3Client.GetRoles getRolesRequest)
             throws ProtocolHttpException, ProtocolException {
 
-        ValidateUtils.checkNull(getRolesRequest, "getRolesRequest");
+        ValidationUtils.checkNull(getRolesRequest, "getRolesRequest");
 
         return client.firePost(
                 getRolesRequest,
@@ -359,7 +358,7 @@ public class HttpPureClient {
     public void insertRoleAssignments(PurekitProtosV3Storage.RoleAssignments roleAssignments)
             throws ProtocolHttpException, ProtocolException {
 
-        ValidateUtils.checkNull(roleAssignments, "roleAssignments");
+        ValidationUtils.checkNull(roleAssignments, "roleAssignments");
         if (roleAssignments.getRoleAssignmentsList().isEmpty()) {
             throw new EmptyArgumentException("roleAssignments");
         }
@@ -386,7 +385,7 @@ public class HttpPureClient {
     public PurekitProtosV3Storage.RoleAssignments getRoleAssignments(PurekitProtosV3Client.GetRoleAssignments request)
             throws ProtocolHttpException, ProtocolException {
 
-        ValidateUtils.checkNull(request, "request");
+        ValidationUtils.checkNull(request, "request");
 
         return client.firePost(
                 request,
@@ -411,7 +410,7 @@ public class HttpPureClient {
     public PurekitProtosV3Storage.RoleAssignment getRoleAssignment(PurekitProtosV3Client.GetRoleAssignment request)
             throws ProtocolHttpException, ProtocolException {
 
-        ValidateUtils.checkNull(request, "request");
+        ValidationUtils.checkNull(request, "request");
 
         return client.firePost(
                 request,
@@ -434,7 +433,7 @@ public class HttpPureClient {
     public void deleteRoleAssignments(PurekitProtosV3Client.DeleteRoleAssignments request)
             throws ProtocolHttpException, ProtocolException {
 
-        ValidateUtils.checkNull(request, "request");
+        ValidationUtils.checkNull(request, "request");
 
         client.firePost(
                 request,
@@ -454,7 +453,7 @@ public class HttpPureClient {
      * successfully. Represents a regular HTTP exception with code and message.
      */
     public void insertGrantKey(PurekitProtosV3Storage.GrantKey grantKey) throws ProtocolHttpException, ProtocolException {
-        ValidateUtils.checkNull(grantKey, "grantKey");
+        ValidationUtils.checkNull(grantKey, "grantKey");
 
         client.firePost(
                 grantKey,
@@ -476,7 +475,7 @@ public class HttpPureClient {
      * successfully. Represents a regular HTTP exception with code and message.
      */
     public PurekitProtosV3Storage.GrantKey getGrantKey(PurekitProtosV3Client.GrantKeyDescriptor request) throws ProtocolHttpException, ProtocolException {
-        ValidateUtils.checkNull(request, "request");
+        ValidationUtils.checkNull(request, "request");
 
         return client.firePost(
                 request,
@@ -497,7 +496,7 @@ public class HttpPureClient {
      * successfully. Represents a regular HTTP exception with code and message.
      */
     public void deleteGrantKey(PurekitProtosV3Client.GrantKeyDescriptor request) throws ProtocolHttpException, ProtocolException {
-        ValidateUtils.checkNull(request, "request");
+        ValidationUtils.checkNull(request, "request");
 
         client.firePost(
                 request,

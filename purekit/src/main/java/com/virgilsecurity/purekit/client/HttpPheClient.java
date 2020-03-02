@@ -33,11 +33,10 @@
 
 package com.virgilsecurity.purekit.client;
 
-import com.virgilsecurity.purekit.client.HttpClientProtobuf;
 import com.virgilsecurity.purekit.data.ProtocolException;
 import com.virgilsecurity.purekit.data.ProtocolHttpException;
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtos;
-import com.virgilsecurity.purekit.utils.ValidateUtils;
+import com.virgilsecurity.purekit.utils.ValidationUtils;
 
 /**
  * HttpPheClient class is for http interactions with PHE service.
@@ -59,8 +58,8 @@ public class HttpPheClient {
      * @param serviceAddress Service url.
      */
     public HttpPheClient(String appToken, String serviceAddress) {
-        ValidateUtils.checkNullOrEmpty(appToken, "appToken");
-        ValidateUtils.checkNullOrEmpty(serviceAddress, "serviceAddress");
+        ValidationUtils.checkNullOrEmpty(appToken, "appToken");
+        ValidationUtils.checkNullOrEmpty(serviceAddress, "serviceAddress");
 
         this.appToken = appToken;
         this.client = new HttpClientProtobuf(serviceAddress);
@@ -81,7 +80,7 @@ public class HttpPheClient {
     public PurekitProtos.EnrollmentResponse enrollAccount(PurekitProtos.EnrollmentRequest request)
         throws ProtocolException, ProtocolHttpException {
 
-        ValidateUtils.checkNull(request, "request");
+        ValidationUtils.checkNull(request, "request");
 
         return client.firePost(
                 request,
@@ -107,7 +106,7 @@ public class HttpPheClient {
         PurekitProtos.VerifyPasswordRequest request
     ) throws ProtocolException, ProtocolHttpException {
 
-        ValidateUtils.checkNull(request, "request");
+        ValidationUtils.checkNull(request, "request");
 
         return client.firePost(
                 request,

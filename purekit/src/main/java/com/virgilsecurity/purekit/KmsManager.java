@@ -49,7 +49,7 @@ import com.virgilsecurity.purekit.exception.PureCryptoException;
 import com.virgilsecurity.purekit.exception.PureException;
 import com.virgilsecurity.purekit.model.GrantKey;
 import com.virgilsecurity.purekit.model.UserRecord;
-import com.virgilsecurity.purekit.utils.ValidateUtils;
+import com.virgilsecurity.purekit.utils.ValidationUtils;
 
 class KmsManager {
     public static final String RECOVER_PWD_ALIAS = "RECOVERY_PASSWORD";
@@ -181,8 +181,8 @@ class KmsManager {
 
     byte[] performPwdRotation(byte[] wrap) throws PureCryptoException {
         try {
-            ValidateUtils.checkNull(pwdKmsRotation, "kmsUpdateToken");
-            ValidateUtils.checkNull(wrap, "wrap");
+            ValidationUtils.checkNull(pwdKmsRotation, "kmsUpdateToken");
+            ValidationUtils.checkNull(wrap, "wrap");
 
             return pwdKmsRotation.updateWrap(wrap);
         }
@@ -193,8 +193,8 @@ class KmsManager {
 
     byte[] performGrantRotation(byte[] wrap) throws PureCryptoException {
         try {
-            ValidateUtils.checkNull(grantKmsRotation, "grantUpdateToken");
-            ValidateUtils.checkNull(wrap, "wrap");
+            ValidationUtils.checkNull(grantKmsRotation, "grantUpdateToken");
+            ValidationUtils.checkNull(wrap, "wrap");
 
             return grantKmsRotation.updateWrap(wrap);
         }
@@ -208,8 +208,8 @@ class KmsManager {
         private final byte[] blob;
 
         public KmsEncryptedData(byte[] wrap, byte[] blob) {
-            ValidateUtils.checkNull(wrap, "wrap");
-            ValidateUtils.checkNull(blob, "blob");
+            ValidationUtils.checkNull(wrap, "wrap");
+            ValidationUtils.checkNull(blob, "blob");
 
             this.wrap = wrap;
             this.blob = blob;

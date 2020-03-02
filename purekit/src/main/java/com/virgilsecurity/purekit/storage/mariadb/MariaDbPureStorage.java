@@ -41,7 +41,7 @@ import com.virgilsecurity.purekit.model.RoleAssignment;
 import com.virgilsecurity.purekit.model.UserRecord;
 import com.virgilsecurity.purekit.storage.*;
 import com.virgilsecurity.purekit.storage.exception.*;
-import com.virgilsecurity.purekit.utils.ValidateUtils;
+import com.virgilsecurity.purekit.utils.ValidationUtils;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -79,7 +79,7 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
 
     @Override
     public void setPureModelSerializer(PureModelSerializer pureModelSerializer) {
-        ValidateUtils.checkNull(pureModelSerializer, "pureModelSerializer");
+        ValidationUtils.checkNull(pureModelSerializer, "pureModelSerializer");
 
         this.pureModelSerializer = pureModelSerializer;
     }
@@ -92,7 +92,7 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
      * @param url connection url with credentials, e.g. "jdbc:mariadb://localhost/puretest?user=root&password=qwerty"
      */
     public MariaDbPureStorage(String url) {
-        ValidateUtils.checkNullOrEmpty(url, "url");
+        ValidationUtils.checkNullOrEmpty(url, "url");
 
         this.url = url;
         this.dataSource = null;
@@ -104,7 +104,7 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
      * @param dataSource connection dataSource
      */
     public MariaDbPureStorage(DataSource dataSource) {
-        ValidateUtils.checkNull(dataSource, "dataSource");
+        ValidationUtils.checkNull(dataSource, "dataSource");
 
         this.url = null;
         this.dataSource = dataSource;
@@ -121,7 +121,7 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
 
     @Override
     public void insertUser(UserRecord userRecord) throws PureStorageException {
-        ValidateUtils.checkNull(userRecord, "userRecord");
+        ValidationUtils.checkNull(userRecord, "userRecord");
 
         PurekitProtosV3Storage.UserRecord protobuf = pureModelSerializer.serializeUserRecord(userRecord);
 
@@ -154,7 +154,7 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
 
     @Override
     public void updateUser(UserRecord userRecord) throws PureStorageException {
-        ValidateUtils.checkNull(userRecord, "userRecord");
+        ValidationUtils.checkNull(userRecord, "userRecord");
 
         PurekitProtosV3Storage.UserRecord protobuf = pureModelSerializer.serializeUserRecord(userRecord);
 
@@ -182,7 +182,7 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
 
     @Override
     public void updateUsers(Iterable<UserRecord> userRecords, int previousVersion) throws PureStorageException {
-        ValidateUtils.checkNull(userRecords, "userRecords");
+        ValidationUtils.checkNull(userRecords, "userRecords");
 
         try (Connection conn = getConnection()) {
             conn.setAutoCommit(false);
@@ -234,7 +234,7 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
 
     @Override
     public UserRecord selectUser(String userId) throws PureStorageException {
-        ValidateUtils.checkNullOrEmpty(userId, "userId");
+        ValidationUtils.checkNullOrEmpty(userId, "userId");
 
         try (Connection conn = getConnection()) {
             try (PreparedStatement stmt = conn.prepareStatement("SELECT protobuf " +
@@ -264,7 +264,7 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
 
     @Override
     public Iterable<UserRecord> selectUsers(Set<String> userIds) throws PureStorageException {
-        ValidateUtils.checkNull(userIds, "userIds");
+        ValidationUtils.checkNull(userIds, "userIds");
 
         if (userIds.isEmpty()) {
             return new ArrayList<>();
@@ -348,7 +348,7 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
 
     @Override
     public void deleteUser(String userId, boolean cascade) throws PureStorageException {
-        ValidateUtils.checkNullOrEmpty(userId, "userId");
+        ValidationUtils.checkNullOrEmpty(userId, "userId");
 
         if (!cascade) {
             throw new MariaDbOperationNotSupportedException();
@@ -384,8 +384,8 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
 
     @Override
     public CellKey selectCellKey(String userId, String dataId) throws PureStorageException {
-        ValidateUtils.checkNullOrEmpty(userId, "userId");
-        ValidateUtils.checkNullOrEmpty(dataId, "dataId");
+        ValidationUtils.checkNullOrEmpty(userId, "userId");
+        ValidationUtils.checkNullOrEmpty(dataId, "dataId");
 
         try (Connection conn = getConnection()) {
             try (PreparedStatement stmt = conn.prepareStatement("SELECT protobuf " +
@@ -417,7 +417,7 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
 
     @Override
     public void insertCellKey(CellKey cellKey) throws PureStorageException {
-        ValidateUtils.checkNull(cellKey, "cellKey");
+        ValidationUtils.checkNull(cellKey, "cellKey");
 
         PurekitProtosV3Storage.CellKey protobuf = pureModelSerializer.serializeCellKey(cellKey);
 
@@ -450,7 +450,7 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
 
     @Override
     public void updateCellKey(CellKey cellKey) throws PureStorageException {
-        ValidateUtils.checkNull(cellKey, "cellKey");
+        ValidationUtils.checkNull(cellKey, "cellKey");
 
         PurekitProtosV3Storage.CellKey protobuf = pureModelSerializer.serializeCellKey(cellKey);
 
@@ -477,8 +477,8 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
 
     @Override
     public void deleteCellKey(String userId, String dataId) throws PureStorageException {
-        ValidateUtils.checkNullOrEmpty(userId, "userId");
-        ValidateUtils.checkNullOrEmpty(dataId, "dataId");
+        ValidationUtils.checkNullOrEmpty(userId, "userId");
+        ValidationUtils.checkNullOrEmpty(dataId, "dataId");
 
         try (Connection conn = getConnection()) {
             try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM virgil_keys WHERE user_id = ? AND data_id = ?;")) {
@@ -498,7 +498,7 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
 
     @Override
     public void insertRole(Role role) throws PureStorageException {
-        ValidateUtils.checkNull(role, "role");
+        ValidationUtils.checkNull(role, "role");
 
         PurekitProtosV3Storage.Role protobuf = pureModelSerializer.serializeRole(role);
 
@@ -542,7 +542,7 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
 
     @Override
     public Set<Role> selectRoles(Set<String> roleNames) throws PureStorageException {
-        ValidateUtils.checkNull(roleNames, "roleNames");
+        ValidationUtils.checkNull(roleNames, "roleNames");
 
         if (roleNames.isEmpty()) {
             return Collections.emptySet();
@@ -596,7 +596,7 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
 
     @Override
     public void deleteRole(String roleName, boolean cascade) throws PureStorageException {
-        ValidateUtils.checkNullOrEmpty(roleName, "roleName");
+        ValidationUtils.checkNullOrEmpty(roleName, "roleName");
 
         if (!cascade) {
             throw new MariaDbOperationNotSupportedException();
@@ -619,7 +619,7 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
 
     @Override
     public void insertRoleAssignments(Collection<RoleAssignment> roleAssignments) throws PureStorageException {
-        ValidateUtils.checkNull(roleAssignments, "roleAssignments");
+        ValidationUtils.checkNull(roleAssignments, "roleAssignments");
 
         if (roleAssignments.isEmpty()) {
             return;
@@ -685,7 +685,7 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
 
     @Override
     public Iterable<RoleAssignment> selectRoleAssignments(String userId) throws PureStorageException {
-        ValidateUtils.checkNullOrEmpty(userId, "userId");
+        ValidationUtils.checkNullOrEmpty(userId, "userId");
 
         try (Connection conn = getConnection()) {
             try (PreparedStatement stmt = conn.prepareStatement("SELECT protobuf " +
@@ -716,8 +716,8 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
 
     @Override
     public RoleAssignment selectRoleAssignment(String roleName, String userId) throws PureStorageException {
-        ValidateUtils.checkNullOrEmpty(roleName, "roleName");
-        ValidateUtils.checkNullOrEmpty(userId, "userId");
+        ValidationUtils.checkNullOrEmpty(roleName, "roleName");
+        ValidationUtils.checkNullOrEmpty(userId, "userId");
 
         try (Connection conn = getConnection()) {
             try (PreparedStatement stmt = conn.prepareStatement("SELECT protobuf " +
@@ -749,8 +749,8 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
 
     @Override
     public void deleteRoleAssignments(String roleName, Set<String> userIds) throws PureStorageException {
-        ValidateUtils.checkNullOrEmpty(roleName, "roleName");
-        ValidateUtils.checkNull(userIds, "userIds");
+        ValidationUtils.checkNullOrEmpty(roleName, "roleName");
+        ValidationUtils.checkNull(userIds, "userIds");
 
         if (userIds.isEmpty()) {
             return;
@@ -802,7 +802,7 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
 
     @Override
     public void insertGrantKey(GrantKey grantKey) throws PureStorageException {
-        ValidateUtils.checkNull(grantKey, "grantKey");
+        ValidationUtils.checkNull(grantKey, "grantKey");
 
         PurekitProtosV3Storage.GrantKey protobuf = pureModelSerializer.serializeGrantKey(grantKey);
 
@@ -839,8 +839,8 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
 
     @Override
     public GrantKey selectGrantKey(String userId, byte[] keyId) throws PureStorageException {
-        ValidateUtils.checkNullOrEmpty(userId, "userId");
-        ValidateUtils.checkNullOrEmpty(keyId, "keyId");
+        ValidationUtils.checkNullOrEmpty(userId, "userId");
+        ValidationUtils.checkNullOrEmpty(keyId, "keyId");
 
         try (Connection conn = getConnection()) {
             try (PreparedStatement stmt = conn.prepareStatement("SELECT protobuf " +
@@ -904,7 +904,7 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
 
     @Override
     public void updateGrantKeys(Iterable<GrantKey> grantKeys) throws PureStorageException {
-        ValidateUtils.checkNull(grantKeys, "grantKeys");
+        ValidationUtils.checkNull(grantKeys, "grantKeys");
 
         try (Connection conn = getConnection()) {
             conn.setAutoCommit(false);
@@ -956,8 +956,8 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
 
     @Override
     public void deleteGrantKey(String userId, byte[] keyId) throws PureStorageException {
-        ValidateUtils.checkNullOrEmpty(userId, "userId");
-        ValidateUtils.checkNullOrEmpty(keyId, "keyId");
+        ValidationUtils.checkNullOrEmpty(userId, "userId");
+        ValidationUtils.checkNullOrEmpty(keyId, "keyId");
 
         try (Connection conn = getConnection()) {
             try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM virgil_grant_keys WHERE user_id = ? AND key_id = ?;")) {

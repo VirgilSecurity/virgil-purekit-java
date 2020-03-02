@@ -44,7 +44,7 @@ import com.virgilsecurity.purekit.storage.PureModelSerializer;
 import com.virgilsecurity.purekit.storage.PureModelSerializerDependent;
 import com.virgilsecurity.purekit.storage.PureStorage;
 import com.virgilsecurity.purekit.storage.virgil.VirgilCloudPureStorage;
-import com.virgilsecurity.purekit.utils.ValidateUtils;
+import com.virgilsecurity.purekit.utils.ValidationUtils;
 import com.virgilsecurity.sdk.crypto.VirgilCrypto;
 import com.virgilsecurity.sdk.crypto.VirgilPublicKey;
 import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
@@ -115,15 +115,15 @@ public class PureContext {
                         Map<String, List<String>> externalPublicKeys,
                         String pheServiceAddress,
                         String kmsServiceAddress) throws PureException {
-        ValidateUtils.checkNull(crypto, "crypto");
-        ValidateUtils.checkNullOrEmpty(appToken, "appToken");
-        ValidateUtils.checkNullOrEmpty(nms, "nms");
-        ValidateUtils.checkNullOrEmpty(buppk, "buppk");
-        ValidateUtils.checkNullOrEmpty(secretKey, "secretKey");
-        ValidateUtils.checkNullOrEmpty(publicKey, "publicKey");
-        ValidateUtils.checkNull(storage, "storage");
-        ValidateUtils.checkNullOrEmpty(pheServiceAddress, "pheServiceAddress");
-        ValidateUtils.checkNullOrEmpty(kmsServiceAddress, "kmsServiceAddress");
+        ValidationUtils.checkNull(crypto, "crypto");
+        ValidationUtils.checkNullOrEmpty(appToken, "appToken");
+        ValidationUtils.checkNullOrEmpty(nms, "nms");
+        ValidationUtils.checkNullOrEmpty(buppk, "buppk");
+        ValidationUtils.checkNullOrEmpty(secretKey, "secretKey");
+        ValidationUtils.checkNullOrEmpty(publicKey, "publicKey");
+        ValidationUtils.checkNull(storage, "storage");
+        ValidationUtils.checkNullOrEmpty(pheServiceAddress, "pheServiceAddress");
+        ValidationUtils.checkNullOrEmpty(kmsServiceAddress, "kmsServiceAddress");
 
         this.crypto = crypto;
 
@@ -228,8 +228,8 @@ public class PureContext {
                                             String pureServiceAddress,
                                             String kmsServiceAddress) throws PureException {
 
-        ValidateUtils.checkNullOrEmpty(at, "at");
-        ValidateUtils.checkNullOrEmpty(pureServiceAddress, "pureServiceAddress");
+        ValidationUtils.checkNullOrEmpty(at, "at");
+        ValidationUtils.checkNullOrEmpty(pureServiceAddress, "pureServiceAddress");
 
         VirgilCrypto crypto = new VirgilCrypto();
         HttpPureClient pureClient = new HttpPureClient(at, pureServiceAddress);
@@ -311,8 +311,8 @@ public class PureContext {
                                                 String credentials,
                                                 boolean isVersioned,
                                                 int numberOfPayloads) throws PureException {
-        ValidateUtils.checkNullOrEmpty(prefix, "prefix");
-        ValidateUtils.checkNullOrEmpty(credentials, "credentials");
+        ValidationUtils.checkNullOrEmpty(prefix, "prefix");
+        ValidationUtils.checkNullOrEmpty(credentials, "credentials");
 
         String[] parts = credentials.split("\\.");
 

@@ -45,7 +45,7 @@ import com.virgilsecurity.purekit.model.UserRecord;
 import com.virgilsecurity.purekit.storage.exception.PureStorageException;
 import com.virgilsecurity.purekit.storage.exception.PureStorageGenericException;
 import com.virgilsecurity.purekit.storage.exception.PureStorageInvalidProtobufException;
-import com.virgilsecurity.purekit.utils.ValidateUtils;
+import com.virgilsecurity.purekit.utils.ValidationUtils;
 import com.virgilsecurity.sdk.crypto.VirgilCrypto;
 import com.virgilsecurity.sdk.crypto.VirgilKeyPair;
 import com.virgilsecurity.sdk.crypto.exceptions.SigningException;
@@ -78,8 +78,8 @@ public class PureModelSerializer {
      * @param signingKey Key used to sign data before sending to Virgil.
      */
     public PureModelSerializer(VirgilCrypto crypto, VirgilKeyPair signingKey) {
-        ValidateUtils.checkNull(crypto, "crypto");
-        ValidateUtils.checkNull(signingKey, "signingKey");
+        ValidationUtils.checkNull(crypto, "crypto");
+        ValidationUtils.checkNull(signingKey, "signingKey");
 
         this.crypto = crypto;
         this.signingKey = signingKey;
@@ -118,7 +118,7 @@ public class PureModelSerializer {
      * @throws PureStorageException PureStorageException
      */
     public PurekitProtosV3Storage.UserRecord serializeUserRecord(UserRecord userRecord) throws PureStorageException {
-        ValidateUtils.checkNull(userRecord, "userRecord");
+        ValidationUtils.checkNull(userRecord, "userRecord");
 
         PurekitProtosV3Crypto.EnrollmentRecord enrollmentRecord;
         try {
@@ -165,7 +165,7 @@ public class PureModelSerializer {
      * @throws PureStorageException PureStorageException
      */
     public UserRecord parseUserRecord(PurekitProtosV3Storage.UserRecord protobufRecord) throws PureStorageException {
-        ValidateUtils.checkNull(protobufRecord, "protobufRecord");
+        ValidationUtils.checkNull(protobufRecord, "protobufRecord");
 
         verifySignature(protobufRecord.getSignature().toByteArray(), protobufRecord.getUserRecordSigned().toByteArray());
 
@@ -206,7 +206,7 @@ public class PureModelSerializer {
      * @throws PureStorageException PureStorageException
      */
     public PurekitProtosV3Storage.CellKey serializeCellKey(CellKey cellKey) throws PureStorageException {
-        ValidateUtils.checkNull(cellKey, "cellKey");
+        ValidationUtils.checkNull(cellKey, "cellKey");
 
         byte[] cellKeySigned = PurekitProtosV3Storage.CellKeySigned
                 .newBuilder()
@@ -239,7 +239,7 @@ public class PureModelSerializer {
      * @throws PureStorageException PureStorageException
      */
     public CellKey parseCellKey(PurekitProtosV3Storage.CellKey protobufRecord) throws PureStorageException {
-        ValidateUtils.checkNull(protobufRecord, "protobufRecord");
+        ValidationUtils.checkNull(protobufRecord, "protobufRecord");
 
         verifySignature(protobufRecord.getSignature().toByteArray(), protobufRecord.getCellKeySigned().toByteArray());
 
@@ -266,7 +266,7 @@ public class PureModelSerializer {
      * @throws PureStorageException PureStorageException
      */
     public PurekitProtosV3Storage.Role serializeRole(Role role) throws PureStorageException {
-        ValidateUtils.checkNull(role, "role");
+        ValidationUtils.checkNull(role, "role");
 
         byte[] roleSigned = PurekitProtosV3Storage.RoleSigned
                 .newBuilder()
@@ -296,7 +296,7 @@ public class PureModelSerializer {
      * @throws PureStorageException PureStorageException
      */
     public Role parseRole(PurekitProtosV3Storage.Role protobufRecord) throws PureStorageException {
-        ValidateUtils.checkNull(protobufRecord, "protobufRecord");
+        ValidationUtils.checkNull(protobufRecord, "protobufRecord");
 
         verifySignature(protobufRecord.getSignature().toByteArray(), protobufRecord.getRoleSigned().toByteArray());
 
@@ -320,7 +320,7 @@ public class PureModelSerializer {
      * @throws PureStorageException PureStorageException
      */
     public PurekitProtosV3Storage.RoleAssignment serializeRoleAssignment(RoleAssignment roleAssignment) throws PureStorageException {
-        ValidateUtils.checkNull(roleAssignment, "roleAssignment");
+        ValidationUtils.checkNull(roleAssignment, "roleAssignment");
 
         byte[] roleAssignmentSigned = PurekitProtosV3Storage.RoleAssignmentSigned
                 .newBuilder()
@@ -352,7 +352,7 @@ public class PureModelSerializer {
      * @throws PureStorageException PureStorageException
      */
     public RoleAssignment parseRoleAssignment(PurekitProtosV3Storage.RoleAssignment protobufRecord) throws PureStorageException {
-        ValidateUtils.checkNull(protobufRecord, "protobufRecord");
+        ValidationUtils.checkNull(protobufRecord, "protobufRecord");
 
         verifySignature(protobufRecord.getSignature().toByteArray(), protobufRecord.getRoleAssignmentSigned().toByteArray());
 
@@ -377,7 +377,7 @@ public class PureModelSerializer {
      * @throws PureStorageException PureStorageException
      */
     public PurekitProtosV3Storage.GrantKey serializeGrantKey(GrantKey grantKey) throws PureStorageException {
-        ValidateUtils.checkNull(grantKey, "grantKey");
+        ValidationUtils.checkNull(grantKey, "grantKey");
 
         byte[] grantKeySigned = PurekitProtosV3Storage.GrantKeySigned
                 .newBuilder()
@@ -412,7 +412,7 @@ public class PureModelSerializer {
      * @throws PureStorageException PureStorageException
      */
     public GrantKey parseGrantKey(PurekitProtosV3Storage.GrantKey protobufRecord) throws PureStorageException {
-        ValidateUtils.checkNull(protobufRecord, "protobufRecord");
+        ValidationUtils.checkNull(protobufRecord, "protobufRecord");
 
         verifySignature(protobufRecord.getSignature().toByteArray(), protobufRecord.getGrantKeySigned().toByteArray());
 

@@ -33,7 +33,7 @@
 
 package com.virgilsecurity.purekit.model;
 
-import com.virgilsecurity.purekit.utils.ValidateUtils;
+import com.virgilsecurity.purekit.utils.ValidationUtils;
 import com.virgilsecurity.sdk.crypto.VirgilKeyPair;
 
 import java.util.Date;
@@ -57,10 +57,10 @@ public class PureGrant {
      * @param creationDate Creation date.
      */
     public PureGrant(VirgilKeyPair ukp, String userId, String sessionId, Date creationDate, Date expirationDate) {
-        ValidateUtils.checkNull(ukp, "ukp");
-        ValidateUtils.checkNullOrEmpty(userId, "userId");
-        ValidateUtils.checkNull(creationDate, "creationDate");
-        ValidateUtils.checkNull(expirationDate, "expirationDate");
+        ValidationUtils.checkNull(ukp, "ukp");
+        ValidationUtils.checkNullOrEmpty(userId, "userId");
+        ValidationUtils.checkNull(creationDate, "creationDate");
+        ValidationUtils.checkNull(expirationDate, "expirationDate");
 
         this.ukp = ukp;
         this.userId = userId;

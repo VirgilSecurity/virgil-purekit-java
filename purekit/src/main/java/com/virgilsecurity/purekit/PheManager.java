@@ -47,7 +47,7 @@ import com.virgilsecurity.purekit.exception.PureCryptoException;
 import com.virgilsecurity.purekit.exception.PureException;
 import com.virgilsecurity.purekit.exception.PureLogicException;
 import com.virgilsecurity.purekit.model.UserRecord;
-import com.virgilsecurity.purekit.utils.ValidateUtils;
+import com.virgilsecurity.purekit.utils.ValidationUtils;
 import com.virgilsecurity.sdk.crypto.HashAlgorithm;
 import com.virgilsecurity.sdk.crypto.VirgilCrypto;
 
@@ -147,7 +147,7 @@ class PheManager {
     }
 
     byte[] performRotation(byte[] enrollmentRecord) throws PureCryptoException {
-        ValidateUtils.checkNull(updateToken, "pheUpdateToken");
+        ValidationUtils.checkNull(updateToken, "pheUpdateToken");
 
         try {
             return previousClient.updateEnrollmentRecord(enrollmentRecord, updateToken);
