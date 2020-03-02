@@ -49,6 +49,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.virgilsecurity.common.util.Base64;
 import com.virgilsecurity.purekit.*;
+import com.virgilsecurity.purekit.exception.KmsClientException;
 import com.virgilsecurity.purekit.exception.PureException;
 import com.virgilsecurity.purekit.storage.*;
 import com.virgilsecurity.purekit.exception.PureCryptoException;
@@ -1161,36 +1162,41 @@ public class PureTestJava {
                                             String appToken,
                                             String publicKey,
                                             String secretKey) throws PureException {
-        PureSetupResult pureResult;
-        StorageType[] storages = createStorages();
-        for (StorageType storage: storages) {
-            pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKey, secretKey, null, storage);
-            Pure pure = new Pure(pureResult.getContext());
+        try {
+            PureSetupResult pureResult;
+            StorageType[] storages = createStorages();
+            for (StorageType storage : storages) {
+                pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKey, secretKey, null, storage);
+                Pure pure = new Pure(pureResult.getContext());
 
-            String userId = UUID.randomUUID().toString();
-            String password1 = UUID.randomUUID().toString();
-            String password2 = UUID.randomUUID().toString();
+                String userId = UUID.randomUUID().toString();
+                String password1 = UUID.randomUUID().toString();
+                String password2 = UUID.randomUUID().toString();
 
-            pure.registerUser(userId, password1);
+                pure.registerUser(userId, password1);
 
-            String dataId = UUID.randomUUID().toString();
-            byte[] text = UUID.randomUUID().toString().getBytes();
+                String dataId = UUID.randomUUID().toString();
+                byte[] text = UUID.randomUUID().toString().getBytes();
 
-            byte[] blob = pure.encrypt(userId, dataId, text);
+                byte[] blob = pure.encrypt(userId, dataId, text);
 
-            pure.recoverUser(userId, password2);
+                pure.recoverUser(userId, password2);
 
-            PureLogicException e = assertThrows(PureLogicException.class, () -> {
-                pure.authenticateUser(userId, password1);
-            });
+                PureLogicException e = assertThrows(PureLogicException.class, () -> {
+                    pure.authenticateUser(userId, password1);
+                });
 
-            assertEquals(PureLogicException.ErrorStatus.INVALID_PASSWORD, e.getErrorStatus());
+                assertEquals(PureLogicException.ErrorStatus.INVALID_PASSWORD, e.getErrorStatus());
 
-            AuthResult authResult = pure.authenticateUser(userId, password2);
-            assertNotNull(authResult);
+                AuthResult authResult = pure.authenticateUser(userId, password2);
+                assertNotNull(authResult);
 
-            byte[] decrypted = pure.decrypt(authResult.getGrant(), userId, dataId, blob);
-            assertArrayEquals(text, decrypted);
+                byte[] decrypted = pure.decrypt(authResult.getGrant(), userId, dataId, blob);
+                assertArrayEquals(text, decrypted);
+            }
+        }
+        catch (KmsClientException e) {
+            System.out.println(e.getProtocolException().getErrorCode());
         }
     }
 
