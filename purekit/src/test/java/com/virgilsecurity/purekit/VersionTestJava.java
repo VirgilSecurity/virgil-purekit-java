@@ -31,24 +31,23 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.purekit.data
+package com.virgilsecurity.purekit;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import com.virgilsecurity.purekit.build.VersionVirgilAgent;
+import com.virgilsecurity.purekit.utils.FileUtils;
+import org.junit.jupiter.api.Test;
 
 /**
- * Exceptions class.
+ * VersionTestJava class.
  */
+class VersionTestJava {
 
-/**
- * Exception that is thrown when purekit service answers with some error.
- */
-class ProtocolException @JvmOverloads constructor(
-    val errorCode: Int = -1,
-    message: String? = "Unknown error"
-) : Exception(message)
+  @Test void version_test() {
+    String versionExpected = VersionVirgilAgent.VERSION;
+    String versionActual = FileUtils.versionFromGradle();
 
-/**
- * Exception that is thrown when purekit service answers with some error but not with default protobuf type.
- */
-class ProtocolHttpException @JvmOverloads constructor(
-    val errorCode: Int = -1,
-    message: String? = "Unknown error"
-) : Exception(message)
+    assertEquals(versionExpected, versionActual);
+  }
+}

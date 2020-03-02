@@ -31,24 +31,62 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.purekit.data
+package com.virgilsecurity.purekit.exception;
 
 /**
- * Exceptions class.
+ * Pure logic exception
  */
+public class PureLogicException extends PureException {
 
-/**
- * Exception that is thrown when purekit service answers with some error.
- */
-class ProtocolException @JvmOverloads constructor(
-    val errorCode: Int = -1,
-    message: String? = "Unknown error"
-) : Exception(message)
+    private final ErrorStatus errorStatus;
 
-/**
- * Exception that is thrown when purekit service answers with some error but not with default protobuf type.
- */
-class ProtocolHttpException @JvmOverloads constructor(
-    val errorCode: Int = -1,
-    message: String? = "Unknown error"
-) : Exception(message)
+    /**
+     * Constructor
+     *
+     * @param errorStatus error status
+     */
+    public PureLogicException(ErrorStatus errorStatus) {
+        super(errorStatus.getMessage());
+
+        this.errorStatus = errorStatus;
+    }
+
+    /**
+     * Error status
+     *
+     * @return error status
+     */
+    public ErrorStatus getErrorStatus() {
+        return errorStatus;
+    }
+
+    /**
+     * Error status
+     */
+    public enum ErrorStatus {
+        KEYS_VERSION_MISMATCH(1, "Keys version mismatch"),
+        UPDATE_TOKEN_VERSION_MISMATCH(2, "Update token version mismatch"),
+        NONROTABLE_MASTER_SECRET_INVALID_LENGTH(3, "Nonrotatable master secret invalid length"),
+        CREDENTIALS_PARSING_ERROR(4, "Credentials parsing error"),
+        INVALID_PASSWORD(5, "Invalid password"),
+        USER_HAS_NO_ACCESS_TO_DATA(6, "User has no access to data"),
+        GRANT_INVALID_PROTOBUF(7, "Grant invalid protobuf"),
+        GRANT_IS_EXPIRED(8, "Grant is expired");
+
+        private final int code;
+        private final String message;
+
+        ErrorStatus(int code, String message) {
+            this.code = code;
+            this.message = message;
+        }
+
+        public int getCode() {
+            return code;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+    }
+}

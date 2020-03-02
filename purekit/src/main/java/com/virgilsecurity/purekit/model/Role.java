@@ -31,24 +31,47 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.purekit.data
+package com.virgilsecurity.purekit.model;
+
+import com.virgilsecurity.purekit.utils.ValidateUtils;
 
 /**
- * Exceptions class.
+ * Role
  */
+public class Role {
 
-/**
- * Exception that is thrown when purekit service answers with some error.
- */
-class ProtocolException @JvmOverloads constructor(
-    val errorCode: Int = -1,
-    message: String? = "Unknown error"
-) : Exception(message)
+    private String roleName;
+    private byte[] rpk;
 
-/**
- * Exception that is thrown when purekit service answers with some error but not with default protobuf type.
- */
-class ProtocolHttpException @JvmOverloads constructor(
-    val errorCode: Int = -1,
-    message: String? = "Unknown error"
-) : Exception(message)
+    /**
+     * Constructor
+     *
+     * @param roleName role name
+     * @param rpk role public key
+     */
+    public Role(String roleName, byte[] rpk) {
+        ValidateUtils.checkNullOrEmpty(roleName, "roleName");
+        ValidateUtils.checkNullOrEmpty(rpk, "rpk");
+
+        this.roleName = roleName;
+        this.rpk = rpk;
+    }
+
+    /**
+     * Returns role name
+     *
+     * @return role name
+     */
+    public String getRoleName() {
+        return roleName;
+    }
+
+    /**
+     * Returns role public key
+     *
+     * @return role public key
+     */
+    public byte[] getRpk() {
+        return rpk;
+    }
+}

@@ -31,24 +31,33 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.purekit.data
+package com.virgilsecurity.purekit.storage.exception;
+
+import com.google.protobuf.InvalidProtocolBufferException;
 
 /**
- * Exceptions class.
+ * Invalid protobuf exception wrapped in PureStorageException
  */
+public class PureStorageInvalidProtobufException extends PureStorageException {
+    private final InvalidProtocolBufferException invalidProtocolBufferException;
 
-/**
- * Exception that is thrown when purekit service answers with some error.
- */
-class ProtocolException @JvmOverloads constructor(
-    val errorCode: Int = -1,
-    message: String? = "Unknown error"
-) : Exception(message)
+    /**
+     * Constructor
+     *
+     * @param invalidProtocolBufferException invalidProtocolBufferException
+     */
+    public PureStorageInvalidProtobufException(InvalidProtocolBufferException invalidProtocolBufferException) {
+        super();
 
-/**
- * Exception that is thrown when purekit service answers with some error but not with default protobuf type.
- */
-class ProtocolHttpException @JvmOverloads constructor(
-    val errorCode: Int = -1,
-    message: String? = "Unknown error"
-) : Exception(message)
+        this.invalidProtocolBufferException = invalidProtocolBufferException;
+    }
+
+    /**
+     * Returns invalidProtocolBufferException
+     *
+     * @return invalidProtocolBufferException
+     */
+    public InvalidProtocolBufferException getInvalidProtocolBufferException() {
+        return invalidProtocolBufferException;
+    };
+}

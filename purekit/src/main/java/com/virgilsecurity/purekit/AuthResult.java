@@ -31,24 +31,48 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.purekit.data
+package com.virgilsecurity.purekit;
+
+import com.virgilsecurity.purekit.model.PureGrant;
+import com.virgilsecurity.purekit.utils.ValidateUtils;
 
 /**
- * Exceptions class.
+ * AuthResult class is a Result of {@link Pure#authenticateUser(String, String)}.
  */
+public class AuthResult {
 
-/**
- * Exception that is thrown when purekit service answers with some error.
- */
-class ProtocolException @JvmOverloads constructor(
-    val errorCode: Int = -1,
-    message: String? = "Unknown error"
-) : Exception(message)
+    private final PureGrant grant;
+    private final String encryptedGrant;
 
-/**
- * Exception that is thrown when purekit service answers with some error but not with default protobuf type.
- */
-class ProtocolHttpException @JvmOverloads constructor(
-    val errorCode: Int = -1,
-    message: String? = "Unknown error"
-) : Exception(message)
+    /**
+     * Instantiates AuthResult.
+     *
+     * @param grant PureGrant.
+     * @param encryptedGrant Encrypted grant.
+     */
+    AuthResult(PureGrant grant, String encryptedGrant) {
+        ValidateUtils.checkNull(grant, "grant");
+        ValidateUtils.checkNullOrEmpty(encryptedGrant, "encryptedGrant");
+
+        this.grant = grant;
+        this.encryptedGrant = encryptedGrant;
+    }
+
+    /**
+     * Returns grant.
+     *
+     * @return PureGrant.
+     */
+    public PureGrant getGrant() {
+        return grant;
+    }
+
+    /**
+     * Returns encrypted PureGrant.
+     *
+     * @return Encrypted PureGrant.
+     */
+    public String getEncryptedGrant() {
+        return encryptedGrant;
+    }
+}

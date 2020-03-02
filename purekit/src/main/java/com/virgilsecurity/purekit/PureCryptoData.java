@@ -31,24 +31,28 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.purekit.data
+package com.virgilsecurity.purekit;
 
-/**
- * Exceptions class.
- */
+import com.virgilsecurity.purekit.utils.ValidateUtils;
 
-/**
- * Exception that is thrown when purekit service answers with some error.
- */
-class ProtocolException @JvmOverloads constructor(
-    val errorCode: Int = -1,
-    message: String? = "Unknown error"
-) : Exception(message)
+class PureCryptoData {
 
-/**
- * Exception that is thrown when purekit service answers with some error but not with default protobuf type.
- */
-class ProtocolHttpException @JvmOverloads constructor(
-    val errorCode: Int = -1,
-    message: String? = "Unknown error"
-) : Exception(message)
+    private final byte[] cms;
+    private final byte[] body;
+
+    PureCryptoData(byte[] cms, byte[] body) {
+        ValidateUtils.checkNullOrEmpty(cms, "cms");
+        ValidateUtils.checkNullOrEmpty(body, "body");
+
+        this.cms = cms;
+        this.body = body;
+    }
+
+    byte[] getCms() {
+        return cms;
+    }
+
+    byte[] getBody() {
+        return body;
+    }
+}

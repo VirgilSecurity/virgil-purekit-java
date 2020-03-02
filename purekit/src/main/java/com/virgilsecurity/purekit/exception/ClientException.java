@@ -31,24 +31,53 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.purekit.data
+package com.virgilsecurity.purekit.exception;
+
+import com.virgilsecurity.purekit.data.ProtocolException;
+import com.virgilsecurity.purekit.data.ProtocolHttpException;
 
 /**
- * Exceptions class.
+ * Base class for exception from Http clients
  */
+public class ClientException extends PureException {
+    private final ProtocolException protocolException;
+    private final ProtocolHttpException protocolHttpException;
 
-/**
- * Exception that is thrown when purekit service answers with some error.
- */
-class ProtocolException @JvmOverloads constructor(
-    val errorCode: Int = -1,
-    message: String? = "Unknown error"
-) : Exception(message)
+    /**
+     * Constructor
+     *
+     * @param protocolException protocolException
+     */
+    public ClientException(ProtocolException protocolException) {
+        this.protocolException = protocolException;
+        this.protocolHttpException = null;
+    }
 
-/**
- * Exception that is thrown when purekit service answers with some error but not with default protobuf type.
- */
-class ProtocolHttpException @JvmOverloads constructor(
-    val errorCode: Int = -1,
-    message: String? = "Unknown error"
-) : Exception(message)
+    /**
+     * Constructor
+     *
+     * @param protocolHttpException protocolHttpException
+     */
+    public ClientException(ProtocolHttpException protocolHttpException) {
+        this.protocolException = null;
+        this.protocolHttpException = protocolHttpException;
+    }
+
+    /**
+     * Returns protocol exception
+     *
+     * @return protocolException
+     */
+    public ProtocolException getProtocolException() {
+        return protocolException;
+    }
+
+    /**
+     * Returns protocolHttpException
+     *
+     * @return protocolHttpException
+     */
+    public ProtocolHttpException getProtocolHttpException() {
+        return protocolHttpException;
+    }
+}

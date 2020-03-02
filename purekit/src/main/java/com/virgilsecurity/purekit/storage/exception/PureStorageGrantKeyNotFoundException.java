@@ -31,24 +31,24 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.purekit.data
+package com.virgilsecurity.purekit.storage.exception;
 
-/**
- * Exceptions class.
- */
+import com.virgilsecurity.common.util.Base64;
 
-/**
- * Exception that is thrown when purekit service answers with some error.
- */
-class ProtocolException @JvmOverloads constructor(
-    val errorCode: Int = -1,
-    message: String? = "Unknown error"
-) : Exception(message)
+public class PureStorageGrantKeyNotFoundException extends PureStorageException {
+    private final String userId;
+    private final String keyId;
 
-/**
- * Exception that is thrown when purekit service answers with some error but not with default protobuf type.
- */
-class ProtocolHttpException @JvmOverloads constructor(
-    val errorCode: Int = -1,
-    message: String? = "Unknown error"
-) : Exception(message)
+    public PureStorageGrantKeyNotFoundException(String userId, byte[] keyId) {
+        this.userId = userId;
+        this.keyId = Base64.encode(keyId);
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public String getKeyId() {
+        return keyId;
+    }
+}

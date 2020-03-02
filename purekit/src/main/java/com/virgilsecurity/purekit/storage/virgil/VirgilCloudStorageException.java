@@ -31,24 +31,54 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.purekit.data
+package com.virgilsecurity.purekit.storage.virgil;
+
+import com.virgilsecurity.purekit.data.ProtocolException;
+import com.virgilsecurity.purekit.data.ProtocolHttpException;
+import com.virgilsecurity.purekit.storage.exception.PureStorageException;
 
 /**
- * Exceptions class.
+ * Virgil Cloud storage exception
  */
+public class VirgilCloudStorageException extends PureStorageException {
+    private final ProtocolException protocolException;
+    private final ProtocolHttpException protocolHttpException;
 
-/**
- * Exception that is thrown when purekit service answers with some error.
- */
-class ProtocolException @JvmOverloads constructor(
-    val errorCode: Int = -1,
-    message: String? = "Unknown error"
-) : Exception(message)
+    /**
+     * Constructor
+     *
+     * @param protocolException protocolException
+     */
+    public VirgilCloudStorageException(ProtocolException protocolException) {
+        this.protocolException = protocolException;
+        this.protocolHttpException = null;
+    }
 
-/**
- * Exception that is thrown when purekit service answers with some error but not with default protobuf type.
- */
-class ProtocolHttpException @JvmOverloads constructor(
-    val errorCode: Int = -1,
-    message: String? = "Unknown error"
-) : Exception(message)
+    /**
+     * Constructor
+     *
+     * @param protocolHttpException protocol http exception
+     */
+    public VirgilCloudStorageException(ProtocolHttpException protocolHttpException) {
+        this.protocolException = null;
+        this.protocolHttpException = protocolHttpException;
+    }
+
+    /**
+     * Returns protocolException
+     *
+     * @return protocolException
+     */
+    public ProtocolException getProtocolException() {
+        return protocolException;
+    }
+
+    /**
+     * Returns protocolHttpException
+     *
+     * @return protocolHttpException
+     */
+    public ProtocolHttpException getProtocolHttpException() {
+        return protocolHttpException;
+    }
+}

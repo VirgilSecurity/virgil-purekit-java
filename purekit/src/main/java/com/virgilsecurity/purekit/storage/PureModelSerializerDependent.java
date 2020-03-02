@@ -31,24 +31,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.purekit.data
+package com.virgilsecurity.purekit.storage;
 
 /**
- * Exceptions class.
+ * Interface for PureStorage implementations that allows to user PureModelSerializer
  */
-
-/**
- * Exception that is thrown when purekit service answers with some error.
- */
-class ProtocolException @JvmOverloads constructor(
-    val errorCode: Int = -1,
-    message: String? = "Unknown error"
-) : Exception(message)
-
-/**
- * Exception that is thrown when purekit service answers with some error but not with default protobuf type.
- */
-class ProtocolHttpException @JvmOverloads constructor(
-    val errorCode: Int = -1,
-    message: String? = "Unknown error"
-) : Exception(message)
+public interface PureModelSerializerDependent {
+    /**
+     * Sets pureModelSerializer
+     *
+     * @param pureModelSerializer pureModelSerializer
+     */
+    void setPureModelSerializer(PureModelSerializer pureModelSerializer);
+}

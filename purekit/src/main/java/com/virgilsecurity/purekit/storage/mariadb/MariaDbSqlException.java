@@ -31,24 +31,55 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.purekit.data
+package com.virgilsecurity.purekit.storage.mariadb;
+
+import com.virgilsecurity.purekit.storage.exception.PureStorageException;
+
+import java.io.IOException;
+import java.sql.SQLException;
 
 /**
- * Exceptions class.
+ * MariaDbSqlStorage exception
  */
+public class MariaDbSqlException extends PureStorageException {
+    private final SQLException sqlException;
+    private final IOException ioException;
 
-/**
- * Exception that is thrown when purekit service answers with some error.
- */
-class ProtocolException @JvmOverloads constructor(
-    val errorCode: Int = -1,
-    message: String? = "Unknown error"
-) : Exception(message)
+    /**
+     * Constructor
+     *
+     * @param sqlException sql exception
+     */
+    public MariaDbSqlException(SQLException sqlException) {
+        this.sqlException = sqlException;
+        this.ioException = null;
+    }
 
-/**
- * Exception that is thrown when purekit service answers with some error but not with default protobuf type.
- */
-class ProtocolHttpException @JvmOverloads constructor(
-    val errorCode: Int = -1,
-    message: String? = "Unknown error"
-) : Exception(message)
+    /**
+     * Constructor
+     *
+     * @param ioException io exception
+     */
+    public MariaDbSqlException(IOException ioException) {
+        this.sqlException = null;
+        this.ioException = ioException;
+    }
+
+    /**
+     * Returns sql exception
+     *
+     * @return sql exception
+     */
+    public SQLException getSqlException() {
+        return sqlException;
+    }
+
+    /**
+     * Returns io exception
+     *
+     * @return io exception
+     */
+    public IOException getIoException() {
+        return ioException;
+    }
+}

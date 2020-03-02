@@ -31,24 +31,23 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.purekit.data
+package com.virgilsecurity.purekit.storage.exception;
 
-/**
- * Exceptions class.
- */
+import java.util.Collections;
+import java.util.Set;
 
-/**
- * Exception that is thrown when purekit service answers with some error.
- */
-class ProtocolException @JvmOverloads constructor(
-    val errorCode: Int = -1,
-    message: String? = "Unknown error"
-) : Exception(message)
+public class PureStorageRoleNotFoundException extends PureStorageException {
+    private final Set<String> roleNames;
 
-/**
- * Exception that is thrown when purekit service answers with some error but not with default protobuf type.
- */
-class ProtocolHttpException @JvmOverloads constructor(
-    val errorCode: Int = -1,
-    message: String? = "Unknown error"
-) : Exception(message)
+    public PureStorageRoleNotFoundException(Set<String> roleNames) {
+        this.roleNames = roleNames;
+    }
+
+    public PureStorageRoleNotFoundException(String roleName) {
+        this.roleNames = Collections.singleton(roleName);
+    }
+
+    public Set<String> getRoleNames() {
+        return roleNames;
+    }
+}

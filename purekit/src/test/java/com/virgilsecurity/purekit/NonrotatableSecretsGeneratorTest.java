@@ -31,24 +31,27 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.purekit.data
+package com.virgilsecurity.purekit;
 
-/**
- * Exceptions class.
- */
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
-/**
- * Exception that is thrown when purekit service answers with some error.
- */
-class ProtocolException @JvmOverloads constructor(
-    val errorCode: Int = -1,
-    message: String? = "Unknown error"
-) : Exception(message)
+import java.util.*;
 
-/**
- * Exception that is thrown when purekit service answers with some error but not with default protobuf type.
- */
-class ProtocolHttpException @JvmOverloads constructor(
-    val errorCode: Int = -1,
-    message: String? = "Unknown error"
-) : Exception(message)
+import com.virgilsecurity.purekit.exception.PureException;
+import org.junit.jupiter.api.Test;
+
+class NonrotatableSecretsGeneratorTest {
+    private static final String nms = "6PvWsrUn/U6ggoabbXCriBk7dtV3NfT+cvqbFGG3DGU=";
+    private static final String oskpId = "7QksLSjG56g=";
+    private static final String vskpId = "l3RDBZ9U6Cs=";
+
+    @Test
+    void generate_secrets__fixed_seed__should_match() throws InterruptedException, PureException {
+        byte[] data = Base64.getDecoder().decode(nms);
+
+        NonrotatableSecrets nonrotatableSecrets = NonrotatableSecretsGenerator.generateSecrets(data);
+
+        assertArrayEquals(Base64.getDecoder().decode(oskpId), nonrotatableSecrets.getOskp().getPublicKey().getIdentifier());
+        assertArrayEquals(Base64.getDecoder().decode(vskpId), nonrotatableSecrets.getVskp().getPublicKey().getIdentifier());
+    }
+}

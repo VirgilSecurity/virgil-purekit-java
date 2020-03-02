@@ -31,24 +31,31 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.purekit.data
+package com.virgilsecurity.purekit.client;
 
 /**
- * Exceptions class.
+ * PHE service error codes.
  */
+public enum ServiceErrorCode {
+    USER_NOT_FOUND(50003),
+    CELL_KEY_NOT_FOUND(50004),
+    CELL_KEY_ALREADY_EXISTS(50006),
+    GRANT_KEY_NOT_FOUND(50023),
+    ROLE_ASSIGNMENT_NOT_FOUND(50015),
+    UNDEFINED(0);
 
-/**
- * Exception that is thrown when purekit service answers with some error.
- */
-class ProtocolException @JvmOverloads constructor(
-    val errorCode: Int = -1,
-    message: String? = "Unknown error"
-) : Exception(message)
+    private final int code;
 
-/**
- * Exception that is thrown when purekit service answers with some error but not with default protobuf type.
- */
-class ProtocolHttpException @JvmOverloads constructor(
-    val errorCode: Int = -1,
-    message: String? = "Unknown error"
-) : Exception(message)
+    ServiceErrorCode(int code) {
+        this.code = code;
+    }
+
+    /**
+     * Error code number.
+     *
+     * @return Error code number.
+     */
+    public int getCode() {
+        return code;
+    }
+}

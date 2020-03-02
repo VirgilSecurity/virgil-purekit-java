@@ -31,24 +31,47 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.purekit.data
+package com.virgilsecurity.purekit;
+
+import com.virgilsecurity.purekit.utils.ValidateUtils;
+import com.virgilsecurity.sdk.crypto.VirgilKeyPair;
 
 /**
- * Exceptions class.
+ * Nonrotatable secrets
  */
+public class NonrotatableSecrets {
+    private final VirgilKeyPair vskp;
+    private final VirgilKeyPair oskp;
 
-/**
- * Exception that is thrown when purekit service answers with some error.
- */
-class ProtocolException @JvmOverloads constructor(
-    val errorCode: Int = -1,
-    message: String? = "Unknown error"
-) : Exception(message)
+    /**
+     * Constructor
+     *
+     * @param vskp virgil signing key pair
+     * @param oskp own signing key pair
+     */
+    public NonrotatableSecrets(VirgilKeyPair vskp, VirgilKeyPair oskp) {
+        ValidateUtils.checkNull(vskp, "vskp");
+        ValidateUtils.checkNull(oskp, "oskp");
 
-/**
- * Exception that is thrown when purekit service answers with some error but not with default protobuf type.
- */
-class ProtocolHttpException @JvmOverloads constructor(
-    val errorCode: Int = -1,
-    message: String? = "Unknown error"
-) : Exception(message)
+        this.vskp = vskp;
+        this.oskp = oskp;
+    }
+
+    /**
+     * Returns virgil signing key pair
+     *
+     * @return virgil signing key pair
+     */
+    public VirgilKeyPair getVskp() {
+        return vskp;
+    }
+
+    /**
+     * Returns
+     *
+     * @return own signing key pair
+     */
+    public VirgilKeyPair getOskp() {
+        return oskp;
+    }
+}

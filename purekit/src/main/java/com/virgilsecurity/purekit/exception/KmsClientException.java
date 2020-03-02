@@ -31,24 +31,30 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.purekit.data
+package com.virgilsecurity.purekit.exception;
+
+import com.virgilsecurity.purekit.data.ProtocolException;
+import com.virgilsecurity.purekit.data.ProtocolHttpException;
 
 /**
- * Exceptions class.
+ * Kms client exception
  */
+public class KmsClientException extends ClientException {
+    /**
+     * Constructor
+     *
+     * @param protocolException protocolException
+     */
+    public KmsClientException(ProtocolException protocolException) {
+        super(protocolException);
+    }
 
-/**
- * Exception that is thrown when purekit service answers with some error.
- */
-class ProtocolException @JvmOverloads constructor(
-    val errorCode: Int = -1,
-    message: String? = "Unknown error"
-) : Exception(message)
-
-/**
- * Exception that is thrown when purekit service answers with some error but not with default protobuf type.
- */
-class ProtocolHttpException @JvmOverloads constructor(
-    val errorCode: Int = -1,
-    message: String? = "Unknown error"
-) : Exception(message)
+    /**
+     * Constructor
+     *
+     * @param protocolHttpException protocolHttpException
+     */
+    public KmsClientException(ProtocolHttpException protocolHttpException) {
+        super(protocolHttpException);
+    }
+}
