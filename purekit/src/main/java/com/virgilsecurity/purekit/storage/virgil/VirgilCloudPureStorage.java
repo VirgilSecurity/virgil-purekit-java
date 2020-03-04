@@ -33,22 +33,37 @@
 
 package com.virgilsecurity.purekit.storage.virgil;
 
-import java.util.*;
-
 import com.google.protobuf.ByteString;
 import com.virgilsecurity.purekit.client.HttpClientException;
 import com.virgilsecurity.purekit.client.HttpClientServiceException;
-import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client;
-import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage;
 import com.virgilsecurity.purekit.client.HttpPureClient;
 import com.virgilsecurity.purekit.client.ServiceErrorCode;
-import com.virgilsecurity.purekit.model.*;
+import com.virgilsecurity.purekit.model.CellKey;
+import com.virgilsecurity.purekit.model.GrantKey;
+import com.virgilsecurity.purekit.model.Role;
+import com.virgilsecurity.purekit.model.RoleAssignment;
+import com.virgilsecurity.purekit.model.UserRecord;
+import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client;
+import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage;
 import com.virgilsecurity.purekit.storage.PureModelSerializer;
 import com.virgilsecurity.purekit.storage.PureModelSerializerDependent;
 import com.virgilsecurity.purekit.storage.PureStorage;
-import com.virgilsecurity.purekit.storage.exception.*;
+import com.virgilsecurity.purekit.storage.exception.PureStorageCellKeyAlreadyExistsException;
+import com.virgilsecurity.purekit.storage.exception.PureStorageCellKeyNotFoundException;
+import com.virgilsecurity.purekit.storage.exception.PureStorageException;
+import com.virgilsecurity.purekit.storage.exception.PureStorageGenericException;
+import com.virgilsecurity.purekit.storage.exception.PureStorageGrantKeyNotFoundException;
+import com.virgilsecurity.purekit.storage.exception.PureStorageRoleAssignmentNotFoundException;
+import com.virgilsecurity.purekit.storage.exception.PureStorageRoleNotFoundException;
+import com.virgilsecurity.purekit.storage.exception.PureStorageUserNotFoundException;
 import com.virgilsecurity.purekit.utils.ValidationUtils;
-import sun.net.www.http.HttpClient;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * PureStorage on Virgil cloud side

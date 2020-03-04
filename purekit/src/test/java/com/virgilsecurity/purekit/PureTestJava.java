@@ -33,27 +33,15 @@
 
 package com.virgilsecurity.purekit;
 
-import static com.virgilsecurity.crypto.phe.PheException.ERROR_AES_FAILED;
-import static org.junit.jupiter.api.Assertions.*;
-
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.sql.SQLException;
-import java.util.*;
-import java.util.stream.Stream;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.virgilsecurity.common.util.Base64;
-import com.virgilsecurity.purekit.exception.PureException;
-import com.virgilsecurity.purekit.storage.*;
 import com.virgilsecurity.purekit.exception.PureCryptoException;
+import com.virgilsecurity.purekit.exception.PureException;
 import com.virgilsecurity.purekit.exception.PureLogicException;
-import com.virgilsecurity.purekit.model.*;
+import com.virgilsecurity.purekit.model.PureGrant;
+import com.virgilsecurity.purekit.model.UserRecord;
+import com.virgilsecurity.purekit.storage.PureStorage;
 import com.virgilsecurity.purekit.storage.exception.PureStorageCellKeyNotFoundException;
 import com.virgilsecurity.purekit.storage.exception.PureStorageGrantKeyNotFoundException;
 import com.virgilsecurity.purekit.storage.exception.PureStorageUserNotFoundException;
@@ -64,13 +52,38 @@ import com.virgilsecurity.sdk.crypto.KeyPairType;
 import com.virgilsecurity.sdk.crypto.VirgilCrypto;
 import com.virgilsecurity.sdk.crypto.VirgilKeyPair;
 import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
-
 import com.virgilsecurity.sdk.crypto.exceptions.DecryptionException;
+
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.sql.SQLException;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Stream;
+
+import static com.virgilsecurity.crypto.phe.PheException.ERROR_AES_FAILED;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class PureTestJava {

@@ -40,8 +40,6 @@ import com.virgilsecurity.purekit.utils.ValidationUtils;
 
 import java.net.URL;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Class for http interactions with Pure service
