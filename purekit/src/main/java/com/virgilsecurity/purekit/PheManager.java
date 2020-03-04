@@ -38,11 +38,8 @@ import com.virgilsecurity.crypto.phe.PheClient;
 import com.virgilsecurity.crypto.phe.PheClientEnrollAccountResult;
 import com.virgilsecurity.crypto.phe.PheClientRotateKeysResult;
 import com.virgilsecurity.crypto.phe.PheException;
-import com.virgilsecurity.purekit.data.ProtocolException;
-import com.virgilsecurity.purekit.data.ProtocolHttpException;
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtos;
 import com.virgilsecurity.purekit.client.HttpPheClient;
-import com.virgilsecurity.purekit.exception.PheClientException;
 import com.virgilsecurity.purekit.exception.PureCryptoException;
 import com.virgilsecurity.purekit.exception.PureException;
 import com.virgilsecurity.purekit.exception.PureLogicException;
@@ -139,10 +136,6 @@ class PheManager {
         }
         catch (PheException e) {
             throw new PureCryptoException(e);
-        } catch (ProtocolException e) {
-            throw new PheClientException(e);
-        } catch (ProtocolHttpException e) {
-            throw new PheClientException(e);
         }
     }
 
@@ -163,14 +156,7 @@ class PheManager {
                 .setVersion(currentVersion)
                 .build();
 
-        PurekitProtos.EnrollmentResponse response = null;
-        try {
-            response = httpClient.enrollAccount(request);
-        } catch (ProtocolException e) {
-            throw new PheClientException(e);
-        } catch (ProtocolHttpException e) {
-            throw new PheClientException(e);
-        }
+        PurekitProtos.EnrollmentResponse response = httpClient.enrollAccount(request);
 
         try {
             return currentClient.enrollAccount(

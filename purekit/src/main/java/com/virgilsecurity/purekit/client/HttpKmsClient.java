@@ -33,18 +33,17 @@
 
 package com.virgilsecurity.purekit.client;
 
-import com.virgilsecurity.purekit.data.ProtocolException;
-import com.virgilsecurity.purekit.data.ProtocolHttpException;
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client;
 import com.virgilsecurity.purekit.utils.ValidationUtils;
+
+import java.net.URL;
 
 /**
  * HttpPheClient class is for http interactions with PHE service.
  */
 public class HttpKmsClient {
 
-    private final String appToken;
-    private final HttpClientProtobuf client;
+    private final HttpClient client;
 
     /**
      * KMS service url
@@ -57,12 +56,11 @@ public class HttpKmsClient {
      * @param appToken Application token.
      * @param serviceAddress Service url.
      */
-    public HttpKmsClient(String appToken, String serviceAddress) {
+    public HttpKmsClient(String appToken, URL serviceAddress) {
         ValidationUtils.checkNullOrEmpty(appToken, "appToken");
-        ValidationUtils.checkNullOrEmpty(serviceAddress, "serviceAddress");
+        ValidationUtils.checkNull(serviceAddress, "serviceAddress");
 
-        this.appToken = appToken;
-        this.client = new HttpClientProtobuf(serviceAddress);
+        this.client = new HttpClient(serviceAddress, appToken);
     }
 
     /**
@@ -77,15 +75,15 @@ public class HttpKmsClient {
      * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
      * successfully. Represents a regular HTTP exception with code and message.
      */
-    public PurekitProtosV3Client.DecryptResponse decrypt(PurekitProtosV3Client.DecryptRequest request)
-            throws ProtocolException, ProtocolHttpException {
+    public PurekitProtosV3Client.DecryptResponse decrypt(PurekitProtosV3Client.DecryptRequest request) throws HttpClientException {
 
         ValidationUtils.checkNull(request, "request");
 
-        return client.firePost(
-                request,
+        return client.execute(
                 "/decrypt",
-                this.appToken,
+                HttpClient.Method.POST,
+                null,
+                request,
                 PurekitProtosV3Client.DecryptResponse.parser()
         );
     }

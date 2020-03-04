@@ -31,30 +31,22 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.purekit.exception;
+package com.virgilsecurity.purekit.client;
 
-import com.virgilsecurity.purekit.data.ProtocolException;
-import com.virgilsecurity.purekit.data.ProtocolHttpException;
+import com.virgilsecurity.purekit.protobuf.build.PurekitProtos;
 
-/**
- * Kms client exception
- */
-public class KmsClientException extends ClientException {
-    /**
-     * Constructor
-     *
-     * @param protocolException protocolException
-     */
-    public KmsClientException(ProtocolException protocolException) {
-        super(protocolException);
+public class HttpClientServiceException extends HttpClientException {
+    public HttpClientServiceException(PurekitProtos.HttpError httpError) {
+        this.httpError = httpError;
     }
 
-    /**
-     * Constructor
-     *
-     * @param protocolHttpException protocolHttpException
-     */
-    public KmsClientException(ProtocolHttpException protocolHttpException) {
-        super(protocolHttpException);
+    public PurekitProtos.HttpError getHttpError() {
+        return httpError;
     }
+
+    public int getErrorCode() {
+        return httpError.getCode();
+    }
+
+    private final PurekitProtos.HttpError httpError;
 }

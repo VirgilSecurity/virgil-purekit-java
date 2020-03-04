@@ -31,24 +31,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.purekit.data
+package com.virgilsecurity.purekit.client;
 
-/**
- * Exceptions class.
- */
+import java.io.IOException;
 
-/**
- * Exception that is thrown when purekit service answers with some error.
- */
-class ProtocolException @JvmOverloads constructor(
-    val errorCode: Int = -1,
-    message: String? = "Unknown error"
-) : Exception(message)
+public class HttpClientIOException extends HttpClientException {
+    public HttpClientIOException(IOException ioException) {
+        this.ioException = ioException;
+    }
 
-/**
- * Exception that is thrown when purekit service answers with some error but not with default protobuf type.
- */
-class ProtocolHttpException @JvmOverloads constructor(
-    val errorCode: Int = -1,
-    message: String? = "Unknown error"
-) : Exception(message)
+    public IOException getIoException() {
+        return ioException;
+    }
+
+    private final IOException ioException;
+}
