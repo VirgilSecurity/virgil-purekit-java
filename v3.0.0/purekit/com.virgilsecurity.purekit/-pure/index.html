@@ -1,0 +1,291 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>Pure - purekit</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">purekit</a>&nbsp;/&nbsp;<a href="../index.html">com.virgilsecurity.purekit</a>&nbsp;/&nbsp;<a href="./index.html">Pure</a><br/>
+<br/>
+<h1>Pure</h1>
+<code><span class="keyword">open</span> <span class="keyword">class </span><span class="identifier">Pure</span></code>
+<p>Main class for interactions with PureKit</p>
+<h3>Types</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-rotation-results/index.html">RotationResults</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">class </span><span class="identifier">RotationResults</span></code>
+<p>Rotation result</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-init-.html">&lt;init&gt;</a></p>
+</td>
+<td>
+<code><span class="identifier">Pure</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.Pure$<init>(com.virgilsecurity.purekit.PureContext)/context">context</span><span class="symbol">:</span>&nbsp;<a href="../-pure-context/index.html"><span class="identifier">PureContext</span></a><span class="symbol">!</span><span class="symbol">)</span></code>
+<p>Instantiates Pure.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-d-e-f-a-u-l-t_-g-r-a-n-t_-t-t-l.html">DEFAULT_GRANT_TTL</a></p>
+</td>
+<td>
+<code><span class="keyword">static</span> <span class="keyword">val </span><span class="identifier">DEFAULT_GRANT_TTL</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html"><span class="identifier">Long</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="assign-role.html">assignRole</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">assignRole</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.Pure$assignRole(kotlin.String, com.virgilsecurity.purekit.model.PureGrant, kotlin.String)/roleName">roleName</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$assignRole(kotlin.String, com.virgilsecurity.purekit.model.PureGrant, kotlin.String)/grant">grant</span><span class="symbol">:</span>&nbsp;<a href="../../com.virgilsecurity.purekit.model/-pure-grant/index.html"><span class="identifier">PureGrant</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$assignRole(kotlin.String, com.virgilsecurity.purekit.model.PureGrant, kotlin.String)/userId">userId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Assigns user to role</p>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">assignRole</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.Pure$assignRole(kotlin.String, com.virgilsecurity.purekit.model.PureGrant, kotlin.collections.MutableSet((kotlin.String)))/roleName">roleName</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$assignRole(kotlin.String, com.virgilsecurity.purekit.model.PureGrant, kotlin.collections.MutableSet((kotlin.String)))/grant">grant</span><span class="symbol">:</span>&nbsp;<a href="../../com.virgilsecurity.purekit.model/-pure-grant/index.html"><span class="identifier">PureGrant</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$assignRole(kotlin.String, com.virgilsecurity.purekit.model.PureGrant, kotlin.collections.MutableSet((kotlin.String)))/userIds">userIds</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-set/index.html"><span class="identifier">MutableSet</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">&gt;</span><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Assigns users to role</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="authenticate-user.html">authenticateUser</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">authenticateUser</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.Pure$authenticateUser(kotlin.String, kotlin.String, com.virgilsecurity.purekit.PureSessionParams)/userId">userId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$authenticateUser(kotlin.String, kotlin.String, com.virgilsecurity.purekit.PureSessionParams)/password">password</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$authenticateUser(kotlin.String, kotlin.String, com.virgilsecurity.purekit.PureSessionParams)/pureSessionParams">pureSessionParams</span><span class="symbol">:</span>&nbsp;<a href="../-pure-session-params/index.html"><span class="identifier">PureSessionParams</span></a><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><a href="../-auth-result/index.html"><span class="identifier">AuthResult</span></a><span class="symbol">!</span></code><br/>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">authenticateUser</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.Pure$authenticateUser(kotlin.String, kotlin.String)/userId">userId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$authenticateUser(kotlin.String, kotlin.String)/password">password</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><a href="../-auth-result/index.html"><span class="identifier">AuthResult</span></a><span class="symbol">!</span></code>
+<p>Authenticates user.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="change-user-password.html">changeUserPassword</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">changeUserPassword</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.Pure$changeUserPassword(kotlin.String, kotlin.String, kotlin.String)/userId">userId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$changeUserPassword(kotlin.String, kotlin.String, kotlin.String)/oldPassword">oldPassword</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$changeUserPassword(kotlin.String, kotlin.String, kotlin.String)/newPassword">newPassword</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code><br/>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">changeUserPassword</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.Pure$changeUserPassword(com.virgilsecurity.purekit.model.PureGrant, kotlin.String)/grant">grant</span><span class="symbol">:</span>&nbsp;<a href="../../com.virgilsecurity.purekit.model/-pure-grant/index.html"><span class="identifier">PureGrant</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$changeUserPassword(com.virgilsecurity.purekit.model.PureGrant, kotlin.String)/newPassword">newPassword</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Changes user password. All encrypted data remains accessible after this method call.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="create-role.html">createRole</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">createRole</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.Pure$createRole(kotlin.String, kotlin.collections.MutableSet((kotlin.String)))/roleName">roleName</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$createRole(kotlin.String, kotlin.collections.MutableSet((kotlin.String)))/userIds">userIds</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-set/index.html"><span class="identifier">MutableSet</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">&gt;</span><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Creates role</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="create-user-grant-as-admin.html">createUserGrantAsAdmin</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">createUserGrantAsAdmin</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.Pure$createUserGrantAsAdmin(kotlin.String, com.virgilsecurity.sdk.crypto.VirgilPrivateKey, kotlin.Long)/userId">userId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$createUserGrantAsAdmin(kotlin.String, com.virgilsecurity.sdk.crypto.VirgilPrivateKey, kotlin.Long)/bupsk">bupsk</span><span class="symbol">:</span>&nbsp;<span class="identifier">VirgilPrivateKey</span><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$createUserGrantAsAdmin(kotlin.String, com.virgilsecurity.sdk.crypto.VirgilPrivateKey, kotlin.Long)/ttl">ttl</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html"><span class="identifier">Long</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="../../com.virgilsecurity.purekit.model/-pure-grant/index.html"><span class="identifier">PureGrant</span></a><span class="symbol">!</span></code><br/>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">createUserGrantAsAdmin</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.Pure$createUserGrantAsAdmin(kotlin.String, com.virgilsecurity.sdk.crypto.VirgilPrivateKey)/userId">userId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$createUserGrantAsAdmin(kotlin.String, com.virgilsecurity.sdk.crypto.VirgilPrivateKey)/bupsk">bupsk</span><span class="symbol">:</span>&nbsp;<span class="identifier">VirgilPrivateKey</span><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><a href="../../com.virgilsecurity.purekit.model/-pure-grant/index.html"><span class="identifier">PureGrant</span></a><span class="symbol">!</span></code>
+<p>Creates PureGrant for some user using admin backup private key.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="decrypt.html">decrypt</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">decrypt</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.Pure$decrypt(com.virgilsecurity.purekit.model.PureGrant, kotlin.String, kotlin.ByteArray)/grant">grant</span><span class="symbol">:</span>&nbsp;<a href="../../com.virgilsecurity.purekit.model/-pure-grant/index.html"><span class="identifier">PureGrant</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$decrypt(com.virgilsecurity.purekit.model.PureGrant, kotlin.String, kotlin.ByteArray)/dataId">dataId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$decrypt(com.virgilsecurity.purekit.model.PureGrant, kotlin.String, kotlin.ByteArray)/cipherText">cipherText</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html"><span class="identifier">ByteArray</span></a><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html"><span class="identifier">ByteArray</span></a><span class="symbol">!</span></code><br/>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">decrypt</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.Pure$decrypt(com.virgilsecurity.purekit.model.PureGrant, kotlin.String, kotlin.String, kotlin.ByteArray)/grant">grant</span><span class="symbol">:</span>&nbsp;<a href="../../com.virgilsecurity.purekit.model/-pure-grant/index.html"><span class="identifier">PureGrant</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$decrypt(com.virgilsecurity.purekit.model.PureGrant, kotlin.String, kotlin.String, kotlin.ByteArray)/ownerUserId">ownerUserId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$decrypt(com.virgilsecurity.purekit.model.PureGrant, kotlin.String, kotlin.String, kotlin.ByteArray)/dataId">dataId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$decrypt(com.virgilsecurity.purekit.model.PureGrant, kotlin.String, kotlin.String, kotlin.ByteArray)/cipherText">cipherText</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html"><span class="identifier">ByteArray</span></a><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html"><span class="identifier">ByteArray</span></a><span class="symbol">!</span></code><br/>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">decrypt</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.Pure$decrypt(com.virgilsecurity.sdk.crypto.VirgilPrivateKey, kotlin.String, kotlin.String, kotlin.ByteArray)/privateKey">privateKey</span><span class="symbol">:</span>&nbsp;<span class="identifier">VirgilPrivateKey</span><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$decrypt(com.virgilsecurity.sdk.crypto.VirgilPrivateKey, kotlin.String, kotlin.String, kotlin.ByteArray)/ownerUserId">ownerUserId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$decrypt(com.virgilsecurity.sdk.crypto.VirgilPrivateKey, kotlin.String, kotlin.String, kotlin.ByteArray)/dataId">dataId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$decrypt(com.virgilsecurity.sdk.crypto.VirgilPrivateKey, kotlin.String, kotlin.String, kotlin.ByteArray)/cipherText">cipherText</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html"><span class="identifier">ByteArray</span></a><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html"><span class="identifier">ByteArray</span></a><span class="symbol">!</span></code>
+<p>Decrypts data.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="decrypt-grant-from-user.html">decryptGrantFromUser</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">decryptGrantFromUser</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.Pure$decryptGrantFromUser(kotlin.String)/encryptedGrantString">encryptedGrantString</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><a href="../../com.virgilsecurity.purekit.model/-pure-grant/index.html"><span class="identifier">PureGrant</span></a><span class="symbol">!</span></code>
+<p>Decrypt encrypted PureGrant that was stored on client-side.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="delete-key.html">deleteKey</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">deleteKey</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.Pure$deleteKey(kotlin.String, kotlin.String)/userId">userId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$deleteKey(kotlin.String, kotlin.String)/dataId">dataId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Deletes cell key with given user Id and data Id.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="delete-role.html">deleteRole</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">deleteRole</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.Pure$deleteRole(kotlin.String)/roleName">roleName</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code><br/>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">deleteRole</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.Pure$deleteRole(kotlin.String, kotlin.Boolean)/roleName">roleName</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$deleteRole(kotlin.String, kotlin.Boolean)/cascade">cascade</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Deletes role making previously encrypted data inaccessible.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="delete-user.html">deleteUser</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">deleteUser</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.Pure$deleteUser(kotlin.String)/userId">userId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Deletes user with given id and all his keys.</p>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">deleteUser</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.Pure$deleteUser(kotlin.String, kotlin.Boolean)/userId">userId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$deleteUser(kotlin.String, kotlin.Boolean)/cascade">cascade</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Deletes user with given id.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="encrypt.html">encrypt</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">encrypt</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.Pure$encrypt(kotlin.String, kotlin.String, kotlin.ByteArray)/userId">userId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$encrypt(kotlin.String, kotlin.String, kotlin.ByteArray)/dataId">dataId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$encrypt(kotlin.String, kotlin.String, kotlin.ByteArray)/plainText">plainText</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html"><span class="identifier">ByteArray</span></a><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html"><span class="identifier">ByteArray</span></a><span class="symbol">!</span></code><br/>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">encrypt</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.Pure$encrypt(kotlin.String, kotlin.String, kotlin.collections.MutableSet((kotlin.String)), kotlin.collections.MutableSet((kotlin.String)), kotlin.collections.MutableCollection((com.virgilsecurity.sdk.crypto.VirgilPublicKey)), kotlin.ByteArray)/userId">userId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$encrypt(kotlin.String, kotlin.String, kotlin.collections.MutableSet((kotlin.String)), kotlin.collections.MutableSet((kotlin.String)), kotlin.collections.MutableCollection((com.virgilsecurity.sdk.crypto.VirgilPublicKey)), kotlin.ByteArray)/dataId">dataId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$encrypt(kotlin.String, kotlin.String, kotlin.collections.MutableSet((kotlin.String)), kotlin.collections.MutableSet((kotlin.String)), kotlin.collections.MutableCollection((com.virgilsecurity.sdk.crypto.VirgilPublicKey)), kotlin.ByteArray)/otherUserIds">otherUserIds</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-set/index.html"><span class="identifier">MutableSet</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">&gt;</span><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$encrypt(kotlin.String, kotlin.String, kotlin.collections.MutableSet((kotlin.String)), kotlin.collections.MutableSet((kotlin.String)), kotlin.collections.MutableCollection((com.virgilsecurity.sdk.crypto.VirgilPublicKey)), kotlin.ByteArray)/roleNames">roleNames</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-set/index.html"><span class="identifier">MutableSet</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">&gt;</span><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$encrypt(kotlin.String, kotlin.String, kotlin.collections.MutableSet((kotlin.String)), kotlin.collections.MutableSet((kotlin.String)), kotlin.collections.MutableCollection((com.virgilsecurity.sdk.crypto.VirgilPublicKey)), kotlin.ByteArray)/publicKeys">publicKeys</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-collection/index.html"><span class="identifier">MutableCollection</span></a><span class="symbol">&lt;</span><span class="identifier">VirgilPublicKey</span><span class="symbol">!</span><span class="symbol">&gt;</span><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$encrypt(kotlin.String, kotlin.String, kotlin.collections.MutableSet((kotlin.String)), kotlin.collections.MutableSet((kotlin.String)), kotlin.collections.MutableCollection((com.virgilsecurity.sdk.crypto.VirgilPublicKey)), kotlin.ByteArray)/plainText">plainText</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html"><span class="identifier">ByteArray</span></a><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html"><span class="identifier">ByteArray</span></a><span class="symbol">!</span></code>
+<p>Encrypts data. This method generates keypair that is unique for given userId and dataId, encrypts plainText using this keypair and stores public key and encrypted private key. Multiple encryptions for the same userId and dataId are allowed, in this case existing keypair will be used.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="get-buppk.html">getBuppk</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">getBuppk</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">VirgilPublicKey</span><span class="symbol">!</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="get-current-version.html">getCurrentVersion</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">getCurrentVersion</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="get-external-public-keys.html">getExternalPublicKeys</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">getExternalPublicKeys</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-map/index.html"><span class="identifier">MutableMap</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">,</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-list/index.html"><span class="identifier">MutableList</span></a><span class="symbol">&lt;</span><span class="identifier">VirgilPublicKey</span><span class="symbol">!</span><span class="symbol">&gt;</span><span class="symbol">!</span><span class="symbol">&gt;</span><span class="symbol">!</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="get-oskp.html">getOskp</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">getOskp</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">VirgilKeyPair</span><span class="symbol">!</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="get-storage.html">getStorage</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">getStorage</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="../../com.virgilsecurity.purekit.storage/-pure-storage/index.html"><span class="identifier">PureStorage</span></a><span class="symbol">!</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="invalidate-encrypted-user-grant.html">invalidateEncryptedUserGrant</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">invalidateEncryptedUserGrant</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.Pure$invalidateEncryptedUserGrant(kotlin.String)/encryptedGrantString">encryptedGrantString</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Invalidates existing encrypted user grant</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="perform-rotation.html">performRotation</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">performRotation</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="-rotation-results/index.html"><span class="identifier">Pure.RotationResults</span></a><span class="symbol">!</span></code>
+<p>Performs PHE and KMS records rotation for all users with old version. Pure should be initialized with UpdateToken for this operation.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="recover-user.html">recoverUser</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">recoverUser</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.Pure$recoverUser(kotlin.String, kotlin.String)/userId">userId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$recoverUser(kotlin.String, kotlin.String)/newPassword">newPassword</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Recovers user in case he doesn't remember his password. All encrypted data remains accessible after this method call. Note: this method is under server-side rate-limiting, which prevents adversary from decrypting database.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="register-user.html">registerUser</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">registerUser</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.Pure$registerUser(kotlin.String, kotlin.String)/userId">userId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$registerUser(kotlin.String, kotlin.String)/password">password</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Registers new user.</p>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">registerUser</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.Pure$registerUser(kotlin.String, kotlin.String, com.virgilsecurity.purekit.PureSessionParams)/userId">userId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$registerUser(kotlin.String, kotlin.String, com.virgilsecurity.purekit.PureSessionParams)/password">password</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$registerUser(kotlin.String, kotlin.String, com.virgilsecurity.purekit.PureSessionParams)/pureSessionParams">pureSessionParams</span><span class="symbol">:</span>&nbsp;<a href="../-pure-session-params/index.html"><span class="identifier">PureSessionParams</span></a><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><a href="../-auth-result/index.html"><span class="identifier">AuthResult</span></a><span class="symbol">!</span></code>
+<p>Registers and authenticates new user.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="reset-user-password.html">resetUserPassword</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">resetUserPassword</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.Pure$resetUserPassword(kotlin.String, kotlin.String, kotlin.Boolean)/userId">userId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$resetUserPassword(kotlin.String, kotlin.String, kotlin.Boolean)/newPassword">newPassword</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$resetUserPassword(kotlin.String, kotlin.String, kotlin.Boolean)/cascade">cascade</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Resets user password, all encrypted user data becomes inaccessible.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="share.html">share</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">share</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.Pure$share(com.virgilsecurity.purekit.model.PureGrant, kotlin.String, kotlin.String)/grant">grant</span><span class="symbol">:</span>&nbsp;<a href="../../com.virgilsecurity.purekit.model/-pure-grant/index.html"><span class="identifier">PureGrant</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$share(com.virgilsecurity.purekit.model.PureGrant, kotlin.String, kotlin.String)/dataId">dataId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$share(com.virgilsecurity.purekit.model.PureGrant, kotlin.String, kotlin.String)/otherUserId">otherUserId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code><br/>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">share</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.Pure$share(com.virgilsecurity.purekit.model.PureGrant, kotlin.String, kotlin.collections.MutableSet((kotlin.String)), kotlin.collections.MutableCollection((com.virgilsecurity.sdk.crypto.VirgilPublicKey)))/grant">grant</span><span class="symbol">:</span>&nbsp;<a href="../../com.virgilsecurity.purekit.model/-pure-grant/index.html"><span class="identifier">PureGrant</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$share(com.virgilsecurity.purekit.model.PureGrant, kotlin.String, kotlin.collections.MutableSet((kotlin.String)), kotlin.collections.MutableCollection((com.virgilsecurity.sdk.crypto.VirgilPublicKey)))/dataId">dataId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$share(com.virgilsecurity.purekit.model.PureGrant, kotlin.String, kotlin.collections.MutableSet((kotlin.String)), kotlin.collections.MutableCollection((com.virgilsecurity.sdk.crypto.VirgilPublicKey)))/otherUserIds">otherUserIds</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-set/index.html"><span class="identifier">MutableSet</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">&gt;</span><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$share(com.virgilsecurity.purekit.model.PureGrant, kotlin.String, kotlin.collections.MutableSet((kotlin.String)), kotlin.collections.MutableCollection((com.virgilsecurity.sdk.crypto.VirgilPublicKey)))/publicKeys">publicKeys</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-collection/index.html"><span class="identifier">MutableCollection</span></a><span class="symbol">&lt;</span><span class="identifier">VirgilPublicKey</span><span class="symbol">!</span><span class="symbol">&gt;</span><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Gives possibility to decrypt data to other user that is not data owner. Shared data can then be decrypted using other user's PureGrant.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="share-to-role.html">shareToRole</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">shareToRole</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.Pure$shareToRole(com.virgilsecurity.purekit.model.PureGrant, kotlin.String, kotlin.collections.MutableSet((kotlin.String)))/grant">grant</span><span class="symbol">:</span>&nbsp;<a href="../../com.virgilsecurity.purekit.model/-pure-grant/index.html"><span class="identifier">PureGrant</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$shareToRole(com.virgilsecurity.purekit.model.PureGrant, kotlin.String, kotlin.collections.MutableSet((kotlin.String)))/dataId">dataId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$shareToRole(com.virgilsecurity.purekit.model.PureGrant, kotlin.String, kotlin.collections.MutableSet((kotlin.String)))/roleNames">roleNames</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-set/index.html"><span class="identifier">MutableSet</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">&gt;</span><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Share data to roles</p>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">shareToRole</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.Pure$shareToRole(com.virgilsecurity.purekit.model.PureGrant, kotlin.String, kotlin.String)/grant">grant</span><span class="symbol">:</span>&nbsp;<a href="../../com.virgilsecurity.purekit.model/-pure-grant/index.html"><span class="identifier">PureGrant</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$shareToRole(com.virgilsecurity.purekit.model.PureGrant, kotlin.String, kotlin.String)/dataId">dataId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$shareToRole(com.virgilsecurity.purekit.model.PureGrant, kotlin.String, kotlin.String)/roleName">roleName</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Share data to role</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="unassign-role.html">unassignRole</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">unassignRole</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.Pure$unassignRole(kotlin.String, kotlin.collections.MutableSet((kotlin.String)))/roleName">roleName</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$unassignRole(kotlin.String, kotlin.collections.MutableSet((kotlin.String)))/userIds">userIds</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-set/index.html"><span class="identifier">MutableSet</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">&gt;</span><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Unassigns users from role</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="unshare.html">unshare</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">unshare</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.Pure$unshare(kotlin.String, kotlin.String, kotlin.String)/ownerUserId">ownerUserId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$unshare(kotlin.String, kotlin.String, kotlin.String)/dataId">dataId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$unshare(kotlin.String, kotlin.String, kotlin.String)/otherUserId">otherUserId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code><br/>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">unshare</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.Pure$unshare(kotlin.String, kotlin.String, kotlin.collections.MutableSet((kotlin.String)), kotlin.collections.MutableCollection((com.virgilsecurity.sdk.crypto.VirgilPublicKey)))/ownerUserId">ownerUserId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$unshare(kotlin.String, kotlin.String, kotlin.collections.MutableSet((kotlin.String)), kotlin.collections.MutableCollection((com.virgilsecurity.sdk.crypto.VirgilPublicKey)))/dataId">dataId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$unshare(kotlin.String, kotlin.String, kotlin.collections.MutableSet((kotlin.String)), kotlin.collections.MutableCollection((com.virgilsecurity.sdk.crypto.VirgilPublicKey)))/otherUserIds">otherUserIds</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-set/index.html"><span class="identifier">MutableSet</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">&gt;</span><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$unshare(kotlin.String, kotlin.String, kotlin.collections.MutableSet((kotlin.String)), kotlin.collections.MutableCollection((com.virgilsecurity.sdk.crypto.VirgilPublicKey)))/publicKeys">publicKeys</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-collection/index.html"><span class="identifier">MutableCollection</span></a><span class="symbol">&lt;</span><span class="identifier">VirgilPublicKey</span><span class="symbol">!</span><span class="symbol">&gt;</span><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Revoke possibility to decrypt data from other user that is not data owner. It won't be possible to decrypt such data other user's PureGrant. Note, that even if further decrypt calls will not succeed for other user, he could have made a copy of decrypted data before that call.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

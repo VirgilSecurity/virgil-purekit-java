@@ -1,0 +1,114 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>UserRecord - purekit</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">purekit</a>&nbsp;/&nbsp;<a href="../index.html">com.virgilsecurity.purekit.model</a>&nbsp;/&nbsp;<a href="./index.html">UserRecord</a><br/>
+<br/>
+<h1>UserRecord</h1>
+<code><span class="keyword">open</span> <span class="keyword">class </span><span class="identifier">UserRecord</span></code>
+<p>User record</p>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-init-.html">&lt;init&gt;</a></p>
+</td>
+<td>
+<code><span class="identifier">UserRecord</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.model.UserRecord$<init>(kotlin.String, kotlin.ByteArray, kotlin.Int, kotlin.ByteArray, kotlin.ByteArray, kotlin.ByteArray, kotlin.ByteArray, kotlin.ByteArray, kotlin.ByteArray)/userId">userId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.model.UserRecord$<init>(kotlin.String, kotlin.ByteArray, kotlin.Int, kotlin.ByteArray, kotlin.ByteArray, kotlin.ByteArray, kotlin.ByteArray, kotlin.ByteArray, kotlin.ByteArray)/pheRecord">pheRecord</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html"><span class="identifier">ByteArray</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.model.UserRecord$<init>(kotlin.String, kotlin.ByteArray, kotlin.Int, kotlin.ByteArray, kotlin.ByteArray, kotlin.ByteArray, kotlin.ByteArray, kotlin.ByteArray, kotlin.ByteArray)/recordVersion">recordVersion</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.model.UserRecord$<init>(kotlin.String, kotlin.ByteArray, kotlin.Int, kotlin.ByteArray, kotlin.ByteArray, kotlin.ByteArray, kotlin.ByteArray, kotlin.ByteArray, kotlin.ByteArray)/upk">upk</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html"><span class="identifier">ByteArray</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.model.UserRecord$<init>(kotlin.String, kotlin.ByteArray, kotlin.Int, kotlin.ByteArray, kotlin.ByteArray, kotlin.ByteArray, kotlin.ByteArray, kotlin.ByteArray, kotlin.ByteArray)/encryptedUsk">encryptedUsk</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html"><span class="identifier">ByteArray</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.model.UserRecord$<init>(kotlin.String, kotlin.ByteArray, kotlin.Int, kotlin.ByteArray, kotlin.ByteArray, kotlin.ByteArray, kotlin.ByteArray, kotlin.ByteArray, kotlin.ByteArray)/encryptedUskBackup">encryptedUskBackup</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html"><span class="identifier">ByteArray</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.model.UserRecord$<init>(kotlin.String, kotlin.ByteArray, kotlin.Int, kotlin.ByteArray, kotlin.ByteArray, kotlin.ByteArray, kotlin.ByteArray, kotlin.ByteArray, kotlin.ByteArray)/backupPwdHash">backupPwdHash</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html"><span class="identifier">ByteArray</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.model.UserRecord$<init>(kotlin.String, kotlin.ByteArray, kotlin.Int, kotlin.ByteArray, kotlin.ByteArray, kotlin.ByteArray, kotlin.ByteArray, kotlin.ByteArray, kotlin.ByteArray)/passwordRecoveryWrap">passwordRecoveryWrap</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html"><span class="identifier">ByteArray</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.model.UserRecord$<init>(kotlin.String, kotlin.ByteArray, kotlin.Int, kotlin.ByteArray, kotlin.ByteArray, kotlin.ByteArray, kotlin.ByteArray, kotlin.ByteArray, kotlin.ByteArray)/passwordRecoveryBlob">passwordRecoveryBlob</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html"><span class="identifier">ByteArray</span></a><span class="symbol">!</span><span class="symbol">)</span></code>
+<p>Instantiates UserRecord.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="get-backup-pwd-hash.html">getBackupPwdHash</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">getBackupPwdHash</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html"><span class="identifier">ByteArray</span></a><span class="symbol">!</span></code>
+<p>Returns encrypted for backup user password hash.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="get-encrypted-usk.html">getEncryptedUsk</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">getEncryptedUsk</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html"><span class="identifier">ByteArray</span></a><span class="symbol">!</span></code>
+<p>Returns encrypted user secret key.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="get-encrypted-usk-backup.html">getEncryptedUskBackup</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">getEncryptedUskBackup</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html"><span class="identifier">ByteArray</span></a><span class="symbol">!</span></code>
+<p>Return encrypted for backup user secret key.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="get-password-recovery-blob.html">getPasswordRecoveryBlob</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">getPasswordRecoveryBlob</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html"><span class="identifier">ByteArray</span></a><span class="symbol">!</span></code>
+<p>Returns password recovery blob</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="get-password-recovery-wrap.html">getPasswordRecoveryWrap</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">getPasswordRecoveryWrap</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html"><span class="identifier">ByteArray</span></a><span class="symbol">!</span></code>
+<p>Returns password recovery wrap</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="get-phe-record.html">getPheRecord</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">getPheRecord</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html"><span class="identifier">ByteArray</span></a><span class="symbol">!</span></code>
+<p>Returns phe record.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="get-record-version.html">getRecordVersion</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">getRecordVersion</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a></code>
+<p>Returns phe record version.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="get-upk.html">getUpk</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">getUpk</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html"><span class="identifier">ByteArray</span></a><span class="symbol">!</span></code>
+<p>Returns user public key.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="get-user-id.html">getUserId</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">getUserId</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span></code>
+<p>Return user id.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

@@ -1,0 +1,86 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>PureCryptoException - purekit</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">purekit</a>&nbsp;/&nbsp;<a href="../index.html">com.virgilsecurity.purekit.exception</a>&nbsp;/&nbsp;<a href="./index.html">PureCryptoException</a><br/>
+<br/>
+<h1>PureCryptoException</h1>
+<code><span class="keyword">open</span> <span class="keyword">class </span><span class="identifier">PureCryptoException</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../-pure-exception/index.html"><span class="identifier">PureException</span></a></code>
+<p>Pure crypto exception</p>
+<h3>Types</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-error-status/index.html">ErrorStatus</a></p>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">ErrorStatus</span></code>
+<p>Error status</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-init-.html">&lt;init&gt;</a></p>
+</td>
+<td>
+<code><span class="identifier">PureCryptoException</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.exception.PureCryptoException$<init>(com.virgilsecurity.purekit.exception.PureCryptoException.ErrorStatus)/errorStatus">errorStatus</span><span class="symbol">:</span>&nbsp;<a href="-error-status/index.html"><span class="identifier">PureCryptoException.ErrorStatus</span></a><span class="symbol">!</span><span class="symbol">)</span></code><br/>
+<code><span class="identifier">PureCryptoException</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.exception.PureCryptoException$<init>(com.virgilsecurity.sdk.crypto.exceptions.CryptoException)/cryptoException">cryptoException</span><span class="symbol">:</span>&nbsp;<span class="identifier">CryptoException</span><span class="symbol">!</span><span class="symbol">)</span></code><br/>
+<code><span class="identifier">PureCryptoException</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.exception.PureCryptoException$<init>(com.virgilsecurity.crypto.foundation.FoundationException)/foundationException">foundationException</span><span class="symbol">:</span>&nbsp;<span class="identifier">FoundationException</span><span class="symbol">!</span><span class="symbol">)</span></code><br/>
+<code><span class="identifier">PureCryptoException</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.exception.PureCryptoException$<init>(com.virgilsecurity.crypto.phe.PheException)/pheException">pheException</span><span class="symbol">:</span>&nbsp;<span class="identifier">PheException</span><span class="symbol">!</span><span class="symbol">)</span></code>
+<p>Constructor</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="get-crypto-exception.html">getCryptoException</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">getCryptoException</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">CryptoException</span><span class="symbol">!</span></code>
+<p>Returns crypto exception</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="get-error-status.html">getErrorStatus</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">getErrorStatus</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="-error-status/index.html"><span class="identifier">PureCryptoException.ErrorStatus</span></a><span class="symbol">!</span></code>
+<p>Returns error status</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="get-foundation-exception.html">getFoundationException</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">getFoundationException</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">FoundationException</span><span class="symbol">!</span></code>
+<p>Returns foundation exception</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="get-phe-exception.html">getPheException</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">getPheException</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">PheException</span><span class="symbol">!</span></code>
+<p>Returns phe exception</p>
+</td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

@@ -1,0 +1,96 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>GrantKey - purekit</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">purekit</a>&nbsp;/&nbsp;<a href="../index.html">com.virgilsecurity.purekit.model</a>&nbsp;/&nbsp;<a href="./index.html">GrantKey</a><br/>
+<br/>
+<h1>GrantKey</h1>
+<code><span class="keyword">open</span> <span class="keyword">class </span><span class="identifier">GrantKey</span></code>
+<p>Grant key</p>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-init-.html">&lt;init&gt;</a></p>
+</td>
+<td>
+<code><span class="identifier">GrantKey</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.model.GrantKey$<init>(kotlin.String, kotlin.ByteArray, kotlin.Int, kotlin.ByteArray, kotlin.ByteArray, java.util.Date, java.util.Date)/userId">userId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.model.GrantKey$<init>(kotlin.String, kotlin.ByteArray, kotlin.Int, kotlin.ByteArray, kotlin.ByteArray, java.util.Date, java.util.Date)/keyId">keyId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html"><span class="identifier">ByteArray</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.model.GrantKey$<init>(kotlin.String, kotlin.ByteArray, kotlin.Int, kotlin.ByteArray, kotlin.ByteArray, java.util.Date, java.util.Date)/recordVersion">recordVersion</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.model.GrantKey$<init>(kotlin.String, kotlin.ByteArray, kotlin.Int, kotlin.ByteArray, kotlin.ByteArray, java.util.Date, java.util.Date)/encryptedGrantKeyWrap">encryptedGrantKeyWrap</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html"><span class="identifier">ByteArray</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.model.GrantKey$<init>(kotlin.String, kotlin.ByteArray, kotlin.Int, kotlin.ByteArray, kotlin.ByteArray, java.util.Date, java.util.Date)/encryptedGrantKeyBlob">encryptedGrantKeyBlob</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html"><span class="identifier">ByteArray</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.model.GrantKey$<init>(kotlin.String, kotlin.ByteArray, kotlin.Int, kotlin.ByteArray, kotlin.ByteArray, java.util.Date, java.util.Date)/creationDate">creationDate</span><span class="symbol">:</span>&nbsp;<a href="https://docs.oracle.com/javase/6/docs/api/java/util/Date.html"><span class="identifier">Date</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.model.GrantKey$<init>(kotlin.String, kotlin.ByteArray, kotlin.Int, kotlin.ByteArray, kotlin.ByteArray, java.util.Date, java.util.Date)/expirationDate">expirationDate</span><span class="symbol">:</span>&nbsp;<a href="https://docs.oracle.com/javase/6/docs/api/java/util/Date.html"><span class="identifier">Date</span></a><span class="symbol">!</span><span class="symbol">)</span></code>
+<p>Constructor</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="get-creation-date.html">getCreationDate</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">getCreationDate</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://docs.oracle.com/javase/6/docs/api/java/util/Date.html"><span class="identifier">Date</span></a><span class="symbol">!</span></code>
+<p>Returns creation date</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="get-encrypted-grant-key-blob.html">getEncryptedGrantKeyBlob</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">getEncryptedGrantKeyBlob</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html"><span class="identifier">ByteArray</span></a><span class="symbol">!</span></code>
+<p>Returns key blod</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="get-encrypted-grant-key-wrap.html">getEncryptedGrantKeyWrap</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">getEncryptedGrantKeyWrap</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html"><span class="identifier">ByteArray</span></a><span class="symbol">!</span></code>
+<p>Returns key wrap</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="get-expiration-date.html">getExpirationDate</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">getExpirationDate</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://docs.oracle.com/javase/6/docs/api/java/util/Date.html"><span class="identifier">Date</span></a><span class="symbol">!</span></code>
+<p>Returns expiration date</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="get-key-id.html">getKeyId</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">getKeyId</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html"><span class="identifier">ByteArray</span></a><span class="symbol">!</span></code>
+<p>Returns key id</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="get-record-version.html">getRecordVersion</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">getRecordVersion</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a></code>
+<p>Returns record version</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="get-user-id.html">getUserId</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">getUserId</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span></code>
+<p>Returns user id</p>
+</td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

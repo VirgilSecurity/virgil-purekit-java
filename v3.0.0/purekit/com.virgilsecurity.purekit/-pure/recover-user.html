@@ -1,0 +1,23 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>Pure.recoverUser - purekit</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">purekit</a>&nbsp;/&nbsp;<a href="../index.html">com.virgilsecurity.purekit</a>&nbsp;/&nbsp;<a href="index.html">Pure</a>&nbsp;/&nbsp;<a href="./recover-user.html">recoverUser</a><br/>
+<br/>
+<h1>recoverUser</h1>
+<a name="com.virgilsecurity.purekit.Pure$recoverUser(kotlin.String, kotlin.String)"></a>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">recoverUser</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.Pure$recoverUser(kotlin.String, kotlin.String)/userId">userId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$recoverUser(kotlin.String, kotlin.String)/newPassword">newPassword</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Recovers user in case he doesn't remember his password. All encrypted data remains accessible after this method call. Note: this method is under server-side rate-limiting, which prevents adversary from decrypting database.</p>
+<h3>Parameters</h3>
+<p><a name="userId"></a>
+<code>userId</code> - <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">:</span> userId</p>
+<p><a name="newPassword"></a>
+<code>newPassword</code> - <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">:</span> new password</p>
+<h3>Exceptions</h3>
+<p><a name="PureException"></a>
+<code>PureException</code> - PureException</p>
+</BODY>
+</HTML>

@@ -1,0 +1,40 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>Pure.share - purekit</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">purekit</a>&nbsp;/&nbsp;<a href="../index.html">com.virgilsecurity.purekit</a>&nbsp;/&nbsp;<a href="index.html">Pure</a>&nbsp;/&nbsp;<a href="./share.html">share</a><br/>
+<br/>
+<h1>share</h1>
+<a name="com.virgilsecurity.purekit.Pure$share(com.virgilsecurity.purekit.model.PureGrant, kotlin.String, kotlin.String)"></a>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">share</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.Pure$share(com.virgilsecurity.purekit.model.PureGrant, kotlin.String, kotlin.String)/grant">grant</span><span class="symbol">:</span>&nbsp;<a href="../../com.virgilsecurity.purekit.model/-pure-grant/index.html"><span class="identifier">PureGrant</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$share(com.virgilsecurity.purekit.model.PureGrant, kotlin.String, kotlin.String)/dataId">dataId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$share(com.virgilsecurity.purekit.model.PureGrant, kotlin.String, kotlin.String)/otherUserId">otherUserId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Gives possibility to decrypt data to other user that is not data owner. Shared data can then be decrypted using other user's PureGrant.</p>
+<h3>Parameters</h3>
+<p><a name="grant"></a>
+<code>grant</code> - <a href="../../com.virgilsecurity.purekit.model/-pure-grant/index.html"><span class="identifier">PureGrant</span></a><span class="symbol">!</span><span class="symbol">:</span> PureGrant of data owner.</p>
+<p><a name="dataId"></a>
+<code>dataId</code> - <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">:</span> Data Id.</p>
+<p><a name="otherUserId"></a>
+<code>otherUserId</code> - <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">:</span> User Id of user to whom access is given.</p>
+<h3>Exceptions</h3>
+<p><a name="PureException"></a>
+<code>PureException</code> - PureException</p>
+<a name="com.virgilsecurity.purekit.Pure$share(com.virgilsecurity.purekit.model.PureGrant, kotlin.String, kotlin.collections.MutableSet((kotlin.String)), kotlin.collections.MutableCollection((com.virgilsecurity.sdk.crypto.VirgilPublicKey)))"></a>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">share</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.Pure$share(com.virgilsecurity.purekit.model.PureGrant, kotlin.String, kotlin.collections.MutableSet((kotlin.String)), kotlin.collections.MutableCollection((com.virgilsecurity.sdk.crypto.VirgilPublicKey)))/grant">grant</span><span class="symbol">:</span>&nbsp;<a href="../../com.virgilsecurity.purekit.model/-pure-grant/index.html"><span class="identifier">PureGrant</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$share(com.virgilsecurity.purekit.model.PureGrant, kotlin.String, kotlin.collections.MutableSet((kotlin.String)), kotlin.collections.MutableCollection((com.virgilsecurity.sdk.crypto.VirgilPublicKey)))/dataId">dataId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$share(com.virgilsecurity.purekit.model.PureGrant, kotlin.String, kotlin.collections.MutableSet((kotlin.String)), kotlin.collections.MutableCollection((com.virgilsecurity.sdk.crypto.VirgilPublicKey)))/otherUserIds">otherUserIds</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-set/index.html"><span class="identifier">MutableSet</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">&gt;</span><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$share(com.virgilsecurity.purekit.model.PureGrant, kotlin.String, kotlin.collections.MutableSet((kotlin.String)), kotlin.collections.MutableCollection((com.virgilsecurity.sdk.crypto.VirgilPublicKey)))/publicKeys">publicKeys</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-collection/index.html"><span class="identifier">MutableCollection</span></a><span class="symbol">&lt;</span><span class="identifier">VirgilPublicKey</span><span class="symbol">!</span><span class="symbol">&gt;</span><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Gives possibility to decrypt data to other user that is not data owner. Shared data can then be decrypted using other user's PureGrant.</p>
+<h3>Parameters</h3>
+<p><a name="grant"></a>
+<code>grant</code> - <a href="../../com.virgilsecurity.purekit.model/-pure-grant/index.html"><span class="identifier">PureGrant</span></a><span class="symbol">!</span><span class="symbol">:</span> PureGrant of data owner.</p>
+<p><a name="dataId"></a>
+<code>dataId</code> - <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">:</span> Data Id.</p>
+<p><a name="otherUserIds"></a>
+<code>otherUserIds</code> - <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-set/index.html"><span class="identifier">MutableSet</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">&gt;</span><span class="symbol">!</span><span class="symbol">:</span> Other user Ids.</p>
+<p><a name="publicKeys"></a>
+<code>publicKeys</code> - <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-collection/index.html"><span class="identifier">MutableCollection</span></a><span class="symbol">&lt;</span><span class="identifier">VirgilPublicKey</span><span class="symbol">!</span><span class="symbol">&gt;</span><span class="symbol">!</span><span class="symbol">:</span> Public keys to share data with.</p>
+<h3>Exceptions</h3>
+<p><a name="PureException"></a>
+<code>PureException</code> - PureException</p>
+</BODY>
+</HTML>

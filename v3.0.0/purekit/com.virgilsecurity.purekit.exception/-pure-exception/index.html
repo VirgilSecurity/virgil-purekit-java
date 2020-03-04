@@ -1,0 +1,71 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>PureException - purekit</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">purekit</a>&nbsp;/&nbsp;<a href="../index.html">com.virgilsecurity.purekit.exception</a>&nbsp;/&nbsp;<a href="./index.html">PureException</a><br/>
+<br/>
+<h1>PureException</h1>
+<code><span class="keyword">open</span> <span class="keyword">class </span><span class="identifier">PureException</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="https://docs.oracle.com/javase/6/docs/api/java/lang/Exception.html"><span class="identifier">Exception</span></a></code>
+<p>Base class for all Pure exceptions</p>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-init-.html">&lt;init&gt;</a></p>
+</td>
+<td>
+<code><span class="identifier">PureException</span><span class="symbol">(</span><span class="symbol">)</span></code><br/>
+<code><span class="identifier">PureException</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.exception.PureException$<init>(kotlin.String)/errorMessage">errorMessage</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">)</span></code><br/>
+<code><span class="identifier">PureException</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.exception.PureException$<init>(kotlin.Throwable)/cause">cause</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-throwable/index.html"><span class="identifier">Throwable</span></a><span class="symbol">!</span><span class="symbol">)</span></code>
+<p>Constructor</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Inheritors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="../-client-exception/index.html">ClientException</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">class </span><span class="identifier">ClientException</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">PureException</span></a></code>
+<p>Base class for exception from Http clients</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="../-pure-crypto-exception/index.html">PureCryptoException</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">class </span><span class="identifier">PureCryptoException</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">PureException</span></a></code>
+<p>Pure crypto exception</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="../-pure-logic-exception/index.html">PureLogicException</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">class </span><span class="identifier">PureLogicException</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">PureException</span></a></code>
+<p>Pure logic exception</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="../../com.virgilsecurity.purekit.storage.exception/-pure-storage-exception/index.html">PureStorageException</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">class </span><span class="identifier">PureStorageException</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">PureException</span></a></code>
+<p>Base class for PureStorage exceptions</p>
+</td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

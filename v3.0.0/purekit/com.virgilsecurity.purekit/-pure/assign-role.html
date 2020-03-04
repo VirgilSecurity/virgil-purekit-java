@@ -1,0 +1,38 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>Pure.assignRole - purekit</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">purekit</a>&nbsp;/&nbsp;<a href="../index.html">com.virgilsecurity.purekit</a>&nbsp;/&nbsp;<a href="index.html">Pure</a>&nbsp;/&nbsp;<a href="./assign-role.html">assignRole</a><br/>
+<br/>
+<h1>assignRole</h1>
+<a name="com.virgilsecurity.purekit.Pure$assignRole(kotlin.String, com.virgilsecurity.purekit.model.PureGrant, kotlin.String)"></a>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">assignRole</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.Pure$assignRole(kotlin.String, com.virgilsecurity.purekit.model.PureGrant, kotlin.String)/roleName">roleName</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$assignRole(kotlin.String, com.virgilsecurity.purekit.model.PureGrant, kotlin.String)/grant">grant</span><span class="symbol">:</span>&nbsp;<a href="../../com.virgilsecurity.purekit.model/-pure-grant/index.html"><span class="identifier">PureGrant</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$assignRole(kotlin.String, com.virgilsecurity.purekit.model.PureGrant, kotlin.String)/userId">userId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Assigns user to role</p>
+<h3>Parameters</h3>
+<p><a name="roleName"></a>
+<code>roleName</code> - <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">:</span> role name</p>
+<p><a name="grant"></a>
+<code>grant</code> - <a href="../../com.virgilsecurity.purekit.model/-pure-grant/index.html"><span class="identifier">PureGrant</span></a><span class="symbol">!</span><span class="symbol">:</span> grant of one of users, that are already assigned to this role</p>
+<p><a name="userId"></a>
+<code>userId</code> - <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">:</span> user id of user who will be assigned to this role</p>
+<h3>Exceptions</h3>
+<p><a name="PureException"></a>
+<code>PureException</code> - PureException</p>
+<a name="com.virgilsecurity.purekit.Pure$assignRole(kotlin.String, com.virgilsecurity.purekit.model.PureGrant, kotlin.collections.MutableSet((kotlin.String)))"></a>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">assignRole</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.Pure$assignRole(kotlin.String, com.virgilsecurity.purekit.model.PureGrant, kotlin.collections.MutableSet((kotlin.String)))/roleName">roleName</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$assignRole(kotlin.String, com.virgilsecurity.purekit.model.PureGrant, kotlin.collections.MutableSet((kotlin.String)))/grant">grant</span><span class="symbol">:</span>&nbsp;<a href="../../com.virgilsecurity.purekit.model/-pure-grant/index.html"><span class="identifier">PureGrant</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$assignRole(kotlin.String, com.virgilsecurity.purekit.model.PureGrant, kotlin.collections.MutableSet((kotlin.String)))/userIds">userIds</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-set/index.html"><span class="identifier">MutableSet</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">&gt;</span><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Assigns users to role</p>
+<h3>Parameters</h3>
+<p><a name="roleName"></a>
+<code>roleName</code> - <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">:</span> role name</p>
+<p><a name="grant"></a>
+<code>grant</code> - <a href="../../com.virgilsecurity.purekit.model/-pure-grant/index.html"><span class="identifier">PureGrant</span></a><span class="symbol">!</span><span class="symbol">:</span> grant of one of users, that are already assigned to this role</p>
+<p><a name="userIds"></a>
+<code>userIds</code> - <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-set/index.html"><span class="identifier">MutableSet</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">&gt;</span><span class="symbol">!</span><span class="symbol">:</span> user ids of users who will be assigned to this role</p>
+<h3>Exceptions</h3>
+<p><a name="PureException"></a>
+<code>PureException</code> - PureException</p>
+</BODY>
+</HTML>

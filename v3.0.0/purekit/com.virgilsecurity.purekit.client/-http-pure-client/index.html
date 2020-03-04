@@ -1,0 +1,209 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>HttpPureClient - purekit</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">purekit</a>&nbsp;/&nbsp;<a href="../index.html">com.virgilsecurity.purekit.client</a>&nbsp;/&nbsp;<a href="./index.html">HttpPureClient</a><br/>
+<br/>
+<h1>HttpPureClient</h1>
+<code><span class="keyword">open</span> <span class="keyword">class </span><span class="identifier">HttpPureClient</span></code>
+<p>Class for http interactions with Pure service</p>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-init-.html">&lt;init&gt;</a></p>
+</td>
+<td>
+<code><span class="identifier">HttpPureClient</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.client.HttpPureClient$<init>(kotlin.String, kotlin.String)/appToken">appToken</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.client.HttpPureClient$<init>(kotlin.String, kotlin.String)/serviceAddress">serviceAddress</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">)</span></code>
+<p>Instantiates HttpPureClient.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-s-e-r-v-i-c-e_-a-d-d-r-e-s-s.html">SERVICE_ADDRESS</a></p>
+</td>
+<td>
+<code><span class="keyword">static</span> <span class="keyword">val </span><span class="identifier">SERVICE_ADDRESS</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a></code>
+<p>Pure service url</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="delete-cell-key.html">deleteCellKey</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">deleteCellKey</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.client.HttpPureClient$deleteCellKey(kotlin.String, kotlin.String)/userId">userId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.client.HttpPureClient$deleteCellKey(kotlin.String, kotlin.String)/dataId">dataId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Deletes cell key.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="delete-grant-key.html">deleteGrantKey</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">deleteGrantKey</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.client.HttpPureClient$deleteGrantKey(com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GrantKeyDescriptor)/request">request</span><span class="symbol">:</span>&nbsp;<span class="identifier">GrantKeyDescriptor</span><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Deletes grant key</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="delete-role-assignments.html">deleteRoleAssignments</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">deleteRoleAssignments</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.client.HttpPureClient$deleteRoleAssignments(com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignments)/request">request</span><span class="symbol">:</span>&nbsp;<span class="identifier">DeleteRoleAssignments</span><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Delete role assignments</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="delete-user.html">deleteUser</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">deleteUser</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.client.HttpPureClient$deleteUser(kotlin.String, kotlin.Boolean)/userId">userId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.client.HttpPureClient$deleteUser(kotlin.String, kotlin.Boolean)/cascade">cascade</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Deletes user.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="get-cell-key.html">getCellKey</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">getCellKey</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.client.HttpPureClient$getCellKey(kotlin.String, kotlin.String)/userId">userId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.client.HttpPureClient$getCellKey(kotlin.String, kotlin.String)/dataId">dataId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">CellKey</span><span class="symbol">!</span></code>
+<p>Obtains cell key.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="get-grant-key.html">getGrantKey</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">getGrantKey</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.client.HttpPureClient$getGrantKey(com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GrantKeyDescriptor)/request">request</span><span class="symbol">:</span>&nbsp;<span class="identifier">GrantKeyDescriptor</span><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">GrantKey</span><span class="symbol">!</span></code>
+<p>Obtains grant key</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="get-role-assignment.html">getRoleAssignment</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">getRoleAssignment</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.client.HttpPureClient$getRoleAssignment(com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignment)/request">request</span><span class="symbol">:</span>&nbsp;<span class="identifier">GetRoleAssignment</span><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">RoleAssignment</span><span class="symbol">!</span></code>
+<p>Obtains role assignmane</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="get-role-assignments.html">getRoleAssignments</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">getRoleAssignments</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.client.HttpPureClient$getRoleAssignments(com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignments)/request">request</span><span class="symbol">:</span>&nbsp;<span class="identifier">GetRoleAssignments</span><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">RoleAssignments</span><span class="symbol">!</span></code>
+<p>Obtains role assignments</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="get-roles.html">getRoles</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">getRoles</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.client.HttpPureClient$getRoles(com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoles)/getRolesRequest">getRolesRequest</span><span class="symbol">:</span>&nbsp;<span class="identifier">GetRoles</span><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Roles</span><span class="symbol">!</span></code>
+<p>Obtains roles</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="get-user.html">getUser</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">getUser</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.client.HttpPureClient$getUser(kotlin.String)/userId">userId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">UserRecord</span><span class="symbol">!</span></code>
+<p>Obtains user.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="get-users.html">getUsers</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">getUsers</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.client.HttpPureClient$getUsers(kotlin.collections.MutableCollection((kotlin.String)))/userIds">userIds</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-collection/index.html"><span class="identifier">MutableCollection</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">&gt;</span><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">UserRecords</span><span class="symbol">!</span></code>
+<p>Obtains user.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="insert-cell-key.html">insertCellKey</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">insertCellKey</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.client.HttpPureClient$insertCellKey(com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.CellKey)/cellKey">cellKey</span><span class="symbol">:</span>&nbsp;<span class="identifier">CellKey</span><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Inserts new cell key.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="insert-grant-key.html">insertGrantKey</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">insertGrantKey</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.client.HttpPureClient$insertGrantKey(com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.GrantKey)/grantKey">grantKey</span><span class="symbol">:</span>&nbsp;<span class="identifier">GrantKey</span><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Inserts new grant key</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="insert-role.html">insertRole</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">insertRole</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.client.HttpPureClient$insertRole(com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.Role)/role">role</span><span class="symbol">:</span>&nbsp;<span class="identifier">Role</span><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Inserts role</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="insert-role-assignments.html">insertRoleAssignments</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">insertRoleAssignments</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.client.HttpPureClient$insertRoleAssignments(com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.RoleAssignments)/roleAssignments">roleAssignments</span><span class="symbol">:</span>&nbsp;<span class="identifier">RoleAssignments</span><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Inserts roles assignments</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="insert-user.html">insertUser</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">insertUser</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.client.HttpPureClient$insertUser(com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecord)/userRecord">userRecord</span><span class="symbol">:</span>&nbsp;<span class="identifier">UserRecord</span><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Inserts new user.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="update-cell-key.html">updateCellKey</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">updateCellKey</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.client.HttpPureClient$updateCellKey(kotlin.String, kotlin.String, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.CellKey)/userId">userId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.client.HttpPureClient$updateCellKey(kotlin.String, kotlin.String, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.CellKey)/dataId">dataId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.client.HttpPureClient$updateCellKey(kotlin.String, kotlin.String, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.CellKey)/cellKey">cellKey</span><span class="symbol">:</span>&nbsp;<span class="identifier">CellKey</span><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Updates cell key.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="update-user.html">updateUser</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">updateUser</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.client.HttpPureClient$updateUser(kotlin.String, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecord)/userId">userId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.client.HttpPureClient$updateUser(kotlin.String, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage.UserRecord)/userRecord">userRecord</span><span class="symbol">:</span>&nbsp;<span class="identifier">UserRecord</span><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Updates user.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

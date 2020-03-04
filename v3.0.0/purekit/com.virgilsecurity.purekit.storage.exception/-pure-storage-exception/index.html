@@ -1,0 +1,125 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>PureStorageException - purekit</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">purekit</a>&nbsp;/&nbsp;<a href="../index.html">com.virgilsecurity.purekit.storage.exception</a>&nbsp;/&nbsp;<a href="./index.html">PureStorageException</a><br/>
+<br/>
+<h1>PureStorageException</h1>
+<code><span class="keyword">open</span> <span class="keyword">class </span><span class="identifier">PureStorageException</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../../com.virgilsecurity.purekit.exception/-pure-exception/index.html"><span class="identifier">PureException</span></a></code>
+<p>Base class for PureStorage exceptions</p>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-init-.html">&lt;init&gt;</a></p>
+</td>
+<td>
+<code><span class="identifier">PureStorageException</span><span class="symbol">(</span><span class="symbol">)</span></code><br/>
+<code><span class="identifier">PureStorageException</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.storage.exception.PureStorageException$<init>(kotlin.String)/errorMessage">errorMessage</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">)</span></code>
+<p>Constructor</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Inheritors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="../../com.virgilsecurity.purekit.storage.mariadb/-maria-db-operation-not-supported-exception/index.html">MariaDbOperationNotSupportedException</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">class </span><span class="identifier">MariaDbOperationNotSupportedException</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">PureStorageException</span></a></code>
+<p>MariaDb storage operation not supported exception</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="../../com.virgilsecurity.purekit.storage.mariadb/-maria-db-sql-exception/index.html">MariaDbSqlException</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">class </span><span class="identifier">MariaDbSqlException</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">PureStorageException</span></a></code>
+<p>MariaDbSqlStorage exception</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="../-pure-storage-cell-key-already-exists-exception/index.html">PureStorageCellKeyAlreadyExistsException</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">class </span><span class="identifier">PureStorageCellKeyAlreadyExistsException</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">PureStorageException</span></a></code>
+<p>PureStorage CellKey already exists exception</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="../-pure-storage-cell-key-not-found-exception/index.html">PureStorageCellKeyNotFoundException</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">class </span><span class="identifier">PureStorageCellKeyNotFoundException</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">PureStorageException</span></a></code>
+<p>PureStorage CellKey not found exception</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="../-pure-storage-generic-exception/index.html">PureStorageGenericException</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">class </span><span class="identifier">PureStorageGenericException</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">PureStorageException</span></a></code>
+<p>Common PureStorage exceptions</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="../-pure-storage-grant-key-not-found-exception/index.html">PureStorageGrantKeyNotFoundException</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">class </span><span class="identifier">PureStorageGrantKeyNotFoundException</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">PureStorageException</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="../-pure-storage-invalid-protobuf-exception/index.html">PureStorageInvalidProtobufException</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">class </span><span class="identifier">PureStorageInvalidProtobufException</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">PureStorageException</span></a></code>
+<p>Invalid protobuf exception wrapped in PureStorageException</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="../-pure-storage-role-assignment-not-found-exception/index.html">PureStorageRoleAssignmentNotFoundException</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">class </span><span class="identifier">PureStorageRoleAssignmentNotFoundException</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">PureStorageException</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="../-pure-storage-role-not-found-exception/index.html">PureStorageRoleNotFoundException</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">class </span><span class="identifier">PureStorageRoleNotFoundException</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">PureStorageException</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="../-pure-storage-user-not-found-exception/index.html">PureStorageUserNotFoundException</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">class </span><span class="identifier">PureStorageUserNotFoundException</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">PureStorageException</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="../../com.virgilsecurity.purekit.storage.virgil/-virgil-cloud-storage-exception/index.html">VirgilCloudStorageException</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">class </span><span class="identifier">VirgilCloudStorageException</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">PureStorageException</span></a></code>
+<p>Virgil Cloud storage exception</p>
+</td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

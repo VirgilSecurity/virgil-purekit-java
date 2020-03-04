@@ -1,0 +1,15 @@
+$dokka.format:html
+$dokka.linkExtension:html
+
+com.virgilsecurity.purekit
+com.virgilsecurity.purekit.build
+com.virgilsecurity.purekit.client
+com.virgilsecurity.purekit.data
+com.virgilsecurity.purekit.exception
+com.virgilsecurity.purekit.model
+com.virgilsecurity.purekit.storage
+com.virgilsecurity.purekit.storage.exception
+com.virgilsecurity.purekit.storage.mariadb
+com.virgilsecurity.purekit.storage.ram
+com.virgilsecurity.purekit.storage.virgil
+com.virgilsecurity.purekit.utils

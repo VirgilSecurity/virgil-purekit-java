@@ -1,0 +1,61 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>Pure.decrypt - purekit</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">purekit</a>&nbsp;/&nbsp;<a href="../index.html">com.virgilsecurity.purekit</a>&nbsp;/&nbsp;<a href="index.html">Pure</a>&nbsp;/&nbsp;<a href="./decrypt.html">decrypt</a><br/>
+<br/>
+<h1>decrypt</h1>
+<a name="com.virgilsecurity.purekit.Pure$decrypt(com.virgilsecurity.purekit.model.PureGrant, kotlin.String, kotlin.ByteArray)"></a>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">decrypt</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.Pure$decrypt(com.virgilsecurity.purekit.model.PureGrant, kotlin.String, kotlin.ByteArray)/grant">grant</span><span class="symbol">:</span>&nbsp;<a href="../../com.virgilsecurity.purekit.model/-pure-grant/index.html"><span class="identifier">PureGrant</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$decrypt(com.virgilsecurity.purekit.model.PureGrant, kotlin.String, kotlin.ByteArray)/dataId">dataId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$decrypt(com.virgilsecurity.purekit.model.PureGrant, kotlin.String, kotlin.ByteArray)/cipherText">cipherText</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html"><span class="identifier">ByteArray</span></a><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html"><span class="identifier">ByteArray</span></a><span class="symbol">!</span></code>
+<p>Decrypts data.</p>
+<h3>Parameters</h3>
+<p><a name="grant"></a>
+<code>grant</code> - <a href="../../com.virgilsecurity.purekit.model/-pure-grant/index.html"><span class="identifier">PureGrant</span></a><span class="symbol">!</span><span class="symbol">:</span> User PureGrant obtained using <code><a href="authenticate-user.html">Pure#authenticateUser</a></code> or <code><a href="create-user-grant-as-admin.html">Pure#createUserGrantAsAdmin</a></code> methods.</p>
+<p><a name="dataId"></a>
+<code>dataId</code> - <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">:</span> Data Id that was used during encryption.</p>
+<p><a name="cipherText"></a>
+<code>cipherText</code> - <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html"><span class="identifier">ByteArray</span></a><span class="symbol">!</span><span class="symbol">:</span> Cipher text.</p>
+<h3>Exceptions</h3>
+<p><a name="PureException"></a>
+<code>PureException</code> - PureException</p>
+<p><strong>Return</strong><br/>
+<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html"><span class="identifier">ByteArray</span></a><span class="symbol">!</span><span class="symbol">:</span> Plain text.</p>
+<a name="com.virgilsecurity.purekit.Pure$decrypt(com.virgilsecurity.purekit.model.PureGrant, kotlin.String, kotlin.String, kotlin.ByteArray)"></a>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">decrypt</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.Pure$decrypt(com.virgilsecurity.purekit.model.PureGrant, kotlin.String, kotlin.String, kotlin.ByteArray)/grant">grant</span><span class="symbol">:</span>&nbsp;<a href="../../com.virgilsecurity.purekit.model/-pure-grant/index.html"><span class="identifier">PureGrant</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$decrypt(com.virgilsecurity.purekit.model.PureGrant, kotlin.String, kotlin.String, kotlin.ByteArray)/ownerUserId">ownerUserId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$decrypt(com.virgilsecurity.purekit.model.PureGrant, kotlin.String, kotlin.String, kotlin.ByteArray)/dataId">dataId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$decrypt(com.virgilsecurity.purekit.model.PureGrant, kotlin.String, kotlin.String, kotlin.ByteArray)/cipherText">cipherText</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html"><span class="identifier">ByteArray</span></a><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html"><span class="identifier">ByteArray</span></a><span class="symbol">!</span></code>
+<p>Decrypts data.</p>
+<h3>Parameters</h3>
+<p><a name="grant"></a>
+<code>grant</code> - <a href="../../com.virgilsecurity.purekit.model/-pure-grant/index.html"><span class="identifier">PureGrant</span></a><span class="symbol">!</span><span class="symbol">:</span> User PureGrant obtained using <code><a href="authenticate-user.html">Pure#authenticateUser</a></code> or <code><a href="create-user-grant-as-admin.html">Pure#createUserGrantAsAdmin</a></code> methods.</p>
+<p><a name="ownerUserId"></a>
+<code>ownerUserId</code> - <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">:</span> Owner userId, pass null if PureGrant belongs to owner.</p>
+<p><a name="dataId"></a>
+<code>dataId</code> - <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">:</span> Data Id that was used during encryption.</p>
+<p><a name="cipherText"></a>
+<code>cipherText</code> - <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html"><span class="identifier">ByteArray</span></a><span class="symbol">!</span><span class="symbol">:</span> Cipher text.</p>
+<h3>Exceptions</h3>
+<p><a name="PureException"></a>
+<code>PureException</code> - PureException</p>
+<p><strong>Return</strong><br/>
+<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html"><span class="identifier">ByteArray</span></a><span class="symbol">!</span><span class="symbol">:</span> Plain text.</p>
+<a name="com.virgilsecurity.purekit.Pure$decrypt(com.virgilsecurity.sdk.crypto.VirgilPrivateKey, kotlin.String, kotlin.String, kotlin.ByteArray)"></a>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">decrypt</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.Pure$decrypt(com.virgilsecurity.sdk.crypto.VirgilPrivateKey, kotlin.String, kotlin.String, kotlin.ByteArray)/privateKey">privateKey</span><span class="symbol">:</span>&nbsp;<span class="identifier">VirgilPrivateKey</span><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$decrypt(com.virgilsecurity.sdk.crypto.VirgilPrivateKey, kotlin.String, kotlin.String, kotlin.ByteArray)/ownerUserId">ownerUserId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$decrypt(com.virgilsecurity.sdk.crypto.VirgilPrivateKey, kotlin.String, kotlin.String, kotlin.ByteArray)/dataId">dataId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.Pure$decrypt(com.virgilsecurity.sdk.crypto.VirgilPrivateKey, kotlin.String, kotlin.String, kotlin.ByteArray)/cipherText">cipherText</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html"><span class="identifier">ByteArray</span></a><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html"><span class="identifier">ByteArray</span></a><span class="symbol">!</span></code>
+<p>Decrypts data.</p>
+<h3>Parameters</h3>
+<p><a name="privateKey"></a>
+<code>privateKey</code> - <span class="identifier">VirgilPrivateKey</span><span class="symbol">!</span><span class="symbol">:</span> Private key from corresponding public key that was used during <code><a href="encrypt.html">Pure#encrypt</a></code>, <code><a href="share.html">Pure#share</a></code> on present in externalPublicKeys.</p>
+<p><a name="ownerUserId"></a>
+<code>ownerUserId</code> - <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">:</span> Owner userId, pass null if PureGrant belongs to.</p>
+<p><a name="dataId"></a>
+<code>dataId</code> - <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">:</span> Data Id that was used during encryption.</p>
+<p><a name="cipherText"></a>
+<code>cipherText</code> - <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html"><span class="identifier">ByteArray</span></a><span class="symbol">!</span><span class="symbol">:</span> Cipher text.</p>
+<h3>Exceptions</h3>
+<p><a name="PureException"></a>
+<code>PureException</code> - PureException</p>
+<p><strong>Return</strong><br/>
+<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html"><span class="identifier">ByteArray</span></a><span class="symbol">!</span><span class="symbol">:</span> Plain text.</p>
+</BODY>
+</HTML>

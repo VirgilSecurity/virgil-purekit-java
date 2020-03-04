@@ -1,0 +1,244 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>MariaDbPureStorage - purekit</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">purekit</a>&nbsp;/&nbsp;<a href="../index.html">com.virgilsecurity.purekit.storage.mariadb</a>&nbsp;/&nbsp;<a href="./index.html">MariaDbPureStorage</a><br/>
+<br/>
+<h1>MariaDbPureStorage</h1>
+<code><span class="keyword">open</span> <span class="keyword">class </span><span class="identifier">MariaDbPureStorage</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../../com.virgilsecurity.purekit.storage/-pure-storage/index.html"><span class="identifier">PureStorage</span></a><span class="symbol">, </span><a href="../../com.virgilsecurity.purekit.storage/-pure-model-serializer-dependent/index.html"><span class="identifier">PureModelSerializerDependent</span></a></code>
+<p>MariaDB storage</p>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-init-.html">&lt;init&gt;</a></p>
+</td>
+<td>
+<code><span class="identifier">MariaDbPureStorage</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.storage.mariadb.MariaDbPureStorage$<init>(kotlin.String)/url">url</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">)</span></code><br/>
+<code><span class="identifier">MariaDbPureStorage</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.storage.mariadb.MariaDbPureStorage$<init>(javax.sql.DataSource)/dataSource">dataSource</span><span class="symbol">:</span>&nbsp;<a href="https://docs.oracle.com/javase/6/docs/api/javax/sql/DataSource.html"><span class="identifier">DataSource</span></a><span class="symbol">!</span><span class="symbol">)</span></code>
+<p>Constructor</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-e-r_-d-u-p_-e-n-t-r-y.html">ER_DUP_ENTRY</a></p>
+</td>
+<td>
+<code><span class="keyword">static</span> <span class="keyword">val </span><span class="identifier">ER_DUP_ENTRY</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="clean-db.html">cleanDb</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">cleanDb</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Drops tables and events</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="delete-cell-key.html">deleteCellKey</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">deleteCellKey</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.storage.mariadb.MariaDbPureStorage$deleteCellKey(kotlin.String, kotlin.String)/userId">userId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.storage.mariadb.MariaDbPureStorage$deleteCellKey(kotlin.String, kotlin.String)/dataId">dataId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="delete-grant-key.html">deleteGrantKey</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">deleteGrantKey</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.storage.mariadb.MariaDbPureStorage$deleteGrantKey(kotlin.String, kotlin.ByteArray)/userId">userId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.storage.mariadb.MariaDbPureStorage$deleteGrantKey(kotlin.String, kotlin.ByteArray)/keyId">keyId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html"><span class="identifier">ByteArray</span></a><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="delete-role.html">deleteRole</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">deleteRole</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.storage.mariadb.MariaDbPureStorage$deleteRole(kotlin.String, kotlin.Boolean)/roleName">roleName</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.storage.mariadb.MariaDbPureStorage$deleteRole(kotlin.String, kotlin.Boolean)/cascade">cascade</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="delete-role-assignments.html">deleteRoleAssignments</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">deleteRoleAssignments</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.storage.mariadb.MariaDbPureStorage$deleteRoleAssignments(kotlin.String, kotlin.collections.MutableSet((kotlin.String)))/roleName">roleName</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.storage.mariadb.MariaDbPureStorage$deleteRoleAssignments(kotlin.String, kotlin.collections.MutableSet((kotlin.String)))/userIds">userIds</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-set/index.html"><span class="identifier">MutableSet</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">&gt;</span><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="delete-user.html">deleteUser</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">deleteUser</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.storage.mariadb.MariaDbPureStorage$deleteUser(kotlin.String, kotlin.Boolean)/userId">userId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.storage.mariadb.MariaDbPureStorage$deleteUser(kotlin.String, kotlin.Boolean)/cascade">cascade</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="execute-sql.html">executeSql</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">executeSql</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.storage.mariadb.MariaDbPureStorage$executeSql(kotlin.String)/sql">sql</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Executes arbitrary sql</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="get-pure-model-serializer.html">getPureModelSerializer</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">getPureModelSerializer</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="../../com.virgilsecurity.purekit.storage/-pure-model-serializer/index.html"><span class="identifier">PureModelSerializer</span></a><span class="symbol">!</span></code>
+<p>Returns PureModelSerializer</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="init-db.html">initDb</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">initDb</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.storage.mariadb.MariaDbPureStorage$initDb(kotlin.Int)/cleanGrantKeysIntervalSeconds">cleanGrantKeysIntervalSeconds</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Creates tables and events. Enables event scheduler</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="insert-cell-key.html">insertCellKey</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">insertCellKey</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.storage.mariadb.MariaDbPureStorage$insertCellKey(com.virgilsecurity.purekit.model.CellKey)/cellKey">cellKey</span><span class="symbol">:</span>&nbsp;<a href="../../com.virgilsecurity.purekit.model/-cell-key/index.html"><span class="identifier">CellKey</span></a><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="insert-grant-key.html">insertGrantKey</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">insertGrantKey</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.storage.mariadb.MariaDbPureStorage$insertGrantKey(com.virgilsecurity.purekit.model.GrantKey)/grantKey">grantKey</span><span class="symbol">:</span>&nbsp;<a href="../../com.virgilsecurity.purekit.model/-grant-key/index.html"><span class="identifier">GrantKey</span></a><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="insert-role.html">insertRole</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">insertRole</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.storage.mariadb.MariaDbPureStorage$insertRole(com.virgilsecurity.purekit.model.Role)/role">role</span><span class="symbol">:</span>&nbsp;<a href="../../com.virgilsecurity.purekit.model/-role/index.html"><span class="identifier">Role</span></a><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="insert-role-assignments.html">insertRoleAssignments</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">insertRoleAssignments</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.storage.mariadb.MariaDbPureStorage$insertRoleAssignments(kotlin.collections.MutableCollection((com.virgilsecurity.purekit.model.RoleAssignment)))/roleAssignments">roleAssignments</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-collection/index.html"><span class="identifier">MutableCollection</span></a><span class="symbol">&lt;</span><a href="../../com.virgilsecurity.purekit.model/-role-assignment/index.html"><span class="identifier">RoleAssignment</span></a><span class="symbol">!</span><span class="symbol">&gt;</span><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="insert-user.html">insertUser</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">insertUser</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.storage.mariadb.MariaDbPureStorage$insertUser(com.virgilsecurity.purekit.model.UserRecord)/userRecord">userRecord</span><span class="symbol">:</span>&nbsp;<a href="../../com.virgilsecurity.purekit.model/-user-record/index.html"><span class="identifier">UserRecord</span></a><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="select-cell-key.html">selectCellKey</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">selectCellKey</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.storage.mariadb.MariaDbPureStorage$selectCellKey(kotlin.String, kotlin.String)/userId">userId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.storage.mariadb.MariaDbPureStorage$selectCellKey(kotlin.String, kotlin.String)/dataId">dataId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><a href="../../com.virgilsecurity.purekit.model/-cell-key/index.html"><span class="identifier">CellKey</span></a><span class="symbol">!</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="select-grant-key.html">selectGrantKey</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">selectGrantKey</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.storage.mariadb.MariaDbPureStorage$selectGrantKey(kotlin.String, kotlin.ByteArray)/userId">userId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.storage.mariadb.MariaDbPureStorage$selectGrantKey(kotlin.String, kotlin.ByteArray)/keyId">keyId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html"><span class="identifier">ByteArray</span></a><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><a href="../../com.virgilsecurity.purekit.model/-grant-key/index.html"><span class="identifier">GrantKey</span></a><span class="symbol">!</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="select-grant-keys.html">selectGrantKeys</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">selectGrantKeys</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.storage.mariadb.MariaDbPureStorage$selectGrantKeys(kotlin.Int)/recordVersion">recordVersion</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-iterable/index.html"><span class="identifier">MutableIterable</span></a><span class="symbol">&lt;</span><a href="../../com.virgilsecurity.purekit.model/-grant-key/index.html"><span class="identifier">GrantKey</span></a><span class="symbol">!</span><span class="symbol">&gt;</span><span class="symbol">!</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="select-role-assignment.html">selectRoleAssignment</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">selectRoleAssignment</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.storage.mariadb.MariaDbPureStorage$selectRoleAssignment(kotlin.String, kotlin.String)/roleName">roleName</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.storage.mariadb.MariaDbPureStorage$selectRoleAssignment(kotlin.String, kotlin.String)/userId">userId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><a href="../../com.virgilsecurity.purekit.model/-role-assignment/index.html"><span class="identifier">RoleAssignment</span></a><span class="symbol">!</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="select-role-assignments.html">selectRoleAssignments</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">selectRoleAssignments</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.storage.mariadb.MariaDbPureStorage$selectRoleAssignments(kotlin.String)/userId">userId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-iterable/index.html"><span class="identifier">MutableIterable</span></a><span class="symbol">&lt;</span><a href="../../com.virgilsecurity.purekit.model/-role-assignment/index.html"><span class="identifier">RoleAssignment</span></a><span class="symbol">!</span><span class="symbol">&gt;</span><span class="symbol">!</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="select-roles.html">selectRoles</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">selectRoles</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.storage.mariadb.MariaDbPureStorage$selectRoles(kotlin.collections.MutableSet((kotlin.String)))/roleNames">roleNames</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-set/index.html"><span class="identifier">MutableSet</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">&gt;</span><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-set/index.html"><span class="identifier">MutableSet</span></a><span class="symbol">&lt;</span><a href="../../com.virgilsecurity.purekit.model/-role/index.html"><span class="identifier">Role</span></a><span class="symbol">!</span><span class="symbol">&gt;</span><span class="symbol">!</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="select-user.html">selectUser</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">selectUser</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.storage.mariadb.MariaDbPureStorage$selectUser(kotlin.String)/userId">userId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><a href="../../com.virgilsecurity.purekit.model/-user-record/index.html"><span class="identifier">UserRecord</span></a><span class="symbol">!</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="select-users.html">selectUsers</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">selectUsers</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.storage.mariadb.MariaDbPureStorage$selectUsers(kotlin.collections.MutableSet((kotlin.String)))/userIds">userIds</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-set/index.html"><span class="identifier">MutableSet</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">!</span><span class="symbol">&gt;</span><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-iterable/index.html"><span class="identifier">MutableIterable</span></a><span class="symbol">&lt;</span><a href="../../com.virgilsecurity.purekit.model/-user-record/index.html"><span class="identifier">UserRecord</span></a><span class="symbol">!</span><span class="symbol">&gt;</span><span class="symbol">!</span></code><br/>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">selectUsers</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.storage.mariadb.MariaDbPureStorage$selectUsers(kotlin.Int)/recordVersion">recordVersion</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-iterable/index.html"><span class="identifier">MutableIterable</span></a><span class="symbol">&lt;</span><a href="../../com.virgilsecurity.purekit.model/-user-record/index.html"><span class="identifier">UserRecord</span></a><span class="symbol">!</span><span class="symbol">&gt;</span><span class="symbol">!</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="set-pure-model-serializer.html">setPureModelSerializer</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">setPureModelSerializer</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.storage.mariadb.MariaDbPureStorage$setPureModelSerializer(com.virgilsecurity.purekit.storage.PureModelSerializer)/pureModelSerializer">pureModelSerializer</span><span class="symbol">:</span>&nbsp;<a href="../../com.virgilsecurity.purekit.storage/-pure-model-serializer/index.html"><span class="identifier">PureModelSerializer</span></a><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="update-cell-key.html">updateCellKey</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">updateCellKey</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.storage.mariadb.MariaDbPureStorage$updateCellKey(com.virgilsecurity.purekit.model.CellKey)/cellKey">cellKey</span><span class="symbol">:</span>&nbsp;<a href="../../com.virgilsecurity.purekit.model/-cell-key/index.html"><span class="identifier">CellKey</span></a><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="update-grant-keys.html">updateGrantKeys</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">updateGrantKeys</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.storage.mariadb.MariaDbPureStorage$updateGrantKeys(kotlin.collections.MutableIterable((com.virgilsecurity.purekit.model.GrantKey)))/grantKeys">grantKeys</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-iterable/index.html"><span class="identifier">MutableIterable</span></a><span class="symbol">&lt;</span><a href="../../com.virgilsecurity.purekit.model/-grant-key/index.html"><span class="identifier">GrantKey</span></a><span class="symbol">!</span><span class="symbol">&gt;</span><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="update-user.html">updateUser</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">updateUser</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.storage.mariadb.MariaDbPureStorage$updateUser(com.virgilsecurity.purekit.model.UserRecord)/userRecord">userRecord</span><span class="symbol">:</span>&nbsp;<a href="../../com.virgilsecurity.purekit.model/-user-record/index.html"><span class="identifier">UserRecord</span></a><span class="symbol">!</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="update-users.html">updateUsers</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">updateUsers</span><span class="symbol">(</span><span class="identifier" id="com.virgilsecurity.purekit.storage.mariadb.MariaDbPureStorage$updateUsers(kotlin.collections.MutableIterable((com.virgilsecurity.purekit.model.UserRecord)), kotlin.Int)/userRecords">userRecords</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-iterable/index.html"><span class="identifier">MutableIterable</span></a><span class="symbol">&lt;</span><a href="../../com.virgilsecurity.purekit.model/-user-record/index.html"><span class="identifier">UserRecord</span></a><span class="symbol">!</span><span class="symbol">&gt;</span><span class="symbol">!</span><span class="symbol">, </span><span class="identifier" id="com.virgilsecurity.purekit.storage.mariadb.MariaDbPureStorage$updateUsers(kotlin.collections.MutableIterable((com.virgilsecurity.purekit.model.UserRecord)), kotlin.Int)/previousVersion">previousVersion</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>
