@@ -42,44 +42,14 @@ import java.sql.SQLException;
  * MariaDbSqlStorage exception
  */
 public class MariaDbSqlException extends PureStorageException {
-    private final SQLException sqlException;
-    private final IOException ioException;
 
     /**
      * Constructor
      *
-     * @param sqlException sql exception
+     * @param cause The cause.
      */
-    public MariaDbSqlException(SQLException sqlException) {
-        this.sqlException = sqlException;
-        this.ioException = null;
+    public MariaDbSqlException(Throwable cause) {
+        super(cause);
     }
 
-    /**
-     * Constructor
-     *
-     * @param ioException io exception
-     */
-    public MariaDbSqlException(IOException ioException) {
-        this.sqlException = null;
-        this.ioException = ioException;
-    }
-
-    /**
-     * Returns sql exception
-     *
-     * @return sql exception
-     */
-    public SQLException getSqlException() {
-        return sqlException;
-    }
-
-    /**
-     * Returns io exception
-     *
-     * @return io exception
-     */
-    public IOException getIoException() {
-        return ioException;
-    }
 }

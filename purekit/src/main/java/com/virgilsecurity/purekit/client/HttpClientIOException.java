@@ -31,53 +31,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.purekit.exception;
+package com.virgilsecurity.purekit.client;
 
-import com.virgilsecurity.purekit.data.ProtocolException;
-import com.virgilsecurity.purekit.data.ProtocolHttpException;
+import java.io.IOException;
 
 /**
- * Base class for exception from Http clients
+ * HttpClient IOException exception
  */
-public class ClientException extends PureException {
-    private final ProtocolException protocolException;
-    private final ProtocolHttpException protocolHttpException;
+public class HttpClientIOException extends HttpClientException {
 
-    /**
-     * Constructor
-     *
-     * @param protocolException protocolException
-     */
-    public ClientException(ProtocolException protocolException) {
-        this.protocolException = protocolException;
-        this.protocolHttpException = null;
-    }
-
-    /**
-     * Constructor
-     *
-     * @param protocolHttpException protocolHttpException
-     */
-    public ClientException(ProtocolHttpException protocolHttpException) {
-        this.protocolException = null;
-        this.protocolHttpException = protocolHttpException;
-    }
-
-    /**
-     * Returns protocol exception
-     *
-     * @return protocolException
-     */
-    public ProtocolException getProtocolException() {
-        return protocolException;
-    }
-
-    /**
-     * Returns protocolHttpException
-     *
-     * @return protocolHttpException
-     */
-    public ProtocolHttpException getProtocolHttpException() {
-        return protocolHttpException;
+    public HttpClientIOException(Throwable cause) {
+        super(cause);
     }
 }

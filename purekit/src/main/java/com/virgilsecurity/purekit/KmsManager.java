@@ -40,15 +40,12 @@ import com.virgilsecurity.crypto.phe.UokmsClientGenerateDecryptRequestResult;
 import com.virgilsecurity.crypto.phe.UokmsClientGenerateEncryptWrapResult;
 import com.virgilsecurity.crypto.phe.UokmsClientRotateKeysResult;
 import com.virgilsecurity.crypto.phe.UokmsWrapRotation;
-import com.virgilsecurity.purekit.data.ProtocolException;
-import com.virgilsecurity.purekit.data.ProtocolHttpException;
-import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client;
 import com.virgilsecurity.purekit.client.HttpKmsClient;
-import com.virgilsecurity.purekit.exception.KmsClientException;
 import com.virgilsecurity.purekit.exception.PureCryptoException;
 import com.virgilsecurity.purekit.exception.PureException;
 import com.virgilsecurity.purekit.model.GrantKey;
 import com.virgilsecurity.purekit.model.UserRecord;
+import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client;
 import com.virgilsecurity.purekit.utils.ValidationUtils;
 
 class KmsManager {
@@ -161,10 +158,6 @@ class KmsManager {
         }
         catch (PheException e) {
             throw new PureCryptoException(e);
-        } catch (ProtocolException e) {
-            throw new KmsClientException(e);
-        } catch (ProtocolHttpException e) {
-            throw new KmsClientException(e);
         }
     }
 

@@ -33,21 +33,37 @@
 
 package com.virgilsecurity.purekit.storage.virgil;
 
-import java.util.*;
-
 import com.google.protobuf.ByteString;
-import com.virgilsecurity.purekit.data.ProtocolException;
-import com.virgilsecurity.purekit.data.ProtocolHttpException;
-import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client;
-import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage;
+import com.virgilsecurity.purekit.client.HttpClientException;
+import com.virgilsecurity.purekit.client.HttpClientServiceException;
 import com.virgilsecurity.purekit.client.HttpPureClient;
 import com.virgilsecurity.purekit.client.ServiceErrorCode;
-import com.virgilsecurity.purekit.model.*;
+import com.virgilsecurity.purekit.model.CellKey;
+import com.virgilsecurity.purekit.model.GrantKey;
+import com.virgilsecurity.purekit.model.Role;
+import com.virgilsecurity.purekit.model.RoleAssignment;
+import com.virgilsecurity.purekit.model.UserRecord;
+import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client;
+import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage;
 import com.virgilsecurity.purekit.storage.PureModelSerializer;
 import com.virgilsecurity.purekit.storage.PureModelSerializerDependent;
 import com.virgilsecurity.purekit.storage.PureStorage;
-import com.virgilsecurity.purekit.storage.exception.*;
+import com.virgilsecurity.purekit.storage.exception.PureStorageCellKeyAlreadyExistsException;
+import com.virgilsecurity.purekit.storage.exception.PureStorageCellKeyNotFoundException;
+import com.virgilsecurity.purekit.storage.exception.PureStorageException;
+import com.virgilsecurity.purekit.storage.exception.PureStorageGenericException;
+import com.virgilsecurity.purekit.storage.exception.PureStorageGrantKeyNotFoundException;
+import com.virgilsecurity.purekit.storage.exception.PureStorageRoleAssignmentNotFoundException;
+import com.virgilsecurity.purekit.storage.exception.PureStorageRoleNotFoundException;
+import com.virgilsecurity.purekit.storage.exception.PureStorageUserNotFoundException;
 import com.virgilsecurity.purekit.utils.ValidationUtils;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * PureStorage on Virgil cloud side
@@ -113,13 +129,13 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
 
         try {
             protobufRecord = client.getUser(userId);
-        } catch (ProtocolException e) {
+        } catch (HttpClientServiceException e) {
             if (e.getErrorCode() == ServiceErrorCode.USER_NOT_FOUND.getCode()) {
                 throw new PureStorageUserNotFoundException(userId);
             }
 
             throw new VirgilCloudStorageException(e);
-        } catch (ProtocolHttpException e) {
+        } catch (HttpClientException e) {
             throw new VirgilCloudStorageException(e);
         }
 
@@ -146,9 +162,7 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
 
         try {
             protoRecords = client.getUsers(userIds);
-        } catch (ProtocolException e) {
-            throw new VirgilCloudStorageException(e);
-        } catch (ProtocolHttpException e) {
+        } catch (HttpClientException e) {
             throw new VirgilCloudStorageException(e);
         }
 
@@ -189,9 +203,7 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
 
         try {
             client.deleteUser(userId, cascade);
-        } catch (ProtocolException e) {
-            throw new VirgilCloudStorageException(e);
-        } catch (ProtocolHttpException e) {
+        } catch (HttpClientException e) {
             throw new VirgilCloudStorageException(e);
         }
     }
@@ -204,13 +216,13 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
         PurekitProtosV3Storage.CellKey protobufRecord;
         try {
             protobufRecord = client.getCellKey(userId, dataId);
-        } catch (ProtocolException e) {
+        } catch (HttpClientServiceException e) {
             if (e.getErrorCode() == ServiceErrorCode.CELL_KEY_NOT_FOUND.getCode()) {
                 throw new PureStorageCellKeyNotFoundException();
             }
 
             throw new VirgilCloudStorageException(e);
-        } catch (ProtocolHttpException e) {
+        } catch (HttpClientException e) {
             throw new VirgilCloudStorageException(e);
         }
 
@@ -244,9 +256,7 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
 
         try {
             client.deleteCellKey(userId, dataId);
-        } catch (ProtocolException e) {
-            throw new VirgilCloudStorageException(e);
-        } catch (ProtocolHttpException e) {
+        } catch (HttpClientException e) {
             throw new VirgilCloudStorageException(e);
         }
     }
@@ -259,9 +269,7 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
 
         try {
             client.insertRole(protobufRecord);
-        } catch (ProtocolException e) {
-            throw new VirgilCloudStorageException(e);
-        } catch (ProtocolHttpException e) {
+        } catch (HttpClientException e) {
             throw new VirgilCloudStorageException(e);
         }
     }
@@ -282,9 +290,7 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
         PurekitProtosV3Storage.Roles protoRecords;
         try {
             protoRecords = client.getRoles(getRolesRequest);
-        } catch (ProtocolException e) {
-            throw new VirgilCloudStorageException(e);
-        } catch (ProtocolHttpException e) {
+        } catch (HttpClientException e) {
             throw new VirgilCloudStorageException(e);
         }
 
@@ -335,9 +341,7 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
 
         try {
             client.insertRoleAssignments(protobufRecord);
-        } catch (ProtocolException e) {
-            throw new VirgilCloudStorageException(e);
-        } catch (ProtocolHttpException e) {
+        } catch (HttpClientException e) {
             throw new VirgilCloudStorageException(e);
         }
     }
@@ -353,9 +357,7 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
         PurekitProtosV3Storage.RoleAssignments protoRecords = null;
         try {
             protoRecords = client.getRoleAssignments(request);
-        } catch (ProtocolException e) {
-            throw new VirgilCloudStorageException(e);
-        } catch (ProtocolHttpException e) {
+        } catch (HttpClientException e) {
             throw new VirgilCloudStorageException(e);
         }
 
@@ -387,13 +389,13 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
         PurekitProtosV3Storage.RoleAssignment protobufRecord;
         try {
             protobufRecord = client.getRoleAssignment(request);
-        } catch (ProtocolException e) {
+        } catch (HttpClientServiceException e) {
             if (e.getErrorCode() == ServiceErrorCode.ROLE_ASSIGNMENT_NOT_FOUND.getCode()) {
                 throw new PureStorageRoleAssignmentNotFoundException(userId, roleName);
             }
 
             throw new VirgilCloudStorageException(e);
-        } catch (ProtocolHttpException e) {
+        } catch (HttpClientException e) {
             throw new VirgilCloudStorageException(e);
         }
 
@@ -417,9 +419,7 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
 
         try {
             client.deleteRoleAssignments(request);
-        } catch (ProtocolException e) {
-            throw new VirgilCloudStorageException(e);
-        } catch (ProtocolHttpException e) {
+        } catch (HttpClientException e) {
             throw new VirgilCloudStorageException(e);
         }
     }
@@ -432,9 +432,7 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
 
         try {
             client.insertGrantKey(protobufRecord);
-        } catch (ProtocolException e) {
-            throw new VirgilCloudStorageException(e);
-        } catch (ProtocolHttpException e) {
+        } catch (HttpClientException e) {
             throw new VirgilCloudStorageException(e);
         }
     }
@@ -452,13 +450,13 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
         PurekitProtosV3Storage.GrantKey protobufRecord;
         try {
             protobufRecord = client.getGrantKey(request);
-        } catch (ProtocolException e) {
+        } catch (HttpClientServiceException e) {
             if (e.getErrorCode() == ServiceErrorCode.GRANT_KEY_NOT_FOUND.getCode()) {
                 throw new PureStorageGrantKeyNotFoundException(userId, keyId);
             }
 
             throw new VirgilCloudStorageException(e);
-        } catch (ProtocolHttpException e) {
+        } catch (HttpClientException e) {
             throw new VirgilCloudStorageException(e);
         }
 
@@ -502,9 +500,7 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
 
         try {
             client.deleteGrantKey(request);
-        } catch (ProtocolException e) {
-            throw new VirgilCloudStorageException(e);
-        } catch (ProtocolHttpException e) {
+        } catch (HttpClientException e) {
             throw new VirgilCloudStorageException(e);
         }
     }
@@ -519,9 +515,7 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
             } else {
                 client.updateUser(userRecord.getUserId(), protobufRecord);
             }
-        } catch (ProtocolException e) {
-            throw new VirgilCloudStorageException(e);
-        } catch (ProtocolHttpException e) {
+        } catch (HttpClientException e) {
             throw new VirgilCloudStorageException(e);
         }
     }
@@ -534,7 +528,7 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
             if (isInsert) {
                 try {
                     client.insertCellKey(protobufRecord);
-                } catch (ProtocolException e) {
+                } catch (HttpClientServiceException e) {
                     if (e.getErrorCode() == ServiceErrorCode.CELL_KEY_ALREADY_EXISTS.getCode()) {
 
                         throw new PureStorageCellKeyAlreadyExistsException();
@@ -545,9 +539,7 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
             } else {
                 client.updateCellKey(cellKey.getUserId(), cellKey.getDataId(), protobufRecord);
             }
-        } catch (ProtocolException e) {
-            throw new VirgilCloudStorageException(e);
-        } catch (ProtocolHttpException e) {
+        } catch (HttpClientException e) {
             throw new VirgilCloudStorageException(e);
         }
     }

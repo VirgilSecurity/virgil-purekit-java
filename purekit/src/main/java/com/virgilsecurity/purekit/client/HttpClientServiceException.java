@@ -31,23 +31,40 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.virgilsecurity.purekit.utils
+package com.virgilsecurity.purekit.client;
 
-import com.virgilsecurity.purekit.build.VersionVirgilAgent
-import com.virgilsecurity.purekit.utils.FileUtils.versionFromGradle
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Test
-
+import com.virgilsecurity.purekit.protobuf.build.PurekitProtos;
 
 /**
- * VersionTest class.
+ * HttpClient exception with service response
  */
-class VersionTest {
+public class HttpClientServiceException extends HttpClientException {
+    private final PurekitProtos.HttpError httpError;
 
-    @Test fun version_test() {
-        val versionExpected = VersionVirgilAgent.VERSION
-        val versionActual = versionFromGradle()
+    /**
+     * Constructor
+     *
+     * @param httpError httpError
+     */
+    public HttpClientServiceException(PurekitProtos.HttpError httpError) {
+        this.httpError = httpError;
+    }
 
-        assertEquals(versionExpected, versionActual)
+    /**
+     * HttpError
+     *
+     * @return HttpError
+     */
+    public PurekitProtos.HttpError getHttpError() {
+        return httpError;
+    }
+
+    /**
+     * Returns error code
+     *
+     * @return error code
+     */
+    public int getErrorCode() {
+        return httpError.getCode();
     }
 }

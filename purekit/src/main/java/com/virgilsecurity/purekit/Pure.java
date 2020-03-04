@@ -39,7 +39,6 @@ import com.virgilsecurity.common.exception.EmptyArgumentException;
 import com.virgilsecurity.common.util.Base64;
 import com.virgilsecurity.crypto.foundation.FoundationException;
 import com.virgilsecurity.crypto.phe.PheClientEnrollAccountResult;
-import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Grant;
 import com.virgilsecurity.purekit.exception.PureCryptoException;
 import com.virgilsecurity.purekit.exception.PureException;
 import com.virgilsecurity.purekit.exception.PureLogicException;
@@ -49,6 +48,7 @@ import com.virgilsecurity.purekit.model.PureGrant;
 import com.virgilsecurity.purekit.model.Role;
 import com.virgilsecurity.purekit.model.RoleAssignment;
 import com.virgilsecurity.purekit.model.UserRecord;
+import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Grant;
 import com.virgilsecurity.purekit.storage.PureStorage;
 import com.virgilsecurity.purekit.storage.exception.PureStorageCellKeyAlreadyExistsException;
 import com.virgilsecurity.purekit.storage.exception.PureStorageCellKeyNotFoundException;
@@ -127,6 +127,8 @@ public class Pure {
      * @param userId User Id.
      * @param password Password.
      * @param pureSessionParams pureSessionParams
+     *
+     * @return {@link AuthResult}.
      *
      * @throws PureException PureException
      *
@@ -602,6 +604,7 @@ public class Pure {
      * @param userId User Id of data owner.
      * @param dataId Data Id.
      * @param otherUserIds Other user ids, to whom access to this data will be given.
+     * @param roleNames Roles that access to this data will be given.
      * @param publicKeys Other public keys, to which access to this data will be given.
      * @param plainText Plain text.
      *
@@ -735,7 +738,8 @@ public class Pure {
             csk = pureCrypto.decryptCellKey(pureCryptoData, grant.getUkp().getPrivateKey(), oskp.getPublicKey());
         }
         catch (PureCryptoException e) {
-            if (e.getFoundationException() == null || e.getFoundationException().getStatusCode() != FoundationException.ERROR_KEY_RECIPIENT_IS_NOT_FOUND) {
+            if (e.getCause() == null || ! (e.getCause() instanceof FoundationException)
+                    || ((FoundationException) e.getCause()).getStatusCode() != FoundationException.ERROR_KEY_RECIPIENT_IS_NOT_FOUND) {
                 throw e;
             }
 

@@ -55,6 +55,7 @@ public class PureGrant {
      * @param userId User Id.
      * @param sessionId Session Id (optional).
      * @param creationDate Creation date.
+     * @param expirationDate Expiration date.
      */
     public PureGrant(VirgilKeyPair ukp, String userId, String sessionId, Date creationDate, Date expirationDate) {
         ValidationUtils.checkNull(ukp, "ukp");

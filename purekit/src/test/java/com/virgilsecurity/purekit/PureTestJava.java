@@ -33,47 +33,58 @@
 
 package com.virgilsecurity.purekit;
 
-import static com.virgilsecurity.crypto.phe.PheException.ERROR_AES_FAILED;
-import static org.junit.jupiter.api.Assertions.*;
-
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.sql.SQLException;
-import java.util.*;
-import java.util.stream.Stream;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.virgilsecurity.common.util.Base64;
-import com.virgilsecurity.purekit.*;
-import com.virgilsecurity.purekit.exception.KmsClientException;
-import com.virgilsecurity.purekit.exception.PureException;
-import com.virgilsecurity.purekit.storage.*;
+import com.virgilsecurity.crypto.phe.PheException;
 import com.virgilsecurity.purekit.exception.PureCryptoException;
+import com.virgilsecurity.purekit.exception.PureException;
 import com.virgilsecurity.purekit.exception.PureLogicException;
-import com.virgilsecurity.purekit.model.*;
+import com.virgilsecurity.purekit.model.PureGrant;
+import com.virgilsecurity.purekit.model.UserRecord;
+import com.virgilsecurity.purekit.storage.PureStorage;
 import com.virgilsecurity.purekit.storage.exception.PureStorageCellKeyNotFoundException;
-import com.virgilsecurity.purekit.storage.exception.PureStorageGenericException;
 import com.virgilsecurity.purekit.storage.exception.PureStorageGrantKeyNotFoundException;
 import com.virgilsecurity.purekit.storage.exception.PureStorageUserNotFoundException;
 import com.virgilsecurity.purekit.storage.mariadb.MariaDbPureStorage;
 import com.virgilsecurity.purekit.storage.mariadb.MariaDbSqlException;
 import com.virgilsecurity.purekit.storage.ram.RamPureStorage;
-import com.virgilsecurity.purekit.utils.PropertyManager;
 import com.virgilsecurity.sdk.crypto.KeyPairType;
 import com.virgilsecurity.sdk.crypto.VirgilCrypto;
 import com.virgilsecurity.sdk.crypto.VirgilKeyPair;
 import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
-
 import com.virgilsecurity.sdk.crypto.exceptions.DecryptionException;
+
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.sql.SQLException;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Stream;
+
+import static com.virgilsecurity.crypto.phe.PheException.ERROR_AES_FAILED;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class PureTestJava {
@@ -187,6 +198,9 @@ public class PureTestJava {
         }
         catch (SQLException e) {
             throw new MariaDbSqlException(e);
+        } catch (MalformedURLException e) {
+            fail(e.getMessage());
+            return null;
         }
     }
 
@@ -395,7 +409,8 @@ public class PureTestJava {
                 pure.decryptGrantFromUser(authResult1.getEncryptedGrant());
             });
 
-            assertEquals(ERROR_AES_FAILED, ex.getPheException().getStatusCode());
+            assertTrue(ex.getCause() instanceof PheException);
+            assertEquals(ERROR_AES_FAILED, ((PheException) ex.getCause()).getStatusCode());
         }
     }
 
@@ -1162,41 +1177,36 @@ public class PureTestJava {
                                             String appToken,
                                             String publicKey,
                                             String secretKey) throws PureException {
-        try {
-            PureSetupResult pureResult;
-            StorageType[] storages = createStorages();
-            for (StorageType storage : storages) {
-                pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKey, secretKey, null, storage);
-                Pure pure = new Pure(pureResult.getContext());
+        PureSetupResult pureResult;
+        StorageType[] storages = createStorages();
+        for (StorageType storage : storages) {
+            pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKey, secretKey, null, storage);
+            Pure pure = new Pure(pureResult.getContext());
 
-                String userId = UUID.randomUUID().toString();
-                String password1 = UUID.randomUUID().toString();
-                String password2 = UUID.randomUUID().toString();
+            String userId = UUID.randomUUID().toString();
+            String password1 = UUID.randomUUID().toString();
+            String password2 = UUID.randomUUID().toString();
 
-                pure.registerUser(userId, password1);
+            pure.registerUser(userId, password1);
 
-                String dataId = UUID.randomUUID().toString();
-                byte[] text = UUID.randomUUID().toString().getBytes();
+            String dataId = UUID.randomUUID().toString();
+            byte[] text = UUID.randomUUID().toString().getBytes();
 
-                byte[] blob = pure.encrypt(userId, dataId, text);
+            byte[] blob = pure.encrypt(userId, dataId, text);
 
-                pure.recoverUser(userId, password2);
+            pure.recoverUser(userId, password2);
 
-                PureLogicException e = assertThrows(PureLogicException.class, () -> {
-                    pure.authenticateUser(userId, password1);
-                });
+            PureLogicException e = assertThrows(PureLogicException.class, () -> {
+                pure.authenticateUser(userId, password1);
+            });
 
-                assertEquals(PureLogicException.ErrorStatus.INVALID_PASSWORD, e.getErrorStatus());
+            assertEquals(PureLogicException.ErrorStatus.INVALID_PASSWORD, e.getErrorStatus());
 
-                AuthResult authResult = pure.authenticateUser(userId, password2);
-                assertNotNull(authResult);
+            AuthResult authResult = pure.authenticateUser(userId, password2);
+            assertNotNull(authResult);
 
-                byte[] decrypted = pure.decrypt(authResult.getGrant(), userId, dataId, blob);
-                assertArrayEquals(text, decrypted);
-            }
-        }
-        catch (KmsClientException e) {
-            System.out.println(e.getProtocolException().getErrorCode());
+            byte[] decrypted = pure.decrypt(authResult.getGrant(), userId, dataId, blob);
+            assertArrayEquals(text, decrypted);
         }
     }
 
@@ -1298,39 +1308,42 @@ public class PureTestJava {
     }
 
     private static Stream<Arguments> testArgumentsNoToken() {
+        PropertyManager propertyManager = new PropertyManager();
         return Stream.of(
-            Arguments.of(PropertyManager.getPheServiceAddress(),
-                         PropertyManager.getPureServerAddress(),
-                         PropertyManager.getKmsServerAddress(),
-                         PropertyManager.getAppToken(),
-                         PropertyManager.getPublicKeyNew(),
-                         PropertyManager.getSecretKeyNew())
+            Arguments.of(propertyManager.getPheServiceAddress(),
+                    propertyManager.getPureServerAddress(),
+                    propertyManager.getKmsServerAddress(),
+                    propertyManager.getAppToken(),
+                    propertyManager.getPublicKeyNew(),
+                    propertyManager.getSecretKeyNew())
         );
     }
 
     private static Stream<Arguments> testArgumentsComp() {
+        PropertyManager propertyManager = new PropertyManager();
         return Stream.of(
-                Arguments.of(PropertyManager.getPheServiceAddress(),
-                        PropertyManager.getPureServerAddress(),
-                        PropertyManager.getKmsServerAddress(),
-                        PropertyManager.getAppToken(),
-                        PropertyManager.getPublicKeyNew(),
-                        PropertyManager.getSecretKeyNew(),
-                        PropertyManager.getEnv())
+                Arguments.of(propertyManager.getPheServiceAddress(),
+                    propertyManager.getPureServerAddress(),
+                    propertyManager.getKmsServerAddress(),
+                    propertyManager.getAppToken(),
+                    propertyManager.getPublicKeyNew(),
+                    propertyManager.getSecretKeyNew(),
+                    propertyManager.getEnv())
         );
     }
 
     private static Stream<Arguments> testArguments() {
+        PropertyManager propertyManager = new PropertyManager();
         return Stream.of(
-            Arguments.of(PropertyManager.getPheServiceAddress(),
-                         PropertyManager.getPureServerAddress(),
-                         PropertyManager.getKmsServerAddress(),
-                         PropertyManager.getAppToken(),
-                         PropertyManager.getPublicKeyOld(),
-                         PropertyManager.getSecretKeyOld(),
-                         PropertyManager.getUpdateToken(),
-                         PropertyManager.getPublicKeyNew(),
-                         PropertyManager.getSecretKeyNew())
+            Arguments.of(propertyManager.getPheServiceAddress(),
+                    propertyManager.getPureServerAddress(),
+                    propertyManager.getKmsServerAddress(),
+                    propertyManager.getAppToken(),
+                    propertyManager.getPublicKeyOld(),
+                    propertyManager.getSecretKeyOld(),
+                    propertyManager.getUpdateToken(),
+                    propertyManager.getPublicKeyNew(),
+                    propertyManager.getSecretKeyNew())
         );
     }
 }

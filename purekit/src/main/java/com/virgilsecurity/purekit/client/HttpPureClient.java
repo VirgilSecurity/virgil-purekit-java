@@ -34,30 +34,24 @@
 package com.virgilsecurity.purekit.client;
 
 import com.virgilsecurity.common.exception.EmptyArgumentException;
-import com.virgilsecurity.purekit.data.ProtocolException;
-import com.virgilsecurity.purekit.data.ProtocolHttpException;
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client;
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage;
 import com.virgilsecurity.purekit.utils.ValidationUtils;
 
+import java.net.URL;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Class for http interactions with Pure service
  */
 public class HttpPureClient {
 
-    private final String appToken;
-    private final HttpClientProtobuf client;
+    private final HttpClient client;
 
     /**
      * Pure service url
      */
     public static final String SERVICE_ADDRESS = "https://api.virgilsecurity.com/pure/v1";
-
-    private static final String KEY_CASCADE = "cascade";
 
     /**
      * Instantiates HttpPureClient.
@@ -65,12 +59,11 @@ public class HttpPureClient {
      * @param appToken Application token.
      * @param serviceAddress Service url.
      */
-    public HttpPureClient(String appToken, String serviceAddress) {
+    public HttpPureClient(String appToken, URL serviceAddress) {
         ValidationUtils.checkNullOrEmpty(appToken, "appToken");
-        ValidationUtils.checkNullOrEmpty(serviceAddress, "serviceAddress");
+        ValidationUtils.checkNull(serviceAddress, "serviceAddress");
 
-        this.appToken = appToken;
-        this.client = new HttpClientProtobuf(serviceAddress);
+        this.client = new HttpClient(serviceAddress, appToken);
     }
 
     /**
@@ -78,20 +71,16 @@ public class HttpPureClient {
      *
      * @param userRecord User Record.
      *
-     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
-     * successfully.
-     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
-     * successfully. Represents a regular HTTP exception with code and message.
+     * @throws HttpClientException HttpClientException
      */
-    public void insertUser(PurekitProtosV3Storage.UserRecord userRecord) 
-        throws ProtocolHttpException, ProtocolException {
+    public void insertUser(PurekitProtosV3Storage.UserRecord userRecord) throws HttpClientException {
 
         ValidationUtils.checkNull(userRecord, "userRecord");
         
-        client.firePost(
-                userRecord,
+        client.execute(
                 "/user",
-                this.appToken
+                HttpClient.Method.POST,
+                userRecord
         );
     }
 
@@ -101,21 +90,17 @@ public class HttpPureClient {
      * @param userId User Id.
      * @param userRecord UserRecord.
      *
-     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
-     * successfully.
-     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
-     * successfully. Represents a regular HTTP exception with code and message.
+     * @throws HttpClientException HttpClientException
      */
-    public void updateUser(String userId, PurekitProtosV3Storage.UserRecord userRecord) 
-        throws ProtocolHttpException, ProtocolException {
+    public void updateUser(String userId, PurekitProtosV3Storage.UserRecord userRecord) throws HttpClientException {
 
         ValidationUtils.checkNull(userRecord, "userRecord");
         ValidationUtils.checkNullOrEmpty(userId, "userId");
 
-        client.firePut(
-                userRecord,
+        client.execute(
                 String.format("/user/%s", userId),
-                this.appToken
+                HttpClient.Method.PUT,
+                userRecord
         );
     }
 
@@ -126,19 +111,16 @@ public class HttpPureClient {
      *
      * @return UserRecord.
      *
-     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
-     * successfully.
-     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
-     * successfully. Represents a regular HTTP exception with code and message.
+     * @throws HttpClientException HttpClientException
      */
-    public PurekitProtosV3Storage.UserRecord getUser(String userId) 
-        throws ProtocolHttpException, ProtocolException {
+    public PurekitProtosV3Storage.UserRecord getUser(String userId) throws HttpClientException {
 
         ValidationUtils.checkNullOrEmpty(userId, "userId");
 
-        return client.fireGet(
+        return client.execute(
                 String.format("/user/%s", userId),
-                this.appToken,
+                HttpClient.Method.GET,
+                null,
                 PurekitProtosV3Storage.UserRecord.parser()
         );
     }
@@ -150,13 +132,9 @@ public class HttpPureClient {
      *
      * @return UserRecords.
      *
-     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
-     * successfully.
-     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
-     * successfully. Represents a regular HTTP exception with code and message.
+     * @throws HttpClientException HttpClientException
      */
-    public PurekitProtosV3Storage.UserRecords getUsers(Collection<String> userIds) 
-        throws ProtocolHttpException, ProtocolException {
+    public PurekitProtosV3Storage.UserRecords getUsers(Collection<String> userIds) throws HttpClientException {
 
         ValidationUtils.checkNull(userIds, "userIds");
         if (userIds.isEmpty()) {
@@ -166,10 +144,10 @@ public class HttpPureClient {
         PurekitProtosV3Client.GetUserRecords getUserRecords =
             PurekitProtosV3Client.GetUserRecords.newBuilder().addAllUserIds(userIds).build();
 
-        return client.firePost(
-                getUserRecords,
+        return client.execute(
                 "/get-users",
-                this.appToken,
+                HttpClient.Method.POST,
+                getUserRecords,
                 PurekitProtosV3Storage.UserRecords.parser()
         );
     }
@@ -180,23 +158,16 @@ public class HttpPureClient {
      * @param userId User Ids.
      * @param cascade Deletes all user cell keys if true.
      *
-     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
-     * successfully.
-     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
-     * successfully. Represents a regular HTTP exception with code and message.
+     * @throws HttpClientException HttpClientException
      */
-    public void deleteUser(String userId, boolean cascade) 
-        throws ProtocolHttpException, ProtocolException {
+    public void deleteUser(String userId, boolean cascade) throws HttpClientException {
 
         ValidationUtils.checkNullOrEmpty(userId, "userId");
 
-        Map<String, String> params = new HashMap<>();
-        params.put(KEY_CASCADE, String.valueOf(cascade));
-
-        client.fireDelete(
-                params,
-                String.format("/user/%s", userId),
-                this.appToken
+        client.execute(
+                String.format("/user/%s?cascade=%s", userId, cascade),
+                HttpClient.Method.DELETE,
+                null
         );
     }
 
@@ -205,20 +176,16 @@ public class HttpPureClient {
      *
      * @param cellKey CellKey.
      *
-     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
-     * successfully.
-     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
-     * successfully. Represents a regular HTTP exception with code and message.
+     * @throws HttpClientException HttpClientException
      */
-    public void insertCellKey(PurekitProtosV3Storage.CellKey cellKey) 
-        throws ProtocolHttpException, ProtocolException {
+    public void insertCellKey(PurekitProtosV3Storage.CellKey cellKey) throws HttpClientException {
 
         ValidationUtils.checkNull(cellKey, "cellKey");
         
-        client.firePost(
-                cellKey,
+        client.execute(
                 "/cell-key",
-                this.appToken
+                HttpClient.Method.POST,
+                cellKey
         );
     }
 
@@ -229,22 +196,18 @@ public class HttpPureClient {
      * @param dataId Data id.
      * @param cellKey CellKey.
      *
-     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
-     * successfully.
-     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
-     * successfully. Represents a regular HTTP exception with code and message.
+     * @throws HttpClientException HttpClientException
      */
-    public void updateCellKey(String userId, String dataId, PurekitProtosV3Storage.CellKey cellKey) 
-        throws ProtocolHttpException, ProtocolException {
+    public void updateCellKey(String userId, String dataId, PurekitProtosV3Storage.CellKey cellKey) throws HttpClientException {
 
         ValidationUtils.checkNullOrEmpty(userId, "userId");
         ValidationUtils.checkNullOrEmpty(dataId, "dataId");
         ValidationUtils.checkNull(cellKey, "cellKey");
 
-        client.firePut(
-                cellKey,
+        client.execute(
                 String.format("/cell-key/%s/%s", userId, dataId),
-                this.appToken
+                HttpClient.Method.PUT,
+                cellKey
         );
     }
 
@@ -256,20 +219,17 @@ public class HttpPureClient {
      *
      * @return CellKey.
      *
-     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
-     * successfully.
-     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
-     * successfully. Represents a regular HTTP exception with code and message.
+     * @throws HttpClientException HttpClientException
      */
-    public PurekitProtosV3Storage.CellKey getCellKey(String userId, String dataId)
-        throws ProtocolHttpException, ProtocolException {
+    public PurekitProtosV3Storage.CellKey getCellKey(String userId, String dataId) throws HttpClientException {
 
         ValidationUtils.checkNullOrEmpty(userId, "userId");
         ValidationUtils.checkNullOrEmpty(dataId, "dataId");
 
-        return client.fireGet(
+        return client.execute(
                 String.format("/cell-key/%s/%s", userId, dataId),
-                this.appToken,
+                HttpClient.Method.GET,
+                null,
                 PurekitProtosV3Storage.CellKey.parser()
         );
     }
@@ -280,20 +240,17 @@ public class HttpPureClient {
      * @param userId User Ids.
      * @param dataId Data Id.
      *
-     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
-     * successfully.
-     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
-     * successfully. Represents a regular HTTP exception with code and message.
+     * @throws HttpClientException HttpClientException
      */
-    public void deleteCellKey(String userId, String dataId)
-        throws ProtocolHttpException, ProtocolException {
+    public void deleteCellKey(String userId, String dataId) throws HttpClientException {
 
         ValidationUtils.checkNullOrEmpty(userId, "userId");
         ValidationUtils.checkNullOrEmpty(dataId, "dataId");
 
-        client.fireDelete(
+        client.execute(
                 String.format("/cell-key/%s/%s", userId, dataId),
-                this.appToken
+                HttpClient.Method.DELETE,
+                null
         );
     }
 
@@ -303,20 +260,16 @@ public class HttpPureClient {
      *
      * @param role Role
      *
-     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
-     * successfully.
-     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
-     * successfully. Represents a regular HTTP exception with code and message.
+     * @throws HttpClientException HttpClientException
      */
-    public void insertRole(PurekitProtosV3Storage.Role role)
-            throws ProtocolHttpException, ProtocolException {
+    public void insertRole(PurekitProtosV3Storage.Role role) throws HttpClientException {
 
         ValidationUtils.checkNull(role, "role");
 
-        client.firePost(
-                role,
+        client.execute(
                 "/roles",
-                this.appToken
+                HttpClient.Method.POST,
+                role
         );
     }
 
@@ -327,20 +280,16 @@ public class HttpPureClient {
      *
      * @return Roles
      *
-     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
-     * successfully.
-     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
-     * successfully. Represents a regular HTTP exception with code and message.
+     * @throws HttpClientException HttpClientException
      */
-    public PurekitProtosV3Storage.Roles getRoles(PurekitProtosV3Client.GetRoles getRolesRequest)
-            throws ProtocolHttpException, ProtocolException {
+    public PurekitProtosV3Storage.Roles getRoles(PurekitProtosV3Client.GetRoles getRolesRequest) throws HttpClientException {
 
         ValidationUtils.checkNull(getRolesRequest, "getRolesRequest");
 
-        return client.firePost(
-                getRolesRequest,
+        return client.execute(
                 "/get-roles",
-                this.appToken,
+                HttpClient.Method.POST,
+                getRolesRequest,
                 PurekitProtosV3Storage.Roles.parser()
         );
     }
@@ -350,23 +299,19 @@ public class HttpPureClient {
      *
      * @param roleAssignments role assignments
      *
-     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
-     * successfully.
-     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
-     * successfully. Represents a regular HTTP exception with code and message.
+     * @throws HttpClientException HttpClientException
      */
-    public void insertRoleAssignments(PurekitProtosV3Storage.RoleAssignments roleAssignments)
-            throws ProtocolHttpException, ProtocolException {
+    public void insertRoleAssignments(PurekitProtosV3Storage.RoleAssignments roleAssignments) throws HttpClientException {
 
         ValidationUtils.checkNull(roleAssignments, "roleAssignments");
         if (roleAssignments.getRoleAssignmentsList().isEmpty()) {
             throw new EmptyArgumentException("roleAssignments");
         }
 
-        client.firePost(
-                roleAssignments,
+        client.execute(
                 "/role-assignments",
-                this.appToken
+                HttpClient.Method.POST,
+                roleAssignments
         );
     }
 
@@ -377,20 +322,16 @@ public class HttpPureClient {
      *
      * @return Role assignments
      *
-     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
-     * successfully.
-     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
-     * successfully. Represents a regular HTTP exception with code and message.
+     * @throws HttpClientException HttpClientException
      */
-    public PurekitProtosV3Storage.RoleAssignments getRoleAssignments(PurekitProtosV3Client.GetRoleAssignments request)
-            throws ProtocolHttpException, ProtocolException {
+    public PurekitProtosV3Storage.RoleAssignments getRoleAssignments(PurekitProtosV3Client.GetRoleAssignments request) throws HttpClientException {
 
         ValidationUtils.checkNull(request, "request");
 
-        return client.firePost(
-                request,
+        return client.execute(
                 "/get-role-assignments",
-                this.appToken,
+                HttpClient.Method.POST,
+                request,
                 PurekitProtosV3Storage.RoleAssignments.parser()
         );
     }
@@ -402,20 +343,16 @@ public class HttpPureClient {
      *
      * @return RoleAssignment
      *
-     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
-     * successfully.
-     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
-     * successfully. Represents a regular HTTP exception with code and message.
+     * @throws HttpClientException HttpClientException
      */
-    public PurekitProtosV3Storage.RoleAssignment getRoleAssignment(PurekitProtosV3Client.GetRoleAssignment request)
-            throws ProtocolHttpException, ProtocolException {
+    public PurekitProtosV3Storage.RoleAssignment getRoleAssignment(PurekitProtosV3Client.GetRoleAssignment request) throws HttpClientException {
 
         ValidationUtils.checkNull(request, "request");
 
-        return client.firePost(
-                request,
+        return client.execute(
                 "/get-role-assignment",
-                this.appToken,
+                HttpClient.Method.POST,
+                request,
                 PurekitProtosV3Storage.RoleAssignment.parser()
         );
     }
@@ -425,20 +362,16 @@ public class HttpPureClient {
      *
      * @param request request
      *
-     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
-     * successfully.
-     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
-     * successfully. Represents a regular HTTP exception with code and message.
+     * @throws HttpClientException HttpClientException
      */
-    public void deleteRoleAssignments(PurekitProtosV3Client.DeleteRoleAssignments request)
-            throws ProtocolHttpException, ProtocolException {
+    public void deleteRoleAssignments(PurekitProtosV3Client.DeleteRoleAssignments request) throws HttpClientException {
 
         ValidationUtils.checkNull(request, "request");
 
-        client.firePost(
-                request,
+        client.execute(
                 "/delete-role-assignments",
-                this.appToken
+                HttpClient.Method.POST,
+                request
         );
     }
 
@@ -447,18 +380,15 @@ public class HttpPureClient {
      *
      * @param grantKey grant key
      *
-     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
-     * successfully.
-     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
-     * successfully. Represents a regular HTTP exception with code and message.
+     * @throws HttpClientException HttpClientException
      */
-    public void insertGrantKey(PurekitProtosV3Storage.GrantKey grantKey) throws ProtocolHttpException, ProtocolException {
+    public void insertGrantKey(PurekitProtosV3Storage.GrantKey grantKey) throws HttpClientException {
         ValidationUtils.checkNull(grantKey, "grantKey");
 
-        client.firePost(
-                grantKey,
+        client.execute(
                 "/grant-key",
-                this.appToken
+                HttpClient.Method.POST,
+                grantKey
         );
     }
 
@@ -469,18 +399,15 @@ public class HttpPureClient {
      *
      * @return grant key
      *
-     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
-     * successfully.
-     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
-     * successfully. Represents a regular HTTP exception with code and message.
+     * @throws HttpClientException HttpClientException
      */
-    public PurekitProtosV3Storage.GrantKey getGrantKey(PurekitProtosV3Client.GrantKeyDescriptor request) throws ProtocolHttpException, ProtocolException {
+    public PurekitProtosV3Storage.GrantKey getGrantKey(PurekitProtosV3Client.GrantKeyDescriptor request) throws HttpClientException {
         ValidationUtils.checkNull(request, "request");
 
-        return client.firePost(
-                request,
+        return client.execute(
                 "/get-grant-key",
-                this.appToken,
+                HttpClient.Method.POST,
+                request,
                 PurekitProtosV3Storage.GrantKey.parser()
         );
     }
@@ -490,18 +417,15 @@ public class HttpPureClient {
      *
      * @param request request
      *
-     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
-     * successfully.
-     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
-     * successfully. Represents a regular HTTP exception with code and message.
+     * @throws HttpClientException HttpClientException
      */
-    public void deleteGrantKey(PurekitProtosV3Client.GrantKeyDescriptor request) throws ProtocolHttpException, ProtocolException {
+    public void deleteGrantKey(PurekitProtosV3Client.GrantKeyDescriptor request) throws HttpClientException {
         ValidationUtils.checkNull(request, "request");
 
-        client.firePost(
-                request,
+        client.execute(
                 "/delete-grant-key",
-                this.appToken
+                HttpClient.Method.POST,
+                request
         );
     }
 }

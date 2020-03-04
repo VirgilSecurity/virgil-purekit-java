@@ -39,7 +39,6 @@ plugins {
 }
 
 apply plugin: 'maven'
-apply plugin: 'org.jetbrains.dokka'
 
 sourceCompatibility = 1.8
 
@@ -59,7 +58,7 @@ task sourcesJar(type: Jar) {
     classifier = 'sources'
 }
 
-task javadocJar(type: Jar, dependsOn: 'dokka') {
+task javadocJar(type: Jar) {
     from "$buildDir/javadoc"
     classifier = 'javadoc'
 }
@@ -81,7 +80,7 @@ publishing {
                 licenses {
                     license {
                         name = 'Virgil Security, Inc. license'
-                        url = 'https://github.com/virgilsecurity/virgil-purekit-kotlin/blob/master/LICENSE.txt'
+                        url = 'https://github.com/virgilsecurity/virgil-purekit-java/blob/master/LICENSE.txt'
                     }
                 }
                 developers {
@@ -93,9 +92,9 @@ publishing {
                     }
                 }
                 scm {
-                    connection = 'scm:git:https://github.com/virgilsecurity/virgil-purekit-kotlin.git'
-                    developerConnection = 'scm:git:git@github.com:virgilsecurity/virgil-purekit-kotlin.git'
-                    url = 'https://github.com/virgilsecurity/virgil-purekit-kotlin'
+                    connection = 'scm:git:https://github.com/virgilsecurity/virgil-purekit-java.git'
+                    developerConnection = 'scm:git:git@github.com:virgilsecurity/virgil-purekit-java.git'
+                    url = 'https://github.com/virgilsecurity/virgil-purekit-java'
                 }
             }
         }
@@ -115,10 +114,4 @@ publishing {
 
 signing {
     sign publishing.publications.mavenJava
-}
-
-dokka {
-    outputFormat = 'html'
-    outputDirectory = "$buildDir/javadoc"
-    reportUndocumented = false
 }

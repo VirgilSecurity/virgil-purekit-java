@@ -2763,21 +2763,21 @@ public final class PurekitProtosV3Storage {
     int getVersion();
 
     /**
-     * <code>string userId = 2;</code>
+     * <code>string user_id = 2;</code>
      */
     java.lang.String getUserId();
     /**
-     * <code>string userId = 2;</code>
+     * <code>string user_id = 2;</code>
      */
     com.google.protobuf.ByteString
         getUserIdBytes();
 
     /**
-     * <code>string dataId = 3;</code>
+     * <code>string data_id = 3;</code>
      */
     java.lang.String getDataId();
     /**
-     * <code>string dataId = 3;</code>
+     * <code>string data_id = 3;</code>
      */
     com.google.protobuf.ByteString
         getDataIdBytes();
@@ -2920,10 +2920,10 @@ public final class PurekitProtosV3Storage {
       return version_;
     }
 
-    public static final int USERID_FIELD_NUMBER = 2;
+    public static final int USER_ID_FIELD_NUMBER = 2;
     private volatile java.lang.Object userId_;
     /**
-     * <code>string userId = 2;</code>
+     * <code>string user_id = 2;</code>
      */
     public java.lang.String getUserId() {
       java.lang.Object ref = userId_;
@@ -2938,7 +2938,7 @@ public final class PurekitProtosV3Storage {
       }
     }
     /**
-     * <code>string userId = 2;</code>
+     * <code>string user_id = 2;</code>
      */
     public com.google.protobuf.ByteString
         getUserIdBytes() {
@@ -2954,10 +2954,10 @@ public final class PurekitProtosV3Storage {
       }
     }
 
-    public static final int DATAID_FIELD_NUMBER = 3;
+    public static final int DATA_ID_FIELD_NUMBER = 3;
     private volatile java.lang.Object dataId_;
     /**
-     * <code>string dataId = 3;</code>
+     * <code>string data_id = 3;</code>
      */
     public java.lang.String getDataId() {
       java.lang.Object ref = dataId_;
@@ -2972,7 +2972,7 @@ public final class PurekitProtosV3Storage {
       }
     }
     /**
-     * <code>string dataId = 3;</code>
+     * <code>string data_id = 3;</code>
      */
     public com.google.protobuf.ByteString
         getDataIdBytes() {
@@ -3118,9 +3118,9 @@ public final class PurekitProtosV3Storage {
       hash = (19 * hash) + getDescriptor().hashCode();
       hash = (37 * hash) + VERSION_FIELD_NUMBER;
       hash = (53 * hash) + getVersion();
-      hash = (37 * hash) + USERID_FIELD_NUMBER;
+      hash = (37 * hash) + USER_ID_FIELD_NUMBER;
       hash = (53 * hash) + getUserId().hashCode();
-      hash = (37 * hash) + DATAID_FIELD_NUMBER;
+      hash = (37 * hash) + DATA_ID_FIELD_NUMBER;
       hash = (53 * hash) + getDataId().hashCode();
       hash = (37 * hash) + CPK_FIELD_NUMBER;
       hash = (53 * hash) + getCpk().hashCode();
@@ -3430,7 +3430,7 @@ public final class PurekitProtosV3Storage {
 
       private java.lang.Object userId_ = "";
       /**
-       * <code>string userId = 2;</code>
+       * <code>string user_id = 2;</code>
        */
       public java.lang.String getUserId() {
         java.lang.Object ref = userId_;
@@ -3445,7 +3445,7 @@ public final class PurekitProtosV3Storage {
         }
       }
       /**
-       * <code>string userId = 2;</code>
+       * <code>string user_id = 2;</code>
        */
       public com.google.protobuf.ByteString
           getUserIdBytes() {
@@ -3461,7 +3461,7 @@ public final class PurekitProtosV3Storage {
         }
       }
       /**
-       * <code>string userId = 2;</code>
+       * <code>string user_id = 2;</code>
        */
       public Builder setUserId(
           java.lang.String value) {
@@ -3474,7 +3474,7 @@ public final class PurekitProtosV3Storage {
         return this;
       }
       /**
-       * <code>string userId = 2;</code>
+       * <code>string user_id = 2;</code>
        */
       public Builder clearUserId() {
         
@@ -3483,7 +3483,7 @@ public final class PurekitProtosV3Storage {
         return this;
       }
       /**
-       * <code>string userId = 2;</code>
+       * <code>string user_id = 2;</code>
        */
       public Builder setUserIdBytes(
           com.google.protobuf.ByteString value) {
@@ -3499,7 +3499,7 @@ public final class PurekitProtosV3Storage {
 
       private java.lang.Object dataId_ = "";
       /**
-       * <code>string dataId = 3;</code>
+       * <code>string data_id = 3;</code>
        */
       public java.lang.String getDataId() {
         java.lang.Object ref = dataId_;
@@ -3514,7 +3514,7 @@ public final class PurekitProtosV3Storage {
         }
       }
       /**
-       * <code>string dataId = 3;</code>
+       * <code>string data_id = 3;</code>
        */
       public com.google.protobuf.ByteString
           getDataIdBytes() {
@@ -3530,7 +3530,7 @@ public final class PurekitProtosV3Storage {
         }
       }
       /**
-       * <code>string dataId = 3;</code>
+       * <code>string data_id = 3;</code>
        */
       public Builder setDataId(
           java.lang.String value) {
@@ -3543,7 +3543,7 @@ public final class PurekitProtosV3Storage {
         return this;
       }
       /**
-       * <code>string dataId = 3;</code>
+       * <code>string data_id = 3;</code>
        */
       public Builder clearDataId() {
         
@@ -3552,7 +3552,7 @@ public final class PurekitProtosV3Storage {
         return this;
       }
       /**
-       * <code>string dataId = 3;</code>
+       * <code>string data_id = 3;</code>
        */
       public Builder setDataIdBytes(
           com.google.protobuf.ByteString value) {
@@ -10387,32 +10387,32 @@ public final class PurekitProtosV3Storage {
       "\n\rphe_record_t1\030\005 \001(\014\022\026\n\016record_version\030" +
       "\006 \001(\r\022\036\n\026password_recovery_wrap\030\007 \001(\014\"6\n" +
       "\013UserRecords\022\'\n\014user_records\030\001 \003(\0132\021.bui" +
-      "ld.UserRecord\"\204\001\n\rCellKeySigned\022\017\n\007versi" +
-      "on\030\001 \001(\r\022\016\n\006userId\030\002 \001(\t\022\016\n\006dataId\030\003 \001(\t" +
-      "\022\013\n\003cpk\030\004 \001(\014\022\031\n\021encrypted_csk_cms\030\005 \001(\014" +
-      "\022\032\n\022encrypted_csk_body\030\006 \001(\014\"F\n\007CellKey\022" +
-      "\017\n\007version\030\001 \001(\r\022\027\n\017cell_key_signed\030\002 \001(" +
-      "\014\022\021\n\tsignature\030\003 \001(\014\"8\n\nRoleSigned\022\017\n\007ve" +
-      "rsion\030\001 \001(\r\022\014\n\004name\030\002 \001(\t\022\013\n\003rpk\030\003 \001(\014\"?" +
-      "\n\004Role\022\017\n\007version\030\001 \001(\r\022\023\n\013role_signed\030\002" +
-      " \001(\014\022\021\n\tsignature\030\003 \001(\014\"#\n\005Roles\022\032\n\005role" +
-      "s\030\001 \003(\0132\013.build.Role\"y\n\024RoleAssignmentSi" +
-      "gned\022\017\n\007version\030\001 \001(\r\022\021\n\trole_name\030\002 \001(\t" +
-      "\022\017\n\007user_id\030\003 \001(\t\022\025\n\rpublic_key_id\030\004 \001(\014" +
-      "\022\025\n\rencrypted_rsk\030\005 \001(\014\"T\n\016RoleAssignmen" +
-      "t\022\017\n\007version\030\001 \001(\r\022\036\n\026role_assignment_si" +
-      "gned\030\002 \001(\014\022\021\n\tsignature\030\003 \001(\014\"B\n\017RoleAss" +
-      "ignments\022/\n\020role_assignments\030\001 \003(\0132\025.bui" +
-      "ld.RoleAssignment\"\224\001\n\016GrantKeySigned\022\017\n\007" +
-      "version\030\001 \001(\r\022\017\n\007user_id\030\002 \001(\t\022\016\n\006key_id" +
-      "\030\003 \001(\014\022 \n\030encrypted_grant_key_blob\030\004 \001(\014" +
-      "\022\025\n\rcreation_date\030\005 \001(\004\022\027\n\017expiration_da" +
-      "te\030\006 \001(\004\"\202\001\n\010GrantKey\022\017\n\007version\030\001 \001(\r\022\030" +
-      "\n\020grant_key_signed\030\002 \001(\014\022\021\n\tsignature\030\003 " +
-      "\001(\014\022\026\n\016record_version\030\004 \001(\r\022 \n\030encrypted" +
-      "_grant_key_wrap\030\005 \001(\014BC\n)com.virgilsecur" +
-      "ity.purekit.protobuf.buildB\026PurekitProto" +
-      "sV3Storageb\006proto3"
+      "ld.UserRecord\"\206\001\n\rCellKeySigned\022\017\n\007versi" +
+      "on\030\001 \001(\r\022\017\n\007user_id\030\002 \001(\t\022\017\n\007data_id\030\003 \001" +
+      "(\t\022\013\n\003cpk\030\004 \001(\014\022\031\n\021encrypted_csk_cms\030\005 \001" +
+      "(\014\022\032\n\022encrypted_csk_body\030\006 \001(\014\"F\n\007CellKe" +
+      "y\022\017\n\007version\030\001 \001(\r\022\027\n\017cell_key_signed\030\002 " +
+      "\001(\014\022\021\n\tsignature\030\003 \001(\014\"8\n\nRoleSigned\022\017\n\007" +
+      "version\030\001 \001(\r\022\014\n\004name\030\002 \001(\t\022\013\n\003rpk\030\003 \001(\014" +
+      "\"?\n\004Role\022\017\n\007version\030\001 \001(\r\022\023\n\013role_signed" +
+      "\030\002 \001(\014\022\021\n\tsignature\030\003 \001(\014\"#\n\005Roles\022\032\n\005ro" +
+      "les\030\001 \003(\0132\013.build.Role\"y\n\024RoleAssignment" +
+      "Signed\022\017\n\007version\030\001 \001(\r\022\021\n\trole_name\030\002 \001" +
+      "(\t\022\017\n\007user_id\030\003 \001(\t\022\025\n\rpublic_key_id\030\004 \001" +
+      "(\014\022\025\n\rencrypted_rsk\030\005 \001(\014\"T\n\016RoleAssignm" +
+      "ent\022\017\n\007version\030\001 \001(\r\022\036\n\026role_assignment_" +
+      "signed\030\002 \001(\014\022\021\n\tsignature\030\003 \001(\014\"B\n\017RoleA" +
+      "ssignments\022/\n\020role_assignments\030\001 \003(\0132\025.b" +
+      "uild.RoleAssignment\"\224\001\n\016GrantKeySigned\022\017" +
+      "\n\007version\030\001 \001(\r\022\017\n\007user_id\030\002 \001(\t\022\016\n\006key_" +
+      "id\030\003 \001(\014\022 \n\030encrypted_grant_key_blob\030\004 \001" +
+      "(\014\022\025\n\rcreation_date\030\005 \001(\004\022\027\n\017expiration_" +
+      "date\030\006 \001(\004\"\202\001\n\010GrantKey\022\017\n\007version\030\001 \001(\r" +
+      "\022\030\n\020grant_key_signed\030\002 \001(\014\022\021\n\tsignature\030" +
+      "\003 \001(\014\022\026\n\016record_version\030\004 \001(\r\022 \n\030encrypt" +
+      "ed_grant_key_wrap\030\005 \001(\014BC\n)com.virgilsec" +
+      "urity.purekit.protobuf.buildB\026PurekitPro" +
+      "tosV3Storageb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

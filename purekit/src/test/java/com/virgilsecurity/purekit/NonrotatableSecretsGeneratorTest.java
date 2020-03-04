@@ -33,12 +33,13 @@
 
 package com.virgilsecurity.purekit;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-
-import java.util.*;
-
 import com.virgilsecurity.purekit.exception.PureException;
+
 import org.junit.jupiter.api.Test;
+
+import java.util.Base64;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
 class NonrotatableSecretsGeneratorTest {
     private static final String nms = "6PvWsrUn/U6ggoabbXCriBk7dtV3NfT+cvqbFGG3DGU=";

@@ -89,7 +89,7 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
     /**
      * Constructor
      *
-     * @param url connection url with credentials, e.g. "jdbc:mariadb://localhost/puretest?user=root&password=qwerty"
+     * @param url connection url with credentials, e.g. "jdbc:mariadb://localhost/puretest?user=root&amp;password=qwerty"
      */
     public MariaDbPureStorage(String url) {
         ValidationUtils.checkNullOrEmpty(url, "url");

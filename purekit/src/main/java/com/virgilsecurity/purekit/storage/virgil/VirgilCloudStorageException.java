@@ -33,52 +33,25 @@
 
 package com.virgilsecurity.purekit.storage.virgil;
 
-import com.virgilsecurity.purekit.data.ProtocolException;
-import com.virgilsecurity.purekit.data.ProtocolHttpException;
+import com.virgilsecurity.purekit.client.HttpClientException;
 import com.virgilsecurity.purekit.storage.exception.PureStorageException;
 
 /**
  * Virgil Cloud storage exception
  */
 public class VirgilCloudStorageException extends PureStorageException {
-    private final ProtocolException protocolException;
-    private final ProtocolHttpException protocolHttpException;
+    public HttpClientException getClientException() {
+        return clientException;
+    }
+
+    private final HttpClientException clientException;
 
     /**
      * Constructor
      *
-     * @param protocolException protocolException
+     * @param clientException clientException
      */
-    public VirgilCloudStorageException(ProtocolException protocolException) {
-        this.protocolException = protocolException;
-        this.protocolHttpException = null;
-    }
-
-    /**
-     * Constructor
-     *
-     * @param protocolHttpException protocol http exception
-     */
-    public VirgilCloudStorageException(ProtocolHttpException protocolHttpException) {
-        this.protocolException = null;
-        this.protocolHttpException = protocolHttpException;
-    }
-
-    /**
-     * Returns protocolException
-     *
-     * @return protocolException
-     */
-    public ProtocolException getProtocolException() {
-        return protocolException;
-    }
-
-    /**
-     * Returns protocolHttpException
-     *
-     * @return protocolHttpException
-     */
-    public ProtocolHttpException getProtocolHttpException() {
-        return protocolHttpException;
+    public VirgilCloudStorageException(HttpClientException clientException) {
+        this.clientException = clientException;
     }
 }

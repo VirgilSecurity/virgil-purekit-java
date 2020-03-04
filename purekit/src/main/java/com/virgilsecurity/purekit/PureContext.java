@@ -49,6 +49,8 @@ import com.virgilsecurity.sdk.crypto.VirgilCrypto;
 import com.virgilsecurity.sdk.crypto.VirgilPublicKey;
 import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -114,7 +116,7 @@ public class PureContext {
                         PureStorage storage,
                         Map<String, List<String>> externalPublicKeys,
                         String pheServiceAddress,
-                        String kmsServiceAddress) throws PureException {
+                        String kmsServiceAddress) throws PureException, MalformedURLException {
         ValidationUtils.checkNull(crypto, "crypto");
         ValidationUtils.checkNullOrEmpty(appToken, "appToken");
         ValidationUtils.checkNullOrEmpty(nms, "nms");
@@ -139,8 +141,8 @@ public class PureContext {
 
         this.secretKey = PureContext.parseCredentials(SECRET_KEY_PREFIX, secretKey, true, 3);
         this.publicKey = PureContext.parseCredentials(PUBLIC_KEY_PREFIX, publicKey, true, 2);
-        this.pheClient = new HttpPheClient(appToken, pheServiceAddress);
-        this.kmsClient = new HttpKmsClient(appToken, kmsServiceAddress);
+        this.pheClient = new HttpPheClient(appToken, new URL(pheServiceAddress));
+        this.kmsClient = new HttpKmsClient(appToken, new URL(kmsServiceAddress));
 
         if (storage instanceof PureModelSerializerDependent) {
             PureModelSerializerDependent dependent = (PureModelSerializerDependent)storage;
@@ -194,7 +196,7 @@ public class PureContext {
                                             String bu,
                                             String sk,
                                             String pk,
-                                            Map<String, List<String>> externalPublicKeys) throws PureException {
+                                            Map<String, List<String>> externalPublicKeys) throws PureException, MalformedURLException {
 
         return PureContext.createContext(
             at, nm, bu, sk, pk,
@@ -226,13 +228,13 @@ public class PureContext {
                                             Map<String, List<String>> externalPublicKeys,
                                             String pheServiceAddress,
                                             String pureServiceAddress,
-                                            String kmsServiceAddress) throws PureException {
+                                            String kmsServiceAddress) throws PureException, MalformedURLException {
 
         ValidationUtils.checkNullOrEmpty(at, "at");
         ValidationUtils.checkNullOrEmpty(pureServiceAddress, "pureServiceAddress");
 
         VirgilCrypto crypto = new VirgilCrypto();
-        HttpPureClient pureClient = new HttpPureClient(at, pureServiceAddress);
+        HttpPureClient pureClient = new HttpPureClient(at, new URL(pureServiceAddress));
 
         VirgilCloudPureStorage storage = new VirgilCloudPureStorage(pureClient);
 
@@ -264,7 +266,7 @@ public class PureContext {
                                             String sk,
                                             String pk,
                                             PureStorage storage,
-                                            Map<String, List<String>> externalPublicKeys) throws PureException {
+                                            Map<String, List<String>> externalPublicKeys) throws PureException, MalformedURLException {
 
         return PureContext.createContext(
             at, nm, bu, sk, pk, storage,
@@ -295,7 +297,7 @@ public class PureContext {
                                             PureStorage storage,
                                             Map<String, List<String>> externalPublicKeys,
                                             String pheServiceAddress,
-                                            String kmsServiceAddress) throws PureException {
+                                            String kmsServiceAddress) throws PureException, MalformedURLException {
 
         return new PureContext(
             new VirgilCrypto(),

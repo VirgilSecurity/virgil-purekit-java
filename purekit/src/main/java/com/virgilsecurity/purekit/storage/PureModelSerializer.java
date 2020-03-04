@@ -35,13 +35,13 @@ package com.virgilsecurity.purekit.storage;
 
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
-import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Crypto;
-import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage;
 import com.virgilsecurity.purekit.model.CellKey;
 import com.virgilsecurity.purekit.model.GrantKey;
 import com.virgilsecurity.purekit.model.Role;
 import com.virgilsecurity.purekit.model.RoleAssignment;
 import com.virgilsecurity.purekit.model.UserRecord;
+import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Crypto;
+import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage;
 import com.virgilsecurity.purekit.storage.exception.PureStorageException;
 import com.virgilsecurity.purekit.storage.exception.PureStorageGenericException;
 import com.virgilsecurity.purekit.storage.exception.PureStorageInvalidProtobufException;
