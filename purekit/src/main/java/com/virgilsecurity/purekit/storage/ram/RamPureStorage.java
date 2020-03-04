@@ -62,7 +62,7 @@ import java.util.function.Predicate;
 
 /**
  * PureStorage implementation that stores data in RAM.
- * @implNote use this implementation only to try out Pure.
+ * <blockquote>Use this implementation only to try out Pure.</blockquote>
  * For any real-world usage please see {@link VirgilCloudPureStorage}, {@link MariaDbPureStorage}
  * or implement {@link PureStorage} yourself.
  */

@@ -48,6 +48,8 @@ public class CellKey {
     /**
      * Instantiates CellKey.
      *
+     * @param userId User identifier.
+     * @param dataId Data identifier.
      * @param cpk Cell public key.
      * @param encryptedCskCms Encrypted cell secret key CMS.
      * @param encryptedCskBody Encrypted cell secret key body.

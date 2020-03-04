@@ -33,23 +33,14 @@
 
 package com.virgilsecurity.purekit.storage.mariadb;
 
+import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage;
 import com.virgilsecurity.purekit.model.CellKey;
 import com.virgilsecurity.purekit.model.GrantKey;
 import com.virgilsecurity.purekit.model.Role;
 import com.virgilsecurity.purekit.model.RoleAssignment;
 import com.virgilsecurity.purekit.model.UserRecord;
-import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage;
-import com.virgilsecurity.purekit.storage.PureModelSerializer;
-import com.virgilsecurity.purekit.storage.PureModelSerializerDependent;
-import com.virgilsecurity.purekit.storage.PureStorage;
-import com.virgilsecurity.purekit.storage.exception.PureStorageCellKeyAlreadyExistsException;
-import com.virgilsecurity.purekit.storage.exception.PureStorageCellKeyNotFoundException;
-import com.virgilsecurity.purekit.storage.exception.PureStorageException;
-import com.virgilsecurity.purekit.storage.exception.PureStorageGenericException;
-import com.virgilsecurity.purekit.storage.exception.PureStorageGrantKeyNotFoundException;
-import com.virgilsecurity.purekit.storage.exception.PureStorageRoleAssignmentNotFoundException;
-import com.virgilsecurity.purekit.storage.exception.PureStorageRoleNotFoundException;
-import com.virgilsecurity.purekit.storage.exception.PureStorageUserNotFoundException;
+import com.virgilsecurity.purekit.storage.*;
+import com.virgilsecurity.purekit.storage.exception.*;
 import com.virgilsecurity.purekit.utils.ValidationUtils;
 
 import java.io.IOException;
@@ -60,12 +51,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Collections;
+import java.util.Collection;
+import java.util.Arrays;
 
 import javax.sql.DataSource;
 
@@ -98,7 +89,7 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
     /**
      * Constructor
      *
-     * @param url connection url with credentials, e.g. "jdbc:mariadb://localhost/puretest?user=root&password=qwerty"
+     * @param url connection url with credentials, e.g. "jdbc:mariadb://localhost/puretest?user=root&amp;password=qwerty"
      */
     public MariaDbPureStorage(String url) {
         ValidationUtils.checkNullOrEmpty(url, "url");

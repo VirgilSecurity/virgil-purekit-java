@@ -60,6 +60,8 @@ public class UserRecord {
      * @param encryptedUsk Encrypted user secret key.
      * @param encryptedUskBackup Encrypted for backup user secret key.
      * @param backupPwdHash Encrypted for backup user password hash.
+     * @param passwordRecoveryWrap Password recovery wrap.
+     * @param passwordRecoveryBlob Password recovery blob.
      */
     public UserRecord(String userId, byte[] pheRecord, int recordVersion, byte[] upk,
                       byte[] encryptedUsk, byte[] encryptedUskBackup, byte[] backupPwdHash,

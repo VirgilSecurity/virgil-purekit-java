@@ -128,6 +128,8 @@ public class Pure {
      * @param password Password.
      * @param pureSessionParams pureSessionParams
      *
+     * @return {@link AuthResult}.
+     *
      * @throws PureException PureException
      *
      */
@@ -602,6 +604,7 @@ public class Pure {
      * @param userId User Id of data owner.
      * @param dataId Data Id.
      * @param otherUserIds Other user ids, to whom access to this data will be given.
+     * @param roleNames Roles that access to this data will be given.
      * @param publicKeys Other public keys, to which access to this data will be given.
      * @param plainText Plain text.
      *
