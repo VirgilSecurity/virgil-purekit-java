@@ -33,31 +33,18 @@
 
 package com.virgilsecurity.purekit.storage.exception;
 
-import com.google.protobuf.InvalidProtocolBufferException;
-
 /**
  * Invalid protobuf exception wrapped in PureStorageException
  */
 public class PureStorageInvalidProtobufException extends PureStorageException {
-    private final InvalidProtocolBufferException invalidProtocolBufferException;
 
     /**
      * Constructor
      *
-     * @param invalidProtocolBufferException invalidProtocolBufferException
+     * @param cause The cause.
      */
-    public PureStorageInvalidProtobufException(InvalidProtocolBufferException invalidProtocolBufferException) {
+    public PureStorageInvalidProtobufException(Throwable cause) {
         super();
-
-        this.invalidProtocolBufferException = invalidProtocolBufferException;
     }
 
-    /**
-     * Returns invalidProtocolBufferException
-     *
-     * @return invalidProtocolBufferException
-     */
-    public InvalidProtocolBufferException getInvalidProtocolBufferException() {
-        return invalidProtocolBufferException;
-    };
 }

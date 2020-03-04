@@ -36,6 +36,7 @@ package com.virgilsecurity.purekit;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.virgilsecurity.common.util.Base64;
+import com.virgilsecurity.crypto.phe.PheException;
 import com.virgilsecurity.purekit.exception.PureCryptoException;
 import com.virgilsecurity.purekit.exception.PureException;
 import com.virgilsecurity.purekit.exception.PureLogicException;
@@ -408,7 +409,8 @@ public class PureTestJava {
                 pure.decryptGrantFromUser(authResult1.getEncryptedGrant());
             });
 
-            assertEquals(ERROR_AES_FAILED, ex.getPheException().getStatusCode());
+            assertTrue(ex.getCause() instanceof PheException);
+            assertEquals(ERROR_AES_FAILED, ((PheException) ex.getCause()).getStatusCode());
         }
     }
 

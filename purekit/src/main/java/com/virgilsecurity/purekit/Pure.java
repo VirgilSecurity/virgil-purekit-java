@@ -738,7 +738,8 @@ public class Pure {
             csk = pureCrypto.decryptCellKey(pureCryptoData, grant.getUkp().getPrivateKey(), oskp.getPublicKey());
         }
         catch (PureCryptoException e) {
-            if (e.getFoundationException() == null || e.getFoundationException().getStatusCode() != FoundationException.ERROR_KEY_RECIPIENT_IS_NOT_FOUND) {
+            if (e.getCause() == null || ! (e.getCause() instanceof FoundationException)
+                    || ((FoundationException) e.getCause()).getStatusCode() != FoundationException.ERROR_KEY_RECIPIENT_IS_NOT_FOUND) {
                 throw e;
             }
 
