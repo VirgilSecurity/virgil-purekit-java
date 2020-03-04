@@ -53,4 +53,13 @@ public class PureStorageException extends PureException {
     public PureStorageException(String errorMessage) {
         super(errorMessage);
     }
+
+    /**
+     * Constructor
+     *
+     * @param cause The cause.
+     */
+    public PureStorageException(Throwable cause) {
+        super(cause);
+    }
 }

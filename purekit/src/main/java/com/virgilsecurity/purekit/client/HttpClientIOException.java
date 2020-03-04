@@ -39,22 +39,8 @@ import java.io.IOException;
  * HttpClient IOException exception
  */
 public class HttpClientIOException extends HttpClientException {
-    private final IOException ioException;
 
-    /**
-     * Constructor
-     *
-     * @param ioException IOException
-     */
-    public HttpClientIOException(IOException ioException) {
-        this.ioException = ioException;
-    }
-
-    /**
-     * IOException
-     * @return IOException
-     */
-    public IOException getIoException() {
-        return ioException;
+    public HttpClientIOException(Throwable cause) {
+        super(cause);
     }
 }

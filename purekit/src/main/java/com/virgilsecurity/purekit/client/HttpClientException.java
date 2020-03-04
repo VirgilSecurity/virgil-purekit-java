@@ -39,4 +39,12 @@ import com.virgilsecurity.purekit.exception.PureException;
  * Base class for http client exception
  */
 public class HttpClientException extends PureException  {
+
+    public HttpClientException() {
+        super();
+    }
+
+    public HttpClientException(Throwable cause) {
+        super(cause);
+    }
 }
