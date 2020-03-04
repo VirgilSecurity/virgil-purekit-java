@@ -60,7 +60,6 @@ import com.virgilsecurity.purekit.storage.exception.PureStorageUserNotFoundExcep
 import com.virgilsecurity.purekit.storage.mariadb.MariaDbPureStorage;
 import com.virgilsecurity.purekit.storage.mariadb.MariaDbSqlException;
 import com.virgilsecurity.purekit.storage.ram.RamPureStorage;
-import com.virgilsecurity.purekit.utils.PropertyManager;
 import com.virgilsecurity.sdk.crypto.KeyPairType;
 import com.virgilsecurity.sdk.crypto.VirgilCrypto;
 import com.virgilsecurity.sdk.crypto.VirgilKeyPair;
