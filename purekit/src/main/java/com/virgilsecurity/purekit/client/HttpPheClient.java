@@ -70,10 +70,7 @@ public class HttpPheClient {
      *
      * @return Enrollment response.
      *
-     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
-     * successfully.
-     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
-     * successfully. Represents a regular HTTP exception with code and message.
+     * @throws HttpClientException HttpClientException
      */
     public PurekitProtos.EnrollmentResponse enrollAccount(PurekitProtos.EnrollmentRequest request) throws HttpClientException {
 
@@ -94,10 +91,7 @@ public class HttpPheClient {
      *
      * @return Verify password response.
      *
-     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
-     * successfully.
-     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
-     * successfully. Represents a regular HTTP exception with code and message.
+     * @throws HttpClientException HttpClientException
      */
     public PurekitProtos.VerifyPasswordResponse verifyPassword(PurekitProtos.VerifyPasswordRequest request) throws HttpClientException {
 

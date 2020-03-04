@@ -35,12 +35,13 @@ package com.virgilsecurity.purekit.client;
 
 import com.google.protobuf.MessageLite;
 import com.google.protobuf.Parser;
+import com.virgilsecurity.purekit.build.VersionVirgilAgent;
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtos;
+import com.virgilsecurity.purekit.utils.OsUtils;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Map;
 import java.util.logging.Logger;
 
 /**
@@ -58,6 +59,9 @@ public class HttpClient {
     private final URL serviceBaseUrl;
     private final String token;
 
+    /**
+     * Http method
+     */
     public enum Method {
         GET,
         POST,
@@ -68,19 +72,42 @@ public class HttpClient {
 
     /**
      * Creating HttpClient with default virgil-agent header.
+     *
+     * @param serviceBaseUrl service base url
+     * @param token access token
      */
     public HttpClient(URL serviceBaseUrl, String token) {
         this.serviceBaseUrl = serviceBaseUrl;
         this.token = token;
-        // FIXME
-        virgilAgent = "purekit;jvm;";
-    //    virgilAgent = "purekit;jvm;" + OsUtils.osAgentName + ";" + VersionVirgilAgent.VERSION;
+        virgilAgent = "purekit;jvm;" + OsUtils.getOsAgentName() + ";" + VersionVirgilAgent.VERSION;
     }
 
+    /**
+     * Executes http request
+     *
+     * @param path ath appended to base ur
+     * @param method http method
+     * @param request protobuf request
+     *
+     * @throws HttpClientException HttpClientException
+     */
     public void execute(String path, Method method, MessageLite request) throws HttpClientException {
         execute(path, method, request, null);
     }
 
+    /**
+     * Executes http request
+     *
+     * @param path path appended to base ur
+     * @param method http method
+     * @param request protobuf request
+     * @param parser protobuf parser
+     * @param <T> Type of response
+     *
+     * @return parsed response
+     *
+     * @throws HttpClientException HttpClientException
+     */
     public <T> T execute(String path, Method method, MessageLite request, Parser<T> parser) throws HttpClientException {
         try {
             HttpURLConnection urlConnection = createConnection(path, method, token);
@@ -111,14 +138,6 @@ public class HttpClient {
         }
     }
 
-    /**
-     * Create and configure http connection.
-     *
-     * @param url    The URL.
-     * @param method The HTTP method.
-     * @return The connection.
-     * @throws IOException if connection couldn't be created.
-     */
     private HttpURLConnection createConnection(String path, Method method, String token) throws IOException {
         URL url = this.serviceBaseUrl;
         URL finalUrl = new URL(url.getProtocol(), url.getHost(), url.getPort(), url.getFile() + path, null);

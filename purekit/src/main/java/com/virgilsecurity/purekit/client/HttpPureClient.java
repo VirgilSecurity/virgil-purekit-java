@@ -73,10 +73,7 @@ public class HttpPureClient {
      *
      * @param userRecord User Record.
      *
-     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
-     * successfully.
-     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
-     * successfully. Represents a regular HTTP exception with code and message.
+     * @throws HttpClientException HttpClientException
      */
     public void insertUser(PurekitProtosV3Storage.UserRecord userRecord) throws HttpClientException {
 
@@ -95,10 +92,7 @@ public class HttpPureClient {
      * @param userId User Id.
      * @param userRecord UserRecord.
      *
-     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
-     * successfully.
-     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
-     * successfully. Represents a regular HTTP exception with code and message.
+     * @throws HttpClientException HttpClientException
      */
     public void updateUser(String userId, PurekitProtosV3Storage.UserRecord userRecord) throws HttpClientException {
 
@@ -119,10 +113,7 @@ public class HttpPureClient {
      *
      * @return UserRecord.
      *
-     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
-     * successfully.
-     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
-     * successfully. Represents a regular HTTP exception with code and message.
+     * @throws HttpClientException HttpClientException
      */
     public PurekitProtosV3Storage.UserRecord getUser(String userId) throws HttpClientException {
 
@@ -143,10 +134,7 @@ public class HttpPureClient {
      *
      * @return UserRecords.
      *
-     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
-     * successfully.
-     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
-     * successfully. Represents a regular HTTP exception with code and message.
+     * @throws HttpClientException HttpClientException
      */
     public PurekitProtosV3Storage.UserRecords getUsers(Collection<String> userIds) throws HttpClientException {
 
@@ -172,10 +160,7 @@ public class HttpPureClient {
      * @param userId User Ids.
      * @param cascade Deletes all user cell keys if true.
      *
-     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
-     * successfully.
-     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
-     * successfully. Represents a regular HTTP exception with code and message.
+     * @throws HttpClientException HttpClientException
      */
     public void deleteUser(String userId, boolean cascade) throws HttpClientException {
 
@@ -193,10 +178,7 @@ public class HttpPureClient {
      *
      * @param cellKey CellKey.
      *
-     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
-     * successfully.
-     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
-     * successfully. Represents a regular HTTP exception with code and message.
+     * @throws HttpClientException HttpClientException
      */
     public void insertCellKey(PurekitProtosV3Storage.CellKey cellKey) throws HttpClientException {
 
@@ -216,10 +198,7 @@ public class HttpPureClient {
      * @param dataId Data id.
      * @param cellKey CellKey.
      *
-     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
-     * successfully.
-     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
-     * successfully. Represents a regular HTTP exception with code and message.
+     * @throws HttpClientException HttpClientException
      */
     public void updateCellKey(String userId, String dataId, PurekitProtosV3Storage.CellKey cellKey) throws HttpClientException {
 
@@ -242,10 +221,7 @@ public class HttpPureClient {
      *
      * @return CellKey.
      *
-     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
-     * successfully.
-     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
-     * successfully. Represents a regular HTTP exception with code and message.
+     * @throws HttpClientException HttpClientException
      */
     public PurekitProtosV3Storage.CellKey getCellKey(String userId, String dataId) throws HttpClientException {
 
@@ -266,10 +242,7 @@ public class HttpPureClient {
      * @param userId User Ids.
      * @param dataId Data Id.
      *
-     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
-     * successfully.
-     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
-     * successfully. Represents a regular HTTP exception with code and message.
+     * @throws HttpClientException HttpClientException
      */
     public void deleteCellKey(String userId, String dataId) throws HttpClientException {
 
@@ -289,10 +262,7 @@ public class HttpPureClient {
      *
      * @param role Role
      *
-     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
-     * successfully.
-     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
-     * successfully. Represents a regular HTTP exception with code and message.
+     * @throws HttpClientException HttpClientException
      */
     public void insertRole(PurekitProtosV3Storage.Role role) throws HttpClientException {
 
@@ -312,10 +282,7 @@ public class HttpPureClient {
      *
      * @return Roles
      *
-     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
-     * successfully.
-     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
-     * successfully. Represents a regular HTTP exception with code and message.
+     * @throws HttpClientException HttpClientException
      */
     public PurekitProtosV3Storage.Roles getRoles(PurekitProtosV3Client.GetRoles getRolesRequest) throws HttpClientException {
 
@@ -334,10 +301,7 @@ public class HttpPureClient {
      *
      * @param roleAssignments role assignments
      *
-     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
-     * successfully.
-     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
-     * successfully. Represents a regular HTTP exception with code and message.
+     * @throws HttpClientException HttpClientException
      */
     public void insertRoleAssignments(PurekitProtosV3Storage.RoleAssignments roleAssignments) throws HttpClientException {
 
@@ -360,10 +324,7 @@ public class HttpPureClient {
      *
      * @return Role assignments
      *
-     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
-     * successfully.
-     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
-     * successfully. Represents a regular HTTP exception with code and message.
+     * @throws HttpClientException HttpClientException
      */
     public PurekitProtosV3Storage.RoleAssignments getRoleAssignments(PurekitProtosV3Client.GetRoleAssignments request) throws HttpClientException {
 
@@ -384,10 +345,7 @@ public class HttpPureClient {
      *
      * @return RoleAssignment
      *
-     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
-     * successfully.
-     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
-     * successfully. Represents a regular HTTP exception with code and message.
+     * @throws HttpClientException HttpClientException
      */
     public PurekitProtosV3Storage.RoleAssignment getRoleAssignment(PurekitProtosV3Client.GetRoleAssignment request) throws HttpClientException {
 
@@ -406,10 +364,7 @@ public class HttpPureClient {
      *
      * @param request request
      *
-     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
-     * successfully.
-     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
-     * successfully. Represents a regular HTTP exception with code and message.
+     * @throws HttpClientException HttpClientException
      */
     public void deleteRoleAssignments(PurekitProtosV3Client.DeleteRoleAssignments request) throws HttpClientException {
 
@@ -427,10 +382,7 @@ public class HttpPureClient {
      *
      * @param grantKey grant key
      *
-     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
-     * successfully.
-     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
-     * successfully. Represents a regular HTTP exception with code and message.
+     * @throws HttpClientException HttpClientException
      */
     public void insertGrantKey(PurekitProtosV3Storage.GrantKey grantKey) throws HttpClientException {
         ValidationUtils.checkNull(grantKey, "grantKey");
@@ -449,10 +401,7 @@ public class HttpPureClient {
      *
      * @return grant key
      *
-     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
-     * successfully.
-     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
-     * successfully. Represents a regular HTTP exception with code and message.
+     * @throws HttpClientException HttpClientException
      */
     public PurekitProtosV3Storage.GrantKey getGrantKey(PurekitProtosV3Client.GrantKeyDescriptor request) throws HttpClientException {
         ValidationUtils.checkNull(request, "request");
@@ -470,10 +419,7 @@ public class HttpPureClient {
      *
      * @param request request
      *
-     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
-     * successfully.
-     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
-     * successfully. Represents a regular HTTP exception with code and message.
+     * @throws HttpClientException HttpClientException
      */
     public void deleteGrantKey(PurekitProtosV3Client.GrantKeyDescriptor request) throws HttpClientException {
         ValidationUtils.checkNull(request, "request");

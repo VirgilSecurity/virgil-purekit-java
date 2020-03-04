@@ -35,14 +35,26 @@ package com.virgilsecurity.purekit.client;
 
 import java.io.IOException;
 
+/**
+ * HttpClient IOException exception
+ */
 public class HttpClientIOException extends HttpClientException {
+    private final IOException ioException;
+
+    /**
+     * Constructor
+     *
+     * @param ioException IOException
+     */
     public HttpClientIOException(IOException ioException) {
         this.ioException = ioException;
     }
 
+    /**
+     * IOException
+     * @return IOException
+     */
     public IOException getIoException() {
         return ioException;
     }
-
-    private final IOException ioException;
 }

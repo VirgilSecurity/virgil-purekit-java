@@ -70,10 +70,7 @@ public class HttpKmsClient {
      *
      * @return DecryptResponse
      *
-     * @throws ProtocolException Thrown if an error from the PHE service has been parsed
-     * successfully.
-     * @throws ProtocolHttpException Thrown if an error from the PHE service has NOT been parsed
-     * successfully. Represents a regular HTTP exception with code and message.
+     * @throws HttpClientException HttpClientException
      */
     public PurekitProtosV3Client.DecryptResponse decrypt(PurekitProtosV3Client.DecryptRequest request) throws HttpClientException {
 

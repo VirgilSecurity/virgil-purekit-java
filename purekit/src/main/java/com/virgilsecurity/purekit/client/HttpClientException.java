@@ -36,5 +36,8 @@ package com.virgilsecurity.purekit.client;
 import com.virgilsecurity.purekit.exception.PureException;
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtos;
 
+/**
+ * Base class for http client exception
+ */
 public class HttpClientException extends PureException  {
 }

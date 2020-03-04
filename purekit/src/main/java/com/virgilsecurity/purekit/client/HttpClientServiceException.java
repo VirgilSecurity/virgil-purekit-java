@@ -35,18 +35,36 @@ package com.virgilsecurity.purekit.client;
 
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtos;
 
+/**
+ * HttpClient exception with service response
+ */
 public class HttpClientServiceException extends HttpClientException {
+    private final PurekitProtos.HttpError httpError;
+
+    /**
+     * Constructor
+     *
+     * @param httpError httpError
+     */
     public HttpClientServiceException(PurekitProtos.HttpError httpError) {
         this.httpError = httpError;
     }
 
+    /**
+     * HttpError
+     *
+     * @return HttpError
+     */
     public PurekitProtos.HttpError getHttpError() {
         return httpError;
     }
 
+    /**
+     * Returns error code
+     *
+     * @return error code
+     */
     public int getErrorCode() {
         return httpError.getCode();
     }
-
-    private final PurekitProtos.HttpError httpError;
 }

@@ -89,14 +89,14 @@ dependencies {
 task generateVersionVirgilAgent {
     outputs.dir "$buildDir/generated"
     doFirst {
-        def versionFile = file("$buildDir/generated/com/virgilsecurity/purekit/build/VersionVirgilAgent.kt")
+        def versionFile = file("$buildDir/generated/com/virgilsecurity/purekit/build/VersionVirgilAgent.java")
         versionFile.parentFile.mkdirs()
         versionFile.text =
                 """
 package com.virgilsecurity.purekit.build;
 
-object VersionVirgilAgent {
-    const val VERSION = "$project.version"
+public class VersionVirgilAgent {
+    public static final String VERSION = "$project.version";
 }
 """
     }
