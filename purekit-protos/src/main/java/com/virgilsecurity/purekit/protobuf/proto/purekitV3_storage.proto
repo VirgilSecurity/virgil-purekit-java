@@ -66,8 +66,8 @@ message UserRecords {
 
 message CellKeySigned {
     uint32 version = 1;
-    string userId = 2;
-    string dataId = 3;
+    string user_id = 2;
+    string data_id = 3;
     bytes cpk = 4;
     bytes encrypted_csk_cms = 5;
     bytes encrypted_csk_body = 6;
