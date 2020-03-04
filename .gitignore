@@ -1,0 +1,9 @@
+.gradle
+.idea
+*.iml
+
+env.json
+local.properties
+
+purekit-protos
+purekit

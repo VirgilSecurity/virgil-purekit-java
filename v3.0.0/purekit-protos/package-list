@@ -1,4 +1,1 @@
-$dokka.format:html
-$dokka.linkExtension:html
-
 com.virgilsecurity.purekit.protobuf.build
