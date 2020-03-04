@@ -1294,39 +1294,42 @@ public class PureTestJava {
     }
 
     private static Stream<Arguments> testArgumentsNoToken() {
+        PropertyManager propertyManager = new PropertyManager();
         return Stream.of(
-            Arguments.of(PropertyManager.getPheServiceAddress(),
-                         PropertyManager.getPureServerAddress(),
-                         PropertyManager.getKmsServerAddress(),
-                         PropertyManager.getAppToken(),
-                         PropertyManager.getPublicKeyNew(),
-                         PropertyManager.getSecretKeyNew())
+            Arguments.of(propertyManager.getPheServiceAddress(),
+                    propertyManager.getPureServerAddress(),
+                    propertyManager.getKmsServerAddress(),
+                    propertyManager.getAppToken(),
+                    propertyManager.getPublicKeyNew(),
+                    propertyManager.getSecretKeyNew())
         );
     }
 
     private static Stream<Arguments> testArgumentsComp() {
+        PropertyManager propertyManager = new PropertyManager();
         return Stream.of(
-                Arguments.of(PropertyManager.getPheServiceAddress(),
-                        PropertyManager.getPureServerAddress(),
-                        PropertyManager.getKmsServerAddress(),
-                        PropertyManager.getAppToken(),
-                        PropertyManager.getPublicKeyNew(),
-                        PropertyManager.getSecretKeyNew(),
-                        PropertyManager.getEnv())
+                Arguments.of(propertyManager.getPheServiceAddress(),
+                    propertyManager.getPureServerAddress(),
+                    propertyManager.getKmsServerAddress(),
+                    propertyManager.getAppToken(),
+                    propertyManager.getPublicKeyNew(),
+                    propertyManager.getSecretKeyNew(),
+                    propertyManager.getEnv())
         );
     }
 
     private static Stream<Arguments> testArguments() {
+        PropertyManager propertyManager = new PropertyManager();
         return Stream.of(
-            Arguments.of(PropertyManager.getPheServiceAddress(),
-                         PropertyManager.getPureServerAddress(),
-                         PropertyManager.getKmsServerAddress(),
-                         PropertyManager.getAppToken(),
-                         PropertyManager.getPublicKeyOld(),
-                         PropertyManager.getSecretKeyOld(),
-                         PropertyManager.getUpdateToken(),
-                         PropertyManager.getPublicKeyNew(),
-                         PropertyManager.getSecretKeyNew())
+            Arguments.of(propertyManager.getPheServiceAddress(),
+                    propertyManager.getPureServerAddress(),
+                    propertyManager.getKmsServerAddress(),
+                    propertyManager.getAppToken(),
+                    propertyManager.getPublicKeyOld(),
+                    propertyManager.getSecretKeyOld(),
+                    propertyManager.getUpdateToken(),
+                    propertyManager.getPublicKeyNew(),
+                    propertyManager.getSecretKeyNew())
         );
     }
 }
