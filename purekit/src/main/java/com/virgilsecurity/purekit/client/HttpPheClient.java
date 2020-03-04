@@ -82,7 +82,6 @@ public class HttpPheClient {
         return client.execute(
                 "/enroll",
                 HttpClient.Method.POST,
-                null,
                 request,
                 PurekitProtos.EnrollmentResponse.parser()
         );
@@ -107,7 +106,6 @@ public class HttpPheClient {
         return client.execute(
                 "/verify-password",
                 HttpClient.Method.POST,
-                null,
                 request,
                 PurekitProtos.VerifyPasswordResponse.parser()
         );

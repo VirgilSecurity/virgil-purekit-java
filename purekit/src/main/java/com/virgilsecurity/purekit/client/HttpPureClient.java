@@ -55,8 +55,6 @@ public class HttpPureClient {
      */
     public static final String SERVICE_ADDRESS = "https://api.virgilsecurity.com/pure/v1";
 
-    private static final String KEY_CASCADE = "cascade";
-
     /**
      * Instantiates HttpPureClient.
      *
@@ -87,7 +85,6 @@ public class HttpPureClient {
         client.execute(
                 "/user",
                 HttpClient.Method.POST,
-                null,
                 userRecord
         );
     }
@@ -111,7 +108,6 @@ public class HttpPureClient {
         client.execute(
                 String.format("/user/%s", userId),
                 HttpClient.Method.PUT,
-                null,
                 userRecord
         );
     }
@@ -135,7 +131,6 @@ public class HttpPureClient {
         return client.execute(
                 String.format("/user/%s", userId),
                 HttpClient.Method.GET,
-                null,
                 null,
                 PurekitProtosV3Storage.UserRecord.parser()
         );
@@ -166,7 +161,6 @@ public class HttpPureClient {
         return client.execute(
                 "/get-users",
                 HttpClient.Method.POST,
-                null,
                 getUserRecords,
                 PurekitProtosV3Storage.UserRecords.parser()
         );
@@ -187,13 +181,9 @@ public class HttpPureClient {
 
         ValidationUtils.checkNullOrEmpty(userId, "userId");
 
-        Map<String, String> params = new HashMap<>();
-        params.put(KEY_CASCADE, String.valueOf(cascade));
-
         client.execute(
-                String.format("/user/%s", userId),
+                String.format("/user/%s?cascade=%s", userId, cascade),
                 HttpClient.Method.DELETE,
-                params,
                 null
         );
     }
@@ -215,7 +205,6 @@ public class HttpPureClient {
         client.execute(
                 "/cell-key",
                 HttpClient.Method.POST,
-                null,
                 cellKey
         );
     }
@@ -241,7 +230,6 @@ public class HttpPureClient {
         client.execute(
                 String.format("/cell-key/%s/%s", userId, dataId),
                 HttpClient.Method.PUT,
-                null,
                 cellKey
         );
     }
@@ -268,7 +256,6 @@ public class HttpPureClient {
                 String.format("/cell-key/%s/%s", userId, dataId),
                 HttpClient.Method.GET,
                 null,
-                null,
                 PurekitProtosV3Storage.CellKey.parser()
         );
     }
@@ -292,7 +279,6 @@ public class HttpPureClient {
         client.execute(
                 String.format("/cell-key/%s/%s", userId, dataId),
                 HttpClient.Method.DELETE,
-                null,
                 null
         );
     }
@@ -315,7 +301,6 @@ public class HttpPureClient {
         client.execute(
                 "/roles",
                 HttpClient.Method.POST,
-                null,
                 role
         );
     }
@@ -339,7 +324,6 @@ public class HttpPureClient {
         return client.execute(
                 "/get-roles",
                 HttpClient.Method.POST,
-                null,
                 getRolesRequest,
                 PurekitProtosV3Storage.Roles.parser()
         );
@@ -365,7 +349,6 @@ public class HttpPureClient {
         client.execute(
                 "/role-assignments",
                 HttpClient.Method.POST,
-                null,
                 roleAssignments
         );
     }
@@ -389,7 +372,6 @@ public class HttpPureClient {
         return client.execute(
                 "/get-role-assignments",
                 HttpClient.Method.POST,
-                null,
                 request,
                 PurekitProtosV3Storage.RoleAssignments.parser()
         );
@@ -414,7 +396,6 @@ public class HttpPureClient {
         return client.execute(
                 "/get-role-assignment",
                 HttpClient.Method.POST,
-                null,
                 request,
                 PurekitProtosV3Storage.RoleAssignment.parser()
         );
@@ -437,7 +418,6 @@ public class HttpPureClient {
         client.execute(
                 "/delete-role-assignments",
                 HttpClient.Method.POST,
-                null,
                 request
         );
     }
@@ -458,7 +438,6 @@ public class HttpPureClient {
         client.execute(
                 "/grant-key",
                 HttpClient.Method.POST,
-                null,
                 grantKey
         );
     }
@@ -481,7 +460,6 @@ public class HttpPureClient {
         return client.execute(
                 "/get-grant-key",
                 HttpClient.Method.POST,
-                null,
                 request,
                 PurekitProtosV3Storage.GrantKey.parser()
         );
@@ -503,7 +481,6 @@ public class HttpPureClient {
         client.execute(
                 "/delete-grant-key",
                 HttpClient.Method.POST,
-                null,
                 request
         );
     }

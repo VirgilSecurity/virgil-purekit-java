@@ -77,13 +77,13 @@ public class HttpClient {
     //    virgilAgent = "purekit;jvm;" + OsUtils.osAgentName + ";" + VersionVirgilAgent.VERSION;
     }
 
-    public void execute(String path, Method method, Map<String, String> headers, MessageLite request) throws HttpClientException {
-        execute(path, method, headers, request, null);
+    public void execute(String path, Method method, MessageLite request) throws HttpClientException {
+        execute(path, method, request, null);
     }
 
-    public <T> T execute(String path, Method method, Map<String, String> headers, MessageLite request, Parser<T> parser) throws HttpClientException {
+    public <T> T execute(String path, Method method, MessageLite request, Parser<T> parser) throws HttpClientException {
         try {
-            HttpURLConnection urlConnection = createConnection(path, method, headers, token);
+            HttpURLConnection urlConnection = createConnection(path, method, token);
             if (request != null) {
                 request.writeTo(urlConnection.getOutputStream());
             }
@@ -119,7 +119,7 @@ public class HttpClient {
      * @return The connection.
      * @throws IOException if connection couldn't be created.
      */
-    private HttpURLConnection createConnection(String path, Method method, Map<String, String> headers, String token) throws IOException {
+    private HttpURLConnection createConnection(String path, Method method, String token) throws IOException {
         URL url = this.serviceBaseUrl;
         URL finalUrl = new URL(url.getProtocol(), url.getHost(), url.getPort(), url.getFile() + path, null);
 
@@ -142,12 +142,6 @@ public class HttpClient {
             urlConnection.setRequestProperty(AUTHORIZATION_HEADER, token);
         } else {
             LOGGER.warning("Provided token is blank");
-        }
-
-        if (headers != null) {
-            for (Map.Entry<String, String> entry : headers.entrySet()) {
-                urlConnection.setRequestProperty(entry.getKey(), entry.getValue());
-            }
         }
 
         urlConnection.setRequestProperty(CONTENT_TYPE_HEADER, "application/protobuf");

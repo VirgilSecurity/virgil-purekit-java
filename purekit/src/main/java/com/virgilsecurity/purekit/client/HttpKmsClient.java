@@ -82,7 +82,6 @@ public class HttpKmsClient {
         return client.execute(
                 "/decrypt",
                 HttpClient.Method.POST,
-                null,
                 request,
                 PurekitProtosV3Client.DecryptResponse.parser()
         );
