@@ -56,7 +56,7 @@ Navigate to our [Developer Documentation](https://developer.virgilsecurity.com/d
 
 
 ## License
-This library is released under the [3-clause BSD License](LICENSE.md).
+This library is released under the [3-clause BSD License](LICENSE).
 
 ## Support
 Our developer support team is here to help you. Find out more information at our [Help Center](https://help.virgilsecurity.com/).
