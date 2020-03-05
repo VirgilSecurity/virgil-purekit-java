@@ -318,9 +318,18 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
     }
 
     @Override
-    public void deleteRole(String roleName, boolean cascade) throws PureStorageException {
-        // TODO: Implement
-        throw new UnsupportedOperationException();
+    public void deleteRole(String roleName) throws PureStorageException {
+        ValidationUtils.checkNullOrEmpty(roleName, "roleName");
+
+        PurekitProtosV3Client.DeleteRole protobuf = PurekitProtosV3Client.DeleteRole.newBuilder()
+                .setName(roleName)
+                .build();
+
+        try {
+            client.deleteRole(protobuf);
+        } catch (HttpClientException e) {
+            throw new VirgilCloudStorageException(e);
+        }
     }
 
     @Override

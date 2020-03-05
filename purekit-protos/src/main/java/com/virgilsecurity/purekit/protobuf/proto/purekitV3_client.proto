@@ -60,6 +60,10 @@ message DeleteRoleAssignments {
     repeated string user_ids = 2;
 }
 
+message DeleteRole {
+    string name = 1;
+}
+
 message DecryptRequest {
     uint32 version = 1;
     string alias = 2;

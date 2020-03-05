@@ -998,19 +998,7 @@ public class Pure {
      * @throws PureException PureException
      */
     public void deleteRole(String roleName) throws PureException {
-        deleteRole(roleName, true);
-    }
-
-    /**
-     * Deletes role making previously encrypted data inaccessible.
-     *
-     * @param roleName role name
-     * @param cascade true - will keep access to previously encrypted data
-     *
-     * @throws PureException PureException
-     */
-    public void deleteRole(String roleName, boolean cascade) throws PureException {
-        storage.deleteRole(roleName, cascade);
+        storage.deleteRole(roleName);
     }
 
     /**

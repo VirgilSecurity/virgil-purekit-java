@@ -428,4 +428,20 @@ public class HttpPureClient {
                 request
         );
     }
+
+    /**
+     * Deletes role and all assignments
+     *
+     * @param request deleteRole request
+     * @throws HttpClientException HttpClientException
+     */
+    public void deleteRole(PurekitProtosV3Client.DeleteRole request) throws HttpClientException {
+        ValidationUtils.checkNull(request, "request");
+
+        client.execute(
+                "/delete-role",
+                HttpClient.Method.POST,
+                request
+        );
+    }
 }
