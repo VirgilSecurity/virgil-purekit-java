@@ -127,8 +127,12 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
 
         PurekitProtosV3Storage.UserRecord protobufRecord;
 
+        PurekitProtosV3Client.GetUserRequest request = PurekitProtosV3Client.GetUserRequest.newBuilder()
+                .setUserId(userId)
+                .build();
+
         try {
-            protobufRecord = client.getUser(userId);
+            protobufRecord = client.getUser(request);
         } catch (HttpClientServiceException e) {
             if (e.getErrorCode() == ServiceErrorCode.USER_NOT_FOUND.getCode()) {
                 throw new PureStorageUserNotFoundException(userId);
@@ -156,12 +160,16 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
             return Collections.emptyList();
         }
 
+        PurekitProtosV3Client.GetUsersRequest request = PurekitProtosV3Client.GetUsersRequest.newBuilder()
+                .addAllUserIds(userIds)
+                .build();
+
         HashSet<String> idsSet = new HashSet<>(userIds);
 
         PurekitProtosV3Storage.UserRecords protoRecords;
 
         try {
-            protoRecords = client.getUsers(userIds);
+            protoRecords = client.getUsers(request);
         } catch (HttpClientException e) {
             throw new VirgilCloudStorageException(e);
         }
@@ -201,8 +209,12 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
     public void deleteUser(String userId, boolean cascade) throws PureStorageException {
         ValidationUtils.checkNullOrEmpty(userId, "userId");
 
+        PurekitProtosV3Client.DeleteUserRequest request = PurekitProtosV3Client.DeleteUserRequest.newBuilder()
+                .setUserId(userId)
+                .build();
+
         try {
-            client.deleteUser(userId, cascade);
+            client.deleteUser(request, cascade);
         } catch (HttpClientException e) {
             throw new VirgilCloudStorageException(e);
         }
@@ -213,9 +225,14 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
         ValidationUtils.checkNullOrEmpty(userId, "userId");
         ValidationUtils.checkNullOrEmpty(dataId, "dataId");
 
+        PurekitProtosV3Client.GetCellKeyRequest request = PurekitProtosV3Client.GetCellKeyRequest.newBuilder()
+                .setUserId(userId)
+                .setDataId(dataId)
+                .build();
+
         PurekitProtosV3Storage.CellKey protobufRecord;
         try {
-            protobufRecord = client.getCellKey(userId, dataId);
+            protobufRecord = client.getCellKey(request);
         } catch (HttpClientServiceException e) {
             if (e.getErrorCode() == ServiceErrorCode.CELL_KEY_NOT_FOUND.getCode()) {
                 throw new PureStorageCellKeyNotFoundException();
@@ -254,8 +271,13 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
         ValidationUtils.checkNullOrEmpty(userId, "userId");
         ValidationUtils.checkNullOrEmpty(dataId, "dataId");
 
+        PurekitProtosV3Client.DeleteCellKeyRequest request = PurekitProtosV3Client.DeleteCellKeyRequest.newBuilder()
+                .setUserId(userId)
+                .setDataId(dataId)
+                .build();
+
         try {
-            client.deleteCellKey(userId, dataId);
+            client.deleteCellKey(request);
         } catch (HttpClientException e) {
             throw new VirgilCloudStorageException(e);
         }
@@ -282,8 +304,8 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
             return Collections.emptySet();
         }
 
-        PurekitProtosV3Client.GetRoles getRolesRequest =
-                PurekitProtosV3Client.GetRoles.newBuilder().addAllRoleNames(roleNames).build();
+        PurekitProtosV3Client.GetRolesRequest getRolesRequest =
+                PurekitProtosV3Client.GetRolesRequest.newBuilder().addAllRoleNames(roleNames).build();
 
         HashSet<String> namesSet = new HashSet<>(roleNames);
 
@@ -321,7 +343,7 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
     public void deleteRole(String roleName) throws PureStorageException {
         ValidationUtils.checkNullOrEmpty(roleName, "roleName");
 
-        PurekitProtosV3Client.DeleteRole protobuf = PurekitProtosV3Client.DeleteRole.newBuilder()
+        PurekitProtosV3Client.DeleteRoleRequest protobuf = PurekitProtosV3Client.DeleteRoleRequest.newBuilder()
                 .setName(roleName)
                 .build();
 
@@ -359,7 +381,7 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
     public Iterable<RoleAssignment> selectRoleAssignments(String userId) throws PureStorageException {
         ValidationUtils.checkNullOrEmpty(userId, "userId");
 
-        PurekitProtosV3Client.GetRoleAssignments request = PurekitProtosV3Client.GetRoleAssignments.newBuilder()
+        PurekitProtosV3Client.GetRoleAssignmentsRequest request = PurekitProtosV3Client.GetRoleAssignmentsRequest.newBuilder()
                 .setUserId(userId)
                 .build();
 
@@ -390,7 +412,7 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
         ValidationUtils.checkNullOrEmpty(roleName, "roleName");
         ValidationUtils.checkNullOrEmpty(userId, "userId");
 
-        PurekitProtosV3Client.GetRoleAssignment request = PurekitProtosV3Client.GetRoleAssignment.newBuilder()
+        PurekitProtosV3Client.GetRoleAssignmentRequest request = PurekitProtosV3Client.GetRoleAssignmentRequest.newBuilder()
                 .setUserId(userId)
                 .setRoleName(roleName)
                 .build();
@@ -420,7 +442,7 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
             return;
         }
 
-        PurekitProtosV3Client.DeleteRoleAssignments request = PurekitProtosV3Client.DeleteRoleAssignments
+        PurekitProtosV3Client.DeleteRoleAssignmentsRequest request = PurekitProtosV3Client.DeleteRoleAssignmentsRequest
                 .newBuilder()
                 .addAllUserIds(userIds)
                 .setRoleName(roleName)
@@ -451,7 +473,7 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
         ValidationUtils.checkNullOrEmpty(userId, "userId");
         ValidationUtils.checkNullOrEmpty(keyId, "keyId");
 
-        PurekitProtosV3Client.GrantKeyDescriptor request = PurekitProtosV3Client.GrantKeyDescriptor.newBuilder()
+        PurekitProtosV3Client.GetGrantKeyRequest request = PurekitProtosV3Client.GetGrantKeyRequest.newBuilder()
                 .setUserId(userId)
                 .setKeyId(ByteString.copyFrom(keyId))
                 .build();
@@ -502,7 +524,7 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
         ValidationUtils.checkNullOrEmpty(userId, "userId");
         ValidationUtils.checkNullOrEmpty(keyId, "keyId");
 
-        PurekitProtosV3Client.GrantKeyDescriptor request = PurekitProtosV3Client.GrantKeyDescriptor.newBuilder()
+        PurekitProtosV3Client.DeleteGrantKeyRequest request = PurekitProtosV3Client.DeleteGrantKeyRequest.newBuilder()
                 .setUserId(userId)
                 .setKeyId(ByteString.copyFrom(keyId))
                 .build();
@@ -522,7 +544,7 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
             if (isInsert) {
                 client.insertUser(protobufRecord);
             } else {
-                client.updateUser(userRecord.getUserId(), protobufRecord);
+                client.updateUser(protobufRecord);
             }
         } catch (HttpClientException e) {
             throw new VirgilCloudStorageException(e);
@@ -546,7 +568,7 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
                     throw e;
                 }
             } else {
-                client.updateCellKey(cellKey.getUserId(), cellKey.getDataId(), protobufRecord);
+                client.updateCellKey(protobufRecord);
             }
         } catch (HttpClientException e) {
             throw new VirgilCloudStorageException(e);

@@ -14,8 +14,8 @@ public final class PurekitProtosV3Client {
     registerAllExtensions(
         (com.google.protobuf.ExtensionRegistryLite) registry);
   }
-  public interface GetUserRecordsOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:build.GetUserRecords)
+  public interface GetUsersRequestOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:build.GetUsersRequest)
       com.google.protobuf.MessageOrBuilder {
 
     /**
@@ -38,18 +38,18 @@ public final class PurekitProtosV3Client {
         getUserIdsBytes(int index);
   }
   /**
-   * Protobuf type {@code build.GetUserRecords}
+   * Protobuf type {@code build.GetUsersRequest}
    */
-  public  static final class GetUserRecords extends
+  public  static final class GetUsersRequest extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:build.GetUserRecords)
-      GetUserRecordsOrBuilder {
+      // @@protoc_insertion_point(message_implements:build.GetUsersRequest)
+      GetUsersRequestOrBuilder {
   private static final long serialVersionUID = 0L;
-    // Use GetUserRecords.newBuilder() to construct.
-    private GetUserRecords(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    // Use GetUsersRequest.newBuilder() to construct.
+    private GetUsersRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
-    private GetUserRecords() {
+    private GetUsersRequest() {
       userIds_ = com.google.protobuf.LazyStringArrayList.EMPTY;
     }
 
@@ -57,7 +57,7 @@ public final class PurekitProtosV3Client {
     @SuppressWarnings({"unused"})
     protected java.lang.Object newInstance(
         UnusedPrivateParameter unused) {
-      return new GetUserRecords();
+      return new GetUsersRequest();
     }
 
     @java.lang.Override
@@ -65,7 +65,7 @@ public final class PurekitProtosV3Client {
     getUnknownFields() {
       return this.unknownFields;
     }
-    private GetUserRecords(
+    private GetUsersRequest(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -117,15 +117,15 @@ public final class PurekitProtosV3Client {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_GetUserRecords_descriptor;
+      return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_GetUsersRequest_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_GetUserRecords_fieldAccessorTable
+      return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_GetUsersRequest_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRecords.class, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRecords.Builder.class);
+              com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUsersRequest.class, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUsersRequest.Builder.class);
     }
 
     public static final int USER_IDS_FIELD_NUMBER = 1;
@@ -201,10 +201,10 @@ public final class PurekitProtosV3Client {
       if (obj == this) {
        return true;
       }
-      if (!(obj instanceof com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRecords)) {
+      if (!(obj instanceof com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUsersRequest)) {
         return super.equals(obj);
       }
-      com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRecords other = (com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRecords) obj;
+      com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUsersRequest other = (com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUsersRequest) obj;
 
       if (!getUserIdsList()
           .equals(other.getUserIdsList())) return false;
@@ -228,69 +228,69 @@ public final class PurekitProtosV3Client {
       return hash;
     }
 
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRecords parseFrom(
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUsersRequest parseFrom(
         java.nio.ByteBuffer data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRecords parseFrom(
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUsersRequest parseFrom(
         java.nio.ByteBuffer data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRecords parseFrom(
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUsersRequest parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRecords parseFrom(
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUsersRequest parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRecords parseFrom(byte[] data)
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUsersRequest parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRecords parseFrom(
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUsersRequest parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRecords parseFrom(java.io.InputStream input)
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUsersRequest parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRecords parseFrom(
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUsersRequest parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRecords parseDelimitedFrom(java.io.InputStream input)
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUsersRequest parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRecords parseDelimitedFrom(
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUsersRequest parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRecords parseFrom(
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUsersRequest parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRecords parseFrom(
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUsersRequest parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -303,7 +303,7 @@ public final class PurekitProtosV3Client {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRecords prototype) {
+    public static Builder newBuilder(com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUsersRequest prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     @java.lang.Override
@@ -319,26 +319,26 @@ public final class PurekitProtosV3Client {
       return builder;
     }
     /**
-     * Protobuf type {@code build.GetUserRecords}
+     * Protobuf type {@code build.GetUsersRequest}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:build.GetUserRecords)
-        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRecordsOrBuilder {
+        // @@protoc_insertion_point(builder_implements:build.GetUsersRequest)
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUsersRequestOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_GetUserRecords_descriptor;
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_GetUsersRequest_descriptor;
       }
 
       @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_GetUserRecords_fieldAccessorTable
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_GetUsersRequest_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRecords.class, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRecords.Builder.class);
+                com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUsersRequest.class, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUsersRequest.Builder.class);
       }
 
-      // Construct using com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRecords.newBuilder()
+      // Construct using com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUsersRequest.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -364,17 +364,17 @@ public final class PurekitProtosV3Client {
       @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_GetUserRecords_descriptor;
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_GetUsersRequest_descriptor;
       }
 
       @java.lang.Override
-      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRecords getDefaultInstanceForType() {
-        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRecords.getDefaultInstance();
+      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUsersRequest getDefaultInstanceForType() {
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUsersRequest.getDefaultInstance();
       }
 
       @java.lang.Override
-      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRecords build() {
-        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRecords result = buildPartial();
+      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUsersRequest build() {
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUsersRequest result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
@@ -382,8 +382,8 @@ public final class PurekitProtosV3Client {
       }
 
       @java.lang.Override
-      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRecords buildPartial() {
-        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRecords result = new com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRecords(this);
+      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUsersRequest buildPartial() {
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUsersRequest result = new com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUsersRequest(this);
         int from_bitField0_ = bitField0_;
         if (((bitField0_ & 0x00000001) != 0)) {
           userIds_ = userIds_.getUnmodifiableView();
@@ -428,16 +428,16 @@ public final class PurekitProtosV3Client {
       }
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRecords) {
-          return mergeFrom((com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRecords)other);
+        if (other instanceof com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUsersRequest) {
+          return mergeFrom((com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUsersRequest)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRecords other) {
-        if (other == com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRecords.getDefaultInstance()) return this;
+      public Builder mergeFrom(com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUsersRequest other) {
+        if (other == com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUsersRequest.getDefaultInstance()) return this;
         if (!other.userIds_.isEmpty()) {
           if (userIds_.isEmpty()) {
             userIds_ = other.userIds_;
@@ -463,11 +463,11 @@ public final class PurekitProtosV3Client {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRecords parsedMessage = null;
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUsersRequest parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRecords) e.getUnfinishedMessage();
+          parsedMessage = (com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUsersRequest) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
           if (parsedMessage != null) {
@@ -584,48 +584,48 @@ public final class PurekitProtosV3Client {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:build.GetUserRecords)
+      // @@protoc_insertion_point(builder_scope:build.GetUsersRequest)
     }
 
-    // @@protoc_insertion_point(class_scope:build.GetUserRecords)
-    private static final com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRecords DEFAULT_INSTANCE;
+    // @@protoc_insertion_point(class_scope:build.GetUsersRequest)
+    private static final com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUsersRequest DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRecords();
+      DEFAULT_INSTANCE = new com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUsersRequest();
     }
 
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRecords getDefaultInstance() {
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUsersRequest getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
-    private static final com.google.protobuf.Parser<GetUserRecords>
-        PARSER = new com.google.protobuf.AbstractParser<GetUserRecords>() {
+    private static final com.google.protobuf.Parser<GetUsersRequest>
+        PARSER = new com.google.protobuf.AbstractParser<GetUsersRequest>() {
       @java.lang.Override
-      public GetUserRecords parsePartialFrom(
+      public GetUsersRequest parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new GetUserRecords(input, extensionRegistry);
+        return new GetUsersRequest(input, extensionRegistry);
       }
     };
 
-    public static com.google.protobuf.Parser<GetUserRecords> parser() {
+    public static com.google.protobuf.Parser<GetUsersRequest> parser() {
       return PARSER;
     }
 
     @java.lang.Override
-    public com.google.protobuf.Parser<GetUserRecords> getParserForType() {
+    public com.google.protobuf.Parser<GetUsersRequest> getParserForType() {
       return PARSER;
     }
 
     @java.lang.Override
-    public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRecords getDefaultInstanceForType() {
+    public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUsersRequest getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
   }
 
-  public interface GetRolesOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:build.GetRoles)
+  public interface GetRolesRequestOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:build.GetRolesRequest)
       com.google.protobuf.MessageOrBuilder {
 
     /**
@@ -648,18 +648,18 @@ public final class PurekitProtosV3Client {
         getRoleNamesBytes(int index);
   }
   /**
-   * Protobuf type {@code build.GetRoles}
+   * Protobuf type {@code build.GetRolesRequest}
    */
-  public  static final class GetRoles extends
+  public  static final class GetRolesRequest extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:build.GetRoles)
-      GetRolesOrBuilder {
+      // @@protoc_insertion_point(message_implements:build.GetRolesRequest)
+      GetRolesRequestOrBuilder {
   private static final long serialVersionUID = 0L;
-    // Use GetRoles.newBuilder() to construct.
-    private GetRoles(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    // Use GetRolesRequest.newBuilder() to construct.
+    private GetRolesRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
-    private GetRoles() {
+    private GetRolesRequest() {
       roleNames_ = com.google.protobuf.LazyStringArrayList.EMPTY;
     }
 
@@ -667,7 +667,7 @@ public final class PurekitProtosV3Client {
     @SuppressWarnings({"unused"})
     protected java.lang.Object newInstance(
         UnusedPrivateParameter unused) {
-      return new GetRoles();
+      return new GetRolesRequest();
     }
 
     @java.lang.Override
@@ -675,7 +675,7 @@ public final class PurekitProtosV3Client {
     getUnknownFields() {
       return this.unknownFields;
     }
-    private GetRoles(
+    private GetRolesRequest(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -727,15 +727,15 @@ public final class PurekitProtosV3Client {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_GetRoles_descriptor;
+      return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_GetRolesRequest_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_GetRoles_fieldAccessorTable
+      return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_GetRolesRequest_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoles.class, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoles.Builder.class);
+              com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRolesRequest.class, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRolesRequest.Builder.class);
     }
 
     public static final int ROLE_NAMES_FIELD_NUMBER = 1;
@@ -811,10 +811,10 @@ public final class PurekitProtosV3Client {
       if (obj == this) {
        return true;
       }
-      if (!(obj instanceof com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoles)) {
+      if (!(obj instanceof com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRolesRequest)) {
         return super.equals(obj);
       }
-      com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoles other = (com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoles) obj;
+      com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRolesRequest other = (com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRolesRequest) obj;
 
       if (!getRoleNamesList()
           .equals(other.getRoleNamesList())) return false;
@@ -838,69 +838,69 @@ public final class PurekitProtosV3Client {
       return hash;
     }
 
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoles parseFrom(
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRolesRequest parseFrom(
         java.nio.ByteBuffer data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoles parseFrom(
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRolesRequest parseFrom(
         java.nio.ByteBuffer data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoles parseFrom(
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRolesRequest parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoles parseFrom(
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRolesRequest parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoles parseFrom(byte[] data)
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRolesRequest parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoles parseFrom(
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRolesRequest parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoles parseFrom(java.io.InputStream input)
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRolesRequest parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoles parseFrom(
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRolesRequest parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoles parseDelimitedFrom(java.io.InputStream input)
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRolesRequest parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoles parseDelimitedFrom(
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRolesRequest parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoles parseFrom(
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRolesRequest parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoles parseFrom(
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRolesRequest parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -913,7 +913,7 @@ public final class PurekitProtosV3Client {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoles prototype) {
+    public static Builder newBuilder(com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRolesRequest prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     @java.lang.Override
@@ -929,26 +929,26 @@ public final class PurekitProtosV3Client {
       return builder;
     }
     /**
-     * Protobuf type {@code build.GetRoles}
+     * Protobuf type {@code build.GetRolesRequest}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:build.GetRoles)
-        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRolesOrBuilder {
+        // @@protoc_insertion_point(builder_implements:build.GetRolesRequest)
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRolesRequestOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_GetRoles_descriptor;
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_GetRolesRequest_descriptor;
       }
 
       @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_GetRoles_fieldAccessorTable
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_GetRolesRequest_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoles.class, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoles.Builder.class);
+                com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRolesRequest.class, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRolesRequest.Builder.class);
       }
 
-      // Construct using com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoles.newBuilder()
+      // Construct using com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRolesRequest.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -974,17 +974,17 @@ public final class PurekitProtosV3Client {
       @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_GetRoles_descriptor;
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_GetRolesRequest_descriptor;
       }
 
       @java.lang.Override
-      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoles getDefaultInstanceForType() {
-        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoles.getDefaultInstance();
+      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRolesRequest getDefaultInstanceForType() {
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRolesRequest.getDefaultInstance();
       }
 
       @java.lang.Override
-      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoles build() {
-        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoles result = buildPartial();
+      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRolesRequest build() {
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRolesRequest result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
@@ -992,8 +992,8 @@ public final class PurekitProtosV3Client {
       }
 
       @java.lang.Override
-      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoles buildPartial() {
-        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoles result = new com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoles(this);
+      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRolesRequest buildPartial() {
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRolesRequest result = new com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRolesRequest(this);
         int from_bitField0_ = bitField0_;
         if (((bitField0_ & 0x00000001) != 0)) {
           roleNames_ = roleNames_.getUnmodifiableView();
@@ -1038,16 +1038,16 @@ public final class PurekitProtosV3Client {
       }
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoles) {
-          return mergeFrom((com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoles)other);
+        if (other instanceof com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRolesRequest) {
+          return mergeFrom((com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRolesRequest)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoles other) {
-        if (other == com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoles.getDefaultInstance()) return this;
+      public Builder mergeFrom(com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRolesRequest other) {
+        if (other == com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRolesRequest.getDefaultInstance()) return this;
         if (!other.roleNames_.isEmpty()) {
           if (roleNames_.isEmpty()) {
             roleNames_ = other.roleNames_;
@@ -1073,11 +1073,11 @@ public final class PurekitProtosV3Client {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoles parsedMessage = null;
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRolesRequest parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoles) e.getUnfinishedMessage();
+          parsedMessage = (com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRolesRequest) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
           if (parsedMessage != null) {
@@ -1194,48 +1194,48 @@ public final class PurekitProtosV3Client {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:build.GetRoles)
+      // @@protoc_insertion_point(builder_scope:build.GetRolesRequest)
     }
 
-    // @@protoc_insertion_point(class_scope:build.GetRoles)
-    private static final com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoles DEFAULT_INSTANCE;
+    // @@protoc_insertion_point(class_scope:build.GetRolesRequest)
+    private static final com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRolesRequest DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoles();
+      DEFAULT_INSTANCE = new com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRolesRequest();
     }
 
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoles getDefaultInstance() {
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRolesRequest getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
-    private static final com.google.protobuf.Parser<GetRoles>
-        PARSER = new com.google.protobuf.AbstractParser<GetRoles>() {
+    private static final com.google.protobuf.Parser<GetRolesRequest>
+        PARSER = new com.google.protobuf.AbstractParser<GetRolesRequest>() {
       @java.lang.Override
-      public GetRoles parsePartialFrom(
+      public GetRolesRequest parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new GetRoles(input, extensionRegistry);
+        return new GetRolesRequest(input, extensionRegistry);
       }
     };
 
-    public static com.google.protobuf.Parser<GetRoles> parser() {
+    public static com.google.protobuf.Parser<GetRolesRequest> parser() {
       return PARSER;
     }
 
     @java.lang.Override
-    public com.google.protobuf.Parser<GetRoles> getParserForType() {
+    public com.google.protobuf.Parser<GetRolesRequest> getParserForType() {
       return PARSER;
     }
 
     @java.lang.Override
-    public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoles getDefaultInstanceForType() {
+    public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRolesRequest getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
   }
 
-  public interface GetRoleAssignmentsOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:build.GetRoleAssignments)
+  public interface GetUserRequestOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:build.GetUserRequest)
       com.google.protobuf.MessageOrBuilder {
 
     /**
@@ -1249,18 +1249,18 @@ public final class PurekitProtosV3Client {
         getUserIdBytes();
   }
   /**
-   * Protobuf type {@code build.GetRoleAssignments}
+   * Protobuf type {@code build.GetUserRequest}
    */
-  public  static final class GetRoleAssignments extends
+  public  static final class GetUserRequest extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:build.GetRoleAssignments)
-      GetRoleAssignmentsOrBuilder {
+      // @@protoc_insertion_point(message_implements:build.GetUserRequest)
+      GetUserRequestOrBuilder {
   private static final long serialVersionUID = 0L;
-    // Use GetRoleAssignments.newBuilder() to construct.
-    private GetRoleAssignments(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    // Use GetUserRequest.newBuilder() to construct.
+    private GetUserRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
-    private GetRoleAssignments() {
+    private GetUserRequest() {
       userId_ = "";
     }
 
@@ -1268,7 +1268,7 @@ public final class PurekitProtosV3Client {
     @SuppressWarnings({"unused"})
     protected java.lang.Object newInstance(
         UnusedPrivateParameter unused) {
-      return new GetRoleAssignments();
+      return new GetUserRequest();
     }
 
     @java.lang.Override
@@ -1276,7 +1276,7 @@ public final class PurekitProtosV3Client {
     getUnknownFields() {
       return this.unknownFields;
     }
-    private GetRoleAssignments(
+    private GetUserRequest(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -1321,15 +1321,15 @@ public final class PurekitProtosV3Client {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_GetRoleAssignments_descriptor;
+      return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_GetUserRequest_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_GetRoleAssignments_fieldAccessorTable
+      return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_GetUserRequest_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignments.class, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignments.Builder.class);
+              com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRequest.class, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRequest.Builder.class);
     }
 
     public static final int USER_ID_FIELD_NUMBER = 1;
@@ -1405,10 +1405,10 @@ public final class PurekitProtosV3Client {
       if (obj == this) {
        return true;
       }
-      if (!(obj instanceof com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignments)) {
+      if (!(obj instanceof com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRequest)) {
         return super.equals(obj);
       }
-      com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignments other = (com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignments) obj;
+      com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRequest other = (com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRequest) obj;
 
       if (!getUserId()
           .equals(other.getUserId())) return false;
@@ -1430,69 +1430,69 @@ public final class PurekitProtosV3Client {
       return hash;
     }
 
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignments parseFrom(
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRequest parseFrom(
         java.nio.ByteBuffer data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignments parseFrom(
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRequest parseFrom(
         java.nio.ByteBuffer data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignments parseFrom(
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRequest parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignments parseFrom(
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRequest parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignments parseFrom(byte[] data)
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRequest parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignments parseFrom(
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRequest parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignments parseFrom(java.io.InputStream input)
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRequest parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignments parseFrom(
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRequest parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignments parseDelimitedFrom(java.io.InputStream input)
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRequest parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignments parseDelimitedFrom(
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRequest parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignments parseFrom(
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRequest parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignments parseFrom(
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRequest parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -1505,7 +1505,7 @@ public final class PurekitProtosV3Client {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignments prototype) {
+    public static Builder newBuilder(com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRequest prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     @java.lang.Override
@@ -1521,26 +1521,26 @@ public final class PurekitProtosV3Client {
       return builder;
     }
     /**
-     * Protobuf type {@code build.GetRoleAssignments}
+     * Protobuf type {@code build.GetUserRequest}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:build.GetRoleAssignments)
-        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentsOrBuilder {
+        // @@protoc_insertion_point(builder_implements:build.GetUserRequest)
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRequestOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_GetRoleAssignments_descriptor;
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_GetUserRequest_descriptor;
       }
 
       @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_GetRoleAssignments_fieldAccessorTable
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_GetUserRequest_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignments.class, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignments.Builder.class);
+                com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRequest.class, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRequest.Builder.class);
       }
 
-      // Construct using com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignments.newBuilder()
+      // Construct using com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRequest.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -1566,17 +1566,17 @@ public final class PurekitProtosV3Client {
       @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_GetRoleAssignments_descriptor;
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_GetUserRequest_descriptor;
       }
 
       @java.lang.Override
-      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignments getDefaultInstanceForType() {
-        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignments.getDefaultInstance();
+      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRequest getDefaultInstanceForType() {
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRequest.getDefaultInstance();
       }
 
       @java.lang.Override
-      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignments build() {
-        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignments result = buildPartial();
+      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRequest build() {
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRequest result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
@@ -1584,8 +1584,8 @@ public final class PurekitProtosV3Client {
       }
 
       @java.lang.Override
-      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignments buildPartial() {
-        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignments result = new com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignments(this);
+      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRequest buildPartial() {
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRequest result = new com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRequest(this);
         result.userId_ = userId_;
         onBuilt();
         return result;
@@ -1625,16 +1625,16 @@ public final class PurekitProtosV3Client {
       }
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignments) {
-          return mergeFrom((com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignments)other);
+        if (other instanceof com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRequest) {
+          return mergeFrom((com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRequest)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignments other) {
-        if (other == com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignments.getDefaultInstance()) return this;
+      public Builder mergeFrom(com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRequest other) {
+        if (other == com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRequest.getDefaultInstance()) return this;
         if (!other.getUserId().isEmpty()) {
           userId_ = other.userId_;
           onChanged();
@@ -1654,11 +1654,11 @@ public final class PurekitProtosV3Client {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignments parsedMessage = null;
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRequest parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignments) e.getUnfinishedMessage();
+          parsedMessage = (com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRequest) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
           if (parsedMessage != null) {
@@ -1749,48 +1749,2542 @@ public final class PurekitProtosV3Client {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:build.GetRoleAssignments)
+      // @@protoc_insertion_point(builder_scope:build.GetUserRequest)
     }
 
-    // @@protoc_insertion_point(class_scope:build.GetRoleAssignments)
-    private static final com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignments DEFAULT_INSTANCE;
+    // @@protoc_insertion_point(class_scope:build.GetUserRequest)
+    private static final com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRequest DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignments();
+      DEFAULT_INSTANCE = new com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRequest();
     }
 
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignments getDefaultInstance() {
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRequest getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
-    private static final com.google.protobuf.Parser<GetRoleAssignments>
-        PARSER = new com.google.protobuf.AbstractParser<GetRoleAssignments>() {
+    private static final com.google.protobuf.Parser<GetUserRequest>
+        PARSER = new com.google.protobuf.AbstractParser<GetUserRequest>() {
       @java.lang.Override
-      public GetRoleAssignments parsePartialFrom(
+      public GetUserRequest parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new GetRoleAssignments(input, extensionRegistry);
+        return new GetUserRequest(input, extensionRegistry);
       }
     };
 
-    public static com.google.protobuf.Parser<GetRoleAssignments> parser() {
+    public static com.google.protobuf.Parser<GetUserRequest> parser() {
       return PARSER;
     }
 
     @java.lang.Override
-    public com.google.protobuf.Parser<GetRoleAssignments> getParserForType() {
+    public com.google.protobuf.Parser<GetUserRequest> getParserForType() {
       return PARSER;
     }
 
     @java.lang.Override
-    public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignments getDefaultInstanceForType() {
+    public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetUserRequest getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
   }
 
-  public interface GetRoleAssignmentOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:build.GetRoleAssignment)
+  public interface DeleteUserRequestOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:build.DeleteUserRequest)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>string user_id = 1;</code>
+     */
+    java.lang.String getUserId();
+    /**
+     * <code>string user_id = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getUserIdBytes();
+  }
+  /**
+   * Protobuf type {@code build.DeleteUserRequest}
+   */
+  public  static final class DeleteUserRequest extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:build.DeleteUserRequest)
+      DeleteUserRequestOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use DeleteUserRequest.newBuilder() to construct.
+    private DeleteUserRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private DeleteUserRequest() {
+      userId_ = "";
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new DeleteUserRequest();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private DeleteUserRequest(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 10: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              userId_ = s;
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_DeleteUserRequest_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_DeleteUserRequest_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteUserRequest.class, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteUserRequest.Builder.class);
+    }
+
+    public static final int USER_ID_FIELD_NUMBER = 1;
+    private volatile java.lang.Object userId_;
+    /**
+     * <code>string user_id = 1;</code>
+     */
+    public java.lang.String getUserId() {
+      java.lang.Object ref = userId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        userId_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string user_id = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getUserIdBytes() {
+      java.lang.Object ref = userId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        userId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (!getUserIdBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, userId_);
+      }
+      unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (!getUserIdBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, userId_);
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteUserRequest)) {
+        return super.equals(obj);
+      }
+      com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteUserRequest other = (com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteUserRequest) obj;
+
+      if (!getUserId()
+          .equals(other.getUserId())) return false;
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + USER_ID_FIELD_NUMBER;
+      hash = (53 * hash) + getUserId().hashCode();
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteUserRequest parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteUserRequest parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteUserRequest parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteUserRequest parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteUserRequest parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteUserRequest parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteUserRequest parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteUserRequest parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteUserRequest parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteUserRequest parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteUserRequest parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteUserRequest parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteUserRequest prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code build.DeleteUserRequest}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:build.DeleteUserRequest)
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteUserRequestOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_DeleteUserRequest_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_DeleteUserRequest_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteUserRequest.class, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteUserRequest.Builder.class);
+      }
+
+      // Construct using com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteUserRequest.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        userId_ = "";
+
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_DeleteUserRequest_descriptor;
+      }
+
+      @java.lang.Override
+      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteUserRequest getDefaultInstanceForType() {
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteUserRequest.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteUserRequest build() {
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteUserRequest result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteUserRequest buildPartial() {
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteUserRequest result = new com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteUserRequest(this);
+        result.userId_ = userId_;
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteUserRequest) {
+          return mergeFrom((com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteUserRequest)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteUserRequest other) {
+        if (other == com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteUserRequest.getDefaultInstance()) return this;
+        if (!other.getUserId().isEmpty()) {
+          userId_ = other.userId_;
+          onChanged();
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteUserRequest parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteUserRequest) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+
+      private java.lang.Object userId_ = "";
+      /**
+       * <code>string user_id = 1;</code>
+       */
+      public java.lang.String getUserId() {
+        java.lang.Object ref = userId_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          userId_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string user_id = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getUserIdBytes() {
+        java.lang.Object ref = userId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          userId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string user_id = 1;</code>
+       */
+      public Builder setUserId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        userId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string user_id = 1;</code>
+       */
+      public Builder clearUserId() {
+        
+        userId_ = getDefaultInstance().getUserId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string user_id = 1;</code>
+       */
+      public Builder setUserIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        userId_ = value;
+        onChanged();
+        return this;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:build.DeleteUserRequest)
+    }
+
+    // @@protoc_insertion_point(class_scope:build.DeleteUserRequest)
+    private static final com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteUserRequest DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteUserRequest();
+    }
+
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteUserRequest getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<DeleteUserRequest>
+        PARSER = new com.google.protobuf.AbstractParser<DeleteUserRequest>() {
+      @java.lang.Override
+      public DeleteUserRequest parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new DeleteUserRequest(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<DeleteUserRequest> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<DeleteUserRequest> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteUserRequest getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface GetCellKeyRequestOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:build.GetCellKeyRequest)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>string user_id = 1;</code>
+     */
+    java.lang.String getUserId();
+    /**
+     * <code>string user_id = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getUserIdBytes();
+
+    /**
+     * <code>string data_id = 2;</code>
+     */
+    java.lang.String getDataId();
+    /**
+     * <code>string data_id = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getDataIdBytes();
+  }
+  /**
+   * Protobuf type {@code build.GetCellKeyRequest}
+   */
+  public  static final class GetCellKeyRequest extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:build.GetCellKeyRequest)
+      GetCellKeyRequestOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use GetCellKeyRequest.newBuilder() to construct.
+    private GetCellKeyRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private GetCellKeyRequest() {
+      userId_ = "";
+      dataId_ = "";
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new GetCellKeyRequest();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private GetCellKeyRequest(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 10: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              userId_ = s;
+              break;
+            }
+            case 18: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              dataId_ = s;
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_GetCellKeyRequest_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_GetCellKeyRequest_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetCellKeyRequest.class, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetCellKeyRequest.Builder.class);
+    }
+
+    public static final int USER_ID_FIELD_NUMBER = 1;
+    private volatile java.lang.Object userId_;
+    /**
+     * <code>string user_id = 1;</code>
+     */
+    public java.lang.String getUserId() {
+      java.lang.Object ref = userId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        userId_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string user_id = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getUserIdBytes() {
+      java.lang.Object ref = userId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        userId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int DATA_ID_FIELD_NUMBER = 2;
+    private volatile java.lang.Object dataId_;
+    /**
+     * <code>string data_id = 2;</code>
+     */
+    public java.lang.String getDataId() {
+      java.lang.Object ref = dataId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        dataId_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string data_id = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getDataIdBytes() {
+      java.lang.Object ref = dataId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        dataId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (!getUserIdBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, userId_);
+      }
+      if (!getDataIdBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, dataId_);
+      }
+      unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (!getUserIdBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, userId_);
+      }
+      if (!getDataIdBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, dataId_);
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetCellKeyRequest)) {
+        return super.equals(obj);
+      }
+      com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetCellKeyRequest other = (com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetCellKeyRequest) obj;
+
+      if (!getUserId()
+          .equals(other.getUserId())) return false;
+      if (!getDataId()
+          .equals(other.getDataId())) return false;
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + USER_ID_FIELD_NUMBER;
+      hash = (53 * hash) + getUserId().hashCode();
+      hash = (37 * hash) + DATA_ID_FIELD_NUMBER;
+      hash = (53 * hash) + getDataId().hashCode();
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetCellKeyRequest parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetCellKeyRequest parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetCellKeyRequest parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetCellKeyRequest parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetCellKeyRequest parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetCellKeyRequest parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetCellKeyRequest parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetCellKeyRequest parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetCellKeyRequest parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetCellKeyRequest parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetCellKeyRequest parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetCellKeyRequest parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetCellKeyRequest prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code build.GetCellKeyRequest}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:build.GetCellKeyRequest)
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetCellKeyRequestOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_GetCellKeyRequest_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_GetCellKeyRequest_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetCellKeyRequest.class, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetCellKeyRequest.Builder.class);
+      }
+
+      // Construct using com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetCellKeyRequest.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        userId_ = "";
+
+        dataId_ = "";
+
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_GetCellKeyRequest_descriptor;
+      }
+
+      @java.lang.Override
+      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetCellKeyRequest getDefaultInstanceForType() {
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetCellKeyRequest.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetCellKeyRequest build() {
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetCellKeyRequest result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetCellKeyRequest buildPartial() {
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetCellKeyRequest result = new com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetCellKeyRequest(this);
+        result.userId_ = userId_;
+        result.dataId_ = dataId_;
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetCellKeyRequest) {
+          return mergeFrom((com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetCellKeyRequest)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetCellKeyRequest other) {
+        if (other == com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetCellKeyRequest.getDefaultInstance()) return this;
+        if (!other.getUserId().isEmpty()) {
+          userId_ = other.userId_;
+          onChanged();
+        }
+        if (!other.getDataId().isEmpty()) {
+          dataId_ = other.dataId_;
+          onChanged();
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetCellKeyRequest parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetCellKeyRequest) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+
+      private java.lang.Object userId_ = "";
+      /**
+       * <code>string user_id = 1;</code>
+       */
+      public java.lang.String getUserId() {
+        java.lang.Object ref = userId_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          userId_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string user_id = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getUserIdBytes() {
+        java.lang.Object ref = userId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          userId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string user_id = 1;</code>
+       */
+      public Builder setUserId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        userId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string user_id = 1;</code>
+       */
+      public Builder clearUserId() {
+        
+        userId_ = getDefaultInstance().getUserId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string user_id = 1;</code>
+       */
+      public Builder setUserIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        userId_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object dataId_ = "";
+      /**
+       * <code>string data_id = 2;</code>
+       */
+      public java.lang.String getDataId() {
+        java.lang.Object ref = dataId_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          dataId_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string data_id = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getDataIdBytes() {
+        java.lang.Object ref = dataId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          dataId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string data_id = 2;</code>
+       */
+      public Builder setDataId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        dataId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string data_id = 2;</code>
+       */
+      public Builder clearDataId() {
+        
+        dataId_ = getDefaultInstance().getDataId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string data_id = 2;</code>
+       */
+      public Builder setDataIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        dataId_ = value;
+        onChanged();
+        return this;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:build.GetCellKeyRequest)
+    }
+
+    // @@protoc_insertion_point(class_scope:build.GetCellKeyRequest)
+    private static final com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetCellKeyRequest DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetCellKeyRequest();
+    }
+
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetCellKeyRequest getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<GetCellKeyRequest>
+        PARSER = new com.google.protobuf.AbstractParser<GetCellKeyRequest>() {
+      @java.lang.Override
+      public GetCellKeyRequest parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new GetCellKeyRequest(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<GetCellKeyRequest> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<GetCellKeyRequest> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetCellKeyRequest getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface DeleteCellKeyRequestOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:build.DeleteCellKeyRequest)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>string user_id = 1;</code>
+     */
+    java.lang.String getUserId();
+    /**
+     * <code>string user_id = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getUserIdBytes();
+
+    /**
+     * <code>string data_id = 2;</code>
+     */
+    java.lang.String getDataId();
+    /**
+     * <code>string data_id = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getDataIdBytes();
+  }
+  /**
+   * Protobuf type {@code build.DeleteCellKeyRequest}
+   */
+  public  static final class DeleteCellKeyRequest extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:build.DeleteCellKeyRequest)
+      DeleteCellKeyRequestOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use DeleteCellKeyRequest.newBuilder() to construct.
+    private DeleteCellKeyRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private DeleteCellKeyRequest() {
+      userId_ = "";
+      dataId_ = "";
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new DeleteCellKeyRequest();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private DeleteCellKeyRequest(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 10: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              userId_ = s;
+              break;
+            }
+            case 18: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              dataId_ = s;
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_DeleteCellKeyRequest_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_DeleteCellKeyRequest_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteCellKeyRequest.class, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteCellKeyRequest.Builder.class);
+    }
+
+    public static final int USER_ID_FIELD_NUMBER = 1;
+    private volatile java.lang.Object userId_;
+    /**
+     * <code>string user_id = 1;</code>
+     */
+    public java.lang.String getUserId() {
+      java.lang.Object ref = userId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        userId_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string user_id = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getUserIdBytes() {
+      java.lang.Object ref = userId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        userId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int DATA_ID_FIELD_NUMBER = 2;
+    private volatile java.lang.Object dataId_;
+    /**
+     * <code>string data_id = 2;</code>
+     */
+    public java.lang.String getDataId() {
+      java.lang.Object ref = dataId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        dataId_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string data_id = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getDataIdBytes() {
+      java.lang.Object ref = dataId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        dataId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (!getUserIdBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, userId_);
+      }
+      if (!getDataIdBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, dataId_);
+      }
+      unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (!getUserIdBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, userId_);
+      }
+      if (!getDataIdBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, dataId_);
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteCellKeyRequest)) {
+        return super.equals(obj);
+      }
+      com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteCellKeyRequest other = (com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteCellKeyRequest) obj;
+
+      if (!getUserId()
+          .equals(other.getUserId())) return false;
+      if (!getDataId()
+          .equals(other.getDataId())) return false;
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + USER_ID_FIELD_NUMBER;
+      hash = (53 * hash) + getUserId().hashCode();
+      hash = (37 * hash) + DATA_ID_FIELD_NUMBER;
+      hash = (53 * hash) + getDataId().hashCode();
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteCellKeyRequest parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteCellKeyRequest parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteCellKeyRequest parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteCellKeyRequest parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteCellKeyRequest parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteCellKeyRequest parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteCellKeyRequest parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteCellKeyRequest parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteCellKeyRequest parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteCellKeyRequest parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteCellKeyRequest parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteCellKeyRequest parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteCellKeyRequest prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code build.DeleteCellKeyRequest}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:build.DeleteCellKeyRequest)
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteCellKeyRequestOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_DeleteCellKeyRequest_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_DeleteCellKeyRequest_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteCellKeyRequest.class, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteCellKeyRequest.Builder.class);
+      }
+
+      // Construct using com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteCellKeyRequest.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        userId_ = "";
+
+        dataId_ = "";
+
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_DeleteCellKeyRequest_descriptor;
+      }
+
+      @java.lang.Override
+      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteCellKeyRequest getDefaultInstanceForType() {
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteCellKeyRequest.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteCellKeyRequest build() {
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteCellKeyRequest result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteCellKeyRequest buildPartial() {
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteCellKeyRequest result = new com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteCellKeyRequest(this);
+        result.userId_ = userId_;
+        result.dataId_ = dataId_;
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteCellKeyRequest) {
+          return mergeFrom((com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteCellKeyRequest)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteCellKeyRequest other) {
+        if (other == com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteCellKeyRequest.getDefaultInstance()) return this;
+        if (!other.getUserId().isEmpty()) {
+          userId_ = other.userId_;
+          onChanged();
+        }
+        if (!other.getDataId().isEmpty()) {
+          dataId_ = other.dataId_;
+          onChanged();
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteCellKeyRequest parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteCellKeyRequest) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+
+      private java.lang.Object userId_ = "";
+      /**
+       * <code>string user_id = 1;</code>
+       */
+      public java.lang.String getUserId() {
+        java.lang.Object ref = userId_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          userId_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string user_id = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getUserIdBytes() {
+        java.lang.Object ref = userId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          userId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string user_id = 1;</code>
+       */
+      public Builder setUserId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        userId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string user_id = 1;</code>
+       */
+      public Builder clearUserId() {
+        
+        userId_ = getDefaultInstance().getUserId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string user_id = 1;</code>
+       */
+      public Builder setUserIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        userId_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object dataId_ = "";
+      /**
+       * <code>string data_id = 2;</code>
+       */
+      public java.lang.String getDataId() {
+        java.lang.Object ref = dataId_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          dataId_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string data_id = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getDataIdBytes() {
+        java.lang.Object ref = dataId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          dataId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string data_id = 2;</code>
+       */
+      public Builder setDataId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        dataId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string data_id = 2;</code>
+       */
+      public Builder clearDataId() {
+        
+        dataId_ = getDefaultInstance().getDataId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string data_id = 2;</code>
+       */
+      public Builder setDataIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        dataId_ = value;
+        onChanged();
+        return this;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:build.DeleteCellKeyRequest)
+    }
+
+    // @@protoc_insertion_point(class_scope:build.DeleteCellKeyRequest)
+    private static final com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteCellKeyRequest DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteCellKeyRequest();
+    }
+
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteCellKeyRequest getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<DeleteCellKeyRequest>
+        PARSER = new com.google.protobuf.AbstractParser<DeleteCellKeyRequest>() {
+      @java.lang.Override
+      public DeleteCellKeyRequest parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new DeleteCellKeyRequest(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<DeleteCellKeyRequest> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<DeleteCellKeyRequest> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteCellKeyRequest getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface GetRoleAssignmentsRequestOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:build.GetRoleAssignmentsRequest)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>string user_id = 1;</code>
+     */
+    java.lang.String getUserId();
+    /**
+     * <code>string user_id = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getUserIdBytes();
+  }
+  /**
+   * Protobuf type {@code build.GetRoleAssignmentsRequest}
+   */
+  public  static final class GetRoleAssignmentsRequest extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:build.GetRoleAssignmentsRequest)
+      GetRoleAssignmentsRequestOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use GetRoleAssignmentsRequest.newBuilder() to construct.
+    private GetRoleAssignmentsRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private GetRoleAssignmentsRequest() {
+      userId_ = "";
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new GetRoleAssignmentsRequest();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private GetRoleAssignmentsRequest(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 10: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              userId_ = s;
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_GetRoleAssignmentsRequest_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_GetRoleAssignmentsRequest_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentsRequest.class, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentsRequest.Builder.class);
+    }
+
+    public static final int USER_ID_FIELD_NUMBER = 1;
+    private volatile java.lang.Object userId_;
+    /**
+     * <code>string user_id = 1;</code>
+     */
+    public java.lang.String getUserId() {
+      java.lang.Object ref = userId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        userId_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string user_id = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getUserIdBytes() {
+      java.lang.Object ref = userId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        userId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (!getUserIdBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, userId_);
+      }
+      unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (!getUserIdBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, userId_);
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentsRequest)) {
+        return super.equals(obj);
+      }
+      com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentsRequest other = (com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentsRequest) obj;
+
+      if (!getUserId()
+          .equals(other.getUserId())) return false;
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + USER_ID_FIELD_NUMBER;
+      hash = (53 * hash) + getUserId().hashCode();
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentsRequest parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentsRequest parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentsRequest parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentsRequest parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentsRequest parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentsRequest parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentsRequest parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentsRequest parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentsRequest parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentsRequest parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentsRequest parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentsRequest parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentsRequest prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code build.GetRoleAssignmentsRequest}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:build.GetRoleAssignmentsRequest)
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentsRequestOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_GetRoleAssignmentsRequest_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_GetRoleAssignmentsRequest_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentsRequest.class, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentsRequest.Builder.class);
+      }
+
+      // Construct using com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentsRequest.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        userId_ = "";
+
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_GetRoleAssignmentsRequest_descriptor;
+      }
+
+      @java.lang.Override
+      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentsRequest getDefaultInstanceForType() {
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentsRequest.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentsRequest build() {
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentsRequest result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentsRequest buildPartial() {
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentsRequest result = new com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentsRequest(this);
+        result.userId_ = userId_;
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentsRequest) {
+          return mergeFrom((com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentsRequest)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentsRequest other) {
+        if (other == com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentsRequest.getDefaultInstance()) return this;
+        if (!other.getUserId().isEmpty()) {
+          userId_ = other.userId_;
+          onChanged();
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentsRequest parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentsRequest) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+
+      private java.lang.Object userId_ = "";
+      /**
+       * <code>string user_id = 1;</code>
+       */
+      public java.lang.String getUserId() {
+        java.lang.Object ref = userId_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          userId_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string user_id = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getUserIdBytes() {
+        java.lang.Object ref = userId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          userId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string user_id = 1;</code>
+       */
+      public Builder setUserId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        userId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string user_id = 1;</code>
+       */
+      public Builder clearUserId() {
+        
+        userId_ = getDefaultInstance().getUserId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string user_id = 1;</code>
+       */
+      public Builder setUserIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        userId_ = value;
+        onChanged();
+        return this;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:build.GetRoleAssignmentsRequest)
+    }
+
+    // @@protoc_insertion_point(class_scope:build.GetRoleAssignmentsRequest)
+    private static final com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentsRequest DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentsRequest();
+    }
+
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentsRequest getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<GetRoleAssignmentsRequest>
+        PARSER = new com.google.protobuf.AbstractParser<GetRoleAssignmentsRequest>() {
+      @java.lang.Override
+      public GetRoleAssignmentsRequest parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new GetRoleAssignmentsRequest(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<GetRoleAssignmentsRequest> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<GetRoleAssignmentsRequest> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentsRequest getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface GetRoleAssignmentRequestOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:build.GetRoleAssignmentRequest)
       com.google.protobuf.MessageOrBuilder {
 
     /**
@@ -1814,18 +4308,18 @@ public final class PurekitProtosV3Client {
         getRoleNameBytes();
   }
   /**
-   * Protobuf type {@code build.GetRoleAssignment}
+   * Protobuf type {@code build.GetRoleAssignmentRequest}
    */
-  public  static final class GetRoleAssignment extends
+  public  static final class GetRoleAssignmentRequest extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:build.GetRoleAssignment)
-      GetRoleAssignmentOrBuilder {
+      // @@protoc_insertion_point(message_implements:build.GetRoleAssignmentRequest)
+      GetRoleAssignmentRequestOrBuilder {
   private static final long serialVersionUID = 0L;
-    // Use GetRoleAssignment.newBuilder() to construct.
-    private GetRoleAssignment(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    // Use GetRoleAssignmentRequest.newBuilder() to construct.
+    private GetRoleAssignmentRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
-    private GetRoleAssignment() {
+    private GetRoleAssignmentRequest() {
       userId_ = "";
       roleName_ = "";
     }
@@ -1834,7 +4328,7 @@ public final class PurekitProtosV3Client {
     @SuppressWarnings({"unused"})
     protected java.lang.Object newInstance(
         UnusedPrivateParameter unused) {
-      return new GetRoleAssignment();
+      return new GetRoleAssignmentRequest();
     }
 
     @java.lang.Override
@@ -1842,7 +4336,7 @@ public final class PurekitProtosV3Client {
     getUnknownFields() {
       return this.unknownFields;
     }
-    private GetRoleAssignment(
+    private GetRoleAssignmentRequest(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -1893,15 +4387,15 @@ public final class PurekitProtosV3Client {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_GetRoleAssignment_descriptor;
+      return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_GetRoleAssignmentRequest_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_GetRoleAssignment_fieldAccessorTable
+      return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_GetRoleAssignmentRequest_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignment.class, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignment.Builder.class);
+              com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentRequest.class, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentRequest.Builder.class);
     }
 
     public static final int USER_ID_FIELD_NUMBER = 1;
@@ -2017,10 +4511,10 @@ public final class PurekitProtosV3Client {
       if (obj == this) {
        return true;
       }
-      if (!(obj instanceof com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignment)) {
+      if (!(obj instanceof com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentRequest)) {
         return super.equals(obj);
       }
-      com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignment other = (com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignment) obj;
+      com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentRequest other = (com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentRequest) obj;
 
       if (!getUserId()
           .equals(other.getUserId())) return false;
@@ -2046,69 +4540,69 @@ public final class PurekitProtosV3Client {
       return hash;
     }
 
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignment parseFrom(
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentRequest parseFrom(
         java.nio.ByteBuffer data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignment parseFrom(
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentRequest parseFrom(
         java.nio.ByteBuffer data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignment parseFrom(
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentRequest parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignment parseFrom(
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentRequest parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignment parseFrom(byte[] data)
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentRequest parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignment parseFrom(
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentRequest parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignment parseFrom(java.io.InputStream input)
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentRequest parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignment parseFrom(
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentRequest parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignment parseDelimitedFrom(java.io.InputStream input)
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentRequest parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignment parseDelimitedFrom(
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentRequest parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignment parseFrom(
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentRequest parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignment parseFrom(
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentRequest parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -2121,7 +4615,7 @@ public final class PurekitProtosV3Client {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignment prototype) {
+    public static Builder newBuilder(com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentRequest prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     @java.lang.Override
@@ -2137,26 +4631,26 @@ public final class PurekitProtosV3Client {
       return builder;
     }
     /**
-     * Protobuf type {@code build.GetRoleAssignment}
+     * Protobuf type {@code build.GetRoleAssignmentRequest}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:build.GetRoleAssignment)
-        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentOrBuilder {
+        // @@protoc_insertion_point(builder_implements:build.GetRoleAssignmentRequest)
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentRequestOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_GetRoleAssignment_descriptor;
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_GetRoleAssignmentRequest_descriptor;
       }
 
       @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_GetRoleAssignment_fieldAccessorTable
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_GetRoleAssignmentRequest_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignment.class, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignment.Builder.class);
+                com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentRequest.class, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentRequest.Builder.class);
       }
 
-      // Construct using com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignment.newBuilder()
+      // Construct using com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentRequest.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -2184,17 +4678,17 @@ public final class PurekitProtosV3Client {
       @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_GetRoleAssignment_descriptor;
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_GetRoleAssignmentRequest_descriptor;
       }
 
       @java.lang.Override
-      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignment getDefaultInstanceForType() {
-        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignment.getDefaultInstance();
+      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentRequest getDefaultInstanceForType() {
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentRequest.getDefaultInstance();
       }
 
       @java.lang.Override
-      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignment build() {
-        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignment result = buildPartial();
+      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentRequest build() {
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentRequest result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
@@ -2202,8 +4696,8 @@ public final class PurekitProtosV3Client {
       }
 
       @java.lang.Override
-      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignment buildPartial() {
-        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignment result = new com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignment(this);
+      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentRequest buildPartial() {
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentRequest result = new com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentRequest(this);
         result.userId_ = userId_;
         result.roleName_ = roleName_;
         onBuilt();
@@ -2244,16 +4738,16 @@ public final class PurekitProtosV3Client {
       }
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignment) {
-          return mergeFrom((com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignment)other);
+        if (other instanceof com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentRequest) {
+          return mergeFrom((com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentRequest)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignment other) {
-        if (other == com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignment.getDefaultInstance()) return this;
+      public Builder mergeFrom(com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentRequest other) {
+        if (other == com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentRequest.getDefaultInstance()) return this;
         if (!other.getUserId().isEmpty()) {
           userId_ = other.userId_;
           onChanged();
@@ -2277,11 +4771,11 @@ public final class PurekitProtosV3Client {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignment parsedMessage = null;
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentRequest parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignment) e.getUnfinishedMessage();
+          parsedMessage = (com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentRequest) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
           if (parsedMessage != null) {
@@ -2441,48 +4935,48 @@ public final class PurekitProtosV3Client {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:build.GetRoleAssignment)
+      // @@protoc_insertion_point(builder_scope:build.GetRoleAssignmentRequest)
     }
 
-    // @@protoc_insertion_point(class_scope:build.GetRoleAssignment)
-    private static final com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignment DEFAULT_INSTANCE;
+    // @@protoc_insertion_point(class_scope:build.GetRoleAssignmentRequest)
+    private static final com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentRequest DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignment();
+      DEFAULT_INSTANCE = new com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentRequest();
     }
 
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignment getDefaultInstance() {
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentRequest getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
-    private static final com.google.protobuf.Parser<GetRoleAssignment>
-        PARSER = new com.google.protobuf.AbstractParser<GetRoleAssignment>() {
+    private static final com.google.protobuf.Parser<GetRoleAssignmentRequest>
+        PARSER = new com.google.protobuf.AbstractParser<GetRoleAssignmentRequest>() {
       @java.lang.Override
-      public GetRoleAssignment parsePartialFrom(
+      public GetRoleAssignmentRequest parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new GetRoleAssignment(input, extensionRegistry);
+        return new GetRoleAssignmentRequest(input, extensionRegistry);
       }
     };
 
-    public static com.google.protobuf.Parser<GetRoleAssignment> parser() {
+    public static com.google.protobuf.Parser<GetRoleAssignmentRequest> parser() {
       return PARSER;
     }
 
     @java.lang.Override
-    public com.google.protobuf.Parser<GetRoleAssignment> getParserForType() {
+    public com.google.protobuf.Parser<GetRoleAssignmentRequest> getParserForType() {
       return PARSER;
     }
 
     @java.lang.Override
-    public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignment getDefaultInstanceForType() {
+    public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetRoleAssignmentRequest getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
   }
 
-  public interface DeleteRoleAssignmentsOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:build.DeleteRoleAssignments)
+  public interface DeleteRoleAssignmentsRequestOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:build.DeleteRoleAssignmentsRequest)
       com.google.protobuf.MessageOrBuilder {
 
     /**
@@ -2515,18 +5009,18 @@ public final class PurekitProtosV3Client {
         getUserIdsBytes(int index);
   }
   /**
-   * Protobuf type {@code build.DeleteRoleAssignments}
+   * Protobuf type {@code build.DeleteRoleAssignmentsRequest}
    */
-  public  static final class DeleteRoleAssignments extends
+  public  static final class DeleteRoleAssignmentsRequest extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:build.DeleteRoleAssignments)
-      DeleteRoleAssignmentsOrBuilder {
+      // @@protoc_insertion_point(message_implements:build.DeleteRoleAssignmentsRequest)
+      DeleteRoleAssignmentsRequestOrBuilder {
   private static final long serialVersionUID = 0L;
-    // Use DeleteRoleAssignments.newBuilder() to construct.
-    private DeleteRoleAssignments(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    // Use DeleteRoleAssignmentsRequest.newBuilder() to construct.
+    private DeleteRoleAssignmentsRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
-    private DeleteRoleAssignments() {
+    private DeleteRoleAssignmentsRequest() {
       roleName_ = "";
       userIds_ = com.google.protobuf.LazyStringArrayList.EMPTY;
     }
@@ -2535,7 +5029,7 @@ public final class PurekitProtosV3Client {
     @SuppressWarnings({"unused"})
     protected java.lang.Object newInstance(
         UnusedPrivateParameter unused) {
-      return new DeleteRoleAssignments();
+      return new DeleteRoleAssignmentsRequest();
     }
 
     @java.lang.Override
@@ -2543,7 +5037,7 @@ public final class PurekitProtosV3Client {
     getUnknownFields() {
       return this.unknownFields;
     }
-    private DeleteRoleAssignments(
+    private DeleteRoleAssignmentsRequest(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -2601,15 +5095,15 @@ public final class PurekitProtosV3Client {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_DeleteRoleAssignments_descriptor;
+      return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_DeleteRoleAssignmentsRequest_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_DeleteRoleAssignments_fieldAccessorTable
+      return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_DeleteRoleAssignmentsRequest_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignments.class, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignments.Builder.class);
+              com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignmentsRequest.class, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignmentsRequest.Builder.class);
     }
 
     public static final int ROLE_NAME_FIELD_NUMBER = 1;
@@ -2725,10 +5219,10 @@ public final class PurekitProtosV3Client {
       if (obj == this) {
        return true;
       }
-      if (!(obj instanceof com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignments)) {
+      if (!(obj instanceof com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignmentsRequest)) {
         return super.equals(obj);
       }
-      com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignments other = (com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignments) obj;
+      com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignmentsRequest other = (com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignmentsRequest) obj;
 
       if (!getRoleName()
           .equals(other.getRoleName())) return false;
@@ -2756,69 +5250,69 @@ public final class PurekitProtosV3Client {
       return hash;
     }
 
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignments parseFrom(
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignmentsRequest parseFrom(
         java.nio.ByteBuffer data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignments parseFrom(
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignmentsRequest parseFrom(
         java.nio.ByteBuffer data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignments parseFrom(
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignmentsRequest parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignments parseFrom(
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignmentsRequest parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignments parseFrom(byte[] data)
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignmentsRequest parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignments parseFrom(
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignmentsRequest parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignments parseFrom(java.io.InputStream input)
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignmentsRequest parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignments parseFrom(
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignmentsRequest parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignments parseDelimitedFrom(java.io.InputStream input)
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignmentsRequest parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignments parseDelimitedFrom(
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignmentsRequest parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignments parseFrom(
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignmentsRequest parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignments parseFrom(
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignmentsRequest parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -2831,7 +5325,7 @@ public final class PurekitProtosV3Client {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignments prototype) {
+    public static Builder newBuilder(com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignmentsRequest prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     @java.lang.Override
@@ -2847,26 +5341,26 @@ public final class PurekitProtosV3Client {
       return builder;
     }
     /**
-     * Protobuf type {@code build.DeleteRoleAssignments}
+     * Protobuf type {@code build.DeleteRoleAssignmentsRequest}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:build.DeleteRoleAssignments)
-        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignmentsOrBuilder {
+        // @@protoc_insertion_point(builder_implements:build.DeleteRoleAssignmentsRequest)
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignmentsRequestOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_DeleteRoleAssignments_descriptor;
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_DeleteRoleAssignmentsRequest_descriptor;
       }
 
       @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_DeleteRoleAssignments_fieldAccessorTable
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_DeleteRoleAssignmentsRequest_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignments.class, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignments.Builder.class);
+                com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignmentsRequest.class, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignmentsRequest.Builder.class);
       }
 
-      // Construct using com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignments.newBuilder()
+      // Construct using com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignmentsRequest.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -2894,17 +5388,17 @@ public final class PurekitProtosV3Client {
       @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_DeleteRoleAssignments_descriptor;
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_DeleteRoleAssignmentsRequest_descriptor;
       }
 
       @java.lang.Override
-      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignments getDefaultInstanceForType() {
-        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignments.getDefaultInstance();
+      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignmentsRequest getDefaultInstanceForType() {
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignmentsRequest.getDefaultInstance();
       }
 
       @java.lang.Override
-      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignments build() {
-        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignments result = buildPartial();
+      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignmentsRequest build() {
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignmentsRequest result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
@@ -2912,8 +5406,8 @@ public final class PurekitProtosV3Client {
       }
 
       @java.lang.Override
-      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignments buildPartial() {
-        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignments result = new com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignments(this);
+      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignmentsRequest buildPartial() {
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignmentsRequest result = new com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignmentsRequest(this);
         int from_bitField0_ = bitField0_;
         result.roleName_ = roleName_;
         if (((bitField0_ & 0x00000001) != 0)) {
@@ -2959,16 +5453,16 @@ public final class PurekitProtosV3Client {
       }
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignments) {
-          return mergeFrom((com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignments)other);
+        if (other instanceof com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignmentsRequest) {
+          return mergeFrom((com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignmentsRequest)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignments other) {
-        if (other == com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignments.getDefaultInstance()) return this;
+      public Builder mergeFrom(com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignmentsRequest other) {
+        if (other == com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignmentsRequest.getDefaultInstance()) return this;
         if (!other.getRoleName().isEmpty()) {
           roleName_ = other.roleName_;
           onChanged();
@@ -2998,11 +5492,11 @@ public final class PurekitProtosV3Client {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignments parsedMessage = null;
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignmentsRequest parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignments) e.getUnfinishedMessage();
+          parsedMessage = (com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignmentsRequest) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
           if (parsedMessage != null) {
@@ -3188,48 +5682,48 @@ public final class PurekitProtosV3Client {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:build.DeleteRoleAssignments)
+      // @@protoc_insertion_point(builder_scope:build.DeleteRoleAssignmentsRequest)
     }
 
-    // @@protoc_insertion_point(class_scope:build.DeleteRoleAssignments)
-    private static final com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignments DEFAULT_INSTANCE;
+    // @@protoc_insertion_point(class_scope:build.DeleteRoleAssignmentsRequest)
+    private static final com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignmentsRequest DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignments();
+      DEFAULT_INSTANCE = new com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignmentsRequest();
     }
 
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignments getDefaultInstance() {
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignmentsRequest getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
-    private static final com.google.protobuf.Parser<DeleteRoleAssignments>
-        PARSER = new com.google.protobuf.AbstractParser<DeleteRoleAssignments>() {
+    private static final com.google.protobuf.Parser<DeleteRoleAssignmentsRequest>
+        PARSER = new com.google.protobuf.AbstractParser<DeleteRoleAssignmentsRequest>() {
       @java.lang.Override
-      public DeleteRoleAssignments parsePartialFrom(
+      public DeleteRoleAssignmentsRequest parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new DeleteRoleAssignments(input, extensionRegistry);
+        return new DeleteRoleAssignmentsRequest(input, extensionRegistry);
       }
     };
 
-    public static com.google.protobuf.Parser<DeleteRoleAssignments> parser() {
+    public static com.google.protobuf.Parser<DeleteRoleAssignmentsRequest> parser() {
       return PARSER;
     }
 
     @java.lang.Override
-    public com.google.protobuf.Parser<DeleteRoleAssignments> getParserForType() {
+    public com.google.protobuf.Parser<DeleteRoleAssignmentsRequest> getParserForType() {
       return PARSER;
     }
 
     @java.lang.Override
-    public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignments getDefaultInstanceForType() {
+    public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleAssignmentsRequest getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
   }
 
-  public interface DeleteRoleOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:build.DeleteRole)
+  public interface DeleteRoleRequestOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:build.DeleteRoleRequest)
       com.google.protobuf.MessageOrBuilder {
 
     /**
@@ -3243,18 +5737,18 @@ public final class PurekitProtosV3Client {
         getNameBytes();
   }
   /**
-   * Protobuf type {@code build.DeleteRole}
+   * Protobuf type {@code build.DeleteRoleRequest}
    */
-  public  static final class DeleteRole extends
+  public  static final class DeleteRoleRequest extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:build.DeleteRole)
-      DeleteRoleOrBuilder {
+      // @@protoc_insertion_point(message_implements:build.DeleteRoleRequest)
+      DeleteRoleRequestOrBuilder {
   private static final long serialVersionUID = 0L;
-    // Use DeleteRole.newBuilder() to construct.
-    private DeleteRole(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    // Use DeleteRoleRequest.newBuilder() to construct.
+    private DeleteRoleRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
-    private DeleteRole() {
+    private DeleteRoleRequest() {
       name_ = "";
     }
 
@@ -3262,7 +5756,7 @@ public final class PurekitProtosV3Client {
     @SuppressWarnings({"unused"})
     protected java.lang.Object newInstance(
         UnusedPrivateParameter unused) {
-      return new DeleteRole();
+      return new DeleteRoleRequest();
     }
 
     @java.lang.Override
@@ -3270,7 +5764,7 @@ public final class PurekitProtosV3Client {
     getUnknownFields() {
       return this.unknownFields;
     }
-    private DeleteRole(
+    private DeleteRoleRequest(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -3315,15 +5809,15 @@ public final class PurekitProtosV3Client {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_DeleteRole_descriptor;
+      return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_DeleteRoleRequest_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_DeleteRole_fieldAccessorTable
+      return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_DeleteRoleRequest_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRole.class, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRole.Builder.class);
+              com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleRequest.class, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleRequest.Builder.class);
     }
 
     public static final int NAME_FIELD_NUMBER = 1;
@@ -3399,10 +5893,10 @@ public final class PurekitProtosV3Client {
       if (obj == this) {
        return true;
       }
-      if (!(obj instanceof com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRole)) {
+      if (!(obj instanceof com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleRequest)) {
         return super.equals(obj);
       }
-      com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRole other = (com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRole) obj;
+      com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleRequest other = (com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleRequest) obj;
 
       if (!getName()
           .equals(other.getName())) return false;
@@ -3424,69 +5918,69 @@ public final class PurekitProtosV3Client {
       return hash;
     }
 
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRole parseFrom(
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleRequest parseFrom(
         java.nio.ByteBuffer data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRole parseFrom(
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleRequest parseFrom(
         java.nio.ByteBuffer data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRole parseFrom(
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleRequest parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRole parseFrom(
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleRequest parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRole parseFrom(byte[] data)
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleRequest parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRole parseFrom(
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleRequest parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRole parseFrom(java.io.InputStream input)
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleRequest parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRole parseFrom(
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleRequest parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRole parseDelimitedFrom(java.io.InputStream input)
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleRequest parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRole parseDelimitedFrom(
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleRequest parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRole parseFrom(
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleRequest parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRole parseFrom(
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleRequest parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -3499,7 +5993,7 @@ public final class PurekitProtosV3Client {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRole prototype) {
+    public static Builder newBuilder(com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleRequest prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     @java.lang.Override
@@ -3515,26 +6009,26 @@ public final class PurekitProtosV3Client {
       return builder;
     }
     /**
-     * Protobuf type {@code build.DeleteRole}
+     * Protobuf type {@code build.DeleteRoleRequest}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:build.DeleteRole)
-        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleOrBuilder {
+        // @@protoc_insertion_point(builder_implements:build.DeleteRoleRequest)
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleRequestOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_DeleteRole_descriptor;
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_DeleteRoleRequest_descriptor;
       }
 
       @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_DeleteRole_fieldAccessorTable
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_DeleteRoleRequest_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRole.class, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRole.Builder.class);
+                com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleRequest.class, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleRequest.Builder.class);
       }
 
-      // Construct using com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRole.newBuilder()
+      // Construct using com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleRequest.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -3560,17 +6054,17 @@ public final class PurekitProtosV3Client {
       @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_DeleteRole_descriptor;
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_DeleteRoleRequest_descriptor;
       }
 
       @java.lang.Override
-      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRole getDefaultInstanceForType() {
-        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRole.getDefaultInstance();
+      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleRequest getDefaultInstanceForType() {
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleRequest.getDefaultInstance();
       }
 
       @java.lang.Override
-      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRole build() {
-        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRole result = buildPartial();
+      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleRequest build() {
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleRequest result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
@@ -3578,8 +6072,8 @@ public final class PurekitProtosV3Client {
       }
 
       @java.lang.Override
-      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRole buildPartial() {
-        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRole result = new com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRole(this);
+      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleRequest buildPartial() {
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleRequest result = new com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleRequest(this);
         result.name_ = name_;
         onBuilt();
         return result;
@@ -3619,16 +6113,16 @@ public final class PurekitProtosV3Client {
       }
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRole) {
-          return mergeFrom((com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRole)other);
+        if (other instanceof com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleRequest) {
+          return mergeFrom((com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleRequest)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRole other) {
-        if (other == com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRole.getDefaultInstance()) return this;
+      public Builder mergeFrom(com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleRequest other) {
+        if (other == com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleRequest.getDefaultInstance()) return this;
         if (!other.getName().isEmpty()) {
           name_ = other.name_;
           onChanged();
@@ -3648,11 +6142,11 @@ public final class PurekitProtosV3Client {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRole parsedMessage = null;
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleRequest parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRole) e.getUnfinishedMessage();
+          parsedMessage = (com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleRequest) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
           if (parsedMessage != null) {
@@ -3743,41 +6237,41 @@ public final class PurekitProtosV3Client {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:build.DeleteRole)
+      // @@protoc_insertion_point(builder_scope:build.DeleteRoleRequest)
     }
 
-    // @@protoc_insertion_point(class_scope:build.DeleteRole)
-    private static final com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRole DEFAULT_INSTANCE;
+    // @@protoc_insertion_point(class_scope:build.DeleteRoleRequest)
+    private static final com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleRequest DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRole();
+      DEFAULT_INSTANCE = new com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleRequest();
     }
 
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRole getDefaultInstance() {
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleRequest getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
-    private static final com.google.protobuf.Parser<DeleteRole>
-        PARSER = new com.google.protobuf.AbstractParser<DeleteRole>() {
+    private static final com.google.protobuf.Parser<DeleteRoleRequest>
+        PARSER = new com.google.protobuf.AbstractParser<DeleteRoleRequest>() {
       @java.lang.Override
-      public DeleteRole parsePartialFrom(
+      public DeleteRoleRequest parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new DeleteRole(input, extensionRegistry);
+        return new DeleteRoleRequest(input, extensionRegistry);
       }
     };
 
-    public static com.google.protobuf.Parser<DeleteRole> parser() {
+    public static com.google.protobuf.Parser<DeleteRoleRequest> parser() {
       return PARSER;
     }
 
     @java.lang.Override
-    public com.google.protobuf.Parser<DeleteRole> getParserForType() {
+    public com.google.protobuf.Parser<DeleteRoleRequest> getParserForType() {
       return PARSER;
     }
 
     @java.lang.Override
-    public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRole getDefaultInstanceForType() {
+    public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteRoleRequest getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -4950,8 +7444,8 @@ public final class PurekitProtosV3Client {
 
   }
 
-  public interface GrantKeyDescriptorOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:build.GrantKeyDescriptor)
+  public interface GetGrantKeyRequestOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:build.GetGrantKeyRequest)
       com.google.protobuf.MessageOrBuilder {
 
     /**
@@ -4970,18 +7464,18 @@ public final class PurekitProtosV3Client {
     com.google.protobuf.ByteString getKeyId();
   }
   /**
-   * Protobuf type {@code build.GrantKeyDescriptor}
+   * Protobuf type {@code build.GetGrantKeyRequest}
    */
-  public  static final class GrantKeyDescriptor extends
+  public  static final class GetGrantKeyRequest extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:build.GrantKeyDescriptor)
-      GrantKeyDescriptorOrBuilder {
+      // @@protoc_insertion_point(message_implements:build.GetGrantKeyRequest)
+      GetGrantKeyRequestOrBuilder {
   private static final long serialVersionUID = 0L;
-    // Use GrantKeyDescriptor.newBuilder() to construct.
-    private GrantKeyDescriptor(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    // Use GetGrantKeyRequest.newBuilder() to construct.
+    private GetGrantKeyRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
-    private GrantKeyDescriptor() {
+    private GetGrantKeyRequest() {
       userId_ = "";
       keyId_ = com.google.protobuf.ByteString.EMPTY;
     }
@@ -4990,7 +7484,7 @@ public final class PurekitProtosV3Client {
     @SuppressWarnings({"unused"})
     protected java.lang.Object newInstance(
         UnusedPrivateParameter unused) {
-      return new GrantKeyDescriptor();
+      return new GetGrantKeyRequest();
     }
 
     @java.lang.Override
@@ -4998,7 +7492,7 @@ public final class PurekitProtosV3Client {
     getUnknownFields() {
       return this.unknownFields;
     }
-    private GrantKeyDescriptor(
+    private GetGrantKeyRequest(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -5048,15 +7542,15 @@ public final class PurekitProtosV3Client {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_GrantKeyDescriptor_descriptor;
+      return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_GetGrantKeyRequest_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_GrantKeyDescriptor_fieldAccessorTable
+      return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_GetGrantKeyRequest_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GrantKeyDescriptor.class, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GrantKeyDescriptor.Builder.class);
+              com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetGrantKeyRequest.class, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetGrantKeyRequest.Builder.class);
     }
 
     public static final int USER_ID_FIELD_NUMBER = 1;
@@ -5148,10 +7642,10 @@ public final class PurekitProtosV3Client {
       if (obj == this) {
        return true;
       }
-      if (!(obj instanceof com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GrantKeyDescriptor)) {
+      if (!(obj instanceof com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetGrantKeyRequest)) {
         return super.equals(obj);
       }
-      com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GrantKeyDescriptor other = (com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GrantKeyDescriptor) obj;
+      com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetGrantKeyRequest other = (com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetGrantKeyRequest) obj;
 
       if (!getUserId()
           .equals(other.getUserId())) return false;
@@ -5177,69 +7671,69 @@ public final class PurekitProtosV3Client {
       return hash;
     }
 
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GrantKeyDescriptor parseFrom(
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetGrantKeyRequest parseFrom(
         java.nio.ByteBuffer data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GrantKeyDescriptor parseFrom(
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetGrantKeyRequest parseFrom(
         java.nio.ByteBuffer data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GrantKeyDescriptor parseFrom(
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetGrantKeyRequest parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GrantKeyDescriptor parseFrom(
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetGrantKeyRequest parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GrantKeyDescriptor parseFrom(byte[] data)
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetGrantKeyRequest parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GrantKeyDescriptor parseFrom(
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetGrantKeyRequest parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GrantKeyDescriptor parseFrom(java.io.InputStream input)
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetGrantKeyRequest parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GrantKeyDescriptor parseFrom(
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetGrantKeyRequest parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GrantKeyDescriptor parseDelimitedFrom(java.io.InputStream input)
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetGrantKeyRequest parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GrantKeyDescriptor parseDelimitedFrom(
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetGrantKeyRequest parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GrantKeyDescriptor parseFrom(
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetGrantKeyRequest parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GrantKeyDescriptor parseFrom(
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetGrantKeyRequest parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -5252,7 +7746,7 @@ public final class PurekitProtosV3Client {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GrantKeyDescriptor prototype) {
+    public static Builder newBuilder(com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetGrantKeyRequest prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     @java.lang.Override
@@ -5268,26 +7762,26 @@ public final class PurekitProtosV3Client {
       return builder;
     }
     /**
-     * Protobuf type {@code build.GrantKeyDescriptor}
+     * Protobuf type {@code build.GetGrantKeyRequest}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:build.GrantKeyDescriptor)
-        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GrantKeyDescriptorOrBuilder {
+        // @@protoc_insertion_point(builder_implements:build.GetGrantKeyRequest)
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetGrantKeyRequestOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_GrantKeyDescriptor_descriptor;
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_GetGrantKeyRequest_descriptor;
       }
 
       @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_GrantKeyDescriptor_fieldAccessorTable
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_GetGrantKeyRequest_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GrantKeyDescriptor.class, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GrantKeyDescriptor.Builder.class);
+                com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetGrantKeyRequest.class, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetGrantKeyRequest.Builder.class);
       }
 
-      // Construct using com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GrantKeyDescriptor.newBuilder()
+      // Construct using com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetGrantKeyRequest.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -5315,17 +7809,17 @@ public final class PurekitProtosV3Client {
       @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_GrantKeyDescriptor_descriptor;
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_GetGrantKeyRequest_descriptor;
       }
 
       @java.lang.Override
-      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GrantKeyDescriptor getDefaultInstanceForType() {
-        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GrantKeyDescriptor.getDefaultInstance();
+      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetGrantKeyRequest getDefaultInstanceForType() {
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetGrantKeyRequest.getDefaultInstance();
       }
 
       @java.lang.Override
-      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GrantKeyDescriptor build() {
-        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GrantKeyDescriptor result = buildPartial();
+      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetGrantKeyRequest build() {
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetGrantKeyRequest result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
@@ -5333,8 +7827,8 @@ public final class PurekitProtosV3Client {
       }
 
       @java.lang.Override
-      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GrantKeyDescriptor buildPartial() {
-        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GrantKeyDescriptor result = new com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GrantKeyDescriptor(this);
+      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetGrantKeyRequest buildPartial() {
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetGrantKeyRequest result = new com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetGrantKeyRequest(this);
         result.userId_ = userId_;
         result.keyId_ = keyId_;
         onBuilt();
@@ -5375,16 +7869,16 @@ public final class PurekitProtosV3Client {
       }
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GrantKeyDescriptor) {
-          return mergeFrom((com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GrantKeyDescriptor)other);
+        if (other instanceof com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetGrantKeyRequest) {
+          return mergeFrom((com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetGrantKeyRequest)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GrantKeyDescriptor other) {
-        if (other == com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GrantKeyDescriptor.getDefaultInstance()) return this;
+      public Builder mergeFrom(com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetGrantKeyRequest other) {
+        if (other == com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetGrantKeyRequest.getDefaultInstance()) return this;
         if (!other.getUserId().isEmpty()) {
           userId_ = other.userId_;
           onChanged();
@@ -5407,11 +7901,11 @@ public final class PurekitProtosV3Client {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GrantKeyDescriptor parsedMessage = null;
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetGrantKeyRequest parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GrantKeyDescriptor) e.getUnfinishedMessage();
+          parsedMessage = (com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetGrantKeyRequest) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
           if (parsedMessage != null) {
@@ -5531,76 +8025,717 @@ public final class PurekitProtosV3Client {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:build.GrantKeyDescriptor)
+      // @@protoc_insertion_point(builder_scope:build.GetGrantKeyRequest)
     }
 
-    // @@protoc_insertion_point(class_scope:build.GrantKeyDescriptor)
-    private static final com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GrantKeyDescriptor DEFAULT_INSTANCE;
+    // @@protoc_insertion_point(class_scope:build.GetGrantKeyRequest)
+    private static final com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetGrantKeyRequest DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GrantKeyDescriptor();
+      DEFAULT_INSTANCE = new com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetGrantKeyRequest();
     }
 
-    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GrantKeyDescriptor getDefaultInstance() {
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetGrantKeyRequest getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
-    private static final com.google.protobuf.Parser<GrantKeyDescriptor>
-        PARSER = new com.google.protobuf.AbstractParser<GrantKeyDescriptor>() {
+    private static final com.google.protobuf.Parser<GetGrantKeyRequest>
+        PARSER = new com.google.protobuf.AbstractParser<GetGrantKeyRequest>() {
       @java.lang.Override
-      public GrantKeyDescriptor parsePartialFrom(
+      public GetGrantKeyRequest parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new GrantKeyDescriptor(input, extensionRegistry);
+        return new GetGrantKeyRequest(input, extensionRegistry);
       }
     };
 
-    public static com.google.protobuf.Parser<GrantKeyDescriptor> parser() {
+    public static com.google.protobuf.Parser<GetGrantKeyRequest> parser() {
       return PARSER;
     }
 
     @java.lang.Override
-    public com.google.protobuf.Parser<GrantKeyDescriptor> getParserForType() {
+    public com.google.protobuf.Parser<GetGrantKeyRequest> getParserForType() {
       return PARSER;
     }
 
     @java.lang.Override
-    public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GrantKeyDescriptor getDefaultInstanceForType() {
+    public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.GetGrantKeyRequest getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface DeleteGrantKeyRequestOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:build.DeleteGrantKeyRequest)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>string user_id = 1;</code>
+     */
+    java.lang.String getUserId();
+    /**
+     * <code>string user_id = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getUserIdBytes();
+
+    /**
+     * <code>bytes key_id = 2;</code>
+     */
+    com.google.protobuf.ByteString getKeyId();
+  }
+  /**
+   * Protobuf type {@code build.DeleteGrantKeyRequest}
+   */
+  public  static final class DeleteGrantKeyRequest extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:build.DeleteGrantKeyRequest)
+      DeleteGrantKeyRequestOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use DeleteGrantKeyRequest.newBuilder() to construct.
+    private DeleteGrantKeyRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private DeleteGrantKeyRequest() {
+      userId_ = "";
+      keyId_ = com.google.protobuf.ByteString.EMPTY;
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new DeleteGrantKeyRequest();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private DeleteGrantKeyRequest(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 10: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              userId_ = s;
+              break;
+            }
+            case 18: {
+
+              keyId_ = input.readBytes();
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_DeleteGrantKeyRequest_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_DeleteGrantKeyRequest_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteGrantKeyRequest.class, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteGrantKeyRequest.Builder.class);
+    }
+
+    public static final int USER_ID_FIELD_NUMBER = 1;
+    private volatile java.lang.Object userId_;
+    /**
+     * <code>string user_id = 1;</code>
+     */
+    public java.lang.String getUserId() {
+      java.lang.Object ref = userId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        userId_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string user_id = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getUserIdBytes() {
+      java.lang.Object ref = userId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        userId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int KEY_ID_FIELD_NUMBER = 2;
+    private com.google.protobuf.ByteString keyId_;
+    /**
+     * <code>bytes key_id = 2;</code>
+     */
+    public com.google.protobuf.ByteString getKeyId() {
+      return keyId_;
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (!getUserIdBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, userId_);
+      }
+      if (!keyId_.isEmpty()) {
+        output.writeBytes(2, keyId_);
+      }
+      unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (!getUserIdBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, userId_);
+      }
+      if (!keyId_.isEmpty()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(2, keyId_);
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteGrantKeyRequest)) {
+        return super.equals(obj);
+      }
+      com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteGrantKeyRequest other = (com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteGrantKeyRequest) obj;
+
+      if (!getUserId()
+          .equals(other.getUserId())) return false;
+      if (!getKeyId()
+          .equals(other.getKeyId())) return false;
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + USER_ID_FIELD_NUMBER;
+      hash = (53 * hash) + getUserId().hashCode();
+      hash = (37 * hash) + KEY_ID_FIELD_NUMBER;
+      hash = (53 * hash) + getKeyId().hashCode();
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteGrantKeyRequest parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteGrantKeyRequest parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteGrantKeyRequest parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteGrantKeyRequest parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteGrantKeyRequest parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteGrantKeyRequest parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteGrantKeyRequest parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteGrantKeyRequest parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteGrantKeyRequest parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteGrantKeyRequest parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteGrantKeyRequest parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteGrantKeyRequest parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteGrantKeyRequest prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code build.DeleteGrantKeyRequest}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:build.DeleteGrantKeyRequest)
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteGrantKeyRequestOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_DeleteGrantKeyRequest_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_DeleteGrantKeyRequest_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteGrantKeyRequest.class, com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteGrantKeyRequest.Builder.class);
+      }
+
+      // Construct using com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteGrantKeyRequest.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        userId_ = "";
+
+        keyId_ = com.google.protobuf.ByteString.EMPTY;
+
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.internal_static_build_DeleteGrantKeyRequest_descriptor;
+      }
+
+      @java.lang.Override
+      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteGrantKeyRequest getDefaultInstanceForType() {
+        return com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteGrantKeyRequest.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteGrantKeyRequest build() {
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteGrantKeyRequest result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteGrantKeyRequest buildPartial() {
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteGrantKeyRequest result = new com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteGrantKeyRequest(this);
+        result.userId_ = userId_;
+        result.keyId_ = keyId_;
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteGrantKeyRequest) {
+          return mergeFrom((com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteGrantKeyRequest)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteGrantKeyRequest other) {
+        if (other == com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteGrantKeyRequest.getDefaultInstance()) return this;
+        if (!other.getUserId().isEmpty()) {
+          userId_ = other.userId_;
+          onChanged();
+        }
+        if (other.getKeyId() != com.google.protobuf.ByteString.EMPTY) {
+          setKeyId(other.getKeyId());
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteGrantKeyRequest parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteGrantKeyRequest) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+
+      private java.lang.Object userId_ = "";
+      /**
+       * <code>string user_id = 1;</code>
+       */
+      public java.lang.String getUserId() {
+        java.lang.Object ref = userId_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          userId_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string user_id = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getUserIdBytes() {
+        java.lang.Object ref = userId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          userId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string user_id = 1;</code>
+       */
+      public Builder setUserId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        userId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string user_id = 1;</code>
+       */
+      public Builder clearUserId() {
+        
+        userId_ = getDefaultInstance().getUserId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string user_id = 1;</code>
+       */
+      public Builder setUserIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        userId_ = value;
+        onChanged();
+        return this;
+      }
+
+      private com.google.protobuf.ByteString keyId_ = com.google.protobuf.ByteString.EMPTY;
+      /**
+       * <code>bytes key_id = 2;</code>
+       */
+      public com.google.protobuf.ByteString getKeyId() {
+        return keyId_;
+      }
+      /**
+       * <code>bytes key_id = 2;</code>
+       */
+      public Builder setKeyId(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        keyId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>bytes key_id = 2;</code>
+       */
+      public Builder clearKeyId() {
+        
+        keyId_ = getDefaultInstance().getKeyId();
+        onChanged();
+        return this;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:build.DeleteGrantKeyRequest)
+    }
+
+    // @@protoc_insertion_point(class_scope:build.DeleteGrantKeyRequest)
+    private static final com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteGrantKeyRequest DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteGrantKeyRequest();
+    }
+
+    public static com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteGrantKeyRequest getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<DeleteGrantKeyRequest>
+        PARSER = new com.google.protobuf.AbstractParser<DeleteGrantKeyRequest>() {
+      @java.lang.Override
+      public DeleteGrantKeyRequest parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new DeleteGrantKeyRequest(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<DeleteGrantKeyRequest> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<DeleteGrantKeyRequest> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client.DeleteGrantKeyRequest getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
   }
 
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_build_GetUserRecords_descriptor;
+    internal_static_build_GetUsersRequest_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_build_GetUserRecords_fieldAccessorTable;
+      internal_static_build_GetUsersRequest_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_build_GetRoles_descriptor;
+    internal_static_build_GetRolesRequest_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_build_GetRoles_fieldAccessorTable;
+      internal_static_build_GetRolesRequest_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_build_GetRoleAssignments_descriptor;
+    internal_static_build_GetUserRequest_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_build_GetRoleAssignments_fieldAccessorTable;
+      internal_static_build_GetUserRequest_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_build_GetRoleAssignment_descriptor;
+    internal_static_build_DeleteUserRequest_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_build_GetRoleAssignment_fieldAccessorTable;
+      internal_static_build_DeleteUserRequest_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_build_DeleteRoleAssignments_descriptor;
+    internal_static_build_GetCellKeyRequest_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_build_DeleteRoleAssignments_fieldAccessorTable;
+      internal_static_build_GetCellKeyRequest_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_build_DeleteRole_descriptor;
+    internal_static_build_DeleteCellKeyRequest_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_build_DeleteRole_fieldAccessorTable;
+      internal_static_build_DeleteCellKeyRequest_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_build_GetRoleAssignmentsRequest_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_build_GetRoleAssignmentsRequest_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_build_GetRoleAssignmentRequest_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_build_GetRoleAssignmentRequest_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_build_DeleteRoleAssignmentsRequest_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_build_DeleteRoleAssignmentsRequest_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_build_DeleteRoleRequest_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_build_DeleteRoleRequest_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_build_DecryptRequest_descriptor;
   private static final 
@@ -5612,10 +8747,15 @@ public final class PurekitProtosV3Client {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_build_DecryptResponse_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_build_GrantKeyDescriptor_descriptor;
+    internal_static_build_GetGrantKeyRequest_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_build_GrantKeyDescriptor_fieldAccessorTable;
+      internal_static_build_GetGrantKeyRequest_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_build_DeleteGrantKeyRequest_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_build_DeleteGrantKeyRequest_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -5625,17 +8765,24 @@ public final class PurekitProtosV3Client {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\026purekitV3_client.proto\022\005build\"\"\n\016GetUs" +
-      "erRecords\022\020\n\010user_ids\030\001 \003(\t\"\036\n\010GetRoles\022" +
-      "\022\n\nrole_names\030\001 \003(\t\"%\n\022GetRoleAssignment" +
-      "s\022\017\n\007user_id\030\001 \001(\t\"7\n\021GetRoleAssignment\022" +
-      "\017\n\007user_id\030\001 \001(\t\022\021\n\trole_name\030\002 \001(\t\"<\n\025D" +
-      "eleteRoleAssignments\022\021\n\trole_name\030\001 \001(\t\022" +
-      "\020\n\010user_ids\030\002 \003(\t\"\032\n\nDeleteRole\022\014\n\004name\030" +
-      "\001 \001(\t\"A\n\016DecryptRequest\022\017\n\007version\030\001 \001(\r" +
-      "\022\r\n\005alias\030\002 \001(\t\022\017\n\007request\030\003 \001(\014\"#\n\017Decr" +
-      "yptResponse\022\020\n\010response\030\001 \001(\014\"5\n\022GrantKe" +
-      "yDescriptor\022\017\n\007user_id\030\001 \001(\t\022\016\n\006key_id\030\002" +
+      "\n\026purekitV3_client.proto\022\005build\"#\n\017GetUs" +
+      "ersRequest\022\020\n\010user_ids\030\001 \003(\t\"%\n\017GetRoles" +
+      "Request\022\022\n\nrole_names\030\001 \003(\t\"!\n\016GetUserRe" +
+      "quest\022\017\n\007user_id\030\001 \001(\t\"$\n\021DeleteUserRequ" +
+      "est\022\017\n\007user_id\030\001 \001(\t\"5\n\021GetCellKeyReques" +
+      "t\022\017\n\007user_id\030\001 \001(\t\022\017\n\007data_id\030\002 \001(\t\"8\n\024D" +
+      "eleteCellKeyRequest\022\017\n\007user_id\030\001 \001(\t\022\017\n\007" +
+      "data_id\030\002 \001(\t\",\n\031GetRoleAssignmentsReque" +
+      "st\022\017\n\007user_id\030\001 \001(\t\">\n\030GetRoleAssignment" +
+      "Request\022\017\n\007user_id\030\001 \001(\t\022\021\n\trole_name\030\002 " +
+      "\001(\t\"C\n\034DeleteRoleAssignmentsRequest\022\021\n\tr" +
+      "ole_name\030\001 \001(\t\022\020\n\010user_ids\030\002 \003(\t\"!\n\021Dele" +
+      "teRoleRequest\022\014\n\004name\030\001 \001(\t\"A\n\016DecryptRe" +
+      "quest\022\017\n\007version\030\001 \001(\r\022\r\n\005alias\030\002 \001(\t\022\017\n" +
+      "\007request\030\003 \001(\014\"#\n\017DecryptResponse\022\020\n\010res" +
+      "ponse\030\001 \001(\014\"5\n\022GetGrantKeyRequest\022\017\n\007use" +
+      "r_id\030\001 \001(\t\022\016\n\006key_id\030\002 \001(\014\"8\n\025DeleteGran" +
+      "tKeyRequest\022\017\n\007user_id\030\001 \001(\t\022\016\n\006key_id\030\002" +
       " \001(\014BB\n)com.virgilsecurity.purekit.proto" +
       "buf.buildB\025PurekitProtosV3Clientb\006proto3"
     };
@@ -5643,59 +8790,89 @@ public final class PurekitProtosV3Client {
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
         });
-    internal_static_build_GetUserRecords_descriptor =
+    internal_static_build_GetUsersRequest_descriptor =
       getDescriptor().getMessageTypes().get(0);
-    internal_static_build_GetUserRecords_fieldAccessorTable = new
+    internal_static_build_GetUsersRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_build_GetUserRecords_descriptor,
+        internal_static_build_GetUsersRequest_descriptor,
         new java.lang.String[] { "UserIds", });
-    internal_static_build_GetRoles_descriptor =
+    internal_static_build_GetRolesRequest_descriptor =
       getDescriptor().getMessageTypes().get(1);
-    internal_static_build_GetRoles_fieldAccessorTable = new
+    internal_static_build_GetRolesRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_build_GetRoles_descriptor,
+        internal_static_build_GetRolesRequest_descriptor,
         new java.lang.String[] { "RoleNames", });
-    internal_static_build_GetRoleAssignments_descriptor =
+    internal_static_build_GetUserRequest_descriptor =
       getDescriptor().getMessageTypes().get(2);
-    internal_static_build_GetRoleAssignments_fieldAccessorTable = new
+    internal_static_build_GetUserRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_build_GetRoleAssignments_descriptor,
+        internal_static_build_GetUserRequest_descriptor,
         new java.lang.String[] { "UserId", });
-    internal_static_build_GetRoleAssignment_descriptor =
+    internal_static_build_DeleteUserRequest_descriptor =
       getDescriptor().getMessageTypes().get(3);
-    internal_static_build_GetRoleAssignment_fieldAccessorTable = new
+    internal_static_build_DeleteUserRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_build_GetRoleAssignment_descriptor,
-        new java.lang.String[] { "UserId", "RoleName", });
-    internal_static_build_DeleteRoleAssignments_descriptor =
+        internal_static_build_DeleteUserRequest_descriptor,
+        new java.lang.String[] { "UserId", });
+    internal_static_build_GetCellKeyRequest_descriptor =
       getDescriptor().getMessageTypes().get(4);
-    internal_static_build_DeleteRoleAssignments_fieldAccessorTable = new
+    internal_static_build_GetCellKeyRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_build_DeleteRoleAssignments_descriptor,
-        new java.lang.String[] { "RoleName", "UserIds", });
-    internal_static_build_DeleteRole_descriptor =
+        internal_static_build_GetCellKeyRequest_descriptor,
+        new java.lang.String[] { "UserId", "DataId", });
+    internal_static_build_DeleteCellKeyRequest_descriptor =
       getDescriptor().getMessageTypes().get(5);
-    internal_static_build_DeleteRole_fieldAccessorTable = new
+    internal_static_build_DeleteCellKeyRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_build_DeleteRole_descriptor,
+        internal_static_build_DeleteCellKeyRequest_descriptor,
+        new java.lang.String[] { "UserId", "DataId", });
+    internal_static_build_GetRoleAssignmentsRequest_descriptor =
+      getDescriptor().getMessageTypes().get(6);
+    internal_static_build_GetRoleAssignmentsRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_build_GetRoleAssignmentsRequest_descriptor,
+        new java.lang.String[] { "UserId", });
+    internal_static_build_GetRoleAssignmentRequest_descriptor =
+      getDescriptor().getMessageTypes().get(7);
+    internal_static_build_GetRoleAssignmentRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_build_GetRoleAssignmentRequest_descriptor,
+        new java.lang.String[] { "UserId", "RoleName", });
+    internal_static_build_DeleteRoleAssignmentsRequest_descriptor =
+      getDescriptor().getMessageTypes().get(8);
+    internal_static_build_DeleteRoleAssignmentsRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_build_DeleteRoleAssignmentsRequest_descriptor,
+        new java.lang.String[] { "RoleName", "UserIds", });
+    internal_static_build_DeleteRoleRequest_descriptor =
+      getDescriptor().getMessageTypes().get(9);
+    internal_static_build_DeleteRoleRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_build_DeleteRoleRequest_descriptor,
         new java.lang.String[] { "Name", });
     internal_static_build_DecryptRequest_descriptor =
-      getDescriptor().getMessageTypes().get(6);
+      getDescriptor().getMessageTypes().get(10);
     internal_static_build_DecryptRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_build_DecryptRequest_descriptor,
         new java.lang.String[] { "Version", "Alias", "Request", });
     internal_static_build_DecryptResponse_descriptor =
-      getDescriptor().getMessageTypes().get(7);
+      getDescriptor().getMessageTypes().get(11);
     internal_static_build_DecryptResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_build_DecryptResponse_descriptor,
         new java.lang.String[] { "Response", });
-    internal_static_build_GrantKeyDescriptor_descriptor =
-      getDescriptor().getMessageTypes().get(8);
-    internal_static_build_GrantKeyDescriptor_fieldAccessorTable = new
+    internal_static_build_GetGrantKeyRequest_descriptor =
+      getDescriptor().getMessageTypes().get(12);
+    internal_static_build_GetGrantKeyRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_build_GrantKeyDescriptor_descriptor,
+        internal_static_build_GetGrantKeyRequest_descriptor,
+        new java.lang.String[] { "UserId", "KeyId", });
+    internal_static_build_DeleteGrantKeyRequest_descriptor =
+      getDescriptor().getMessageTypes().get(13);
+    internal_static_build_DeleteGrantKeyRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_build_DeleteGrantKeyRequest_descriptor,
         new java.lang.String[] { "UserId", "KeyId", });
   }
 

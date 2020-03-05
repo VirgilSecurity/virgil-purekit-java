@@ -39,7 +39,6 @@ import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Storage;
 import com.virgilsecurity.purekit.utils.ValidationUtils;
 
 import java.net.URL;
-import java.util.Collection;
 
 /**
  * Class for http interactions with Pure service
@@ -78,7 +77,7 @@ public class HttpPureClient {
         ValidationUtils.checkNull(userRecord, "userRecord");
         
         client.execute(
-                "/user",
+                "/insert-user",
                 HttpClient.Method.POST,
                 userRecord
         );
@@ -87,19 +86,17 @@ public class HttpPureClient {
     /**
      * Updates user.
      *
-     * @param userId User Id.
      * @param userRecord UserRecord.
      *
      * @throws HttpClientException HttpClientException
      */
-    public void updateUser(String userId, PurekitProtosV3Storage.UserRecord userRecord) throws HttpClientException {
+    public void updateUser(PurekitProtosV3Storage.UserRecord userRecord) throws HttpClientException {
 
         ValidationUtils.checkNull(userRecord, "userRecord");
-        ValidationUtils.checkNullOrEmpty(userId, "userId");
 
         client.execute(
-                String.format("/user/%s", userId),
-                HttpClient.Method.PUT,
+                "/update-user",
+                HttpClient.Method.POST,
                 userRecord
         );
     }
@@ -107,20 +104,20 @@ public class HttpPureClient {
     /**
      * Obtains user.
      *
-     * @param userId User Id.
+     * @param request GetUserRequest
      *
      * @return UserRecord.
      *
      * @throws HttpClientException HttpClientException
      */
-    public PurekitProtosV3Storage.UserRecord getUser(String userId) throws HttpClientException {
+    public PurekitProtosV3Storage.UserRecord getUser(PurekitProtosV3Client.GetUserRequest request) throws HttpClientException {
 
-        ValidationUtils.checkNullOrEmpty(userId, "userId");
+        ValidationUtils.checkNull(request, "request");
 
         return client.execute(
-                String.format("/user/%s", userId),
-                HttpClient.Method.GET,
-                null,
+                "/get-user",
+                HttpClient.Method.POST,
+                request,
                 PurekitProtosV3Storage.UserRecord.parser()
         );
     }
@@ -128,26 +125,20 @@ public class HttpPureClient {
     /**
      * Obtains user.
      *
-     * @param userIds User Ids.
+     * @param request GetUsersRequest
      *
      * @return UserRecords.
      *
      * @throws HttpClientException HttpClientException
      */
-    public PurekitProtosV3Storage.UserRecords getUsers(Collection<String> userIds) throws HttpClientException {
+    public PurekitProtosV3Storage.UserRecords getUsers(PurekitProtosV3Client.GetUsersRequest request) throws HttpClientException {
 
-        ValidationUtils.checkNull(userIds, "userIds");
-        if (userIds.isEmpty()) {
-            throw new EmptyArgumentException("userIds");
-        }
-
-        PurekitProtosV3Client.GetUserRecords getUserRecords =
-            PurekitProtosV3Client.GetUserRecords.newBuilder().addAllUserIds(userIds).build();
+        ValidationUtils.checkNull(request, "request");
 
         return client.execute(
                 "/get-users",
                 HttpClient.Method.POST,
-                getUserRecords,
+                request,
                 PurekitProtosV3Storage.UserRecords.parser()
         );
     }
@@ -155,19 +146,18 @@ public class HttpPureClient {
     /**
      * Deletes user.
      *
-     * @param userId User Ids.
-     * @param cascade Deletes all user cell keys if true.
+     * @param request DeleteUserRequest
      *
      * @throws HttpClientException HttpClientException
      */
-    public void deleteUser(String userId, boolean cascade) throws HttpClientException {
+    public void deleteUser(PurekitProtosV3Client.DeleteUserRequest request, boolean cascade) throws HttpClientException {
 
-        ValidationUtils.checkNullOrEmpty(userId, "userId");
+        ValidationUtils.checkNull(request, "request");
 
         client.execute(
-                String.format("/user/%s?cascade=%s", userId, cascade),
-                HttpClient.Method.DELETE,
-                null
+                String.format("/delete-user?cascade=%s", cascade),
+                HttpClient.Method.POST,
+                request
         );
     }
 
@@ -183,7 +173,7 @@ public class HttpPureClient {
         ValidationUtils.checkNull(cellKey, "cellKey");
         
         client.execute(
-                "/cell-key",
+                "/insert-cell-key",
                 HttpClient.Method.POST,
                 cellKey
         );
@@ -192,21 +182,17 @@ public class HttpPureClient {
     /**
      * Updates cell key.
      *
-     * @param userId User Id.
-     * @param dataId Data id.
      * @param cellKey CellKey.
      *
      * @throws HttpClientException HttpClientException
      */
-    public void updateCellKey(String userId, String dataId, PurekitProtosV3Storage.CellKey cellKey) throws HttpClientException {
+    public void updateCellKey(PurekitProtosV3Storage.CellKey cellKey) throws HttpClientException {
 
-        ValidationUtils.checkNullOrEmpty(userId, "userId");
-        ValidationUtils.checkNullOrEmpty(dataId, "dataId");
         ValidationUtils.checkNull(cellKey, "cellKey");
 
         client.execute(
-                String.format("/cell-key/%s/%s", userId, dataId),
-                HttpClient.Method.PUT,
+                "/update-cell-key",
+                HttpClient.Method.POST,
                 cellKey
         );
     }
@@ -214,22 +200,20 @@ public class HttpPureClient {
     /**
      * Obtains cell key.
      *
-     * @param userId User Id.
-     * @param dataId Data Id.
+     * @param request GetCellKey
      *
      * @return CellKey.
      *
      * @throws HttpClientException HttpClientException
      */
-    public PurekitProtosV3Storage.CellKey getCellKey(String userId, String dataId) throws HttpClientException {
+    public PurekitProtosV3Storage.CellKey getCellKey(PurekitProtosV3Client.GetCellKeyRequest request) throws HttpClientException {
 
-        ValidationUtils.checkNullOrEmpty(userId, "userId");
-        ValidationUtils.checkNullOrEmpty(dataId, "dataId");
+        ValidationUtils.checkNull(request, "request");
 
         return client.execute(
-                String.format("/cell-key/%s/%s", userId, dataId),
-                HttpClient.Method.GET,
-                null,
+                "/get-cell-key",
+                HttpClient.Method.POST,
+                request,
                 PurekitProtosV3Storage.CellKey.parser()
         );
     }
@@ -237,20 +221,18 @@ public class HttpPureClient {
     /**
      * Deletes cell key.
      *
-     * @param userId User Ids.
-     * @param dataId Data Id.
+     * @param request DeleteCellKeyRequest
      *
      * @throws HttpClientException HttpClientException
      */
-    public void deleteCellKey(String userId, String dataId) throws HttpClientException {
+    public void deleteCellKey(PurekitProtosV3Client.DeleteCellKeyRequest request) throws HttpClientException {
 
-        ValidationUtils.checkNullOrEmpty(userId, "userId");
-        ValidationUtils.checkNullOrEmpty(dataId, "dataId");
+        ValidationUtils.checkNull(request, "request");
 
         client.execute(
-                String.format("/cell-key/%s/%s", userId, dataId),
-                HttpClient.Method.DELETE,
-                null
+                "/delete-cell-key",
+                HttpClient.Method.POST,
+                request
         );
     }
 
@@ -267,7 +249,7 @@ public class HttpPureClient {
         ValidationUtils.checkNull(role, "role");
 
         client.execute(
-                "/roles",
+                "/insert-role",
                 HttpClient.Method.POST,
                 role
         );
@@ -276,20 +258,20 @@ public class HttpPureClient {
     /**
      * Obtains roles
      *
-     * @param getRolesRequest Role names
+     * @param request GetRolesRequest
      *
      * @return Roles
      *
      * @throws HttpClientException HttpClientException
      */
-    public PurekitProtosV3Storage.Roles getRoles(PurekitProtosV3Client.GetRoles getRolesRequest) throws HttpClientException {
+    public PurekitProtosV3Storage.Roles getRoles(PurekitProtosV3Client.GetRolesRequest request) throws HttpClientException {
 
-        ValidationUtils.checkNull(getRolesRequest, "getRolesRequest");
+        ValidationUtils.checkNull(request, "request");
 
         return client.execute(
                 "/get-roles",
                 HttpClient.Method.POST,
-                getRolesRequest,
+                request,
                 PurekitProtosV3Storage.Roles.parser()
         );
     }
@@ -324,7 +306,7 @@ public class HttpPureClient {
      *
      * @throws HttpClientException HttpClientException
      */
-    public PurekitProtosV3Storage.RoleAssignments getRoleAssignments(PurekitProtosV3Client.GetRoleAssignments request) throws HttpClientException {
+    public PurekitProtosV3Storage.RoleAssignments getRoleAssignments(PurekitProtosV3Client.GetRoleAssignmentsRequest request) throws HttpClientException {
 
         ValidationUtils.checkNull(request, "request");
 
@@ -345,7 +327,7 @@ public class HttpPureClient {
      *
      * @throws HttpClientException HttpClientException
      */
-    public PurekitProtosV3Storage.RoleAssignment getRoleAssignment(PurekitProtosV3Client.GetRoleAssignment request) throws HttpClientException {
+    public PurekitProtosV3Storage.RoleAssignment getRoleAssignment(PurekitProtosV3Client.GetRoleAssignmentRequest request) throws HttpClientException {
 
         ValidationUtils.checkNull(request, "request");
 
@@ -364,7 +346,7 @@ public class HttpPureClient {
      *
      * @throws HttpClientException HttpClientException
      */
-    public void deleteRoleAssignments(PurekitProtosV3Client.DeleteRoleAssignments request) throws HttpClientException {
+    public void deleteRoleAssignments(PurekitProtosV3Client.DeleteRoleAssignmentsRequest request) throws HttpClientException {
 
         ValidationUtils.checkNull(request, "request");
 
@@ -386,7 +368,7 @@ public class HttpPureClient {
         ValidationUtils.checkNull(grantKey, "grantKey");
 
         client.execute(
-                "/grant-key",
+                "/insert-grant-key",
                 HttpClient.Method.POST,
                 grantKey
         );
@@ -401,7 +383,7 @@ public class HttpPureClient {
      *
      * @throws HttpClientException HttpClientException
      */
-    public PurekitProtosV3Storage.GrantKey getGrantKey(PurekitProtosV3Client.GrantKeyDescriptor request) throws HttpClientException {
+    public PurekitProtosV3Storage.GrantKey getGrantKey(PurekitProtosV3Client.GetGrantKeyRequest request) throws HttpClientException {
         ValidationUtils.checkNull(request, "request");
 
         return client.execute(
@@ -419,7 +401,7 @@ public class HttpPureClient {
      *
      * @throws HttpClientException HttpClientException
      */
-    public void deleteGrantKey(PurekitProtosV3Client.GrantKeyDescriptor request) throws HttpClientException {
+    public void deleteGrantKey(PurekitProtosV3Client.DeleteGrantKeyRequest request) throws HttpClientException {
         ValidationUtils.checkNull(request, "request");
 
         client.execute(
@@ -435,7 +417,7 @@ public class HttpPureClient {
      * @param request deleteRole request
      * @throws HttpClientException HttpClientException
      */
-    public void deleteRole(PurekitProtosV3Client.DeleteRole request) throws HttpClientException {
+    public void deleteRole(PurekitProtosV3Client.DeleteRoleRequest request) throws HttpClientException {
         ValidationUtils.checkNull(request, "request");
 
         client.execute(
