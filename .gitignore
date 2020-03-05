@@ -5,5 +5,5 @@
 env.json
 local.properties
 
-purekit-protos
-purekit
+/purekit-protos/
+/purekit/
