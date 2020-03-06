@@ -131,7 +131,7 @@ public class HttpClient {
                 } catch (IOException e) {
                     LOGGER.warning(String.format("Response error body uses unknown format: %s", Base64.encode(errorData)));
                     throw new HttpClientIOException(e);
-                } 
+                }
             } else {
                 if (parser != null) {
                     LOGGER.fine("Trying to extract response body...");
