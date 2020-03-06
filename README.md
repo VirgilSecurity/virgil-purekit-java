@@ -3,6 +3,7 @@
 [![Build Status](https://travis-ci.com/VirgilSecurity/virgil-purekit-java.svg?branch=master)](https://travis-ci.com/VirgilSecurity/virgil-purekit-java)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.virgilsecurity/purekit/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.virgilsecurity/purekit)
 [![GitHub license](https://img.shields.io/badge/license-BSD%203--Clause-blue.svg)](https://github.com/VirgilSecurity/virgil/blob/master/LICENSE)
+[![API Reference](https://img.shields.io/badge/API%20reference-purekit--java-green)](https://virgilsecurity.github.io/virgil-purekit-java/)
 
 [Introduction](#introduction) | [Features](#features)  | [Benefits](#benefits) | [Installation](#installation) | [Resources](#resources) | [License](#license) | [Support](#support)
 
@@ -15,7 +16,7 @@ The framework can be used within any database or login system that uses a passwo
 
 ### Password-Based Security
 
-Virgil PureKit is based on the [Password-Hardened Encryption (PHE) protocol](https://virgilsecurity.com/wp-content/uploads/2018/11/PHE-Whitepaper-2018.pdf) – a powerful and revolutionary cryptographic technology that provides stronger and more modern security, that secures users' data and reduces the security risks associated with weak passwords.
+Virgil PureKit is based on the [Password-Hardened Encryption (PHE) protocol](https://virgilsecurity.com/wp-content/uploads/2018/11/PHE-Whitepaper-2018.pdf) – a powerful and revolutionary cryptographic technology that provides stronger and more modern security, that protects users' data and reduces the security risks associated with weak passwords.
 
 PureKit brings data security to a new level in three ways:
 1. **Replaces password hashing** in a way making it impossible to run offline and online attacks. By interacting with PHE Service, a standalone cryptographic service in Virgil Cloud dedicated to implement  PHE protocol, PureKit creates a unique user’s record that is associated with the user password. It is important to note that a user password is never transmitted to the PHE service in any form.
@@ -54,6 +55,7 @@ Navigate to our [Developer Documentation](https://developer.virgilsecurity.com/d
 - [Developer Documentation](https://developer.virgilsecurity.com/docs/purekit) - start integrating PureKit into your project with our detailed guides.
 - [MariaDB Demo](https://github.com/VirgilSecurity/virgil-mariadb-demo) - a simple web application that illustrates how Virgil PureKit can be used with MariaDB to store and share data in the most secure way.
 - [Virgil PHE WhitePaper](https://virgilsecurity.com/wp-content/uploads/2018/11/PHE-Whitepaper-2018.pdf) - foundation principles of the Password-Hardened Encryption (PHE) protocol.
+- [PureKit API Reference](https://virgilsecurity.github.io/virgil-purekit-java/)
 
 
 ## License
