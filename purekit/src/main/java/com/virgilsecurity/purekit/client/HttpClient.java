@@ -116,7 +116,7 @@ public class HttpClient {
                 request.writeTo(urlConnection.getOutputStream());
             }
             if (urlConnection.getResponseCode() >= HttpURLConnection.HTTP_BAD_REQUEST) {
-                int responseCode = urlConnection.getResponseCode();
+                int responseCode = urlConnection.getResponseCode(); 
                 LOGGER.info(String.format("Http error: %s", responseCode));
 
                 byte[] errorData = new byte[urlConnection.getErrorStream().available()];
