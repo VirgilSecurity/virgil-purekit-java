@@ -1,552 +1,69 @@
-# Virgil PureKit SDK Kotlin/Java
+# Virgil PureKit Java
 
-[![Build Status](https://travis-ci.com/VirgilSecurity/virgil-purekit-kotlin.svg?branch=master)](https://travis-ci.com/VirgilSecurity/virgil-purekit-kotlin)
+[![Build Status](https://travis-ci.com/VirgilSecurity/virgil-purekit-java.svg?branch=master)](https://travis-ci.com/VirgilSecurity/virgil-purekit-java)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.virgilsecurity/purekit/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.virgilsecurity/purekit)
 [![GitHub license](https://img.shields.io/badge/license-BSD%203--Clause-blue.svg)](https://github.com/VirgilSecurity/virgil/blob/master/LICENSE)
+[![API Reference](https://img.shields.io/badge/API%20reference-purekit--java-green)](https://virgilsecurity.github.io/virgil-purekit-java/)
 
+[Introduction](#introduction) | [Features](#features)  | [Benefits](#benefits) | [Installation](#installation) | [Resources](#resources) | [License](#license) | [Support](#support)
 
-[Introduction](#introduction) | [Features](#features) | [Register Your Account](#register-your-account) | [Install and configure SDK](#install-and-configure-sdk) | [Prepare Your Database](#prepare-your-database) | [Usage Examples](#usage-examples) | [Docs](#docs) | [Support](#support)
+<img src="https://cdn.virgilsecurity.com/assets/images/github/logos/purekit/PureKit.png" width="25%" align="left" hspace="1" vspace="3">
 
 ## Introduction
-<img src="https://cdn.virgilsecurity.com/assets/images/github/logos/pure_grey_logo.png" align="left" hspace="0" vspace="0"></a>[Virgil Security](https://virgilsecurity.com) introduces an implementation of the [Password-Hardened Encryption (PHE) protocol](https://virgilsecurity.com/wp-content/uploads/2018/11/PHE-Whitepaper-2018.pdf) – a powerful and revolutionary cryptographic technology that provides stronger and more modern security, that secures users' data and reduces the security risks associated with weak passwords.
+</a>[Virgil Security](https://virgilsecurity.com) introduces [Virgil PureKit](https://developer.virgilsecurity.com/docs/purekit/) - an open-source security framework for enabling post-compromise protection for stored data. PureKit allows developers to protect users' passwords and personal data from hacking and securely share data.
 
-Virgil PureKit allows developers to interact with Virgil PHE Service to protect users' passwords and sensitive personal identifiable information (PII data) in a database from offline/online attacks and makes stolen passwords/data useless if your database has been compromised. Neither Virgil nor attackers know anything about user passwords/data.
+The framework can be used within any database or login system that uses a password, so it’s applicable for a company of any industry or size.
 
-This technology can be used within any database or login system that uses a password, so it’s applicable for a company of any industry or size.
+### Password-Based Security
 
-**Authors of the PHE protocol**: Russell W. F. Lai, Christoph Egger, Manuel Reinert, Sherman S. M. Chow, Matteo Maffei and Dominique Schroder.
+Virgil PureKit is based on the [Password-Hardened Encryption (PHE) protocol](https://virgilsecurity.com/wp-content/uploads/2018/11/PHE-Whitepaper-2018.pdf) – a powerful and revolutionary cryptographic technology that provides stronger and more modern security, that protects users' data and reduces the security risks associated with weak passwords.
+
+PureKit brings data security to a new level in three ways:
+1. **Replaces password hashing** in a way making it impossible to run offline and online attacks. By interacting with PHE Service, a standalone cryptographic service in Virgil Cloud dedicated to implement  PHE protocol, PureKit creates a unique user’s record that is associated with the user password. It is important to note that a user password is never transmitted to the PHE service in any form.
+2. **Encrypts data with user’s personal encryption keys**. PureKit gives users a possibility to encrypt their data with personal encryption keys, and all keys can be revealed only after providing a correct password.
+3. **Immediately invalidate stolen database**. Even if your database has been compromised it impossible to run offline attacks, to retrieve user password or decrypt data. At the same time, PureKit provides convenient and secure key rotation procedure, that allows you quickly update all your server keys without losing access to your data.
 
 ## Features
-- Zero knowledge of user passwords
-- Password & data protection from online attacks
-- Password & data protection from offline attacks
+
+- Per-user data and files encryption
+- Password protection against hacking
+- Management of data encryption keys 
+- Secure data and files sharing
+- Role-based data encryption
+
+
+## Benefits
+
+- Users control data access
+- Post-compromise security
+- Password & data protection from online and offline attacks
+- Replaces salting and hashing of passwords
+- Zero knowledge of user passwords and secret keys
+- Virgil Security has no access to your data
+- Encryption occurs independently of database security
+- Works with any database
+- Stronger than encryption at-rest and TDE
+- More secure than AWS and Google Key Management Systems (KMS)
 - Instant invalidation of stolen databases
-- User data encryption with a personal key
+- Compliance with GDPR, HIPAA, PCI DSS and more
 
-## Register Your Account
-Before practicing with the SDK and usage examples make sure that:
-- you have registered a Virgil Account at [Virgil Dashboard](https://dashboard.virgilsecurity.com/)
-- you've created a PURE Application
-- and you've obtained your PURE application's credentials such as: `App_Secret_Key`, `Service_Public_Key`, `App_Token`
+## Installation
 
+Navigate to our [Developer Documentation](https://developer.virgilsecurity.com/docs/purekit) to install and start working with Virgil PureKit.
 
-## Install and Configure the SDK
-The PureKit Kotlin/Java SDK is provided as a package named `purekit` with a group id named `com.virgilsecurity`. You can either use `Gradle` or `Maven` to add it to your project dependencies.
+## Resources
+- [Developer Documentation](https://developer.virgilsecurity.com/docs/purekit) - start integrating PureKit into your project with our detailed guides.
+- [MariaDB Demo](https://github.com/VirgilSecurity/virgil-mariadb-demo) - a simple web application that illustrates how Virgil PureKit can be used with MariaDB to store and share data in the most secure way.
+- [Virgil PHE WhitePaper](https://virgilsecurity.com/wp-content/uploads/2018/11/PHE-Whitepaper-2018.pdf) - foundation principles of the Password-Hardened Encryption (PHE) protocol.
+- [PureKit API Reference](https://virgilsecurity.github.io/virgil-purekit-java/)
 
-
-### Install the SDK Package
-Install the PureKit SDK library with the following code:
-
-#### Maven
-
-Add the `jcenter` repository:
-
-```
-<repositories>
-	<repository>
-		<id>jcenter</id>
-		<name>jCenter</name>
-		<url>http://jcenter.bintray.com</url>
-	</repository>
-</repositories>
-```
-
-Add the `purekit` dependency:
-
-```
-<dependencies>
-    <dependency>
-        <groupId>com.virgilsecurity</groupId>
-        <artifactId>purekit</artifactId>
-        <version><latest-version></version>
-    </dependency>
-</dependencies>
-```
-
-#### Gradle
-
-Add the `jcenter` repository:
-
-```
-repositories {
-    jcenter()
-}
-```
-
-Add the `purekit` dependency:
-
-```
-implementation "com.virgilsecurity:purekit:<latest-version>"
-```
-
-The **\<latest-version>** of the SDK can be found in the [Maven Central Repository](https://mvnrepository.com/artifact/com.virgilsecurity/purekit)  or in the header of the current readme.
-
-To uninstall Pure, see the [Recover Password Hashes](#recover-password-hashes) section.
-
-### Configure SDK
-Here is an example of how to specify your credentials SDK class instance:
-
-`Kotlin`:
-```kotlin
-// here set your PURE app credentials
-fun initPureKit(): Protocol {
-    val context = ProtocolContext.create(
-        appToken = "AT.OSoPhirdopvijQlFPKdlSydN9BUrn5oEuDwf3Hqps",
-        servicePublicKey = "PK.1.BEn/hnuyKV0inZL+kaRUZNvwQ/jkhDQdALrw6VdfvhZhPQQHWyYO+fRlJYZweUz1FGH3WxcZBjA0tL4wn7kE0ls=",
-        clientSecretKey = "SK.1.xxx",
-        updateToken = "") // updateToken needs to be empty
-
-    return Protocol(context)
-}
-```
-
-`Java`:
-```java
-Protocol initPureKit() {
-    ProtocolContext context = ProtocolContext.create(
-        "AT.OSoPhirdopvijQlFPKdlSydN9BUrn5oEuDwf3Hqps",
-        "PK.1.BEn/hnuyKV0inZL+kaRUZNvwQ/jkhDQdALrw6VdfvhZhPQQHWyYO+fRlJYZweUz1FGH3WxcZBjA0tL4wn7kE0ls=",
-        "SK.1.xxx",
-        ""); // updateToken needs to be empty
-
-    return new Protocol(context);
-}
-```
-
-## Prepare Your Database
-The PureKit SDK allows you to easily perform all the necessary operations to create, verify, and rotate a user's `record`.
-
-Pure **record** - a user's password that is protected with our PHE technology. A Pure `record` contains a version, client & server random salts, and two values obtained during execution of the PHE protocol.
-
-In order to create and work with a user's `record` you have to set up your database with an additional column.
-
-The column must have the following parameters:
-<table class="params">
-<thead>
-		<tr>
-			<th>Parameters</th>
-			<th>Type</th>
-			<th>Size (bytes)</th>
-			<th>Description</th>
-		</tr>
-</thead>
-
-<tbody>
-<tr>
-	<td>record</td>
-	<td>bytearray</td>
-	<td>210</td>
-	<td> A unique record, namely a user's protected Pure record.</td>
-</tr>
-
-</tbody>
-</table>
-
-### Generate a recovery keypair
-
-This step is __optional__. Use this step if you will need to move away from Pure without having to put your users through registering again.
-
-To be able to move away from Pure without having to put your users through registering again, you need to generate a recovery keypair (public and private key). The public key will be used to encrypt password hashes at the enrollment step. You will need to store the encrypted hashes in your database.
-
-To generate a recovery keypair, [install the Virgil Crypto Library](https://developer.virgilsecurity.com/docs/how-to/virgil-crypto/install-virgil-crypto) and use the code snippet below. Store the public key in your database and save the private key securely on another external device.
-
-> You won’t be able to restore your recovery private key, so it is crucial not to lose it.
-
-`Kotlin`:
-```kotlin
-import com.virgilsecurity.crypto.foundation.Base64;
-
-val virgilCrypto = VirgilCrypto()
-val recoveryKeyPair = virgilCrypto.generateKeyPair()
-
-val recoveryKey = recoveryKeyPair.privateKey
-
-// Export recovery private key
-val exportedRecoveryKey = virgilCrypto.exportPrivateKey(recoveryKey)
-val exportedKeyB64 = Base64.encode(exportedRecoveryKey).toString()
-
-// Store privateKey
-
-val publicKey = recoveryKeyPair.publicKey
-// Put to your DB
-```
-
-`Java`:
-```java
-import com.virgilsecurity.crypto.foundation.Base64;
-
-VirgilCrypto virgilCrypto = new VirgilCrypto();
-VirgilKeyPair recoveryKeyPair = virgilCrypto.generateKeyPair();
-
-VirgilPrivateKey recoveryKey = keyPair.getPrivateKey();
-// Export recovery private key
-byte[] exportedRecoveryKey = virgilCrypto.exportPrivateKey(recoveryKey);
-String exportedKeyB64 = new String(Base64.encode(exportedRecoveryKey));
-// Store privateKey
-
-VirgilPublicKey publicKey = keyPair.getPublicKey();
-// Put to your DB
-```
-
-### Prepare your database for storing encrypted password hashes
-
-Now you need to prepare your database for future password hash recovery. Create a column in your users table or a separate table for storing encrypted user password hashes.
-
-<table class="params">
-<thead>
-		<tr>
-			<th>Parameters</th>
-			<th>Type</th>
-			<th>Size (bytes)</th>
-			<th>Description</th>
-		</tr>
-</thead>
-
-<tbody>
-<tr>
-	<td>encrypted_password_hashes</td>
-	<td>bytearray</td>
-	<td>512</td>
-	<td>User password hash, encrypted with the recovery key.</td>
-</tr>
-</tbody>
-</table>
-
-Further, on the [enrollment step](#enroll-user-record) you'll need to encrypt user password hashes with the generated recovery public key and save them to the `encrypted_password_hashes` column.
-
-
-## Usage Examples
-
-> You can find a working sample for the following commands in [this directory](/samples)
-
-### Enroll a User Record
-
-Use this flow to create a `PureRecord` in your DB for a user.
-
-> Remember, if you already have a database with user passwords, you don't have to wait until a user logs into your system to implement PHE technology. You can go through your database and enroll (create) a user's Pure `Record` at any time.
-
-To create a Pure `Record` for a new or existing database, go through the following operations:
-- Take a user's **password** (or its hash or whatever you use) and pass it through the `EnrollAccount` function in the PureKit on your Server side.
-- PureKit will send a request to the PureKit service to get enrollment.
-- Then, PureKit will create a user's Pure `Record`. You need to store this unique user's Pure `Record` in your database in the associated column.
-- (optional) Encrypt your user password hashes with the recovery key generated in [Generate a recovery keypair](#generate-a-recovery-keypair) and save them to your database.
-
-`Kotlin`:
-```kotlin
-import com.virgilsecurity.crypto.foundation.Base64;
-
-// create a new encrypted password record using a user password or its hash
-fun enrollAccount(password: String, protocol: Protocol) {
-    val enrollResult = protocol.enrollAccount(password).get()
-
-    // save Pure record to database
-    println("Database record:\n ${String(Base64.encode(enrollResult.enrollmentRecord))}")
-    val encryptionKey = enrollResult.accountKey
-
-    // use encryptionKey for protecting user data
-    val cipher = PheCipher()
-    cipher.setupDefaults()
-    val encryptedUserData = cipher.encrypt(data, encryptionKey)
-
-    // (optional) use the generated recovery public key to encrypt a user password hash
-    // save encryptedPasswordHash into your database
-    val encryptedPasswordHash = virgilCrypto.encrypt(passwordHash.toByteArray(), recoveryPublicKey)
-}
-```
-
-`Java`:
-```java
-import com.virgilsecurity.crypto.foundation.Base64;
-
-void enrollAccount(String password, Protocol protocol) throws ProtocolException, ExecutionException, InterruptedException {
-    EnrollResult enrollResult = protocol.enrollAccount(password).get();
-
-    //save pure record to database
-    System.out.println("Database record:\n" +
-        new String(Base64.encode(enrollResult.getEnrollmentRecord())));
-    byte[] encryptionKey = enrollResult.getAccountKey();
-
-    //use encryptionKey for protecting user data
-    PheCipher cipher = new PheCipher();
-    cipher.setupDefaults();
-    byte[] encryptedUserData = cipher.encrypt(data, encryptionKey);
-
-    //(optional) use the generated recovery public key to encrypt a user's password hash
-    //save encryptedPasswordHash into your database
-    byte[] encryptedPasswordHash = virgilCrypto.encrypt(passwordHash.getBytes(), recoveryPublicKey);
-}
-```
-
-When you've created a Pure `record` *(record is enrollResult.enrollmentRecord)* for all users in your DB, you can delete the unnecessary column where user passwords were previously stored.
-
-
-### Verify User Record
-
-Use this flow when a user already has his or her own Pure `record` in your database. This function allows you to verify a user's password with the `record` from your DB every time the user signs in. You have to pass his or her `record` from your DB into the `verifyPassword` function:
-
-`Kotlin`:
-```kotlin
-fun verifyPassword(password: String, record: ByteArray, protocol: Protocol) {
-    val encryptionKey = try {
-        protocol.verifyPassword(password, record)
-    } catch (exception: InvalidPasswordException) {
-        // Invalid password handling
-    }
-
-    //use encryptionKey for decrypting user data
-    val cipher = PheCipher()
-    cipher.setupDefaults()
-    val decrypted = cipher.decrypt(encrypted, encryptionKey)
-    ...
-}
-```
-
-`Java`:
-```java
-void verifyPassword(String password, byte[] record, Protocol protocol)
-        throws InvalidProtobufTypeException, ProtocolException, ExecutionException, InterruptedException {
-    byte[] encryptionKey;
-    try {
-        encryptionKey = protocol.verifyPassword(password, record).get();
-    } catch (InvalidPasswordException exception) {
-        // Invalid password handling
-    }
-
-    //use encryptionKey for decrypting user data
-    PheCipher cipher = new PheCipher();
-    cipher.setupDefaults();
-    byte[] decrypted = cipher.decrypt(encrypted, encryptionKey);
-    ...
-}
-```
-
-### Encrypt user data in your database
-
-Not only user passwords are sensitive data. In this flow we will help you protect any Personally identifiable information (PII) in your database.
-
-PII is data that could potentially identify a specific individual, and PII is sensitive.
-Sensitive PII is information, when disclosed, could result in harm to the individual whose privacy has been breached. Sensitive PII should therefore be encrypted in transit and when data is at rest. Such information includes biometric information, medical information, personally identifiable financial information (PIFI), and unique identifiers such as passport or Social Security numbers.
-
-The PHE service allows you to protect user's PII (personal data) with a user's `encryptionKey` that is obtained from the `enrollAccount` or `verifyPassword` functions. The `encryptionKey` will be the same for both functions.
-
-In addition, this key is unique to a particular user and won't be changed even after rotating (updating) a user's `record`. The `encryptionKey` will be updated after a user changes their own password.
-
-Here is an example of data encryption/decryption with an `encryptionKey`:
-
-`Kotlin`:
-```kotlin
-fun main() {
-    // encryptionKey (accountKey) is obtained from protocol.enrollAccount() or protocol.verifyPassword() calls
-
-    val data = "Personal data".toByteArray()
-    val cipher = PheCipher()
-    cipher.setupDefaults()
-
-    val ciphertext = cipher.encrypt(data, encryptionKey)
-    val decrypted = cipher.decrypt(ciphertext, encryptionKey)
-
-    //use decrypted data
-}
-```
-
-`Java`:
-```java
-void main() {
-    // encryptionKey (accountKey) is obtained from protocol.enrollAccount() or protocol.verifyPassword() calls
-
-    byte[] data = "Personal data".getBytes();
-    PheCipher cipher = new PheCipher();
-    cipher.setupDefaults();
-
-    byte[] ciphertext = cipher.encrypt(data, encryptionKey);
-    byte[] decrypted = cipher.decrypt(ciphertext, encryptionKey);
-
-    // use decrypted data
-}
-```
-
-Encryption is performed using AES256-GCM with key & nonce derived from the user's encryptionKey using HKDF and the random 256-bit salt.
-
-Virgil Security has zero knowledge about a user's `encryptionKey`, because the key is calculated every time you execute the `enrollAccount` or `verifyPassword` functions on your server side.
-
-
-### Rotate app keys and user record
-There can never be enough security, so you should rotate your sensitive data regularly (about once a week). Use this flow to get an `UPDATE_TOKEN` for updating a user's `RECORD` in your database and to get a new `APP_SECRET_KEY` and `SERVICE_PUBLIC_KEY` of a specific application.
-
-Also, use this flow in the event your database has been COMPROMISED!
-
-> This action doesn't require creating an additional table or to do any modifications to an existing one. When a user needs to change his or her own password, use the EnrollAccount function to replace user's old Pure record value in your DB with a newRecord.
-
-Here is how it works:
-
-**Step 1.** Get your `UPDATE_TOKEN`
-
-Navigate to the [Virgil Dashboard](https://dashboard.virgilsecurity.com/login), open your pure application panel, and press "Show update token" button to get the `update_token`.
-
-**Step 2.** Initialize the PureKit SDK with the `UPDATE_TOKEN`.
-Move to the PureKit SDK configuration file and specify your `UPDATE_TOKEN`:
-
-`Kotlin`:
-```kotlin
-// here set your PURE app credentials
-fun initPureKit(): Protocol {
-    val context = ProtocolContext.create(
-        appToken = "AT.OSoPhirdopvijQlFPKdlSydN9BUrn5oEuDwf3Hqps",
-        servicePublicKey = "PK.1.BEn/hnuyKV0inZL+kaRUZNvwQ/jkhDQdALrw6VdfvhZhPQQHWyYO+fRlJYZweUz1FGH3WxcZBjA0tL4wn7kE0ls=",
-        clientSecretKey = "SK.1.00000fLr2JOu2Vf1+MbEzpdtEP1kUefA0PUJw2UyI0=",
-        updateToken = "UT.2.00000000+0000000000000000000008UfxXDUU2FGkMvKhIgqjxA+hsAtf17K5j11Cnf07jB6uVEvxMJT0lMGv00000=")
-
-    return Protocol(context)
-}
-```
-
-`Java`:
-```java
-// here set your PURE app credentials
-Protocol initPureKit() {
-    ProtocolContext context = ProtocolContext.create(
-        "AT.OSoPhirdopvijQlFPKdlSydN9BUrn5oEuDwf3Hqps",
-        "PK.1.BEn/hnuyKV0inZL+kaRUZNvwQ/jkhDQdALrw6VdfvhZhPQQHWyYO+fRlJYZweUz1FGH3WxcZBjA0tL4wn7kE0ls=",
-        "SK.1.00000fLr2JOu2Vf1+MbEzpdtEP1kUefA0PUJw2UyI0=",
-        "UT.2.00000000+0000000000000000000008UfxXDUU2FGkMvKhIgqjxA+hsAtf17K5j11Cnf07jB6uVEvxMJT0lMGv00000=");
-
-    return new Protocol(context);
-}
-```
-
-**Step 3.** Start migration. Use the `RecordUpdater.updateEnrollmentRecord()` SDK function to create a user's `newRecord` (you don't need to ask your users to create a new password). The `RecordUpdater.updateEnrollmentRecord()` function requires the `update_token` and the user's `oldRecord` from your DB:
-
-`Kotlin`:
-```kotlin
-fun main() {
-    // Get old record from the database
-    val oldRecord = ...
-
-    // Update old record
-    val newRecord = try {
-        RecordUpdater.updateEnrollmentRecord(oldRecord, "UPDATE_TOKEN")
-    } catch (exception: IllegalArgumentException) {
-        // Handle already updated state
-    }
-
-    // Save new record to the database
-    saveNewRecord(newRecord)
-}
-```
-
-`Java`:
-```java
-void main() throws InvalidProtobufTypeException, ExecutionException, InterruptedException {
-    // Get old record from the database
-    byte[] oldRecord = ...
-
-    // Update old record
-    byte[] newRecord;
-    try {
-        newRecord = RecordUpdater.updateEnrollmentRecord(oldRecord, "UPDATE_TOKEN").get();
-    } catch (IllegalArgumentException exception) {
-        // Handle already updated state
-    }
-
-    // Save new record to the database
-    saveNewRecord(newRecord);
-}
-```
-
-Run the `RecordUpdater.updateEnrollmentRecord()` function and save the user's `newRecord` into your database.
-
-Since the SDK is able to work simultaneously with two versions of a user's records (`newRecord` and `oldRecord`), this will not affect the backend or users. This means, if a user logs into your system when you do the migration, the PureKit SDK will verify the user's password without any problems because the PHE Service can work with both user records (`newRecord` and `oldRecord`).
-
-**Step 4.** Get a new `APP_SECRET_KEY` and `SERVICE_PUBLIC_KEY` of a specific application
-
-Use the Virgil CLI `update-keys` command and your `UPDATE_TOKEN` to update the `APP_SECRET_KEY` and `SERVICE_PUBLIC_KEY`:
-
-```bash
-// FreeBSD / Linux / Mac OS
-./virgil pure update-keys <service_public_key> <app_secret_key> <update_token>
-
-// Windows OS
-virgil pure update-keys <service_public_key> <app_secret_key> <update_token>
-```
-
-**Step 5.** Move to the PureKit SDK configuration and replace your previous `APP_SECRET_KEY`,  `SERVICE_PUBLIC_KEY` with a new one (`APP_TOKEN` will be the same). Delete the previous `APP_SECRET_KEY`, `SERVICE_PUBLIC_KEY` and `UPDATE_TOKEN`.
-
-`Kotlin`:
-```kotlin
-// here set your PURE app credentials
-fun initPureKitNew(): Protocol {
-    val context = ProtocolContext.create(
-        appToken = "APP_TOKEN_HERE",
-        servicePublicKey = "NEW_SERVICE_PUBLIC_KEY_HERE",
-        clientSecretKey = "NEW_APP_SECRET_KEY_HERE",
-        updateToken = "") // updateToken needs to be empty
-
-    return Protocol(context)
-}
-```
-
-`Java`:
-```java
-Protocol initPureKitNew() {
-    ProtocolContext context = ProtocolContext.create(
-        "APP_TOKEN_HERE",
-        "NEW_SERVICE_PUBLIC_KEY_HERE",
-        "NEW_APP_SECRET_KEY_HERE",
-        ""); // updateToken needs to be empty
-
-    return new Protocol(context);
-}
-```
-
-### Recover password hashes
-
-Use this step if you're uninstalling Pure. 
-
-Password hash recovery is carried out by decrypting the encrypted users password hashes in your database and replacing the Pure records with them.
-
-In order to recover the original password hashes, you need to prepare your recovery private key. If you don't have a recovery key, then you have to ask your users to reregister to restore their passwords.
-
-Use your recovery private key to get original password hashes:
-
-`Kotlin`:
-```kotlin
-import com.virgilsecurity.crypto.foundation.Base64;
-
-// Import recovery private key
-byte[] exportedKey = Base64.decode(exportedKeyB64.getBytes());
-VirgilPrivateKey recoveryPrivateKey = virgilCrypto.importPrivateKey(exportedKey).getPrivateKey();
-
-// decrypt password hashes and save them in database
-byte[] decryptedPasswordHash = virgilCrypto.decrypt(encryptedPasswordHash, recoveryPrivateKey);
-```
-
-`Java`:
-```java
-import com.virgilsecurity.crypto.foundation.Base64;
-
-// Import recovery private key
-byte[] exportedKey = Base64.decode(exportedKeyB64.getBytes());
-VirgilPrivateKey recoveryPrivateKey = virgilCrypto.importPrivateKey(exportedKey).getPrivateKey();
-
-// decrypt password hashes and save them in database
-byte[] decryptedPasswordHash = virgilCrypto.decrypt(encryptedPasswordHash, recoveryPrivateKey);
-```
-
-Save the decrypted user password hashes into your database. After the recovery process is done, you can delete all the Pure data and the recovery keypair.
-
-## Docs
-* [Virgil Dashboard](https://dashboard.virgilsecurity.com/)
-* [The PHE WhitePaper](https://virgilsecurity.com/wp-content/uploads/2018/11/PHE-Whitepaper-2018.pdf) - foundation principles of the protocol
-* [Kotlin Samples](/samples) - explore our Kotlin PURE samples to easily run the SDK
-* [PURE use-case](https://developer.virgilsecurity.com/docs/use-cases/v1/passwords-and-data-protection) - explore our use-case to protect user passwords and data in your database from data breaches
 
 ## License
-
-This library is released under the [3-clause BSD License](LICENSE.md).
+This library is released under the [3-clause BSD License](LICENSE).
 
 ## Support
 Our developer support team is here to help you. Find out more information at our [Help Center](https://help.virgilsecurity.com/).
 
-You can find us on [Twitter](https://twitter.com/VirgilSecurity) or send an email to support@VirgilSecurity.com.
+You can find us on [Twitter](https://twitter.com/VirgilSecurity) or send an email to our support team support@VirgilSecurity.com.
 
 Also, get extra help from our support team on [Slack](https://virgilsecurity.com/join-community).
