@@ -22,6 +22,15 @@ PureKit brings data security to a new level in three ways:
 2. **Encrypts data with user’s personal encryption keys**. PureKit gives users a possibility to encrypt their data with personal encryption keys, and all keys can be revealed only after providing a correct password.
 3. **Immediately invalidate stolen database**. Even if your database has been compromised it impossible to run offline attacks, to retrieve user password or decrypt data. At the same time, PureKit provides convenient and secure key rotation procedure, that allows you quickly update all your server keys without losing access to your data.
 
+## Features
+
+- Per-user data and files encryption
+- Password protection against hacking
+- Management of data encryption keys 
+- Secure data and files sharing
+- Role-based data encryption
+
+
 ## Benefits
 
 - Users control data access
@@ -33,17 +42,9 @@ PureKit brings data security to a new level in three ways:
 - Encryption occurs independently of database security
 - Works with any database
 - Stronger than encryption at-rest and TDE
-- More secure than AWS and Google Key Management System (KMS)
+- More secure than AWS and Google Key Management Systems (KMS)
 - Instant invalidation of stolen databases
 - Compliance with GDPR, HIPAA, PCI DSS and more
-
-## Features
-
-- Per-user data and files encryption
-- Password protection against hacking
-- Management of data encryption keys 
-- Secure data and files sharing
-- Role-based data encryption
 
 ## Installation
 
