@@ -44,6 +44,10 @@ public class PureException extends Exception {
     public PureException() {
     }
 
+    public PureException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
     /**
      * Constructor
      *

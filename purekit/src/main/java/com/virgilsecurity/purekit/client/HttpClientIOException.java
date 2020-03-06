@@ -40,6 +40,10 @@ import java.io.IOException;
  */
 public class HttpClientIOException extends HttpClientException {
 
+    public HttpClientIOException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
     public HttpClientIOException(Throwable cause) {
         super(cause);
     }
