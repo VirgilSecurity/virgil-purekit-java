@@ -1,10 +1,10 @@
-# Virgil PureKit Kotlin/Java
+# Virgil PureKit Java
 
 [![Build Status](https://travis-ci.com/VirgilSecurity/virgil-purekit-java.svg?branch=master)](https://travis-ci.com/VirgilSecurity/virgil-purekit-java)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.virgilsecurity/purekit/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.virgilsecurity/purekit)
 [![GitHub license](https://img.shields.io/badge/license-BSD%203--Clause-blue.svg)](https://github.com/VirgilSecurity/virgil/blob/master/LICENSE)
 
-[Introduction](#introduction) | [Benefits](#benefits) | [Features](#features) |  [Installation](#installation) | [Resources](#resources) | [License](#license) | [Support](#support)
+[Introduction](#introduction) | [Features](#features)  | [Benefits](#benefits) | [Installation](#installation) | [Resources](#resources) | [License](#license) | [Support](#support)
 
 <img src="https://cdn.virgilsecurity.com/assets/images/github/logos/purekit/PureKit.png" width="25%" align="left" hspace="1" vspace="3">
 
