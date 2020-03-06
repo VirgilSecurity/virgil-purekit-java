@@ -130,7 +130,7 @@ public class HttpClient {
                     throw new HttpClientServiceException(httpError);
                 } catch (IOException e) {
                     LOGGER.warning(String.format("Response error body uses unknown format: %s", Base64.encode(errorData)));
-                    throw new HttpClientIOException(e);
+                    throw new HttpClientIOException(String.format("Http response code: %s", responseCode), e);
                 }
             } else {
                 if (parser != null) {

@@ -40,6 +40,10 @@ import com.virgilsecurity.purekit.exception.PureException;
  */
 public class HttpClientException extends PureException  {
 
+    public HttpClientException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
     public HttpClientException() {
         super();
     }
