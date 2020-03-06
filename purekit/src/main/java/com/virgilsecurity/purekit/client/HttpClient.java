@@ -35,6 +35,7 @@ package com.virgilsecurity.purekit.client;
 
 import com.google.protobuf.MessageLite;
 import com.google.protobuf.Parser;
+import com.virgilsecurity.common.util.Base64;
 import com.virgilsecurity.purekit.build.VersionVirgilAgent;
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtos;
 import com.virgilsecurity.purekit.utils.OsUtils;
@@ -115,14 +116,20 @@ public class HttpClient {
                 request.writeTo(urlConnection.getOutputStream());
             }
             if (urlConnection.getResponseCode() >= HttpURLConnection.HTTP_BAD_REQUEST) {
-                LOGGER.info("Http error occurred...");
+                int responseCode = urlConnection.getResponseCode();
+                LOGGER.info(String.format("Http error: %s", responseCode));
+
+                byte[] errorData = new byte[urlConnection.getErrorStream().available()];
+                urlConnection.getErrorStream().read(errorData);
+                LOGGER.finest(String.format("Http error response: %s", Base64.encode(errorData)));
+
                 // Get error code from request
-                LOGGER.info("Trying to get error info...");
+                LOGGER.finer("Trying to get error info...");
                 try {
-                    PurekitProtos.HttpError httpError = PurekitProtos.HttpError.parseFrom(urlConnection.getErrorStream());
+                    PurekitProtos.HttpError httpError = PurekitProtos.HttpError.parseFrom(errorData);
                     throw new HttpClientServiceException(httpError);
                 } catch (IOException e) {
-                    LOGGER.warning("Response error body uses unknown format");
+                    LOGGER.warning(String.format("Response error body uses unknown format: %s", Base64.encode(errorData)));
                     throw new HttpClientIOException(e);
                 }
             } else {
