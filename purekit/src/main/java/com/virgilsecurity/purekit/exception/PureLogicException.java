@@ -71,7 +71,8 @@ public class PureLogicException extends PureException {
         INVALID_PASSWORD(5, "Invalid password"),
         USER_HAS_NO_ACCESS_TO_DATA(6, "User has no access to data"),
         GRANT_INVALID_PROTOBUF(7, "Grant invalid protobuf"),
-        GRANT_IS_EXPIRED(8, "Grant is expired");
+        GRANT_IS_EXPIRED(8, "Grant is expired"),
+        PASSWORD_RECOVER_REQUEST_THROTTLED(9, "Password recover request was throttled");
 
         private final int code;
         private final String message;

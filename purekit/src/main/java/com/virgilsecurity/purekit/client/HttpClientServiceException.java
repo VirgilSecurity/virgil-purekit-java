@@ -47,6 +47,7 @@ public class HttpClientServiceException extends HttpClientException {
      * @param httpError httpError
      */
     public HttpClientServiceException(PurekitProtos.HttpError httpError) {
+        super(String.format("Service error %s, message: %s", httpError.getCode(), httpError.getMessage()));
         this.httpError = httpError;
     }
 

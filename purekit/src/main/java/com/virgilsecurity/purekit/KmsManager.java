@@ -40,9 +40,12 @@ import com.virgilsecurity.crypto.phe.UokmsClientGenerateDecryptRequestResult;
 import com.virgilsecurity.crypto.phe.UokmsClientGenerateEncryptWrapResult;
 import com.virgilsecurity.crypto.phe.UokmsClientRotateKeysResult;
 import com.virgilsecurity.crypto.phe.UokmsWrapRotation;
+import com.virgilsecurity.purekit.client.HttpClientServiceException;
 import com.virgilsecurity.purekit.client.HttpKmsClient;
+import com.virgilsecurity.purekit.client.ServiceErrorCode;
 import com.virgilsecurity.purekit.exception.PureCryptoException;
 import com.virgilsecurity.purekit.exception.PureException;
+import com.virgilsecurity.purekit.exception.PureLogicException;
 import com.virgilsecurity.purekit.model.GrantKey;
 import com.virgilsecurity.purekit.model.UserRecord;
 import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client;
@@ -148,7 +151,16 @@ class KmsManager {
                     .setRequest(ByteString.copyFrom(uokmsClientGenerateDecryptRequestResult.getDecryptRequest()))
                     .build();
 
-            PurekitProtosV3Client.DecryptResponse decryptResponse = httpClient.decrypt(decryptRequest);
+            PurekitProtosV3Client.DecryptResponse decryptResponse;
+            try {
+                decryptResponse = httpClient.decrypt(decryptRequest);
+            } catch (HttpClientServiceException e) {
+                if (e.getErrorCode() == ServiceErrorCode.THROTTLING.getCode()) {
+                    throw new PureLogicException(PureLogicException.ErrorStatus.PASSWORD_RECOVER_REQUEST_THROTTLED);
+                }
+
+                throw e;
+            }
 
             return kmsClient.processDecryptResponse(userRecord.getPasswordRecoveryWrap(),
                     uokmsClientGenerateDecryptRequestResult.getDecryptRequest(),

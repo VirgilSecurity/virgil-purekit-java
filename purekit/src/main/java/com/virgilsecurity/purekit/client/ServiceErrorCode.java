@@ -42,6 +42,7 @@ public enum ServiceErrorCode {
     CELL_KEY_ALREADY_EXISTS(50006),
     GRANT_KEY_NOT_FOUND(50023),
     ROLE_ASSIGNMENT_NOT_FOUND(50015),
+    THROTTLING(50070),
     UNDEFINED(0);
 
     private final int code;
