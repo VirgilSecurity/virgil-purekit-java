@@ -39,6 +39,10 @@ import com.virgilsecurity.purekit.exception.PureException;
  * Base class for PureStorage exceptions
  */
 public class PureStorageException extends PureException {
+    public PureStorageException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
     /**
      * Constructor
      */

@@ -52,6 +52,7 @@ public class VirgilCloudStorageException extends PureStorageException {
      * @param clientException clientException
      */
     public VirgilCloudStorageException(HttpClientException clientException) {
+        super(clientException);
         this.clientException = clientException;
     }
 }
