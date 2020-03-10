@@ -58,7 +58,7 @@ buildscript {
 
 allprojects {
     group "com.virgilsecurity"
-    version "3.0.0-SNAPSHOT"
+    version "3.0.0"
 
     repositories {
         maven {
