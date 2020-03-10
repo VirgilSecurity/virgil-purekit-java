@@ -68,13 +68,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.SQLException;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
 import static com.virgilsecurity.crypto.phe.PheException.ERROR_AES_FAILED;
@@ -614,7 +609,7 @@ public class PureTestJava {
                                                             String secretKeyOld,
                                                             String updateToken,
                                                             String publicKeyNew,
-                                                            String secretKeyNew) throws PureException {
+                                                            String secretKeyNew) throws PureException, InterruptedException {
         StorageType[] storages = createStorages();
         for (StorageType storage: storages) {
             // VirgilCloudPureStorage should not support that
@@ -680,6 +675,8 @@ public class PureTestJava {
 
                 pure.recoverUser(firstUserId, newPwd);
 
+                Thread.sleep(10000);
+
                 AuthResult authResult2 = pure.authenticateUser(firstUserId, newPwd);
 
                 byte[] decrypted2 = pure.decrypt(authResult2.getGrant(), firstUserId, dataId, blob);
@@ -701,6 +698,8 @@ public class PureTestJava {
                 String newPwd2 = UUID.randomUUID().toString();
 
                 pure.recoverUser(firstUserId, newPwd2);
+
+                Thread.sleep(10000);
 
                 AuthResult authResult2 = pure.authenticateUser(firstUserId, newPwd2);
 
@@ -1158,7 +1157,7 @@ public class PureTestJava {
                                             String kmsServerAddress,
                                             String appToken,
                                             String publicKey,
-                                            String secretKey) throws PureException {
+                                            String secretKey) throws PureException, InterruptedException {
         PureSetupResult pureResult;
         StorageType[] storages = createStorages();
         for (StorageType storage : storages) {
@@ -1182,6 +1181,8 @@ public class PureTestJava {
                 pure.authenticateUser(userId, password1);
             });
 
+            Thread.sleep(10000);
+
             assertEquals(PureLogicException.ErrorStatus.INVALID_PASSWORD, e.getErrorStatus());
 
             AuthResult authResult = pure.authenticateUser(userId, password2);
@@ -1190,6 +1191,72 @@ public class PureTestJava {
             byte[] decrypted = pure.decrypt(authResult.getGrant(), userId, dataId, blob);
             assertArrayEquals(text, decrypted);
         }
+    }
+
+    @ParameterizedTest @MethodSource("testArgumentsNoToken")
+    void recovery__many_users__should_throttle(String pheServerAddress,
+                                               String pureServerAddress,
+                                               String kmsServerAddress,
+                                               String appToken,
+                                               String publicKey,
+                                               String secretKey) throws PureException, InterruptedException {
+        PureSetupResult pureResult = this.setupPure(pheServerAddress, pureServerAddress, kmsServerAddress, appToken, publicKey, secretKey, null, StorageType.MariaDB);
+        Pure pure = new Pure(pureResult.getContext());
+
+        final int throttlingNumber = 10;
+        final int checkNumber = 5;
+        final int total = throttlingNumber + checkNumber;
+
+        Thread[] threads = new Thread[total];
+
+        AtomicInteger succeeded = new AtomicInteger(0);
+        AtomicInteger failed = new AtomicInteger(0);
+
+        Runnable recoverNewUser = () -> {
+            String userId = UUID.randomUUID().toString();
+            String password1 = UUID.randomUUID().toString();
+            String password2 = UUID.randomUUID().toString();
+
+            try {
+                pure.registerUser(userId, password1);
+            }
+            catch (PureException e) {
+                fail(e);
+            }
+
+            try {
+                pure.recoverUser(userId, password2);
+            } catch (PureLogicException e) {
+                if (e.getErrorStatus() == PureLogicException.ErrorStatus.PASSWORD_RECOVER_REQUEST_THROTTLED) {
+                    failed.incrementAndGet();
+                    return;
+                }
+                else {
+                    fail(e);
+                }
+            } catch (PureException e) {
+                fail(e);
+            }
+
+            succeeded.incrementAndGet();
+        };
+
+        for (int i = 0; i < total; i++) {
+            threads[i] = new Thread(recoverNewUser);
+        }
+
+        for (Thread thread: threads) {
+            thread.start();
+        }
+
+        for (Thread thread: threads) {
+            thread.join();
+        }
+
+        assertEquals(throttlingNumber, succeeded.get());
+        assertEquals(checkNumber, failed.get());
+
+        Thread.sleep(10000);
     }
 
     @ParameterizedTest @MethodSource("testArgumentsNoToken")
