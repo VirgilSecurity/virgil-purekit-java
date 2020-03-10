@@ -41,6 +41,7 @@ import com.virgilsecurity.purekit.protobuf.build.PurekitProtos;
 import com.virgilsecurity.purekit.utils.OsUtils;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.logging.Logger;
@@ -119,18 +120,22 @@ public class HttpClient {
                 int responseCode = urlConnection.getResponseCode();
                 LOGGER.info(String.format("Http error: %s", responseCode));
 
-                byte[] errorData = new byte[urlConnection.getErrorStream().available()];
-                urlConnection.getErrorStream().read(errorData);
-                LOGGER.finest(String.format("Http error response: %s", Base64.encode(errorData)));
+                InputStream errStream = urlConnection.getErrorStream();
+                if (errStream != null) {
+                    byte[] errorData = new byte[errStream.available()];
+                    errStream.read(errorData);
 
-                // Get error code from request
-                LOGGER.finer("Trying to get error info...");
-                try {
-                    PurekitProtos.HttpError httpError = PurekitProtos.HttpError.parseFrom(errorData);
-                    throw new HttpClientServiceException(httpError);
-                } catch (IOException e) {
-                    LOGGER.warning(String.format("Response error body uses unknown format: %s", Base64.encode(errorData)));
-                    throw new HttpClientIOException(String.format("Http response code: %s", responseCode), e);
+                    try {
+                        PurekitProtos.HttpError httpError = PurekitProtos.HttpError.parseFrom(errorData);
+                        LOGGER.info(String.format("Http service error code %s. Message: %s", httpError.getCode(), httpError.getMessage()));
+                        throw new HttpClientServiceException(httpError);
+                    } catch (IOException e) {
+                        LOGGER.warning(String.format("Response error body uses unknown format: %s", Base64.encode(errorData)));
+                        throw new HttpClientIOException(String.format("Http response code: %s", responseCode), e);
+                    }
+                } else {
+                    LOGGER.warning("Http error with empty body");
+                    throw new HttpClientIOException(String.format("Empty http response with %s code", responseCode));
                 }
             } else {
                 if (parser != null) {

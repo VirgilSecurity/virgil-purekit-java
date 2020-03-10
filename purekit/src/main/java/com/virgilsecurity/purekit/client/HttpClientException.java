@@ -51,4 +51,8 @@ public class HttpClientException extends PureException  {
     public HttpClientException(Throwable cause) {
         super(cause);
     }
+
+    public HttpClientException(String errorMessage) {
+        super(errorMessage);
+    }
 }
