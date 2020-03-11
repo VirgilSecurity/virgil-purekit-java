@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019, Virgil Security, Inc.
+ * Copyright (c) 2015-2020, Virgil Security, Inc.
  *
  * Lead Maintainer: Virgil Security Inc. <support@virgilsecurity.com>
  *
@@ -31,18 +31,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-buildscript {
-    ext.versions = [
-            dokkaVersion: '0.9.17',
-    ]
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath "org.jetbrains.dokka:dokka-gradle-plugin:$versions.dokkaVersion"
-    }
-}
-
 plugins {
     id 'java'
     id 'java-library'
@@ -50,13 +38,7 @@ plugins {
     id 'signing'
 }
 
-apply from: "$rootDir/meta.gradle"
-
-group "com.virgilsecurity"
-version "0.1.0"
-
 apply plugin: 'maven'
-apply plugin: 'org.jetbrains.dokka'
 
 sourceCompatibility = 1.8
 
@@ -68,7 +50,7 @@ repositories {
 
 dependencies {
     // Protobuf
-    compile "com.google.protobuf:protobuf-java:$versions.protobuf"
+    compile "com.google.protobuf:protobuf-java:$versions.protobufVersion"
 }
 
 task sourcesJar(type: Jar) {
@@ -76,7 +58,7 @@ task sourcesJar(type: Jar) {
     classifier = 'sources'
 }
 
-task javadocJar(type: Jar, dependsOn: 'dokka') {
+task javadocJar(type: Jar) {
     from "$buildDir/javadoc"
     classifier = 'javadoc'
 }
@@ -98,7 +80,7 @@ publishing {
                 licenses {
                     license {
                         name = 'Virgil Security, Inc. license'
-                        url = 'https://github.com/virgilsecurity/virgil-purekit-kotlin/blob/master/LICENSE.txt'
+                        url = 'https://github.com/virgilsecurity/virgil-purekit-java/blob/master/LICENSE.txt'
                     }
                 }
                 developers {
@@ -110,9 +92,9 @@ publishing {
                     }
                 }
                 scm {
-                    connection = 'scm:git:https://github.com/virgilsecurity/virgil-purekit-kotlin.git'
-                    developerConnection = 'scm:git:git@github.com:virgilsecurity/virgil-purekit-kotlin.git'
-                    url = 'https://github.com/virgilsecurity/virgil-purekit-kotlin'
+                    connection = 'scm:git:https://github.com/virgilsecurity/virgil-purekit-java.git'
+                    developerConnection = 'scm:git:git@github.com:virgilsecurity/virgil-purekit-java.git'
+                    url = 'https://github.com/virgilsecurity/virgil-purekit-java'
                 }
             }
         }
@@ -132,10 +114,4 @@ publishing {
 
 signing {
     sign publishing.publications.mavenJava
-}
-
-dokka {
-    outputFormat = 'html'
-    outputDirectory = "$buildDir/javadoc"
-    reportUndocumented = false
 }

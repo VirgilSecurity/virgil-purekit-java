@@ -31,42 +31,50 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-syntax = "proto3";
+package com.virgilsecurity.purekit;
 
-package build;
+import com.virgilsecurity.crypto.foundation.KeyMaterialRng;
+import com.virgilsecurity.purekit.exception.PureCryptoException;
+import com.virgilsecurity.purekit.exception.PureException;
+import com.virgilsecurity.purekit.exception.PureLogicException;
+import com.virgilsecurity.sdk.crypto.VirgilCrypto;
+import com.virgilsecurity.sdk.crypto.VirgilKeyPair;
+import com.virgilsecurity.sdk.crypto.exceptions.CryptoException;
 
-option java_package = "com.virgilsecurity.purekit.protobuf.build";
-option java_outer_classname = "PurekitProtos";
+/**
+ * Generate nonrotatable secrets from 1 master secret
+ */
+public class NonrotatableSecretsGenerator {
+    private static final int NONROTATABLE_MASTER_SECRET_LENGTH = 32;
 
-message DatabaseRecord {
-    uint32 version = 1;
-    bytes record = 2;
-}
+    /**
+     * Generate nonrotatable secrets from 1 master secret
+     *
+     * @param masterSecret master secret
+     *
+     * @return NonrotatableSecrets
+     *
+     * @throws PureException PureException
+     */
+    public static NonrotatableSecrets generateSecrets(byte[] masterSecret) throws PureException {
+        if (masterSecret.length != NONROTATABLE_MASTER_SECRET_LENGTH) {
+            throw new PureLogicException(PureLogicException.ErrorStatus.NONROTABLE_MASTER_SECRET_INVALID_LENGTH);
+        }
 
-message EnrollmentRequest {
-    uint32 version = 1;
-}
+        KeyMaterialRng rng = new KeyMaterialRng();
+        rng.resetKeyMaterial(masterSecret);
 
-message EnrollmentResponse {
-    uint32 version = 1;
-    bytes response = 2;
-}
+        VirgilCrypto crypto = new VirgilCrypto(rng);
 
-message VerifyPasswordRequest {
-    uint32 version = 1;
-    bytes request = 2;
-}
+        VirgilKeyPair vskp;
+        VirgilKeyPair oskp;
+        try {
+            vskp = crypto.generateKeyPair();
+            oskp = crypto.generateKeyPair();
+        } catch (CryptoException e) {
+            throw new PureCryptoException(e);
+        }
 
-message VerifyPasswordResponse {
-    bytes response = 1;
-}
-
-message VersionedUpdateToken {
-    uint32 version = 1;
-    bytes update_token = 2;
-}
-
-message HttpError {
-    uint32 code = 1;
-    string message = 2;
+        return new NonrotatableSecrets(vskp, oskp);
+    }
 }

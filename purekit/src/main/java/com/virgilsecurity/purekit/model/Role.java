@@ -31,42 +31,47 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-syntax = "proto3";
+package com.virgilsecurity.purekit.model;
 
-package build;
+import com.virgilsecurity.purekit.utils.ValidationUtils;
 
-option java_package = "com.virgilsecurity.purekit.protobuf.build";
-option java_outer_classname = "PurekitProtos";
+/**
+ * Role
+ */
+public class Role {
 
-message DatabaseRecord {
-    uint32 version = 1;
-    bytes record = 2;
-}
+    private String roleName;
+    private byte[] rpk;
 
-message EnrollmentRequest {
-    uint32 version = 1;
-}
+    /**
+     * Constructor
+     *
+     * @param roleName role name
+     * @param rpk role public key
+     */
+    public Role(String roleName, byte[] rpk) {
+        ValidationUtils.checkNullOrEmpty(roleName, "roleName");
+        ValidationUtils.checkNullOrEmpty(rpk, "rpk");
 
-message EnrollmentResponse {
-    uint32 version = 1;
-    bytes response = 2;
-}
+        this.roleName = roleName;
+        this.rpk = rpk;
+    }
 
-message VerifyPasswordRequest {
-    uint32 version = 1;
-    bytes request = 2;
-}
+    /**
+     * Returns role name
+     *
+     * @return role name
+     */
+    public String getRoleName() {
+        return roleName;
+    }
 
-message VerifyPasswordResponse {
-    bytes response = 1;
-}
-
-message VersionedUpdateToken {
-    uint32 version = 1;
-    bytes update_token = 2;
-}
-
-message HttpError {
-    uint32 code = 1;
-    string message = 2;
+    /**
+     * Returns role public key
+     *
+     * @return role public key
+     */
+    public byte[] getRpk() {
+        return rpk;
+    }
 }

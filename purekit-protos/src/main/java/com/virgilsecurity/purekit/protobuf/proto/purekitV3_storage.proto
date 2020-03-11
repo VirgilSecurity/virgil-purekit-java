@@ -36,37 +36,96 @@ syntax = "proto3";
 package build;
 
 option java_package = "com.virgilsecurity.purekit.protobuf.build";
-option java_outer_classname = "PurekitProtos";
+option java_outer_classname = "PurekitProtosV3Storage";
 
-message DatabaseRecord {
+message UserRecordSigned {
     uint32 version = 1;
-    bytes record = 2;
+    string user_id = 2;
+    bytes phe_record_ns = 3;
+    bytes phe_record_nc = 4;
+    bytes upk = 5;
+    bytes encrypted_usk = 6;
+    bytes encrypted_usk_backup = 7;
+    bytes backup_pwd_hash = 8;
+    bytes password_recovery_blob = 9;
 }
 
-message EnrollmentRequest {
+message UserRecord {
     uint32 version = 1;
+    bytes user_record_signed = 2;
+    bytes signature = 3;
+    bytes phe_record_t0 = 4;
+    bytes phe_record_t1 = 5;
+    uint32 record_version = 6;
+    bytes password_recovery_wrap = 7;
 }
 
-message EnrollmentResponse {
+message UserRecords {
+    repeated UserRecord user_records = 1;
+}
+
+message CellKeySigned {
     uint32 version = 1;
-    bytes response = 2;
+    string user_id = 2;
+    string data_id = 3;
+    bytes cpk = 4;
+    bytes encrypted_csk_cms = 5;
+    bytes encrypted_csk_body = 6;
 }
 
-message VerifyPasswordRequest {
+message CellKey {
     uint32 version = 1;
-    bytes request = 2;
+    bytes cell_key_signed = 2;
+    bytes signature = 3;
 }
 
-message VerifyPasswordResponse {
-    bytes response = 1;
-}
-
-message VersionedUpdateToken {
+message RoleSigned {
     uint32 version = 1;
-    bytes update_token = 2;
+    string name = 2;
+    bytes rpk = 3;
 }
 
-message HttpError {
-    uint32 code = 1;
-    string message = 2;
+message Role {
+    uint32 version = 1;
+    bytes role_signed = 2;
+    bytes signature = 3;
+}
+
+message Roles {
+    repeated Role roles = 1;
+}
+
+message RoleAssignmentSigned {
+    uint32 version = 1;
+    string role_name = 2;
+    string user_id = 3;
+    bytes public_key_id = 4;
+    bytes encrypted_rsk = 5;
+}
+
+message RoleAssignment {
+    uint32 version = 1;
+    bytes role_assignment_signed = 2;
+    bytes signature = 3;
+}
+
+message RoleAssignments {
+    repeated RoleAssignment role_assignments = 1;
+}
+
+message GrantKeySigned {
+    uint32 version = 1;
+    string user_id = 2;
+    bytes key_id = 3;
+    bytes encrypted_grant_key_blob = 4;
+    uint64 creation_date = 5;
+    uint64 expiration_date = 6;
+}
+
+message GrantKey {
+    uint32 version = 1;
+    bytes grant_key_signed = 2;
+    bytes signature = 3;
+    uint32 record_version = 4;
+    bytes encrypted_grant_key_wrap = 5;
 }

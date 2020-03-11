@@ -31,42 +31,41 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-syntax = "proto3";
+package com.virgilsecurity.purekit.client;
 
-package build;
+import com.virgilsecurity.purekit.protobuf.build.PurekitProtos;
 
-option java_package = "com.virgilsecurity.purekit.protobuf.build";
-option java_outer_classname = "PurekitProtos";
+/**
+ * HttpClient exception with service response
+ */
+public class HttpClientServiceException extends HttpClientException {
+    private final PurekitProtos.HttpError httpError;
 
-message DatabaseRecord {
-    uint32 version = 1;
-    bytes record = 2;
-}
+    /**
+     * Constructor
+     *
+     * @param httpError httpError
+     */
+    public HttpClientServiceException(PurekitProtos.HttpError httpError) {
+        super(String.format("Service error %s, message: %s", httpError.getCode(), httpError.getMessage()));
+        this.httpError = httpError;
+    }
 
-message EnrollmentRequest {
-    uint32 version = 1;
-}
+    /**
+     * HttpError
+     *
+     * @return HttpError
+     */
+    public PurekitProtos.HttpError getHttpError() {
+        return httpError;
+    }
 
-message EnrollmentResponse {
-    uint32 version = 1;
-    bytes response = 2;
-}
-
-message VerifyPasswordRequest {
-    uint32 version = 1;
-    bytes request = 2;
-}
-
-message VerifyPasswordResponse {
-    bytes response = 1;
-}
-
-message VersionedUpdateToken {
-    uint32 version = 1;
-    bytes update_token = 2;
-}
-
-message HttpError {
-    uint32 code = 1;
-    string message = 2;
+    /**
+     * Returns error code
+     *
+     * @return error code
+     */
+    public int getErrorCode() {
+        return httpError.getCode();
+    }
 }

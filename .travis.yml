@@ -1,10 +1,16 @@
 language: java
-
+services:
+  - docker
+jdk:
+  - oraclejdk9
 os:
   - linux
-  - osx
 
-branches:
-  only:
-    - dev
-    - master
+before_install:
+  - openssl aes-256-cbc -K $encrypted_e2b216a86c03_key -iv $encrypted_e2b216a86c03_iv -in env.json.enc -out env.json -d
+
+script:
+  - pushd purekit/src/test/resources/com/virgilsecurity/purekit
+  - ./setuptestdb.sh
+  - popd
+  - "./gradlew clean test"

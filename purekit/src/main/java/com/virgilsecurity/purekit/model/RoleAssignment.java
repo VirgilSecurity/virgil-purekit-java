@@ -31,42 +31,72 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-syntax = "proto3";
+package com.virgilsecurity.purekit.model;
 
-package build;
+import com.virgilsecurity.purekit.utils.ValidationUtils;
 
-option java_package = "com.virgilsecurity.purekit.protobuf.build";
-option java_outer_classname = "PurekitProtos";
+/**
+ * Role assignment
+ */
+public class RoleAssignment {
+    private String roleName;
+    private String userId;
+    private byte[] publicKeyId;
+    private byte[] encryptedRsk;
 
-message DatabaseRecord {
-    uint32 version = 1;
-    bytes record = 2;
-}
+    /**
+     * Constructor
+     *
+     * @param roleName role name
+     * @param userId user id
+     * @param publicKeyId public key id
+     * @param encryptedRsk encrypted role private key
+     */
+    public RoleAssignment(String roleName, String userId, byte[] publicKeyId, byte[] encryptedRsk) {
+        ValidationUtils.checkNullOrEmpty(roleName, "roleName");
+        ValidationUtils.checkNullOrEmpty(userId, "userId");
+        ValidationUtils.checkNullOrEmpty(publicKeyId, "publicKeyId");
+        ValidationUtils.checkNullOrEmpty(encryptedRsk, "encryptedRsk");
 
-message EnrollmentRequest {
-    uint32 version = 1;
-}
+        this.roleName = roleName;
+        this.userId = userId;
+        this.publicKeyId = publicKeyId;
+        this.encryptedRsk = encryptedRsk;
+    }
 
-message EnrollmentResponse {
-    uint32 version = 1;
-    bytes response = 2;
-}
+    /**
+     * Returns role name
+     *
+     * @return role name
+     */
+    public String getRoleName() {
+        return roleName;
+    }
 
-message VerifyPasswordRequest {
-    uint32 version = 1;
-    bytes request = 2;
-}
+    /**
+     * Returns public key id
+     *
+     * @return public key id
+     */
+    public byte[] getPublicKeyId() {
+        return publicKeyId;
+    }
 
-message VerifyPasswordResponse {
-    bytes response = 1;
-}
+    /**
+     * Returns encrypted role private key
+     *
+     * @return encrypted role private key
+     */
+    public byte[] getEncryptedRsk() {
+        return encryptedRsk;
+    }
 
-message VersionedUpdateToken {
-    uint32 version = 1;
-    bytes update_token = 2;
-}
-
-message HttpError {
-    uint32 code = 1;
-    string message = 2;
+    /**
+     * Returns user id
+     *
+     * @return user id
+     */
+    public String getUserId() {
+        return userId;
+    }
 }

@@ -31,42 +31,24 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-syntax = "proto3";
+package com.virgilsecurity.purekit.storage.exception;
 
-package build;
+import com.virgilsecurity.common.util.Base64;
 
-option java_package = "com.virgilsecurity.purekit.protobuf.build";
-option java_outer_classname = "PurekitProtos";
+public class PureStorageGrantKeyNotFoundException extends PureStorageException {
+    private final String userId;
+    private final String keyId;
 
-message DatabaseRecord {
-    uint32 version = 1;
-    bytes record = 2;
-}
+    public PureStorageGrantKeyNotFoundException(String userId, byte[] keyId) {
+        this.userId = userId;
+        this.keyId = Base64.encode(keyId);
+    }
 
-message EnrollmentRequest {
-    uint32 version = 1;
-}
+    public String getUserId() {
+        return userId;
+    }
 
-message EnrollmentResponse {
-    uint32 version = 1;
-    bytes response = 2;
-}
-
-message VerifyPasswordRequest {
-    uint32 version = 1;
-    bytes request = 2;
-}
-
-message VerifyPasswordResponse {
-    bytes response = 1;
-}
-
-message VersionedUpdateToken {
-    uint32 version = 1;
-    bytes update_token = 2;
-}
-
-message HttpError {
-    uint32 code = 1;
-    string message = 2;
+    public String getKeyId() {
+        return keyId;
+    }
 }

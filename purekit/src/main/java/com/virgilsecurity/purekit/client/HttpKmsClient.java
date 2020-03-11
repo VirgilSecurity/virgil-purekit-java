@@ -31,42 +31,56 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-syntax = "proto3";
+package com.virgilsecurity.purekit.client;
 
-package build;
+import com.virgilsecurity.purekit.protobuf.build.PurekitProtosV3Client;
+import com.virgilsecurity.purekit.utils.ValidationUtils;
 
-option java_package = "com.virgilsecurity.purekit.protobuf.build";
-option java_outer_classname = "PurekitProtos";
+import java.net.URL;
 
-message DatabaseRecord {
-    uint32 version = 1;
-    bytes record = 2;
-}
+/**
+ * HttpPheClient class is for http interactions with PHE service.
+ */
+public class HttpKmsClient {
 
-message EnrollmentRequest {
-    uint32 version = 1;
-}
+    private final HttpClient client;
 
-message EnrollmentResponse {
-    uint32 version = 1;
-    bytes response = 2;
-}
+    /**
+     * KMS service url
+     */
+    public static final String SERVICE_ADDRESS = "https://api.virgilsecurity.com/kms/v1";
 
-message VerifyPasswordRequest {
-    uint32 version = 1;
-    bytes request = 2;
-}
+    /**
+     * Instantiates HttpKmsClient.
+     *
+     * @param appToken Application token.
+     * @param serviceAddress Service url.
+     */
+    public HttpKmsClient(String appToken, URL serviceAddress) {
+        ValidationUtils.checkNullOrEmpty(appToken, "appToken");
+        ValidationUtils.checkNull(serviceAddress, "serviceAddress");
 
-message VerifyPasswordResponse {
-    bytes response = 1;
-}
+        this.client = new HttpClient(serviceAddress, appToken);
+    }
 
-message VersionedUpdateToken {
-    uint32 version = 1;
-    bytes update_token = 2;
-}
+    /**
+     * Decrypt query
+     *
+     * @param request DecryptRequest
+     *
+     * @return DecryptResponse
+     *
+     * @throws HttpClientException HttpClientException
+     */
+    public PurekitProtosV3Client.DecryptResponse decrypt(PurekitProtosV3Client.DecryptRequest request) throws HttpClientException {
 
-message HttpError {
-    uint32 code = 1;
-    string message = 2;
+        ValidationUtils.checkNull(request, "request");
+
+        return client.execute(
+                "/decrypt",
+                HttpClient.Method.POST,
+                request,
+                PurekitProtosV3Client.DecryptResponse.parser()
+        );
+    }
 }

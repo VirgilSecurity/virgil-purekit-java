@@ -31,42 +31,24 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-syntax = "proto3";
+package com.virgilsecurity.purekit.client;
 
-package build;
+import java.io.IOException;
 
-option java_package = "com.virgilsecurity.purekit.protobuf.build";
-option java_outer_classname = "PurekitProtos";
+/**
+ * HttpClient IOException exception
+ */
+public class HttpClientIOException extends HttpClientException {
 
-message DatabaseRecord {
-    uint32 version = 1;
-    bytes record = 2;
-}
+    public HttpClientIOException(String errorMessage) {
+        super(errorMessage);
+    }
 
-message EnrollmentRequest {
-    uint32 version = 1;
-}
+    public HttpClientIOException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
-message EnrollmentResponse {
-    uint32 version = 1;
-    bytes response = 2;
-}
-
-message VerifyPasswordRequest {
-    uint32 version = 1;
-    bytes request = 2;
-}
-
-message VerifyPasswordResponse {
-    bytes response = 1;
-}
-
-message VersionedUpdateToken {
-    uint32 version = 1;
-    bytes update_token = 2;
-}
-
-message HttpError {
-    uint32 code = 1;
-    string message = 2;
+    public HttpClientIOException(Throwable cause) {
+        super(cause);
+    }
 }

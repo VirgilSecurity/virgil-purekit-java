@@ -31,42 +31,32 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-syntax = "proto3";
+package com.virgilsecurity.purekit.client;
 
-package build;
+/**
+ * PHE service error codes.
+ */
+public enum ServiceErrorCode {
+    USER_NOT_FOUND(50003),
+    CELL_KEY_NOT_FOUND(50004),
+    CELL_KEY_ALREADY_EXISTS(50006),
+    GRANT_KEY_NOT_FOUND(50023),
+    ROLE_ASSIGNMENT_NOT_FOUND(50015),
+    THROTTLING(50070),
+    UNDEFINED(0);
 
-option java_package = "com.virgilsecurity.purekit.protobuf.build";
-option java_outer_classname = "PurekitProtos";
+    private final int code;
 
-message DatabaseRecord {
-    uint32 version = 1;
-    bytes record = 2;
-}
+    ServiceErrorCode(int code) {
+        this.code = code;
+    }
 
-message EnrollmentRequest {
-    uint32 version = 1;
-}
-
-message EnrollmentResponse {
-    uint32 version = 1;
-    bytes response = 2;
-}
-
-message VerifyPasswordRequest {
-    uint32 version = 1;
-    bytes request = 2;
-}
-
-message VerifyPasswordResponse {
-    bytes response = 1;
-}
-
-message VersionedUpdateToken {
-    uint32 version = 1;
-    bytes update_token = 2;
-}
-
-message HttpError {
-    uint32 code = 1;
-    string message = 2;
+    /**
+     * Error code number.
+     *
+     * @return Error code number.
+     */
+    public int getCode() {
+        return code;
+    }
 }

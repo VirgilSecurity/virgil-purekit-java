@@ -31,42 +31,28 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-syntax = "proto3";
+package com.virgilsecurity.purekit;
 
-package build;
+import com.virgilsecurity.purekit.utils.ValidationUtils;
 
-option java_package = "com.virgilsecurity.purekit.protobuf.build";
-option java_outer_classname = "PurekitProtos";
+class PureCryptoData {
 
-message DatabaseRecord {
-    uint32 version = 1;
-    bytes record = 2;
-}
+    private final byte[] cms;
+    private final byte[] body;
 
-message EnrollmentRequest {
-    uint32 version = 1;
-}
+    PureCryptoData(byte[] cms, byte[] body) {
+        ValidationUtils.checkNullOrEmpty(cms, "cms");
+        ValidationUtils.checkNullOrEmpty(body, "body");
 
-message EnrollmentResponse {
-    uint32 version = 1;
-    bytes response = 2;
-}
+        this.cms = cms;
+        this.body = body;
+    }
 
-message VerifyPasswordRequest {
-    uint32 version = 1;
-    bytes request = 2;
-}
+    byte[] getCms() {
+        return cms;
+    }
 
-message VerifyPasswordResponse {
-    bytes response = 1;
-}
-
-message VersionedUpdateToken {
-    uint32 version = 1;
-    bytes update_token = 2;
-}
-
-message HttpError {
-    uint32 code = 1;
-    string message = 2;
+    byte[] getBody() {
+        return body;
+    }
 }

@@ -31,42 +31,39 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-syntax = "proto3";
+package com.virgilsecurity.purekit.storage.exception;
 
-package build;
+import com.virgilsecurity.purekit.exception.PureException;
 
-option java_package = "com.virgilsecurity.purekit.protobuf.build";
-option java_outer_classname = "PurekitProtos";
+/**
+ * Base class for PureStorage exceptions
+ */
+public class PureStorageException extends PureException {
+    public PureStorageException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
-message DatabaseRecord {
-    uint32 version = 1;
-    bytes record = 2;
-}
+    /**
+     * Constructor
+     */
+    public PureStorageException() {
+    }
 
-message EnrollmentRequest {
-    uint32 version = 1;
-}
+    /**
+     * Constructor
+     *
+     * @param errorMessage error message
+     */
+    public PureStorageException(String errorMessage) {
+        super(errorMessage);
+    }
 
-message EnrollmentResponse {
-    uint32 version = 1;
-    bytes response = 2;
-}
-
-message VerifyPasswordRequest {
-    uint32 version = 1;
-    bytes request = 2;
-}
-
-message VerifyPasswordResponse {
-    bytes response = 1;
-}
-
-message VersionedUpdateToken {
-    uint32 version = 1;
-    bytes update_token = 2;
-}
-
-message HttpError {
-    uint32 code = 1;
-    string message = 2;
+    /**
+     * Constructor
+     *
+     * @param cause The cause.
+     */
+    public PureStorageException(Throwable cause) {
+        super(cause);
+    }
 }

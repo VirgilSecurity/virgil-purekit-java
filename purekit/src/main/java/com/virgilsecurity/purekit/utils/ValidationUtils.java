@@ -31,42 +31,66 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-syntax = "proto3";
+package com.virgilsecurity.purekit.utils;
 
-package build;
+import com.virgilsecurity.common.exception.EmptyArgumentException;
+import com.virgilsecurity.common.exception.NullArgumentException;
 
-option java_package = "com.virgilsecurity.purekit.protobuf.build";
-option java_outer_classname = "PurekitProtos";
+/**
+ * ValidateUtils class.
+ */
+public class ValidationUtils {
 
-message DatabaseRecord {
-    uint32 version = 1;
-    bytes record = 2;
-}
+  /**
+   * Throws NullArgumentException if an argument is null and EmptyArgumentException if an argument
+   * is empty.
+   */
+  public static void checkNullOrEmpty(String argument, String name) {
+    if (name == null) {
+      throw new IllegalStateException("\'name\' cannot be null");
+    }
 
-message EnrollmentRequest {
-    uint32 version = 1;
-}
 
-message EnrollmentResponse {
-    uint32 version = 1;
-    bytes response = 2;
-}
+    // Check argument itself
+    if (argument == null) {
+      throw new NullArgumentException(name);
+    }
+    if (argument.isEmpty()) {
+      throw new EmptyArgumentException(name);
+    }
+  }
 
-message VerifyPasswordRequest {
-    uint32 version = 1;
-    bytes request = 2;
-}
+  /**
+   * Throws NullArgumentException if an argument is null and EmptyArgumentException if an argument
+   * is empty.
+   */
+  public static void checkNullOrEmpty(byte[] argument, String name) {
+    if (name == null) {
+      throw new IllegalStateException("\'name\' cannot be null");
+    }
 
-message VerifyPasswordResponse {
-    bytes response = 1;
-}
 
-message VersionedUpdateToken {
-    uint32 version = 1;
-    bytes update_token = 2;
-}
+    // Check argument itself
+    if (argument == null) {
+      throw new NullArgumentException(name);
+    }
+    if (argument.length == 0) {
+      throw new EmptyArgumentException(name);
+    }
+  }
 
-message HttpError {
-    uint32 code = 1;
-    string message = 2;
+  /**
+   * Throws NullArgumentException if an argument is null.
+   */
+  public static void checkNull(Object argument, String name) {
+    if (name == null) {
+      throw new IllegalStateException("\'name\' cannot be null");
+    }
+
+
+    // Check argument itself
+    if (argument == null) {
+      throw new NullArgumentException(name);
+    }
+  }
 }

@@ -31,42 +31,47 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-syntax = "proto3";
+package com.virgilsecurity.purekit;
 
-package build;
+import com.virgilsecurity.purekit.utils.ValidationUtils;
+import com.virgilsecurity.sdk.crypto.VirgilKeyPair;
 
-option java_package = "com.virgilsecurity.purekit.protobuf.build";
-option java_outer_classname = "PurekitProtos";
+/**
+ * Nonrotatable secrets
+ */
+public class NonrotatableSecrets {
+    private final VirgilKeyPair vskp;
+    private final VirgilKeyPair oskp;
 
-message DatabaseRecord {
-    uint32 version = 1;
-    bytes record = 2;
-}
+    /**
+     * Constructor
+     *
+     * @param vskp virgil signing key pair
+     * @param oskp own signing key pair
+     */
+    public NonrotatableSecrets(VirgilKeyPair vskp, VirgilKeyPair oskp) {
+        ValidationUtils.checkNull(vskp, "vskp");
+        ValidationUtils.checkNull(oskp, "oskp");
 
-message EnrollmentRequest {
-    uint32 version = 1;
-}
+        this.vskp = vskp;
+        this.oskp = oskp;
+    }
 
-message EnrollmentResponse {
-    uint32 version = 1;
-    bytes response = 2;
-}
+    /**
+     * Returns virgil signing key pair
+     *
+     * @return virgil signing key pair
+     */
+    public VirgilKeyPair getVskp() {
+        return vskp;
+    }
 
-message VerifyPasswordRequest {
-    uint32 version = 1;
-    bytes request = 2;
-}
-
-message VerifyPasswordResponse {
-    bytes response = 1;
-}
-
-message VersionedUpdateToken {
-    uint32 version = 1;
-    bytes update_token = 2;
-}
-
-message HttpError {
-    uint32 code = 1;
-    string message = 2;
+    /**
+     * Returns
+     *
+     * @return own signing key pair
+     */
+    public VirgilKeyPair getOskp() {
+        return oskp;
+    }
 }

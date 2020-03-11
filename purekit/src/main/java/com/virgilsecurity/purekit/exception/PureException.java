@@ -31,42 +31,38 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-syntax = "proto3";
+package com.virgilsecurity.purekit.exception;
 
-package build;
+/**
+ * Base class for all Pure exceptions
+ */
+public class PureException extends Exception {
 
-option java_package = "com.virgilsecurity.purekit.protobuf.build";
-option java_outer_classname = "PurekitProtos";
+    /**
+     * Constructor
+     */
+    public PureException() {
+    }
 
-message DatabaseRecord {
-    uint32 version = 1;
-    bytes record = 2;
-}
+    public PureException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
-message EnrollmentRequest {
-    uint32 version = 1;
-}
+    /**
+     * Constructor
+     *
+     * @param errorMessage error message
+     */
+    public PureException(String errorMessage) {
+        super(errorMessage);
+    }
 
-message EnrollmentResponse {
-    uint32 version = 1;
-    bytes response = 2;
-}
-
-message VerifyPasswordRequest {
-    uint32 version = 1;
-    bytes request = 2;
-}
-
-message VerifyPasswordResponse {
-    bytes response = 1;
-}
-
-message VersionedUpdateToken {
-    uint32 version = 1;
-    bytes update_token = 2;
-}
-
-message HttpError {
-    uint32 code = 1;
-    string message = 2;
+    /**
+     * Constructor
+     *
+     * @param cause cause
+     */
+    public PureException(Throwable cause) {
+        super(cause);
+    }
 }

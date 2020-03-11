@@ -36,37 +36,18 @@ syntax = "proto3";
 package build;
 
 option java_package = "com.virgilsecurity.purekit.protobuf.build";
-option java_outer_classname = "PurekitProtos";
+option java_outer_classname = "PurekitProtosV3Grant";
 
-message DatabaseRecord {
+message EncryptedGrantHeader {
+    string user_id = 1;
+    string session_id = 2;
+    bytes key_id = 3;
+    uint64 creation_date = 4;
+    uint64 expiration_date = 5;
+}
+
+message EncryptedGrant {
     uint32 version = 1;
-    bytes record = 2;
-}
-
-message EnrollmentRequest {
-    uint32 version = 1;
-}
-
-message EnrollmentResponse {
-    uint32 version = 1;
-    bytes response = 2;
-}
-
-message VerifyPasswordRequest {
-    uint32 version = 1;
-    bytes request = 2;
-}
-
-message VerifyPasswordResponse {
-    bytes response = 1;
-}
-
-message VersionedUpdateToken {
-    uint32 version = 1;
-    bytes update_token = 2;
-}
-
-message HttpError {
-    uint32 code = 1;
-    string message = 2;
+    bytes encrypted_phek = 2;
+    bytes header = 3;
 }

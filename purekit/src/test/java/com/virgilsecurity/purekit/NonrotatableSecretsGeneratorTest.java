@@ -31,42 +31,28 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-syntax = "proto3";
+package com.virgilsecurity.purekit;
 
-package build;
+import com.virgilsecurity.purekit.exception.PureException;
 
-option java_package = "com.virgilsecurity.purekit.protobuf.build";
-option java_outer_classname = "PurekitProtos";
+import org.junit.jupiter.api.Test;
 
-message DatabaseRecord {
-    uint32 version = 1;
-    bytes record = 2;
-}
+import java.util.Base64;
 
-message EnrollmentRequest {
-    uint32 version = 1;
-}
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
-message EnrollmentResponse {
-    uint32 version = 1;
-    bytes response = 2;
-}
+class NonrotatableSecretsGeneratorTest {
+    private static final String nms = "6PvWsrUn/U6ggoabbXCriBk7dtV3NfT+cvqbFGG3DGU=";
+    private static final String oskpId = "7QksLSjG56g=";
+    private static final String vskpId = "l3RDBZ9U6Cs=";
 
-message VerifyPasswordRequest {
-    uint32 version = 1;
-    bytes request = 2;
-}
+    @Test
+    void generate_secrets__fixed_seed__should_match() throws InterruptedException, PureException {
+        byte[] data = Base64.getDecoder().decode(nms);
 
-message VerifyPasswordResponse {
-    bytes response = 1;
-}
+        NonrotatableSecrets nonrotatableSecrets = NonrotatableSecretsGenerator.generateSecrets(data);
 
-message VersionedUpdateToken {
-    uint32 version = 1;
-    bytes update_token = 2;
-}
-
-message HttpError {
-    uint32 code = 1;
-    string message = 2;
+        assertArrayEquals(Base64.getDecoder().decode(oskpId), nonrotatableSecrets.getOskp().getPublicKey().getIdentifier());
+        assertArrayEquals(Base64.getDecoder().decode(vskpId), nonrotatableSecrets.getVskp().getPublicKey().getIdentifier());
+    }
 }

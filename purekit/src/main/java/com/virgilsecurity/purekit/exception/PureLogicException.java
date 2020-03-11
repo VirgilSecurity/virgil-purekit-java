@@ -31,42 +31,63 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-syntax = "proto3";
+package com.virgilsecurity.purekit.exception;
 
-package build;
+/**
+ * Pure logic exception
+ */
+public class PureLogicException extends PureException {
 
-option java_package = "com.virgilsecurity.purekit.protobuf.build";
-option java_outer_classname = "PurekitProtos";
+    private final ErrorStatus errorStatus;
 
-message DatabaseRecord {
-    uint32 version = 1;
-    bytes record = 2;
-}
+    /**
+     * Constructor
+     *
+     * @param errorStatus error status
+     */
+    public PureLogicException(ErrorStatus errorStatus) {
+        super(errorStatus.getMessage());
 
-message EnrollmentRequest {
-    uint32 version = 1;
-}
+        this.errorStatus = errorStatus;
+    }
 
-message EnrollmentResponse {
-    uint32 version = 1;
-    bytes response = 2;
-}
+    /**
+     * Error status
+     *
+     * @return error status
+     */
+    public ErrorStatus getErrorStatus() {
+        return errorStatus;
+    }
 
-message VerifyPasswordRequest {
-    uint32 version = 1;
-    bytes request = 2;
-}
+    /**
+     * Error status
+     */
+    public enum ErrorStatus {
+        KEYS_VERSION_MISMATCH(1, "Keys version mismatch"),
+        UPDATE_TOKEN_VERSION_MISMATCH(2, "Update token version mismatch"),
+        NONROTABLE_MASTER_SECRET_INVALID_LENGTH(3, "Nonrotatable master secret invalid length"),
+        CREDENTIALS_PARSING_ERROR(4, "Credentials parsing error"),
+        INVALID_PASSWORD(5, "Invalid password"),
+        USER_HAS_NO_ACCESS_TO_DATA(6, "User has no access to data"),
+        GRANT_INVALID_PROTOBUF(7, "Grant invalid protobuf"),
+        GRANT_IS_EXPIRED(8, "Grant is expired"),
+        PASSWORD_RECOVER_REQUEST_THROTTLED(9, "Password recover request was throttled");
 
-message VerifyPasswordResponse {
-    bytes response = 1;
-}
+        private final int code;
+        private final String message;
 
-message VersionedUpdateToken {
-    uint32 version = 1;
-    bytes update_token = 2;
-}
+        ErrorStatus(int code, String message) {
+            this.code = code;
+            this.message = message;
+        }
 
-message HttpError {
-    uint32 code = 1;
-    string message = 2;
+        public int getCode() {
+            return code;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+    }
 }

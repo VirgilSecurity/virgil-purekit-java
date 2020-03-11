@@ -31,42 +31,23 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-syntax = "proto3";
+package com.virgilsecurity.purekit.storage.exception;
 
-package build;
+import java.util.Collections;
+import java.util.Set;
 
-option java_package = "com.virgilsecurity.purekit.protobuf.build";
-option java_outer_classname = "PurekitProtos";
+public class PureStorageRoleNotFoundException extends PureStorageException {
+    private final Set<String> roleNames;
 
-message DatabaseRecord {
-    uint32 version = 1;
-    bytes record = 2;
-}
+    public PureStorageRoleNotFoundException(Set<String> roleNames) {
+        this.roleNames = roleNames;
+    }
 
-message EnrollmentRequest {
-    uint32 version = 1;
-}
+    public PureStorageRoleNotFoundException(String roleName) {
+        this.roleNames = Collections.singleton(roleName);
+    }
 
-message EnrollmentResponse {
-    uint32 version = 1;
-    bytes response = 2;
-}
-
-message VerifyPasswordRequest {
-    uint32 version = 1;
-    bytes request = 2;
-}
-
-message VerifyPasswordResponse {
-    bytes response = 1;
-}
-
-message VersionedUpdateToken {
-    uint32 version = 1;
-    bytes update_token = 2;
-}
-
-message HttpError {
-    uint32 code = 1;
-    string message = 2;
+    public Set<String> getRoleNames() {
+        return roleNames;
+    }
 }
