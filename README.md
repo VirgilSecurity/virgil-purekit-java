@@ -54,7 +54,7 @@ Navigate to our [Developer Documentation](https://developer.virgilsecurity.com/d
 
 ## Resources
 
-- [PureKit product page](https://virgilsecurity.com/purekit/)
+- [PureKit Product Page](https://virgilsecurity.com/purekit/)
 - [PureKit Documentation](https://developer.virgilsecurity.com/docs/purekit) - start integrating PureKit into your project with our detailed guides.
 - [PureKit API Reference](https://virgilsecurity.github.io/virgil-purekit-java/)
 - [MariaDB Demo](https://github.com/VirgilSecurity/virgil-mariadb-demo) - a simple web application that illustrates how Virgil PureKit can be used with MariaDB to store and share data in the most secure way.
