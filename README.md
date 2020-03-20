@@ -9,7 +9,7 @@
 
 ## Introduction
 
-<img src="https://cdn.virgilsecurity.com/assets/images/github/logos/purekit/PureKit.png" width="25%" align="left" hspace="1" vspace="3">
+<img src="https://cdn.virgilsecurity.com/assets/images/github/logos/purekit/PureKit.png" width="20%" align="left" hspace="1" vspace="3">
 
 </a>[Virgil Security](https://virgilsecurity.com) introduces [Virgil PureKit](https://virgilsecurity.com/purekit/) - an open-source security framework for enabling post-compromise protection for stored data. PureKit allows developers to protect users' passwords and personal data from hacking and securely share data.
 
