@@ -7,10 +7,11 @@
 
 [Introduction](#introduction) | [Features](#features)  | [Benefits](#benefits) | [Installation](#installation) | [Resources](#resources) | [License](#license) | [Support](#support)
 
+## Introduction
+
 <img src="https://cdn.virgilsecurity.com/assets/images/github/logos/purekit/PureKit.png" width="25%" align="left" hspace="1" vspace="3">
 
-## Introduction
-</a>[Virgil Security](https://virgilsecurity.com) introduces [Virgil PureKit](https://developer.virgilsecurity.com/docs/purekit/) - an open-source security framework for enabling post-compromise protection for stored data. PureKit allows developers to protect users' passwords and personal data from hacking and securely share data.
+</a>[Virgil Security](https://virgilsecurity.com) introduces [Virgil PureKit](https://virgilsecurity.com/purekit/) - an open-source security framework for enabling post-compromise protection for stored data. PureKit allows developers to protect users' passwords and personal data from hacking and securely share data.
 
 The framework can be used within any database or login system that uses a password, so it’s applicable for a company of any industry or size.
 
@@ -52,6 +53,8 @@ PureKit brings data security to a new level in three ways:
 Navigate to our [Developer Documentation](https://developer.virgilsecurity.com/docs/purekit) to install and start working with Virgil PureKit.
 
 ## Resources
+
+- [PureKit product page](https://virgilsecurity.com/purekit/)
 - [Developer Documentation](https://developer.virgilsecurity.com/docs/purekit) - start integrating PureKit into your project with our detailed guides.
 - [MariaDB Demo](https://github.com/VirgilSecurity/virgil-mariadb-demo) - a simple web application that illustrates how Virgil PureKit can be used with MariaDB to store and share data in the most secure way.
 - [Virgil PHE WhitePaper](https://virgilsecurity.com/wp-content/uploads/2018/11/PHE-Whitepaper-2018.pdf) - foundation principles of the Password-Hardened Encryption (PHE) protocol.
