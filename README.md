@@ -55,10 +55,10 @@ Navigate to our [Developer Documentation](https://developer.virgilsecurity.com/d
 ## Resources
 
 - [PureKit product page](https://virgilsecurity.com/purekit/)
-- [Developer Documentation](https://developer.virgilsecurity.com/docs/purekit) - start integrating PureKit into your project with our detailed guides.
+- [PureKit Documentation](https://developer.virgilsecurity.com/docs/purekit) - start integrating PureKit into your project with our detailed guides.
+- [PureKit API Reference](https://virgilsecurity.github.io/virgil-purekit-java/)
 - [MariaDB Demo](https://github.com/VirgilSecurity/virgil-mariadb-demo) - a simple web application that illustrates how Virgil PureKit can be used with MariaDB to store and share data in the most secure way.
 - [Virgil PHE WhitePaper](https://virgilsecurity.com/wp-content/uploads/2018/11/PHE-Whitepaper-2018.pdf) - foundation principles of the Password-Hardened Encryption (PHE) protocol.
-- [PureKit API Reference](https://virgilsecurity.github.io/virgil-purekit-java/)
 
 
 ## License
