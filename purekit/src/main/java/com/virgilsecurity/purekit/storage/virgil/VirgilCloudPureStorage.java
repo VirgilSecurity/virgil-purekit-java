@@ -430,7 +430,17 @@ public class VirgilCloudPureStorage implements PureStorage, PureModelSerializerD
             throw new VirgilCloudStorageException(e);
         }
 
-        return pureModelSerializer.parseRoleAssignment(protobufRecord);
+        RoleAssignment roleAssignment = pureModelSerializer.parseRoleAssignment(protobufRecord);
+
+        if (!roleAssignment.getUserId().equals(userId)) {
+            throw new PureStorageGenericException(PureStorageGenericException.ErrorStatus.USER_ID_MISMATCH);
+        }
+
+        if (!roleAssignment.getRoleName().equals(roleName)) {
+            throw new PureStorageGenericException(PureStorageGenericException.ErrorStatus.ROLE_NAME_MISMATCH);
+        }
+
+        return roleAssignment;
     }
 
     @Override
