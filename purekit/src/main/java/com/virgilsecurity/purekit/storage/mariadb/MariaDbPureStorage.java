@@ -273,7 +273,7 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
         HashSet<String> idsSet = new HashSet<>(userIds);
 
         try (Connection conn = getConnection()) {
-            StringBuilder sbSql = new StringBuilder(/* heuristics */ 64 + 38 * userIds.size());
+            StringBuilder sbSql = new StringBuilder(53 + 2 * userIds.size());
             sbSql.append("SELECT protobuf " +
                     "FROM virgil_users " +
                     "WHERE user_id in (" );
@@ -551,7 +551,7 @@ public class MariaDbPureStorage implements PureStorage, PureModelSerializerDepen
         HashSet<String> namesSet = new HashSet<>(roleNames);
 
         try (Connection conn = getConnection()) {
-            StringBuilder sbSql = new StringBuilder(/* heuristics */ 64 + 66 * roleNames.size());
+            StringBuilder sbSql = new StringBuilder(55 + 2 * roleNames.size());
             sbSql.append("SELECT protobuf " +
                     "FROM virgil_roles " +
                     "WHERE role_name in (");
