@@ -297,10 +297,10 @@ public class Pure {
             throw new PureLogicException(PureLogicException.ErrorStatus.GRANT_IS_EXPIRED);
         }
 
-        byte[] grantKeyRaw = kmsManager.recoverGrantKey(grantKey, deserializedEncryptedGrant.getHeader().toByteArray());
+        byte[] grantKeyRaw = kmsManager.recoverGrantKey(grantKey, deserializedEncryptedGrant.getEncryptedGrant().getHeader().toByteArray());
 
         return pureCrypto.decryptSymmetricWithOneTimeKey(encryptedData.toByteArray(),
-                deserializedEncryptedGrant.getHeader().toByteArray(),
+                deserializedEncryptedGrant.getEncryptedGrant().getHeader().toByteArray(),
                 grantKeyRaw);
     }
 
